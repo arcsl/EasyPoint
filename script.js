@@ -4,21 +4,17 @@ const divEstudio = document.getElementById("divEstudio");
 const divSummario = document.getElementById("divSummario");
 
 
-
 /* ------------------------- CONSTANTES GLOBALES ------------------------- */
-const signalTypes = ["EA", "ED", "SA", "SD"];
-
-
 
 
 /* ------------------------- VARIABLES GLOBALES ------------------------- */
 let checkboxChangeScheduled = false;
 
 
-
 /* ------------------------- ESCUCHADORES ------------------------- */
 document.addEventListener("DOMContentLoaded", () => {
     populateSelect();
+    totalHeaderRow();
 });
 
 document.addEventListener("change", (event) => {
@@ -58,7 +54,10 @@ function addBlock() {
     table.appendChild(addBody(table));
 
     divEstudio.appendChild(table);
+
     updateSummary();
+
+    blockSelect.focus();
 
 }
 
@@ -87,66 +86,43 @@ function countSignals(code) {
 
 function updateSummary() {
 
-    const titleTableRow = divSummario.querySelector("table thead tr");
-    titleTableRow.innerHTML = "";
+    const sumTableBodyRow = divSummario.querySelector("table tbody tr");
+    sumTableBodyRow.innerHTML = "";
 
-    const thTotal = document.createElement("th");
-    thTotal.innerText = "TOTAL";
-    titleTableRow.appendChild(thTotal);
-
-    signalTypes.forEach(sig => {
-        const thSig = document.createElement("th");
-        thSig.innerText = sig;
-        titleTableRow.appendChild(thSig);
-    });
-
-    const summaryTable = divSummario.querySelector("table tbody");
-
-    // Limpio la fila existente (según tu DOM, solo una fila en tbody)
-    summaryTable.innerHTML = "";
-
-    // Inicializo total global para todos los tipos de señal
-    const totalGlobal = {};
+    const totalGlobal = {};  
     signalTypes.forEach(sig => {
         totalGlobal[sig] = 0;
-    });
-
-    // Recorro todas las tablas dentro de divEstudio
+    });    
+       
     const tables = divEstudio.querySelectorAll("table");
     tables.forEach(table => {
-        const rows = table.querySelectorAll("tbody tr");
 
+        const rows = table.querySelectorAll("tbody tr");
         rows.forEach(row => {
+
             const checkbox = row.querySelector("input[type=checkbox]");
-            if (!checkbox || !checkbox.checked) return;  // solo filas con checkbox checked
+            if (!checkbox || !checkbox.checked) return; 
 
             const cells = row.querySelectorAll("td");
-
             signalTypes.forEach((sig, idx) => {
-                // Para flexibilidad: si la tabla tiene menos columnas que señal, evita errores
-                const cellText = cells[idx + 2]?.textContent;
+                const cellText = cells[idx + 1]?.textContent;
                 const val = parseInt(cellText) || 0;
                 totalGlobal[sig] += val;
             });
         });
     });
 
-    // Creo la fila resumen con los totales
-    const summaryRow = document.createElement("tr");
+    const nameCell = document.createElement("th");
+    nameCell.innerText = "TOTAL";
 
-    // Primera celda con texto "TOTAL"
-    const nameCell = document.createElement("td");
-    nameCell.textContent = "TOTAL";
-    summaryRow.appendChild(nameCell);
+    sumTableBodyRow.appendChild(nameCell);
 
-    // Celdas con los totales globales según signalTypes
     signalTypes.forEach(sig => {
         const cell = document.createElement("td");
         cell.textContent = totalGlobal[sig];
-        summaryRow.appendChild(cell);
+        sumTableBodyRow.appendChild(cell);
     });
 
-    summaryTable.appendChild(summaryRow);
 }
 
 function addHeader(table) {
@@ -160,9 +136,9 @@ function addHeader(table) {
     const deleteBtn = document.createElement("button");
     deleteBtn.textContent = "✖";
     deleteBtn.className = "w3-button w3-red w3-small";
-    deleteBtn.onclick = () => {
-        table.remove();
-        // updateSummary();
+    deleteBtn.onclick = () => { 
+        table.remove(); 
+        updateSummary();
     };
 
     const nameInput = document.createElement("input");
@@ -184,6 +160,14 @@ function addHeader(table) {
     numberInput.oninput = () => {
         numberInput.value = numberInput.value.replace(/[^0-9]/g, '');
     };
+
+    numberInput.onchange = () => {
+        const checkboxes = table.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(checkbox => {
+            checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+        });
+    };
+
 
     headerCell.appendChild(deleteBtn);
     headerCell.appendChild(nameInput);
@@ -253,11 +237,26 @@ function addBody(table) {
                     }
                 });
             });
-            updateSummary();
         });
 
         tbody.appendChild(row);
     }
 
     return tbody;
+}
+
+function totalHeaderRow () {
+
+    const sumTableHeadRow = divSummario.querySelector("table thead tr");
+    sumTableHeadRow.innerHTML = "";
+
+    const headEmpty = document.createElement("th");
+    sumTableHeadRow.appendChild(headEmpty);
+
+    signalTypes.forEach(sig => {
+        const headTitle = document.createElement("th");
+        headTitle.innerText = sig;
+        sumTableHeadRow.appendChild(headTitle);
+    });
+    
 }

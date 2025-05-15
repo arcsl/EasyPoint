@@ -1,3 +1,5 @@
+const signalTypes = ["EA", "ED", "SA", "SD"];
+
 const blocksData = {
 	"Condiciones Exteriores": {
 		"Temperatura": "EA",
@@ -13,7 +15,7 @@ const blocksData = {
 	"Circuito Calefacción": {
 		"Temperatura impulsión": "EA",
 		"Bomba": "EDSD",
-		"Válvula": "SA",
+		"Válvula": "SDSD",
 	},
 	"ACS": {
 		"Temperatura Secundario": "ea",
