@@ -1,8 +1,8 @@
 const blocksData = {
 	"Condiciones Exteriores": {
 		"Temperatura": "EA",
-		"Humedad": "EA",
-		"Calidad de aire": "EA",
+		"Humedad": "ea",
+		"Calidad de aire": "ea",
 	},
 	"Caldera": {
 		"Sonda": "EA",

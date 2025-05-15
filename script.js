@@ -1,22 +1,40 @@
 /* ------------------------- REFERENCIAS AL DOM ------------------------- */
 const blockSelect = document.getElementById("blockSelect");
 const divEstudio = document.getElementById("divEstudio");
+const divSummario = document.getElementById("divSummario");
 
 
 
 /* ------------------------- CONSTANTES GLOBALES ------------------------- */
 const signalTypes = ["EA", "ED", "SA", "SD"];
 
+
+
+
 /* ------------------------- VARIABLES GLOBALES ------------------------- */
+let checkboxChangeScheduled = false;
 
 
 
-
-/* ------------------------- PRINCIPAL ------------------------- */
+/* ------------------------- ESCUCHADORES ------------------------- */
 document.addEventListener("DOMContentLoaded", () => {
     populateSelect();
 });
 
+document.addEventListener("change", (event) => {
+    if (event.target.type === "checkbox") {
+        if (!checkboxChangeScheduled) {
+            checkboxChangeScheduled = true;
+            Promise.resolve().then(() => {
+                updateSummary();
+                checkboxChangeScheduled = false;
+            });
+        }
+    }
+});
+
+
+/* ------------------------- FUNCIONES ------------------------- */
 function populateSelect() {
     for (const type in blocksData) {
         const option = document.createElement("option");
@@ -26,20 +44,21 @@ function populateSelect() {
     }
 }
 
-/* ------------------------- BLOQUES ------------------------- */
 function addBlock() {
 
     if (!blockSelect.value) return;
 
+    divEstudio.style.display = "block";
+    divSummario.style.display = "block";
+
     const table = document.createElement("table");
     table.className = "w3-table w3-bordered w3-margin-bottom";
-    table.style.maxWidth = "1000px";
 
     table.appendChild(addHeader(table));
     table.appendChild(addBody(table));
 
     divEstudio.appendChild(table);
-    //updateSummary();
+    updateSummary();
 
 }
 
@@ -67,42 +86,68 @@ function countSignals(code) {
 }
 
 function updateSummary() {
-    const summaryTable = document.getElementById("summary-table").querySelector("tbody");
+
+    const titleTableRow = divSummario.querySelector("table thead tr");
+    titleTableRow.innerHTML = "";
+
+    const thTotal = document.createElement("th");
+    thTotal.innerText = "TOTAL";
+    titleTableRow.appendChild(thTotal);
+
+    signalTypes.forEach(sig => {
+        const thSig = document.createElement("th");
+        thSig.innerText = sig;
+        titleTableRow.appendChild(thSig);
+    });
+
+    const summaryTable = divSummario.querySelector("table tbody");
+
+    // Limpio la fila existente (según tu DOM, solo una fila en tbody)
     summaryTable.innerHTML = "";
 
-    const blocks = document.getElementById("blocks-container")?.children || [];
+    // Inicializo total global para todos los tipos de señal
+    const totalGlobal = {};
+    signalTypes.forEach(sig => {
+        totalGlobal[sig] = 0;
+    });
 
-    for (const block of blocks) {
-        const nameInput = block.querySelector("input");
-        const rows = block.querySelectorAll("tbody tr");
-        const total = { EA: 0, ED: 0, SA: 0, SD: 0 };
+    // Recorro todas las tablas dentro de divEstudio
+    const tables = divEstudio.querySelectorAll("table");
+    tables.forEach(table => {
+        const rows = table.querySelectorAll("tbody tr");
 
         rows.forEach(row => {
             const checkbox = row.querySelector("input[type=checkbox]");
-            if (!checkbox.checked) return;
+            if (!checkbox || !checkbox.checked) return;  // solo filas con checkbox checked
 
             const cells = row.querySelectorAll("td");
-            ["EA", "ED", "SA", "SD"].forEach((sig, idx) => {
-                total[sig] += parseInt(cells[idx + 2].textContent) || 0;
+
+            signalTypes.forEach((sig, idx) => {
+                // Para flexibilidad: si la tabla tiene menos columnas que señal, evita errores
+                const cellText = cells[idx + 2]?.textContent;
+                const val = parseInt(cellText) || 0;
+                totalGlobal[sig] += val;
             });
         });
+    });
 
-        const summaryRow = document.createElement("tr");
-        const nameCell = document.createElement("td");
-        nameCell.textContent = nameInput.value;
-        summaryRow.appendChild(nameCell);
+    // Creo la fila resumen con los totales
+    const summaryRow = document.createElement("tr");
 
-        ["EA", "ED", "SA", "SD"].forEach(sig => {
-            const cell = document.createElement("td");
-            cell.textContent = total[sig];
-            cell.style.textAlign = "center";
-            summaryRow.appendChild(cell);
-        });
+    // Primera celda con texto "TOTAL"
+    const nameCell = document.createElement("td");
+    nameCell.textContent = "TOTAL";
+    summaryRow.appendChild(nameCell);
 
-        summaryTable.appendChild(summaryRow);
-    }
+    // Celdas con los totales globales según signalTypes
+    signalTypes.forEach(sig => {
+        const cell = document.createElement("td");
+        cell.textContent = totalGlobal[sig];
+        summaryRow.appendChild(cell);
+    });
+
+    summaryTable.appendChild(summaryRow);
 }
-
 
 function addHeader(table) {
 
@@ -169,7 +214,6 @@ function addBody(table) {
     for (const [name, code] of Object.entries(elements)) {
 
         const row = document.createElement("tr");
-
         const nameCell = document.createElement("td");
 
         const checkbox = document.createElement("input");
@@ -177,7 +221,7 @@ function addBody(table) {
         checkbox.checked = code === code.toUpperCase();
 
         const label = document.createElement("label");
-        label.classList.add("w3-margin-left");
+        label.className = "w3-margin-left";
         label.innerText = name;
 
         nameCell.appendChild(checkbox);
@@ -185,7 +229,6 @@ function addBody(table) {
         row.appendChild(nameCell);
 
         const multiplierInput = table.querySelector("thead input[type='number']");
-
         const signalCounts = countSignals(code);
 
         signalTypes.forEach(sig => {
@@ -196,7 +239,6 @@ function addBody(table) {
             cell.textContent = checkbox.checked
                 ? (count === "-" ? "-" : count * (multiplierInput ? multiplierInput.value : 1))
                 : "-";
-            cell.style.textAlign = "center";
             row.appendChild(cell);
         });
 

@@ -1,0 +1,29 @@
+input.inputName {
+    display: inline-block;
+    margin-left : 8px;
+    width : 500px;
+}
+
+input.inputNumber {
+    display: inline-block;
+    margin-left : 8px;
+    width : 60px;
+}
+
+#divEstudio table,
+#divSummario table {
+    width : 1250px;
+}
+
+tr > td:first-child,
+tr > th:first-child {
+    width: 1000px;
+}
+
+tr > td:not(:first-child),
+tr > th:not(:first-child) {
+    text-align : center;
+}
+
+
+
