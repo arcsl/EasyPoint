@@ -25,5 +25,15 @@ tr > th:not(:first-child) {
     text-align : center;
 }
 
+button.botonAncho {
+    width : 150px;
+}
 
+button.botonTxiki {
+    width : 40px;
+}
 
+input[type="checkbox"] {
+  margin:12px;
+  margin-left: 14px;
+}

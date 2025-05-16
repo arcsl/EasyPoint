@@ -3,13 +3,17 @@ const signalTypes = ["EA", "ED", "SA", "SD"];
 const blocksData = {
 	"Condiciones Exteriores": {
 		"Temperatura": "EA",
-		"Humedad": "ea",
-		"Calidad de aire": "ea",
+	},
+	"Maestro Caldera": {
+		"Temperatura impulsión": "EA",
+		"Bomba calderas": "edsd",
+		"Presostato agua": "ED",
+		"Ventilacion forzada": "edsd",
+		"Electroválvula de Gas": "sd",
 	},
 	"Caldera": {
-		"Sonda": "EA",
-		"Bomba": "edsd",
-		"Presostato": "ed",
+		"Temperatura impulsión": "EA",
+		"Bomba": "EDSD",
 		"Quemador": "SD",
 	},
 	"Circuito Calefacción": {

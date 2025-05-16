@@ -89,11 +89,11 @@ function updateSummary() {
     const sumTableBodyRow = divSummario.querySelector("table tbody tr");
     sumTableBodyRow.innerHTML = "";
 
-    const totalGlobal = {};  
+    const totalGlobal = {};
     signalTypes.forEach(sig => {
         totalGlobal[sig] = 0;
-    });    
-       
+    });
+
     const tables = divEstudio.querySelectorAll("table");
     tables.forEach(table => {
 
@@ -101,7 +101,7 @@ function updateSummary() {
         rows.forEach(row => {
 
             const checkbox = row.querySelector("input[type=checkbox]");
-            if (!checkbox || !checkbox.checked) return; 
+            if (!checkbox || !checkbox.checked) return;
 
             const cells = row.querySelectorAll("td");
             signalTypes.forEach((sig, idx) => {
@@ -135,32 +135,14 @@ function addHeader(table) {
 
     const deleteBtn = document.createElement("button");
     deleteBtn.textContent = "✖";
-    deleteBtn.className = "w3-button w3-red w3-small";
-    deleteBtn.onclick = () => { 
-        table.remove(); 
+    deleteBtn.className = "w3-button w3-red w3-small botonTxiki";
+    deleteBtn.onclick = () => {
+        table.remove();
         updateSummary();
     };
 
-    const nameInput = document.createElement("input");
-    nameInput.className = "w3-input w3-border w3-small";
-    nameInput.value = blockSelect.value;
-    nameInput.style.display = "inline-block";
-    nameInput.style.width = "500px";
-    nameInput.style.marginLeft = "8px";
-
-    const numberInput = document.createElement("input");
-    numberInput.type = "number";
-    numberInput.style.display = "inline-block";
-    numberInput.value = 1;
-    numberInput.min = 1; // evita números negativos o cero si no son deseados
-    numberInput.step = 1; // solo números enteros
-    numberInput.className = "w3-input w3-border w3-small";
-    numberInput.style.width = "60px";
-    numberInput.style.marginLeft = "8px";
-    numberInput.oninput = () => {
-        numberInput.value = numberInput.value.replace(/[^0-9]/g, '');
-    };
-
+    const nameInput = inputNombre(blockSelect.value);
+    const numberInput = inputNumero();
     numberInput.onchange = () => {
         const checkboxes = table.querySelectorAll('input[type="checkbox"]');
         checkboxes.forEach(checkbox => {
@@ -168,13 +150,11 @@ function addHeader(table) {
         });
     };
 
-
     headerCell.appendChild(deleteBtn);
     headerCell.appendChild(nameInput);
     headerCell.appendChild(numberInput);
 
     headerRow.appendChild(headerCell);
-
 
     signalTypes.forEach(sig => {
         const th = document.createElement("th");
@@ -204,12 +184,17 @@ function addBody(table) {
         checkbox.type = "checkbox";
         checkbox.checked = code === code.toUpperCase();
 
-        const label = document.createElement("label");
-        label.className = "w3-margin-left";
-        label.innerText = name;
+        const nameInput = inputNombre(name);
+        nameInput.innerText = name;
+
+        const numberInput = inputNumero();       
+        numberInput.onchange = () => {
+            checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+        };
 
         nameCell.appendChild(checkbox);
-        nameCell.appendChild(label);
+        nameCell.appendChild(nameInput);
+        nameCell.appendChild(numberInput);
         row.appendChild(nameCell);
 
         const multiplierInput = table.querySelector("thead input[type='number']");
@@ -221,7 +206,7 @@ function addBody(table) {
             // Multiplicar por el valor del input del thead
             const count = signalCounts[sig] === 0 ? "-" : signalCounts[sig];
             cell.textContent = checkbox.checked
-                ? (count === "-" ? "-" : count * (multiplierInput ? multiplierInput.value : 1))
+                ? (count === "-" ? "-" : count * multiplierInput.value * numberInput.value)
                 : "-";
             row.appendChild(cell);
         });
@@ -232,7 +217,7 @@ function addBody(table) {
                     if (cell.classList.contains(sig)) {
                         const count = signalCounts[sig] === 0 ? "-" : signalCounts[sig];
                         cell.textContent = checkbox.checked
-                            ? (count === "-" ? "-" : count * (multiplierInput ? multiplierInput.value : 1))
+                            ? (count === "-" ? "-" : count * multiplierInput.value * numberInput.value)
                             : "-";
                     }
                 });
@@ -245,7 +230,7 @@ function addBody(table) {
     return tbody;
 }
 
-function totalHeaderRow () {
+function totalHeaderRow() {
 
     const sumTableHeadRow = divSummario.querySelector("table thead tr");
     sumTableHeadRow.innerHTML = "";
@@ -258,5 +243,31 @@ function totalHeaderRow () {
         headTitle.innerText = sig;
         sumTableHeadRow.appendChild(headTitle);
     });
-    
+
+}
+
+function inputNombre(texto) {
+    const nameInput = document.createElement("input");
+    nameInput.className = "w3-input w3-border w3-small";
+    nameInput.value = texto;
+    nameInput.style.display = "inline-block";
+    nameInput.style.width = "500px";
+    nameInput.style.marginLeft = "8px";
+    return nameInput;
+}
+
+function inputNumero() {
+    const numberInput = document.createElement("input");
+    numberInput.type = "number";
+    numberInput.style.display = "inline-block";
+    numberInput.value = 1;
+    numberInput.min = 1; // evita números negativos o cero si no son deseados
+    numberInput.step = 1; // solo números enteros
+    numberInput.className = "w3-input w3-border w3-small";
+    numberInput.style.width = "60px";
+    numberInput.style.marginLeft = "8px";
+    numberInput.oninput = () => {
+        numberInput.value = numberInput.value.replace(/[^0-9]/g, '');
+    };
+    return numberInput;
 }
