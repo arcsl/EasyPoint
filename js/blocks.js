@@ -13,7 +13,15 @@ const blocksData = {
 	},
 	"Caldera": {
 		"Temperatura impulsión": "EA",
-		"Bomba": "EDSD",
+		"Bomba": {
+			"Normal": "EDSD",
+			"Modulante": "edsasd",
+		},
+		"Válvula": {
+			"3 Puntos": "SDSD",
+			"0..10 Vcc": "sa",
+			"Todo/Nada": "edsd",
+		},		
 		"Quemador": "SD",
 	},
 	"Circuito Calefacción": {
@@ -22,8 +30,8 @@ const blocksData = {
 		"Válvula": {
 			"3 Puntos": "SDSD",
 			"0..10 Vcc": "sa",
-			"Todo/Nada": "sd",
-		}
+			"Todo/Nada": "edsd",
+		},
 	},
 	"ACS": {
 		"Temperatura Secundario": "ea",

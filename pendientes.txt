@@ -1,9 +1,5 @@
 exportar tabla a csv
-añadir opciones de tipo de valvula, bomba doble,... ¿reformar objeto blocks?
-
-
 
 añadir nombre de proyecto
 guardar proyectos en un objeto en local storage
 abrir proyecto existente
-

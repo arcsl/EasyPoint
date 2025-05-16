@@ -4,38 +4,55 @@
 <head>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>EasyPoint V1.0</title>
-	<link rel="stylesheet" href="w3.css" />
-	<link rel="stylesheet" href="style.css" />
-	<script src="blocks.js"></script>
-	<script src="script.js" defer></script>
+
+	<title>Easy Point – Cálculo de señales de PLC y generador de memoria de control para proyectos HVAC</title>
+	<meta name="description" content="Easy Point: herramienta online para realizar cálculos de señales de PLC y generar memorias de control para proyectos de calefacción, climatización y aire acondicionado (HVAC). Ideal para técnicos, instaladores e ingenieros que buscan facilitar la documentación técnica y el análisis funcional.">
+	<link rel="canonical" href="https://easypoint.arcsl.com">
+	<meta property="og:title" content="Easy Point – Cálculo de señales de PLC y generador de memoria de control para HVAC">
+	<meta property="og:description" content="Realiza cálculos y genera documentación profesional para proyectos HVAC con Easy Point, una herramienta útil tanto para instaladores como para estudios de ingeniería. Incluye cálculos de señales de PLC y generación de memorias de control.">
+	<meta property="og:url" content="https://easypoint.arcsl.com">
+	<meta name="robots" content="index, follow">
+
+	<script src="./js/redirect.js"></script>
+	<script src="./js/blocks.js"></script>
+	<script src="./js/script.js" defer></script>
+
+	<link rel="stylesheet" href="./css/w3.css" />
+	<link rel="stylesheet" href="./css/style.css" />
+
+
 </head>
 
 <body class="w3-container">
 
-	<h1>EasyPoint V1.0</h1>
-
-	<div class="w3-margin-bottom" style="display: flex; gap: 8px;">
-		<select class="w3-select w3-border" style="width: 400px; padding-left:16px;" id="blockSelect"></select>
+	<div class="w3-margin-bottom sticky-div" style="display: flex; gap: 8px;" id="divAddBlock">
+		<select class="w3-select w3-border blocSel" id="blockSelect"></select>
 		<button class="w3-button w3-green botonAncho" onclick="addBlock()">Añadir</button>
-		<button class="w3-button w3-blue botonAncho" onclick="generateCSV()">Generar CSV</button>
+		<a href="informe.html" class="w3-button w3-blue botonAncho">Informe</a>
 	</div>
 
-	<div class="w3-margin-bottom" style="display: none; gap: 8px;" id="divEstudio">
-		<!-- <h2>Desglose de Entradas/Salidas</h2> -->
+	<div class="w3-margin-bottom" id="divEstudio">
 		<!-- tablas de bloques -->
-	</div>	
+	</div>
 
-	<div class="w3-margin-bottom" style="display: none; gap: 8px;" id="divSummario">
+	<div class="w3-bottom" id="divSummario">
 		<table class="w3-table w3-bordered">
 			<thead>
 				<tr></tr>
-			</thead>	
+			</thead>
 			<tbody>
 				<tr style="font-weight: bold;"></tr>
-			</tbody>	
-		</table>	
-	</div><br>	
+			</tbody>
+		</table>
+	</div>
+
+	<div class="w3-small w3-text-gray w3-right w3-padding-small" style="position: fixed; bottom: 5px; right: 10px; user-select: none; z-index: 10000;">
+		EasyPoint V1.0 - Copyright ARC S.L. 2025
+	</div>
+
+	<div style="height: 90px;">
+
+	</div>
 
 </body>
 

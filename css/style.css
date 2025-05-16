@@ -1,0 +1,90 @@
+input.inputName {
+    display: inline-block;
+    margin-left: 8px;
+    width: 500px;
+}
+
+input.inputNumber {
+    display: inline-block;
+    margin-left: 8px;
+    width: 60px;
+}
+
+.noborder {
+    border: none;
+}
+
+.nobackground {
+    background-color: transparent;
+}
+
+table tbody tr:last-child {
+    border-bottom: none;
+}
+
+#divAddBlock {
+    padding-top: 16px;
+    background-color: white;
+}
+
+#divSummario {
+    background-color: white;
+    padding-bottom: 16px;
+    bottom: 0;
+}
+
+#divEstudio table,
+#divSummario table {
+    width: 1250px;
+}
+
+#divEstudio table:nth-of-type(even) {
+    background-color: #E9E9ED;
+}
+
+#divSummario table {
+    background-color: #88FF88;
+}
+
+tr>td:first-child,
+tr>th:first-child {
+    width: 1000px;
+}
+
+tr>td:not(:first-child),
+tr>th:not(:first-child) {
+    text-align: center;
+}
+
+a.botonAncho,
+button.botonAncho {
+    width: 150px;
+}
+
+button.botonTxiki {
+    width: 40px;
+}
+
+input[type="checkbox"] {
+    margin: 12px;
+    margin-left: 14px;
+}
+
+select.blocSel {
+    width: 935px;
+    padding-left: 16px;
+}
+
+select.optSel {
+    width: 150px;
+    padding-left: 16px;
+    margin-left: 8px;
+    border: none;
+    background-color: transparent;
+}
+
+.sticky-div {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
