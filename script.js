@@ -175,30 +175,65 @@ function addBody(table) {
     const tbody = document.createElement("tbody");
     const elements = blocksData[blockSelect.value];
 
-    for (const [name, code] of Object.entries(elements)) {
+    for (const [name, value] of Object.entries(elements)) {
 
         const row = document.createElement("tr");
         const nameCell = document.createElement("td");
 
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
-        checkbox.checked = code === code.toUpperCase();
-
+        
         const nameInput = inputNombre(name);
-        nameInput.innerText = name;
-
+                
         const numberInput = inputNumero();       
         numberInput.onchange = () => {
             checkbox.dispatchEvent(new Event('change', { bubbles: true }));
         };
-
+        
         nameCell.appendChild(checkbox);
-        nameCell.appendChild(nameInput);
         nameCell.appendChild(numberInput);
+        nameCell.appendChild(nameInput);
         row.appendChild(nameCell);
 
+        /* ----- VERIFICAR SI HAY QUE PONER SELECT O NO -----*/
+
+        let code = value;
+        let select; // solo existirá si es un subobjeto
+        let signalCounts;
+
+        if (typeof value === "object" && value !== null) {
+            // Crear select si el valor es un subobjeto
+            select = document.createElement("select");
+            select.className = "w3-select w3-border w3-small";
+            select.style.display = "inline-block";
+            select.style.width = "auto";
+            select.style.marginLeft = "8px";
+
+            for (const [label, val] of Object.entries(value)) {
+                const option = document.createElement("option");
+                option.value = val;
+                option.textContent = label;
+                select.appendChild(option);
+            }
+
+            // Selección por defecto: primera opción cuyo valor esté en mayúsculas
+            for (const option of select.options) {
+                if (option.value === option.value.toUpperCase()) {
+                    select.value = option.value;
+                    break;
+                }
+            }
+
+            code = select.value; // usar valor seleccionado para contar señales
+            nameCell.appendChild(select);
+        }
+
+
+        
+        checkbox.checked = code === code.toUpperCase();
+
         const multiplierInput = table.querySelector("thead input[type='number']");
-        const signalCounts = countSignals(code);
+        signalCounts = countSignals(code);
 
         signalTypes.forEach(sig => {
             const cell = document.createElement("td");

@@ -19,7 +19,11 @@ const blocksData = {
 	"Circuito Calefacción": {
 		"Temperatura impulsión": "EA",
 		"Bomba": "EDSD",
-		"Válvula": "SDSD",
+		"Válvula": {
+			"3 Puntos": "SDSD",
+			"0..10 Vcc": "sa",
+			"Todo/Nada": "sd",
+		}
 	},
 	"ACS": {
 		"Temperatura Secundario": "ea",
