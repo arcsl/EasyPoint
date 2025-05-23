@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+	<title>Easy Point – Cálculo de señales de PLC y generador de memoria de control para proyectos HVAC</title>
+	<meta name="description" content="Easy Point: herramienta online para realizar cálculos de señales de PLC y generar memorias de control para proyectos de calefacción, climatización y aire acondicionado (HVAC). Ideal para técnicos, instaladores e ingenieros que buscan facilitar la documentación técnica y el análisis funcional.">
+	<link rel="canonical" href="https://easypoint.arcsl.com">
+	<meta property="og:title" content="Easy Point – Cálculo de señales de PLC y generador de memoria de control para HVAC">
+	<meta property="og:description" content="Realiza cálculos y genera documentación profesional para proyectos HVAC con Easy Point, una herramienta útil tanto para instaladores como para estudios de ingeniería. Incluye cálculos de señales de PLC y generación de memorias de control.">
+	<meta property="og:url" content="https://easypoint.arcsl.com">
+	<meta name="robots" content="index, follow">
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+
+	<script src="./js/blocks.js"></script>
+	<script src="./js/pdfMakeConfig.js"></script>
+	<script src="./js/script.js" defer></script>
+
+	<link rel="icon" type="image/png" href="./images/ARClogo.png">
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+	<link rel="stylesheet" href="./css/style.css" />
+
+</head>
+
+<body class="w3-container">
+
+	<div class="w3-display-container w3-light-grey" style="height:100vh;" id="portada">
+		<div class="custom-container">
+
+			<!-- Logotipo -->
+			<a href="https://www.arcsl.com">
+				<img src="./images/ARClogo.png" alt="Logotipo" width="150" height="150">
+			</a>
+
+			<!-- Texto grande -->
+			<h1 class="custom-text w3-margin-top">EASY POINT</h1>
+
+			<!-- Botones -->
+			<div class="w3-margin-top">
+				<button id="nuevoBtn" class="w3-button w3-green w3-margin-right custom-button">Nuevo</button>
+				<button id="abrirBtn" class="w3-button w3-blue custom-button" disabled>Abrir</button>
+			</div>
+
+			<!-- Select proyecto -->
+			<div id="selectContainer" class="oculto">
+				<button id="proyectoSelectBtn" class="w3-button w3-red w3-margin-right botonCuadrado">✖</button>
+				<select id="proyectoSelect" class="w3-select"></select>
+			</div>
+
+			<!-- Input nuevo proyecto -->
+			<div id="inputContainer" class="oculto">
+				<div class="w3-margin-bottom">
+					<button id="nuevoInputBtn" class="w3-button w3-red w3-margin-right botonCuadrado">✖</button>
+					<input id="nuevoInput" class="w3-input" type="text" placeholder="Nombre del nuevo proyecto">
+				</div>
+				<label id="mensajeError" class="w3-text-blue w3-small w3-margin-top">Presione ENTER para validar.</label>
+			</div>
+
+		</div>
+	</div>
+
+	<div class="w3-display-container" style="height:100vh; display:none" id="aplicacion">
+		<div class="w3-top">
+			<div style="display: flex; gap: 8px;" id="divControlApp">
+				<input class="w3-input" id="nombreProyecto" placeholder="Nombre del proyecto" />
+				<button class="w3-button w3-green botonAncho" onclick="guardaProyecto()">Guardar</button>
+				<button class="w3-button w3-blue botonAncho" onclick="crearPDF()">PDF</button>
+				<button class="w3-button w3-red botonAncho" onclick="cerrarProyecto()">Salir</button>
+				<!-- <a href="informe.html" class="w3-button w3-blue botonAncho">Informe</a> -->
+			</div>
+			<div class="w3-margin-bottom" id="divCabecera"> </div>
+		</div>
+		<div style="height: 110px;"></div>
+		<div class="w3-margin-bottom" id="divEstudio"></div>
+		<div class="w3-margin-bottom" id="divAniadir">
+			<select class="w3-margin-top w3-select w3-border" id="blockSelect"></select>
+			<button class="w3-margin-top w3-button w3-green botonAncho" onclick="addBlock()">Añadir</button>
+		</div>
+		<div class="w3-bottom" id="divSummario"></div>
+		<div style="height: 90px;"></div>
+	</div>
+
+	<!-- Boton info para abrir el manual -->
+	<div style="position: absolute; top: 20px; right: 36px; z-index: 9999;">
+		<a id="manualBtn" href="https://github.com/arcsl/EasyPoint/blob/main/README.md#easy-point" target="_blank" class="w3-button w3-blue w3-circle w3-animate-zoom" style="width: 100px; height: 100px;" title="Ver manual">
+			<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 10 10">
+				<path d="M 2 3 a 2.5 2.5 0 0 1 3 0 a 2.5 2.5 0 0 1 3 0 v4 h-6 z M 2 7 a 2.5 2.5 0 0 1 3 0 a 2.5 2.5 0 0 1 3 0 M 5 3 v 4" stroke="#FFFFFF" stroke-width="0.4" fill="none" />
+			</svg>
+		</a>
+	</div>
+
+	<!-- inf pie de pagina -->
+	<div class="w3-small w3-text-gray w3-right w3-padding-small" style="position: fixed; bottom: 5px; right: 10px; z-index: 10000;">
+		EasyPoint V1.0 - Copyright ARC S.L. 2025
+	</div>
+
+</body>
+
+</html>

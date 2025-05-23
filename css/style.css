@@ -1,0 +1,235 @@
+/* ---------- GENERALES ---------- */
+
+body {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+input,
+textarea {
+    user-select: text;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+}
+
+/* html,
+body {
+    height: 100%;
+    margin: 0;
+} */
+
+/* ---------- PORTADA APP ---------- */
+
+.custom-container {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -30%);
+    text-align: center;
+}
+
+.custom-text {
+    font-size: 6rem;
+}
+
+.custom-button {
+    width: 150px;
+    height: 50px;
+    font-size: 1.2rem;
+}
+
+#selectContainer,
+#inputContainer {
+    width: 320px;
+    margin-top: 20px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#nuevoInput,
+#proyectoSelect {
+    display: inline-block;
+    width: 248px;
+    height: 50px;
+    font-size: 1.2rem;
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+
+/* ---------- DIV APP ---------- */
+
+button.botonCuadrado {
+    vertical-align: top;
+    width: 50px;
+    height: 50px;
+    display: inline-block;
+}
+
+input.inputName {
+    display: inline-block;
+    margin-left: 8px;
+    width: 500px;
+}
+
+input.inputNumber {
+    display: inline-block;
+    margin-left: 8px;
+    width: 60px;
+}
+
+.noborder {
+    border: none;
+}
+
+.nobackground {
+    background-color: transparent;
+}
+
+table tbody tr:last-child {
+    border-bottom: none;
+}
+
+#divControlApp,
+#divCabecera {
+    padding-top: 16px;
+    background-color: white;
+}
+
+#divSummario {
+    background-color: white;
+    padding-bottom: 16px;
+    bottom: 0;
+}
+
+#divControlApp,
+#divCabecera,
+#divEstudio,
+#divSummario {
+    width: 1000px;
+}
+
+#divEstudio table:nth-of-type(odd) {
+    background-color: #E9E9ED;
+}
+
+#divSummario table {
+    background-color: #DDFFDD;
+}
+
+tr>td:first-child,
+tr>th:first-child {
+    width: 800px;
+}
+
+select.optSel {
+    width: 200px;
+    padding-left: 16px;
+    margin-left: 8px;
+    border: none;
+    background-color: transparent;
+}
+
+tr>td:not(:first-child),
+tr>th:not(:first-child) {
+    text-align: center;
+}
+
+button.botonAncho {
+    vertical-align: top;
+    width: 150px;
+    height: 50px;
+}
+
+/* ---------- FILA CABECERA DE CADA BLOQUE ---------- */
+button.botonTxiki {
+    width: 35px;
+    height: 35px;
+    margin-right: 5px;
+    /* border-radius: 50% !important; */
+}
+
+input[type="checkbox"] {
+    margin: 12px;
+    margin-left: 14px;
+}
+
+#nombreProyecto {
+    width: 525px;
+    font-weight: bold;
+}
+
+#blockSelect {
+    width: 525px;
+    height: 50px;
+    padding-left: 16px;
+}
+
+.w3-table td {
+    vertical-align: middle;
+}
+
+
+.sticky-div {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.sticky-div {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.oculto {
+    visibility: hidden;
+}
+
+
+/* ---------- NOTIFICACION GUARDADO ---------- */
+
+.notificacion-fija {
+    position: fixed !important;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+}
+
+@keyframes fadeinout {
+    0% {
+        opacity: 0;
+    }
+
+    20% {
+        opacity: 1;
+    }
+
+    80% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+
+}
+
+.fadeinout {
+    animation-name: fadeinout;
+    animation-duration: 1.2s;
+    animation-fill-mode: forwards;
+}
+
+#manualBtn {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
