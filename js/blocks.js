@@ -30,6 +30,7 @@ const blocksData = {
 			"Temperatura": "EA",
 			"Marcha-Paro": "SD",
 			"Estado / Alarma": "ED",
+			"Cambio de régimen": "SD",
 			"Modulación / Consigna": {
 				"3 Puntos": "sdsd",
 				"0..10 Vcc": "SA",
