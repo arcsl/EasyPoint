@@ -113,7 +113,11 @@ const blocksData = {
 			"Demanda a terceros": {
 				"Todo/Nada": "sd",
 				"0..10 Vcc": "sa",
-			}
+			},
+			"Control Presión": {
+				"Sonda": "ea",
+				"Presostato": "ED",
+			},
 		},
 	},
 	"ACS": {
