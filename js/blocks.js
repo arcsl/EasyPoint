@@ -115,8 +115,8 @@ const blocksData = {
 				"0..10 Vcc": "sa",
 			},
 			"Control Presión": {
+				"Presostato": "ed",
 				"Sonda": "ea",
-				"Presostato": "ED",
 			},
 		},
 	},
@@ -129,8 +129,8 @@ const blocksData = {
 			"Bomba Secundario": "edsd",
 			"Bomba Retorno": "EDSD",
 			"Válvula Primario": {
-				"3 Puntos": "edsdsdsd",
-				"0..10 Vcc": "easa",
+				"3 Puntos": "sdsd",
+				"0..10 Vcc": "sa",
 				"Todo/Nada": "edsd",
 			},
 			"Válvula Consumidores": "SA",
