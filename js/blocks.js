@@ -162,8 +162,8 @@ const blocksData = {
 				"Temp + Hum + CO2": "eaeaea",
 			},
 			"Sonda toma aire del Exterior": {
-				"Temperatura": "ea",
-				"Temp + Hum": "ea",
+				"Temperatura": "EA",
+				"Temp + Hum": "eaea",
 				"Temp + CO2": "eaea",
 				"Temp + Hum + CO2": "eaeaea",
 			},
