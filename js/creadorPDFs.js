@@ -193,7 +193,7 @@ function docDef() {
                     },
                     {
                         columns: [
-                            { fontSize: 8, alignment: 'left', margin: [0, 0, 40, 0], text: 'Easy Point V1.0', },
+                            { fontSize: 8, alignment: 'left', margin: [0, 0, 40, 0], text: 'Easy Point V1.2', },
                             { fontSize: 8, alignment: 'center', margin: [0, 0, 0, 0], text: `${currentPage - 1} de ${pageCount - 1}`, },
                             { fontSize: 8, alignment: 'right', margin: [0, 0, 0, 0], text: printDate, },
                         ]

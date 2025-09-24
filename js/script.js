@@ -296,6 +296,9 @@ function addBlockBody(table) {
     const tbody = document.createElement("tbody");
     const elements = blocksData[estudioBloqSelect.value].Seniales;
 
+    console.log(elements);
+    
+
     for (const [name, value] of Object.entries(elements)) {
 
         // multiplicador general de la tabla
