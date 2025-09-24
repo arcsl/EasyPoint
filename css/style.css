@@ -1,4 +1,7 @@
 /* ---------- GENERALES ---------- */
+* {
+    box-sizing: border-box;
+}
 
 body {
     user-select: none;
@@ -15,180 +18,196 @@ textarea {
     -ms-user-select: text;
 }
 
-/* html,
-body {
-    height: 100%;
-    margin: 0;
-} */
-
-/* ---------- PORTADA APP ---------- */
-
-.custom-container {
-    position: absolute;
-    top: 30%;
-    left: 50%;
-    transform: translate(-50%, -30%);
-    text-align: center;
-}
-
-.custom-text {
-    font-size: 6rem;
-}
-
-.custom-button {
+button {
     width: 150px;
     height: 50px;
     font-size: 1.2rem;
 }
 
-#selectContainer,
-#inputContainer {
-    width: 320px;
-    margin-top: 20px;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
+button.botonCuadrado {
+    width: 50px;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-#nuevoInput,
-#proyectoSelect {
-    display: inline-block;
-    width: 248px;
+label,
+input,
+select {
     height: 50px;
     font-size: 1.2rem;
-    padding: 0 10px;
-    box-sizing: border-box;
-}
-
-/* ---------- DIV APP ---------- */
-
-button.botonCuadrado {
-    vertical-align: top;
-    width: 50px;
-    height: 50px;
-    display: inline-block;
-}
-
-input.inputName {
-    display: inline-block;
-    margin-left: 8px;
-    width: 500px;
-}
-
-input.inputNumber {
-    display: inline-block;
-    margin-left: 8px;
-    width: 60px;
-}
-
-.noborder {
-    border: none;
-}
-
-.nobackground {
-    background-color: transparent;
 }
 
 table tbody tr:last-child {
     border-bottom: none;
 }
 
-#divControlApp,
-#divCabecera {
-    padding-top: 16px;
-    background-color: white;
+.contenidoFlex {
+    display: flex;
 }
 
-#divSummario {
-    background-color: white;
-    padding-bottom: 16px;
-    bottom: 0;
+.contenidoCentrado {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-#divControlApp,
-#divCabecera,
-#divEstudio,
-#divSummario {
-    width: 1000px;
+.contenidoCentradoH {
+    width: 100%;
+    display: flex;
+    justify-content: center;
 }
 
-#divEstudio table:nth-of-type(odd) {
-    background-color: #E9E9ED;
+.contenidoCentradoV {
+    height: 100%;
+    display: flex;
+    align-items: center;
 }
 
-#divSummario table {
-    background-color: #DDFFDD;
-}
-
-tr>td:first-child,
-tr>th:first-child {
-    width: 800px;
-}
-
-select.optSel {
-    width: 200px;
-    padding-left: 16px;
-    margin-left: 8px;
-    border: none;
+.nobackground {
     background-color: transparent;
 }
 
-tr>td:not(:first-child),
-tr>th:not(:first-child) {
+/* ---------- COMUN SECCIONES ---------- */
+.seccion {
+    height: 100vh;
+}
+
+.manualBtn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10000;
+
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+}
+
+.copyVersion {
+    position: fixed;
+    bottom: 5px;
+    right: 10px;
+    z-index: 10000;
+}
+
+/* ---------- PORTADA ---------- */
+.margin-top-8p100 {
+    margin-top: 8%;
+}
+
+.portadaTitulo {
+    font-size: 6rem;
+}
+
+#portadaNueProyecInput {
+    width: 416px;
+}
+
+#portadaSelProyecSelect {
+    width: 350px;
+}
+
+#mensajeError {
     text-align: center;
 }
 
-button.botonAncho {
-    vertical-align: top;
-    width: 150px;
-    height: 50px;
+
+/* ---------- ESTUDIO ---------- */
+#estudioCabeceraCont,
+#estudioBloqCont,
+#estudioSumarioCont {
+    width: 1000px;
 }
 
-/* ---------- FILA CABECERA DE CADA BLOQUE ---------- */
-button.botonTxiki {
-    width: 35px;
-    height: 35px;
-    margin-right: 5px;
-    /* border-radius: 50% !important; */
+#estudio tr> :first-child {
+    width: 800px;
 }
 
-input[type="checkbox"] {
-    margin: 12px;
-    margin-left: 14px;
+#estudio tr> :not(:first-child) {
+    text-align: center;
 }
 
-#nombreProyecto {
-    width: 525px;
+
+/* ---------- ESTUDIO SEPARADORES SUPERIOR E INFERIOR ---------- */
+#estudioSepTop {
+    height: 138px;
+}
+
+#estudioSepPie {
+    height: 112px;
+}
+
+
+/* ---------- ESTUDIO CABECERA ---------- */
+#estudioNombProyecInput {
+    width: 502px;
     font-weight: bold;
 }
 
-#blockSelect {
-    width: 525px;
-    height: 50px;
-    padding-left: 16px;
+/* ---------- ESTUDIO SELECTOR DE BLOQUES ---------- */
+#estudioBloqSelect {
+    width: 502px;
 }
 
-.w3-table td {
-    vertical-align: middle;
+/* ---------- ESTUDIO BLOQUES ---------- */
+#estudioBloqCont table:nth-of-type(odd) {
+    background-color: #EEE;
 }
 
 
-.sticky-div {
-    position: sticky;
-    top: 0;
-    z-index: 10;
+/* elementos de la primera celda de cabecera */
+#estudio thead tr> :first-child * {
+    height: 30px;
+    vertical-align: top;
 }
 
-.sticky-div {
-    position: sticky;
-    top: 0;
-    z-index: 10;
+/* elementos de las filas del cuerpo */
+#estudioBloqCont tbody tr * {
+    height: 25px;
+    font-size: 1em !important;
 }
 
-.oculto {
-    visibility: hidden;
+/* botones de la primera celda */
+#estudio tr > :first-child button {
+    width: 30px;
+    height: 30px;
+    padding: 0;
 }
 
+/* checkbox de la primera celda */
+#estudio tr> :first-child input[type="checkbox"] {
+    margin-left: 5px;
+    margin-right: 20px;
+    width: 15px;
+    height: 15px;
+}
+
+/* inputs de la primera celda */
+#estudio tr> :first-child input.inputNombre {
+    width: 400px;
+    border: none !important;
+}
+
+/* input numbers de la primera celda */
+#estudio tr> :first-child input[type="number"] {
+    width: 60px;
+    text-align: right;
+    border: none !important;
+}
+
+/* selects de la primera celda */
+#estudio tr> :first-child select {
+    width: 225px;
+    padding: 0 8px;
+    display: inline-block;
+    background-color: transparent;
+    text-overflow: ellipsis;
+    border: none !important;
+}
 
 /* ---------- NOTIFICACION GUARDADO ---------- */
 
@@ -223,13 +242,4 @@ input[type="checkbox"] {
     animation-name: fadeinout;
     animation-duration: 1.2s;
     animation-fill-mode: forwards;
-}
-
-#manualBtn {
-    width: 50px;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
 }

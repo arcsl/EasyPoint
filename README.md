@@ -58,21 +58,31 @@
 
 ## 3.Pantalla de inicio
 
-Al acceder a Easy Point, se muestra una pantalla inicial con dos opciones principales: **"Nuevo"** y **"Abrir"**.
+Al acceder a Easy Point, se muestra una **pantalla de inicio** con tres opciones principales: **"Nuevo"**, **Importar** y **"Abrir"**( Deshabilitado si no hay proyectos existentes).
 
-- Si **no hay proyectos almacenados**, el botón **"Abrir"** aparecerá **deshabilitado**.
-- Al hacer clic en **"Nuevo"**:
-  - Se muestra un campo de texto para **introducir el nombre del nuevo proyecto**.
-  - Al pulsar **ENTER**, se accede directamente a la pantalla de **selección de proyectos**, con el nuevo proyecto ya seleccionado.
-  - También se muestra un botón con un **aspa (✖)** que permite cancelar y **volver a la pantalla de inicio**.
-- Si se hace clic en **"Abrir"** (cuando hay proyectos disponibles):
-  - Se accede a la **pantalla de selección de proyectos** donde se pueden:
-    - Abrir proyectos existentes.
-    - Borrar el proyecto seleccionado (previa confirmación).
-    - Cancelar y volver a la pantalla de inicio con el botón de aspa (✖).
-  - Si se borran todos los proyectos, se regresa automáticamente a la **pantalla de inicio** con el botón "Abrir" deshabilitado.
+- Al hacer clic en **"Nuevo"** (verde):
+  - Se accede a la **pantalla de creacion de proyecto**.
+  - El boton **"Nuevo"**pasa a ser **Cancelar** para poder volver a la **pantalla de inicio**.
+  - Se deshabilitan los botones **Importar** y **"Abrir"**.
+  - Se muestra un campo de texto para **Nombre del nuevo proyecto**.
+  - Tras introducir el nombre deseado, al pulsar **ENTER**, o presionando el botón de confirmación verde con icono ✔, se accede a la pantalla **selección de proyectos**, con el nuevo proyecto ya seleccionado.
 
-Este flujo garantiza que siempre haya un proyecto seleccionado y listo para editarse, o bien que el usuario pueda crear uno nuevo desde cero si es la primera vez que usa la herramienta.
+- Clicando en **Importar** (morado): 
+  - Se abre un cuadro de diálogo para elegir el archivo con el proyecto a importar.
+  - Una vez importado, se accede a la pantalla **selección de proyectos**, con el nuevo proyecto ya seleccionado.
+
+- Si se hace clic en **"Abrir"** (azul):
+  - Se accede a la **pantalla de selección de proyectos**.
+  - El boton **Abrir** pasa a ser **Cancelar** para poder volver a la **pantalla de inicio**.
+  - Se deshabilita el boton **Nuevo**.
+  - El boton **Importar** pasa a ser **Exportar**.
+  - Aparece un cuadro de selleccion para elegir uno entre todos los proyectos que tengamos almacenados en nuestro ordenador.
+  - Presionando en **Exportar** se descarga un archivo con la copia del proyecto que tengamos seleccionado, para tener un copia de seguridad, o poder enviarlo a otros, ...
+  - Se puede eliminar de nuestro ordenador el proyecto seleccionado presionando el boton con icono de papelera (pide confirmación).
+  - Si se eliminan todos los proyectos, se regresa automáticamente a la **pantalla de inicio** con el botón "Abrir" deshabilitado.
+  - por Ultimo presionando en el boton verde con el icono de flecha hacia la derecha accederemos al editor del proyecto.
+
+**PRO TIP**: Para empezar un nuevo proyecto duplicando uno exitente, basta con exportar el proyecto existente, cambiar el nombre al archivo exportado con el nombre del nuevo proyecto e importarlo. 
 
 ---
 
@@ -80,24 +90,19 @@ Este flujo garantiza que siempre haya un proyecto seleccionado y listo para edit
 
 Una vez abierto un proyecto desde la pantalla de selección, se accede al editor principal.
 El editor está diseñado para agregar bloques de control, como una caldera o un conjunto de producción de ACS.
-En cada bloque se pueden definir y ajustar todas las señales que incluye. 
+En cada bloque se pueden definir y ajustar todas las señales que incluye dicho bloque. 
 A continuación se detallan las opciones disponibles:
 
 ### 4.1 Gestión del proyecto
 
 En la parte superior de la pantalla del editor, se dispone de un recuadro de texto que muestra el nombre actual del proyecto junto con los botones **Guardar**, **PDF** y **Salir**. 
 
-#### 4.1.1 Renombrar / Sobrescribir / Duplicar
+#### 4.1.1 Renombrar / Sobrescribir
 - El recuadro de texto contiene por defecto el nombre que se introdujo al crear el proyecto desde la pantalla de inicio.
 - Puedes cambiar este nombre directamente desde el input.  
 - Si introduces un nombre **ya existente** (idéntico al de otro proyecto), el campo se **sombrea en rojo** para advertir del conflicto.
 - Al pulsar **Guardar**, se solicitará confirmación para sobrescribir el proyecto existente con ese nombre.
-- Esta funcionalidad permite **duplicar un proyecto fácilmente**, siguiendo este flujo:
-  1. Crear un nuevo proyecto vacío (proyecto destino).
-  2. Abrir el proyecto que se desea copiar (proyecto origen).
-  3. En el input superior del proyecto origen, introducir el nombre del proyecto destino.
-  4. Pulsar **Guardar** y confirmar la sobrescritura.
-  5. Ahora ambos proyectos contienen el mismo contenido y pueden editarse por separado.
+
 
 #### 4.1.2 Guardar proyecto
 - Pulsa el botón **"Guardar"** para almacenar el estado actual del proyecto.
@@ -142,38 +147,41 @@ Accede a la herramienta aquí:
 
 ---
 
-## 6.Flujo pantalla de inicio (guía visual)
+## 6.Flujo gestión de proyectos (guía visual)
 
 ```mermaid
 flowchart TD
-B[Nombre proyecto] --> |Enter| C{Seleccionar proyecto}
-A[Inicio] --> |Nuevo| B
-B --> |✖ Cancel| A
-G -- No --> A
-C -- ✖ Cancel --> A
-C -- Abrir --> H[Proyecto abierto]
-G -- Si --> C
-C -- Borrar --> G{¿Quedan Proyectos}
-D --> |No| E
-A --> D{¿Hay proyectos?} 
-D --> |Si| F[Abrir habilitado]
-E[Abrir deshabilitado] --> A
-F --> |Abrir| C
-```
 
----
+%% Nodos principales
+INICIO[Inicio]:::step
+NUEVO[Nuevo]:::w3green
+IMPORTAR[Importar]:::w3purple
+ABRIR[Abrir]:::w3blue
+SEL_PROY[Selector de<br>proyectos]:::step
 
-## 7.Flujo para Renombrar / Sobrescribir / Duplicar
+%% Subnodos Selector de proyectos
+EXPORTAR[Descarga<br>archivo]:::w3purple
+EDITOR[Editor de<br>proyecto]:::w3green
+BORRAR[Borra el<br>proyecto]:::w3red
 
-```mermaid
-flowchart TD
-    A[Editor abierto con proyecto origen] --> B[Usuario edita nombre en el input]
-    B --> C{¿Nombre ya existe?}
-    C -- No --> D[Botón Guardar]
-    D --> E[Proyecto se guarda con nuevo nombre]
-    C -- Sí --> G[Input se marca en rojo]
-    G --> H[Usuario pulsa Guardar]
-    H --> I[Confirmar sobrescritura]
-    I -->|Confirmado| J[Sobrescribe proyecto existente]
-    I -->|Cancelado| K[No se guarda nada]
+%% Flujo desde Inicio
+INICIO <--> NUEVO --> |Nombre| SEL_PROY
+INICIO <--> IMPORTAR --> |Elegir archivo| SEL_PROY
+INICIO <--> ABRIR --> SEL_PROY
+
+%% Acciones dentro del selector de proyectos
+SEL_PROY --> |Cancelar| INICIO
+SEL_PROY ---> |Flecha Verde| EDITOR
+SEL_PROY --> |Exportar| EXPORTAR
+EXPORTAR ---> SEL_PROY
+SEL_PROY ---> |Papelera| BORRAR
+BORRAR --> | Si quedan proyectos| SEL_PROY
+BORRAR --> | No quedan proyectos| INICIO
+
+%% Estilos
+classDef step fill:#f0ad4e,color:#fff;
+classDef w3green fill:#4CAF50,color:#fff;
+classDef w3purple fill:#9C27B0,color:#fff;
+classDef w3blue fill:#2196F3,color:#fff;
+classDef w3red fill:#f44336,color:#fff;
 ```

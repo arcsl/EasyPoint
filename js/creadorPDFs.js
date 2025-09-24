@@ -1,3 +1,95 @@
+function crearPDF() {
+
+    facilityName = portadaSelProyecSelect.value;
+    headerText = portadaSelProyecSelect.value;
+
+    const textosColumnas = ["", "", ...signalTypes];
+
+    nombresColumnas = [];
+    textosColumnas.forEach(texto => {
+        nombresColumnas.push({ text: texto, fillColor: colorCabeceraTablasPDF });
+    });
+
+    let extraPages = [{ pageBreak: 'before', text: null }];
+
+    const tables = estudioBloqCont.querySelectorAll("table");
+
+    tables.forEach(table => {
+
+        let tablaSeniales = JSON.parse(JSON.stringify(tablaSig()));
+        tablaSeniales.layout = (tablaSig()).layout;
+
+        const bodyRows = table.querySelectorAll("tbody tr");
+
+        bodyRows.forEach(row => {
+
+            const checkbox = row.querySelector('input[type="checkbox"]');
+            if (!checkbox || !checkbox.checked) return;
+
+            const numeroSenial = row.querySelector('[name="numeroSenial"]')?.value || "";
+            const nombreSenial = row.querySelector('[name="nombreSenial"]')?.value || "";
+            const opcionSenial = row.querySelector('[name="opcionSenial"]');
+
+            const opcionTexto = opcionSenial?.options[opcionSenial.selectedIndex]?.text || "";
+
+            const textoCeldaNombre = opcionTexto
+                ? `${nombreSenial} ( ${opcionTexto} )`
+                : nombreSenial;
+
+            const celdaNombre = {
+                text: textoCeldaNombre,
+                alignment: 'left',
+            }
+
+            let numeroSeñales = [];
+            signalTypes.forEach(sig => {
+                const celdaSenial = row.querySelector(`.${sig}`);
+                numeroSeñales.push(celdaSenial?.textContent || "");
+            });
+
+            tablaSeniales.table.body.push([numeroSenial, celdaNombre, ...numeroSeñales]);
+
+        });
+
+        const nombreBloque = table.querySelector('[name="nombreBloque"]')?.value || "";
+        const cantidadBloque = table.querySelector('[name="cantidadBloque"]')?.value || "";
+
+        let extPagElem = JSON.parse(JSON.stringify(extraPagesElem()));
+        if (cantidadBloque > 1) {
+            extPagElem.stack[0].table.body[0][0].text = nombreBloque + " (x" + cantidadBloque + ")";
+        } else {
+            extPagElem.stack[0].table.body[0][0].text = nombreBloque;
+        }
+        extPagElem.stack.push(tablaSeniales);
+        extraPages.push(extPagElem);
+
+    });
+
+    const totalRow = estudioSumarioCont.querySelector("table tbody tr");
+
+    // let tablaTotales = JSON.parse(JSON.stringify(tablaSig()));
+    let tablaTotales = JSON.parse(JSON.stringify(tablaSig()));
+    tablaTotales.layout = (tablaSig()).layout;
+
+    let numeroTotalSeñales = [];
+    signalTypes.forEach(sig => {
+        const celdaSenial = totalRow.querySelector(`.${sig}`);
+        numeroTotalSeñales.push(celdaSenial?.textContent || "");
+    });
+
+    tablaTotales.table.body.push(["", "", ...numeroTotalSeñales]);
+
+    let extPagElemTotal = JSON.parse(JSON.stringify(extraPagesElem()));
+    extPagElemTotal.stack[0].table.body[0][0].text = "TOTAL";
+    extPagElemTotal.stack.push(tablaTotales);
+    extraPages.push(extPagElemTotal);
+
+    let docDefinition = docDef();
+    docDefinition.content = docDefinition.content.concat(extraPages);
+    pdfMake.createPdf(docDefinition).download(portadaSelProyecSelect.value + ' - Listado de Puntos.pdf');
+
+}
+
 function tablaSig() {
     return {
         table: {
@@ -77,13 +169,13 @@ function docDef() {
                         { text: '', alignment: 'left', },
                         {
                             text: [
-                                'Creado con Easy Point V1.0\n',
+                                'Creado con ',
                                 {
-                                    text: 'https://easypoint.arcsl.com',
+                                    text: 'Easy Point V1.2',
                                     link: 'https://easypoint.arcsl.com',
                                     color: 'blue',
-                                    decoration: 'underline',
-                                },
+                                    decoration: 'underline'
+                                }
                             ],
                             alignment: 'right',
                             fontSize: 8,

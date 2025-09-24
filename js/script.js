@@ -1,39 +1,41 @@
 /* ------------------------- REFERENCIAS AL DOM ------------------------- */
 const portada = document.getElementById("portada");
-const aplicacion = document.getElementById("aplicacion");
+const estudio = document.getElementById("estudio");
 
-const abrirBtn = document.getElementById("abrirBtn");
-const nuevoBtn = document.getElementById("nuevoBtn");
-const proyectoSelectBtn = document.getElementById("proyectoSelectBtn");
-const nuevoInputBtn = document.getElementById("nuevoInputBtn");
+const portadaNueProyecBtn = document.getElementById("portadaNueProyecBtn");
+const portadaImpProyecBtn = document.getElementById("portadaImpProyecBtn");
+const portadaAbrProyecBtn = document.getElementById("portadaAbrProyecBtn");
+const portadaImpProyecInput = document.getElementById("portadaImpProyecInput");
 
-const selectContainer = document.getElementById("selectContainer");
-const inputContainer = document.getElementById("inputContainer");
-const proyectoSelect = document.getElementById("proyectoSelect");
-const nuevoInput = document.getElementById("nuevoInput");
-const mensajeError = document.getElementById("mensajeError");
+const portadaNueProyecCont = document.getElementById("portadaNueProyecCont");
+const portadaNueProyecCancel = document.getElementById("portadaNueProyecCancel");
+const portadaNueProyecInput = document.getElementById("portadaNueProyecInput");
+const portadaNueProyecMsg = document.getElementById("portadaNueProyecMsg");
 
-const divControlApp = document.getElementById("divControlApp");
-const nombreProyecto = document.getElementById("nombreProyecto");
-const divCabecera = document.getElementById("divCabecera");
-const divEstudio = document.getElementById("divEstudio");
-const blockSelect = document.getElementById("blockSelect");
-const divSummario = document.getElementById("divSummario");
+const portadaSelProyecCont = document.getElementById("portadaSelProyecCont");
+const portadaSelProyecCancel = document.getElementById("portadaSelProyecCancel");
+const portadaSelProyecSelect = document.getElementById("portadaSelProyecSelect");
+
+const estudioBotonera = document.getElementById("estudioBotonera");
+const estudioNombProyecInput = document.getElementById("estudioNombProyecInput");
+const estudioCabeceraSeniales = document.getElementById("estudioCabeceraSeniales");
+const estudioBloqCont = document.getElementById("estudioBloqCont");
+const estudioBloqSelect = document.getElementById("estudioBloqSelect");
+const estudioSumarioCont = document.getElementById("estudioSumarioCont");
 
 
 /* ------------------------- VARIABLES GLOBALES ------------------------- */
 let checkboxChangeScheduled = false;
 let proyectosEasyPoint = JSON.parse(localStorage.getItem('proyectosEasyPoint')) || {};
 let guardado = true;
-let facilityName;
-let headerText;
-let anchosColumnas = [28, '*'];
-
 
 /* ------------------------- GLOBALES PARA PDFMAKE ------------------------- */
 const printDate = new Date().toLocaleDateString();
-let nombresColumnas = [];
 const colorCabeceraTablasPDF = "#ddfaff"
+let anchosColumnas = [28, '*'];
+let nombresColumnas = [];
+let facilityName;
+let headerText;
 
 
 /* ------------------------- EJECUCIONES INICIALES ------------------------- */
@@ -45,252 +47,46 @@ signalTypes.forEach(() => {
     anchosColumnas.push(28);
 });
 
-
-/* ------------------------- ESCUCHADORES ------------------------- */
-document.addEventListener("DOMContentLoaded", () => {
-
-    document.title = "Easy Point";
-
-    populateProyectSelect();
-    populateBlockSelect();
-
-    const divCabeceraTable = document.createElement("table");
-    divCabeceraTable.classList = "w3-table w3-bordered";
-    divCabecera.appendChild(divCabeceraTable);
-    divCabeceraTable.appendChild(totalHeader());
-
-    const divSummarioTable = document.createElement("table");
-    divSummarioTable.classList = "w3-table w3-bordered";
-    divSummario.appendChild(divSummarioTable);
-    divSummarioTable.appendChild(totalHeader());
-    divSummarioTable.appendChild(totalBody());
-
-    abrirBtn.focus();
-
-});
-
-document.addEventListener("change", (event) => {
-    if (event.target.type === "checkbox") {
-        if (!checkboxChangeScheduled) {
-            checkboxChangeScheduled = true;
-            Promise.resolve().then(() => {
-                updateSummary();
-                checkboxChangeScheduled = false;
-            });
-        }
-    }
-});
-
-divEstudio.addEventListener('input', (event) => {
-    const target = event.target;
-    if (target.tagName === 'INPUT' && ['checkbox', 'number', 'text'].includes(target.type)) {
-        guardado = false;
-    }
-});
-
-divEstudio.addEventListener('click', (event) => {
-    const target = event.target;
-    if (target.tagName === 'BUTTON') {
-        guardado = false;
-    }
-});
-
-abrirBtn.addEventListener("click", () => {
-
-    // Prevención adicional
-    if (abrirBtn.disabled) return;
-
-    // si se esta mostrando el select, se quiere abrir el proyecto seleccionado
-    if (!selectContainer.classList.contains("oculto")) {
-
-        // por seguridad
-        if (!proyectoSelect.value.trim()) return;
-        if (!proyectosEasyPoint.hasOwnProperty(proyectoSelect.value)) return;
-
-        writeBlocks();
-        nombreProyecto.value = proyectoSelect.value.trim();
-        portada.style.display = "none";
-        aplicacion.style.display = "block";
-
-        return;
-    }
-
-    // si no es para abrir el select
-    selectContainer.classList.remove("oculto");
-    proyectoSelect.focus();
-    inputContainer.classList.add("oculto"); // por si acaso
-
-    // boton nuevo pasa a ser borrar para poder borrar el proyecto
-    nuevoBtn.textContent = "Borrar";
-    nuevoBtn.classList.remove("w3-green");
-    nuevoBtn.classList.add("w3-red");
-
-});
-
-nuevoBtn.addEventListener("click", () => {
-
-    // Prevención adicional
-    if (nuevoBtn.disabled) return;
-
-    // si se esta mostrando el select, se quiere borrar dicho proyecto
-    if (!selectContainer.classList.contains("oculto")) {
-
-        if (!confirm("Este cambio es irreversible\n\n¿Desea continuar?\n")) return;
-
-        // Borrar la opción seleccionada
-        delete proyectosEasyPoint[proyectoSelect.value];
-        localStorage.setItem("proyectosEasyPoint", JSON.stringify(proyectosEasyPoint));
-
-        // actualizar opciones
-        populateProyectSelect();
-
-        // si no quedan proyectos
-        if (proyectoSelect.length === 0) {
-
-            //restaurar botón nuevo
-            nuevoBtn.textContent = "Nuevo";
-            nuevoBtn.classList.remove("w3-red");
-            nuevoBtn.classList.add("w3-green");
-
-            // Ocultar select
-            selectContainer.classList.add("oculto");
-
-        }
-
-        return;
-
-    }
-
-    // Si no se esta mostrando ni input ni select, mostrar input para nuevo nombre y cambiar Nuevo a Cancelar y deshabilitar abrir
-    nuevoInput.value = "";
-    inputContainer.classList.remove("oculto");
-    nuevoInput.focus();
-    nuevoBtn.disabled = true;
-    abrirBtn.disabled = true;
-
-});
-
-nuevoInput.addEventListener("input", (e) => {
-
-    const nuevoProyecto = nuevoInput.value.trim();
-
-    // verificar si el proyecto ya existe
-    if (proyectosEasyPoint.hasOwnProperty(nuevoProyecto)) {
-
-        // Mostrar mensaje de error
-        mensajeError.textContent = `El proyecto ${nuevoProyecto} ya existe.`;
-        mensajeError.classList.add("w3-text-red");
-        mensajeError.classList.remove("w3-text-blue");
-
-        nuevoInput.classList.add("w3-pale-red");
-
-    } else {
-
-        // Mostrar mensaje informativo
-        mensajeError.textContent = "Presione ENTER para validar.";
-        mensajeError.classList.add("w3-text-blue");
-        mensajeError.classList.remove("w3-text-red");
-
-        nuevoInput.classList.remove("w3-pale-red");
-
-    }
-
-});
-
-nuevoInput.addEventListener("keydown", (e) => {
-
-    if (mensajeError.classList.contains("w3-text-red")) return;
-
-    if (e.key === "Enter") {
-
-        const nuevoProyecto = nuevoInput.value.trim();
-
-        if (!nuevoProyecto) return;
-
-        // agregar proyecto al objeto y salvar en localstorage
-        proyectosEasyPoint[nuevoProyecto] = [];
-        localStorage.setItem("proyectosEasyPoint", JSON.stringify(proyectosEasyPoint));
-
-        // borrar contenido del input y ocultarlo
-        nuevoInput.value = "";
-        inputContainer.classList.add("oculto");
-
-        // actualizar opciones del select de proyectos y seleccionar 
-        populateProyectSelect();
-        proyectoSelect.value = nuevoProyecto;
-
-        // habilitar botones y simular click en abrir para mostrar el select de proyectos
-        nuevoBtn.disabled = false;
-        abrirBtn.disabled = false;
-        abrirBtn.dispatchEvent(new Event("click"));
-
-    }
-});
-
-proyectoSelectBtn.addEventListener("click", (e) => {
-
-    //ocultar select
-    selectContainer.classList.add("oculto")
-
-    //restaurar botón nuevo
-    nuevoBtn.textContent = "Nuevo";
-    nuevoBtn.classList.remove("w3-red");
-    nuevoBtn.classList.add("w3-green");
-
-});
-
-nuevoInputBtn.addEventListener("click", (e) => {
-
-    //ocultar input
-    inputContainer.classList.add("oculto");
-
-    //habilitar botones
-    nuevoBtn.disabled = false;
-    abrirBtn.disabled = false;
-
-});
-
-nombreProyecto.addEventListener("input", (e) => {
-
-    const estaVacio = nombreProyecto.value.trim() === "";
-    const yaExiste = proyectosEasyPoint.hasOwnProperty(nombreProyecto.value.trim());
-    const esElActual = nombreProyecto.value.trim() === proyectoSelect.value;
-
-    if ((yaExiste && !esElActual) || estaVacio) {
-        nombreProyecto.classList.add("w3-pale-red");
-    } else {
-        nombreProyecto.classList.remove("w3-pale-red");
-    }
-
-});
-
-/* ------------------------- FUNCIONES ------------------------- */
+escuchadores();
+
+
+/* ------------------------- GENERALES ------------------------- */
+function guardadoOK() {
+    const notificacion = document.createElement('div');
+    notificacion.id = 'notificacion';
+    notificacion.className = 'w3-center w3-button w3-green w3-round-large fadeinout notificacion-fija';
+    notificacion.innerHTML = "<h3>Guardado</h3>";
+    estudio.appendChild(notificacion);
+    setTimeout(() => {
+        notificacion.remove();
+    }, 2000);
+}
+
+/* ------------------------- PORTADA ------------------------- */
 function populateProyectSelect() {
 
     // Asegurarse de que existe el objeto
     if (proyectosEasyPoint) {
-        proyectoSelect.innerHTML = "";
+        portadaSelProyecSelect.innerHTML = "";
         // Recorrer las claves del objeto y agregarlas como opciones
         Object.keys(proyectosEasyPoint).forEach(clave => {
             const option = document.createElement('option');
             option.value = clave;
             option.textContent = clave;
-            proyectoSelect.appendChild(option);
+            portadaSelProyecSelect.appendChild(option);
         });
     }
 
-    abrirBtn.disabled = proyectoSelect.options.length === 0;
-
-
 }
 
+/* ------------------------- ESTUDIO ------------------------- */
 function populateBlockSelect() {
     Object.keys(blocksData).forEach(type => {
         const option = document.createElement("option");
         option.value = type;
         option.textContent = type;
         if (blocksData[type] === null) option.disabled = true;
-        blockSelect.appendChild(option);
+        estudioBloqSelect.appendChild(option);
     });
 }
 
@@ -298,7 +94,7 @@ function readBlocks() {
 
     let lectura = [];
 
-    const tables = divEstudio.querySelectorAll("table");
+    const tables = estudioBloqCont.querySelectorAll("table");
 
     tables.forEach(table => {
 
@@ -334,11 +130,11 @@ function readBlocks() {
 
 function writeBlocks() {
 
-    divEstudio.innerHTML = "";
+    estudioBloqCont.innerHTML = "";
 
-    proyectosEasyPoint[proyectoSelect.value].forEach(seccion => {
+    proyectosEasyPoint[portadaSelProyecSelect.value].forEach(seccion => {
 
-        blockSelect.value = seccion.bloque.tipo
+        estudioBloqSelect.value = seccion.bloque.tipo
         const table = addBlock();
 
         const nombreBloque = table.querySelector('[name="nombreBloque"]');
@@ -373,26 +169,60 @@ function writeBlocks() {
 
     });
 
-    blockSelect.selectedIndex = 0;
+    estudioBloqSelect.selectedIndex = 0;
 
-    console.log(document.documentElement.outerHTML);
+    buttonsMoveBlock();
+
+}
+
+function moveBlock(tabla, direccion) {
+
+    const tablas = Array.from(estudioBloqCont.children);
+    const indice = tablas.indexOf(tabla);
+
+    const nuevoIndice = indice + direccion;
+    if (nuevoIndice < 0 || nuevoIndice >= tablas.length) return;
+
+    estudioBloqCont.removeChild(tabla);
+    if (direccion === -1) {
+        estudioBloqCont.insertBefore(tabla, tablas[nuevoIndice]);
+    } else {
+        estudioBloqCont.insertBefore(tabla, tablas[nuevoIndice].nextSibling);
+    }
+
+    buttonsMoveBlock();
+
+}
+
+function buttonsMoveBlock() {
+
+    const tablas = Array.from(estudioBloqCont.children);
+
+    // deshabilitar el botor subir de la primera y el bajar de la ultima
+    tablas.forEach((tabla, i) => {
+        const botones = tabla.querySelectorAll('button');
+        //botones[0] es el boton de eliminar la tabla
+        botones[1].disabled = i === 0;               // Botón subir
+        botones[2].disabled = i === tablas.length - 1; // Botón bajar
+    });
 
 }
 
 function addBlock() {
 
-    if (!blockSelect.value) return;
+    if (!estudioBloqSelect.value) return;
 
     const table = document.createElement("table");
-    table.name = blockSelect.value;
-    table.className = "w3-table w3-bordered w3-margin-bottom w3-margin-top ";
+    table.name = estudioBloqSelect.value;
+    table.className = "w3-table w3-bordered w3-margin-bottom";
 
     table.appendChild(addBlockHeader(table));
     table.appendChild(addBlockBody(table));
-    divEstudio.appendChild(table);
+    estudioBloqCont.appendChild(table);
 
     updateSummary();
-    blockSelect.focus();
+
+    estudioBloqSelect.focus();
 
     return table;
 
@@ -406,14 +236,29 @@ function addBlockHeader(table) {
     const headerCell = document.createElement("th");
 
     const deleteBtn = document.createElement("button");
-    deleteBtn.innerHTML = "<b>-</b>";
-    deleteBtn.className = "w3-button w3-red botonTxiki";
+    deleteBtn.innerHTML = '<img src="./images/papelera.svg" alt="Salir" width="15" height="15">';
+    deleteBtn.className = "w3-button w3-red w3-margin-right";
     deleteBtn.addEventListener("click", () => {
         table.remove();
+        buttonsMoveBlock();
         updateSummary();
     });
 
-    const nameInput = inputNombre(blockSelect.value);
+    const subirBtn = document.createElement('button');
+    subirBtn.className = "w3-button w3-pale-green w3-margin-left";
+    subirBtn.textContent = '▲';
+    subirBtn.addEventListener('click', () => {
+        moveBlock(table, -1)
+    });
+
+    const bajarBtn = document.createElement('button');
+    bajarBtn.className = "w3-button w3-pale-red w3-margin-right";
+    bajarBtn.textContent = '▼';
+    bajarBtn.addEventListener('click', () => {
+        moveBlock(table, 1)
+    });
+
+    const nameInput = inputNombre(estudioBloqSelect.value);
     nameInput.classList.add("nombreBloque");
     nameInput.name = "nombreBloque";
 
@@ -431,6 +276,8 @@ function addBlockHeader(table) {
     headerCell.appendChild(deleteBtn);
     headerCell.appendChild(nameInput);
     headerCell.appendChild(numberInput);
+    headerCell.appendChild(subirBtn);
+    headerCell.appendChild(bajarBtn);
     headerRow.appendChild(headerCell);
 
     signalTypes.forEach(sig => {
@@ -447,7 +294,7 @@ function addBlockHeader(table) {
 function addBlockBody(table) {
 
     const tbody = document.createElement("tbody");
-    const elements = blocksData[blockSelect.value].Seniales;
+    const elements = blocksData[estudioBloqSelect.value].Seniales;
 
     for (const [name, value] of Object.entries(elements)) {
 
@@ -465,6 +312,7 @@ function addBlockBody(table) {
 
         const nameInput = inputNombre(name);
         nameInput.name = "nombreSenial";
+        nameInput.placeholder = name;
 
         const numberInput = inputNumero();
         numberInput.name = "numeroSenial";
@@ -485,7 +333,7 @@ function addBlockBody(table) {
             // Crear select si el valor es un subobjeto
             select = document.createElement("select");
             select.name = "opcionSenial";
-            select.className = "w3-select optSel";
+            select.className = "w3-select";
 
             for (const [label, val] of Object.entries(value)) {
                 const option = document.createElement("option");
@@ -521,25 +369,40 @@ function addBlockBody(table) {
             const cell = document.createElement("td");
             cell.classList.add(sig);
             cell.classList.add("celda-numero-seniales");
-            const count = signalCounts[sig] === 0 ? "-" : signalCounts[sig];
-            cell.textContent = checkbox.checked
-                ? (count === "-" ? "-" : count)
-                : "-";
+            // const count = signalCounts[sig] === 0 ? "-" : signalCounts[sig];
+            // cell.textContent = checkbox.checked
+            //     ? (count === "-" ? "-" : count)
+            //     : "-";
             row.appendChild(cell);
         });
 
         checkbox.addEventListener("change", () => {
+            const checked = checkbox.checked;
+
+            // Ocultar o mostrar inputs tipo number
+            row.querySelectorAll('input[type="number"]').forEach(input => {
+                input.classList.toggle("w3-hide", !checked);
+            });
+
+            // Ocultar o mostrar selects
+            row.querySelectorAll("select").forEach(select => {
+                select.classList.toggle("w3-hide", !checked);
+            });
+
+            // Actualizar celdas de tipos de señal
             row.querySelectorAll("td").forEach(cell => {
                 signalTypes.forEach(sig => {
                     if (cell.classList.contains(sig)) {
                         const count = signalCounts[sig] === 0 ? "-" : signalCounts[sig];
-                        cell.textContent = checkbox.checked
+                        cell.textContent = checked
                             ? (count === "-" ? "-" : count * multiplierInput.value * numberInput.value)
                             : "-";
                     }
                 });
             });
         });
+
+        checkbox.dispatchEvent(new Event('change', { bubbles: true }));
 
         tbody.appendChild(row);
     }
@@ -572,7 +435,7 @@ function countSignals(code) {
 
 function updateSummary() {
 
-    const sumTableBodyRow = divSummario.querySelector("table tbody tr");
+    const sumTableBodyRow = estudioSumarioCont.querySelector("table tbody tr");
     sumTableBodyRow.innerHTML = "";
 
     const totalGlobal = {};
@@ -580,7 +443,7 @@ function updateSummary() {
         totalGlobal[sig] = 0;
     });
 
-    const tables = divEstudio.querySelectorAll("table");
+    const tables = estudioBloqCont.querySelectorAll("table");
     tables.forEach(table => {
 
         const rows = table.querySelectorAll("tbody tr");
@@ -656,11 +519,9 @@ function totalBody() {
 
 function inputNombre(texto) {
     const nameInput = document.createElement("input");
-    nameInput.className = "w3-input noborder nobackground";
+    nameInput.className = "w3-input w3-margin-right nobackground inputNombre";
     nameInput.value = texto;
     nameInput.style.display = "inline-block";
-    nameInput.style.width = "450px";
-    nameInput.style.marginLeft = "8px";
     return nameInput;
 }
 
@@ -670,10 +531,8 @@ function inputNumero() {
     numberInput.value = 1;
     numberInput.min = 1; // evita números negativos o cero si no son deseados
     numberInput.step = 1; // solo números enteros
-    numberInput.className = "noborder nobackground";
+    numberInput.className = "w3-input w3-margin-right nobackground";
     numberInput.style.display = "inline-block";
-    numberInput.style.width = "60px";
-    numberInput.style.marginLeft = "8px";
     numberInput.addEventListener("input", () => {
         numberInput.value = numberInput.value.replace(/[^0-9]/g, '');
     });
@@ -681,183 +540,3 @@ function inputNumero() {
     return numberInput;
 }
 
-function guardaProyecto() {
-
-    let sobreescribir = false;
-
-    // leemos el nombre del proyecto en la casilla que el usuario puede modificar
-    const nuevoNombreProyecto = nombreProyecto.value.trim();
-
-    if (!nuevoNombreProyecto) {
-        alert("El nombre del proyecto no puede estar vacio.\n\n");
-        return;
-    }
-
-    // Si dicho nombre ya existe y no es el nombre del proyecto que tenemos abierto (proyectoSelect.value) preguntamos al usuario si desea continuar.
-    if (nuevoNombreProyecto !== proyectoSelect.value && proyectosEasyPoint.hasOwnProperty(nuevoNombreProyecto)) {
-        if (confirm("Ya existe un proyecto con ese nombre.\n\n¿Desea sobreescribirlo?\n")) {
-            // si = activamos flag sobreescribir
-            sobreescribir = true;
-        } else {
-            // no = abortar guardado
-            return;
-        }
-    }
-
-
-    // si desea sobreescribir 
-    if (sobreescribir) {
-
-        // directamente leemos los bloques en la propiedad existente
-        proyectosEasyPoint[nuevoNombreProyecto] = readBlocks();
-        // cambiamos el valor seleccionado en proyectoselec al nuevo nombre donde hemos sobreescrito
-        proyectoSelect.value = nuevoNombreProyecto;
-
-        // asi no se ha modificado el proyecto que hemos abierto originalmente y hemos podidohacer copia de un proyecto en otro
-
-
-        // si no desea sobreescribir 
-    } else {
-
-        // leemos los bloques en el proyecto abierto
-        proyectosEasyPoint[proyectoSelect.value] = readBlocks();
-
-        // verificamos si el nombre de proyecto ha cambiado por si el usuario queria renombrarlo
-        if (nuevoNombreProyecto !== proyectoSelect.value) {
-
-            // si ha cambiado copiamos la clave a una nueva clave con el nuevo nombre 
-            proyectosEasyPoint[nuevoNombreProyecto] = proyectosEasyPoint[proyectoSelect.value];
-
-            // y borramos la antigua clave.
-            delete proyectosEasyPoint[proyectoSelect.value];
-
-            // actualizamos opciones de proyectoselec usando la funcion
-            populateProyectSelect();
-
-            // y dejamos seleccionado el nuevo nombre
-            proyectoSelect.value = nuevoNombreProyecto;
-
-        }
-    }
-
-
-    localStorage.setItem("proyectosEasyPoint", JSON.stringify(proyectosEasyPoint));
-    guardado = true;
-    guardadoOK();
-}
-
-function cerrarProyecto() {
-    let seguir = guardado
-        ? true
-        : confirm("Hay cambios no guardados que se perderán.\n\n¿Desea continuar?\n");
-    if (seguir) {
-        // poner pantalla principal en modo inicial (presionamos boton abrir que deberia estar en modo "cancelar")
-        abrirBtn.dispatchEvent(new Event('click', { bubbles: true }));
-        portada.style.display = "block";
-        aplicacion.style.display = "none";
-        abrirBtn.focus();
-    }
-}
-
-function guardadoOK() {
-    const notificacion = document.createElement('div');
-    notificacion.id = 'notificacion';
-    notificacion.className = 'w3-center w3-button w3-green w3-round-large fadeinout notificacion-fija';
-    notificacion.innerHTML = "<h3>Guardado</h3>";
-    aplicacion.appendChild(notificacion);
-    setTimeout(() => {
-        notificacion.remove();
-    }, 2000);
-}
-
-function crearPDF() {
-
-    facilityName = proyectoSelect.value;
-    headerText = proyectoSelect.value;
-
-    const textosColumnas = ["", "", ...signalTypes];
-
-    nombresColumnas = [];
-    textosColumnas.forEach(texto => {
-        nombresColumnas.push({ text: texto, fillColor: colorCabeceraTablasPDF });
-    });
-
-    let extraPages = [{ pageBreak: 'before', text: null }];
-
-    const tables = divEstudio.querySelectorAll("table");
-
-    tables.forEach(table => {
-
-        let tablaSeniales = JSON.parse(JSON.stringify(tablaSig()));
-        tablaSeniales.layout = (tablaSig()).layout;
-
-        const bodyRows = table.querySelectorAll("tbody tr");
-
-        bodyRows.forEach(row => {
-
-            const checkbox = row.querySelector('input[type="checkbox"]');
-            if (!checkbox || !checkbox.checked) return;
-
-            const numeroSenial = row.querySelector('[name="numeroSenial"]')?.value || "";
-            const nombreSenial = row.querySelector('[name="nombreSenial"]')?.value || "";
-            const opcionSenial = row.querySelector('[name="opcionSenial"]');
-
-            const opcionTexto = opcionSenial?.options[opcionSenial.selectedIndex]?.text || "";
-
-            const textoCeldaNombre = opcionTexto
-                ? `${nombreSenial} ( ${opcionTexto} )`
-                : nombreSenial;
-
-            const celdaNombre = {
-                text: textoCeldaNombre,
-                alignment: 'left',
-            }
-
-            let numeroSeñales = [];
-            signalTypes.forEach(sig => {
-                const celdaSenial = row.querySelector(`.${sig}`);
-                numeroSeñales.push(celdaSenial?.textContent || "");
-            });
-
-            tablaSeniales.table.body.push([numeroSenial, celdaNombre, ...numeroSeñales]);
-
-        });
-
-        const nombreBloque = table.querySelector('[name="nombreBloque"]')?.value || "";
-        const cantidadBloque = table.querySelector('[name="cantidadBloque"]')?.value || "";
-
-        let extPagElem = JSON.parse(JSON.stringify(extraPagesElem()));
-        if(cantidadBloque > 1) {
-             extPagElem.stack[0].table.body[0][0].text = nombreBloque + " x" + cantidadBloque;
-        } else {
-            extPagElem.stack[0].table.body[0][0].text = nombreBloque;
-        }
-        extPagElem.stack.push(tablaSeniales);
-        extraPages.push(extPagElem);
-
-    });
-
-    const totalRow = divSummario.querySelector("table tbody tr");
-
-    // let tablaTotales = JSON.parse(JSON.stringify(tablaSig()));
-    let tablaTotales = JSON.parse(JSON.stringify(tablaSig()));
-    tablaTotales.layout = (tablaSig()).layout;
-
-    let numeroTotalSeñales = [];
-    signalTypes.forEach(sig => {
-        const celdaSenial = totalRow.querySelector(`.${sig}`);
-        numeroTotalSeñales.push(celdaSenial?.textContent || "");
-    });
-
-    tablaTotales.table.body.push(["", "", ...numeroTotalSeñales]);
-
-    let extPagElemTotal = JSON.parse(JSON.stringify(extraPagesElem()));
-    extPagElemTotal.stack[0].table.body[0][0].text = "TOTAL";
-    extPagElemTotal.stack.push(tablaTotales);
-    extraPages.push(extPagElemTotal);
-
-    let docDefinition = docDef();
-    docDefinition.content = docDefinition.content.concat(extraPages);
-    pdfMake.createPdf(docDefinition).download(proyectoSelect.value + ' - Listado de Puntos.pdf');
-
-}
