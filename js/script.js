@@ -23,6 +23,7 @@ const estudioBloqCont = document.getElementById("estudioBloqCont");
 const estudioBloqSelect = document.getElementById("estudioBloqSelect");
 const estudioSumarioCont = document.getElementById("estudioSumarioCont");
 
+const overlay = document.getElementById("overlay");
 const customPop = document.getElementById("customPop");
 const popLabelTR = document.getElementById("popLabelTR");
 const popInputTR = document.getElementById("popInputTR");
@@ -231,10 +232,10 @@ function writeBlocks() {
         addCustom.classList = "w3-button w3-green addBtn";
         addCustom.addEventListener('click', (e) => {
 
-            customPop.style.display = "block";
+            overlay.style.display = "block";
+            customPop.bodyOrigen = tBody;
             const divWidth = customPop.offsetWidth;
             const divHeight = customPop.offsetHeight;
-            console.log(divWidth, divHeight);
 
             const top = e.clientY - divHeight / 2;
             let left = e.clientX - divWidth / 2;
@@ -245,6 +246,7 @@ function writeBlocks() {
             customPop.style.left = left + "px";
 
         });
+        
     });
 
     estudioBloqSelect.selectedIndex = 0;

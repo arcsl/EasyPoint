@@ -127,18 +127,24 @@
 	</div>
 
 	<!-- Ventana emergente para añadir lineas con señales custom -->
-	<div id="customPop" class="w3-card" style="display:none;">
-		<h3 class="w3-center">Definir señales</h3>
-		<table class="w3-table w3-margin-bottom">
-			<tbody>
-				<tr id ="popLabelTR"></tr>
-				<tr id ="popInputTR"></tr>
-			</tbody>
-		</table>
+	<div id="overlay">
+		<div class="w3-container" id="customPop" class="w3-card">
+			
+			<div class="w3-padding">
+				<input id="nombreNuevaSenial" placeholder="Nombre del nuevo elemento" class="w3-input w3-center" />
+			</div>
 
-		<div class="w3-center">
-			<button id="popAceptar" class="w3-button w3-green w3-margin-right">Aceptar</button>
-			<button id="popCancel" class="w3-button w3-red w3-margin-left">Cancelar</button>
+			<table class="w3-table w3-margin-bottom">
+				<tbody>
+					<tr id="popLabelTR"></tr>
+					<tr id="popInputTR"></tr>
+				</tbody>
+			</table>
+
+			<div class="w3-center">
+				<button id="popAceptar" class="w3-button w3-green w3-margin">Aceptar</button>
+				<button id="popCancel" class="w3-button w3-red w3-margin">Cancelar</button>
+			</div>
 		</div>
 	</div>
 

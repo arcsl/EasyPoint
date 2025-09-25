@@ -389,8 +389,8 @@ function escuchadores() {
         addBlock();
         buttonsMoveBlock();
     });
-    // ---------- ESTUDIO INPUT/SELECT ----------
 
+    // ---------- ESTUDIO INPUT/SELECT ----------
     estudioNombProyecInput.addEventListener("input", (e) => {
 
         const estaVacio = estudioNombProyecInput.value.trim() === "";
@@ -430,6 +430,18 @@ function escuchadores() {
             guardado = false;
         }
     });
+
+    // ---------- BOTONES POPUP SEÑALES ----------
+    popAceptar.addEventListener("click", (event) => {
+        overlay.style.display = "none";
+    });
+    popCancel.addEventListener("click", (event) => {
+        overlay.style.display = "none";
+    });
+    overlay.addEventListener('click', () => {
+        overlay.style.display = "none";
+    });
+
 
 
 

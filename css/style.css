@@ -10,6 +10,10 @@ body {
     -ms-user-select: none;
 }
 
+body.no-scroll {
+    overflow: hidden;
+}
+
 input,
 textarea {
     user-select: text;
@@ -172,26 +176,30 @@ table tbody tr:last-child {
 }
 
 /* botones de la primera celda */
-#estudio tr > :first-child button {
+#estudio tr> :first-child button {
     width: 30px;
     height: 30px;
     padding: 0;
 }
 
-#estudio tbody> tr> :first-child button {
+#estudio tbody>tr> :first-child button {
     width: 15px;
     height: 15px;
     margin-left: 5px;
     margin-right: 20px;
-    padding: 0;           /* para que el padding no agrande el botón */
-    line-height: 15px;    /* centra el contenido verticalmente si lo necesitas */
-    font-size: 12px !important;         /* opcional, para que no influya el texto */
+    padding: 0;
+    /* para que el padding no agrande el botón */
+    line-height: 15px;
+    /* centra el contenido verticalmente si lo necesitas */
+    font-size: 12px !important;
+    /* opcional, para que no influya el texto */
     font-weight: bold;
 }
 
-#estudio tbody> tr> :first-child button.addBtn {
+#estudio tbody>tr> :first-child button.addBtn {
     padding-right: 1px;
-    line-height: 12px;    /* centra el contenido verticalmente si lo necesitas */
+    line-height: 12px;
+    /* centra el contenido verticalmente si lo necesitas */
 }
 
 /* checkbox de la primera celda */
@@ -268,7 +276,8 @@ table tbody tr:last-child {
     z-index: 10000;
     background-color: white;
     border: 1px solid #ccc;
-    padding: 10px;
+    border-radius: 8px;
+    padding: 1.5rem;
 }
 
 #customPop label,
@@ -281,4 +290,25 @@ table tbody tr:last-child {
     padding: 0;
     padding-right: 20px;
     border: none !important;
+}
+
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    z-index: 9999;
+    /* display: none; */
+    align-items: center;
+    justify-content: center;
+}
+
+#customPop #nombreNuevaSenial {
+    display: inline-block;
+    width: 100%;
+    font-size: 1.5em;
 }
