@@ -23,11 +23,18 @@ const estudioBloqCont = document.getElementById("estudioBloqCont");
 const estudioBloqSelect = document.getElementById("estudioBloqSelect");
 const estudioSumarioCont = document.getElementById("estudioSumarioCont");
 
+const customPop = document.getElementById("customPop");
+const popLabelTR = document.getElementById("popLabelTR");
+const popInputTR = document.getElementById("popInputTR");
+const popAceptar = document.getElementById("popAceptar");
+const popCancel = document.getElementById("popCancel");
+
 
 /* ------------------------- VARIABLES GLOBALES ------------------------- */
 let checkboxChangeScheduled = false;
 let proyectosEasyPoint = JSON.parse(localStorage.getItem('proyectosEasyPoint')) || {};
 let guardado = true;
+
 
 /* ------------------------- GLOBALES PARA PDFMAKE ------------------------- */
 const printDate = new Date().toLocaleDateString();
@@ -43,8 +50,34 @@ if (location.hostname === "arcsl.github.io") {
     window.location.replace("https://easypoint.arcsl.com");
 }
 
-signalTypes.forEach(() => {
+signalTypes.forEach((signal) => {
+
     anchosColumnas.push(28);
+
+
+    //componer tabla de ventana popup para introducir señales custom
+
+    // --- Fila de labels ---
+    const tdLabel = document.createElement("td");
+    popLabelTR.appendChild(tdLabel);
+
+    const typeLabel = document.createElement("label");
+    tdLabel.appendChild(typeLabel);
+
+    typeLabel.className = "w3-input w3-center";
+    typeLabel.textContent = signal;
+
+
+    // --- Fila de inputs ---
+    const tdInput = document.createElement("td");
+    popInputTR.appendChild(tdInput);
+    
+    const numSeniales = inputNumero();
+    tdInput.appendChild(numSeniales);
+
+    numSeniales.value = 0;
+    numSeniales.className = "w3-input w3-center";
+
 });
 
 escuchadores();
@@ -110,6 +143,7 @@ function readBlocks() {
         const bodyRows = table.querySelectorAll("tbody tr");
 
         bodyRows.forEach(row => {
+
             const checkbox = row.querySelector('input[type="checkbox"]');
             if (!checkbox || !checkbox.checked) return;
 
@@ -117,7 +151,9 @@ function readBlocks() {
             block.seniales[tipoSenial] = {
                 nombre: row.querySelector('[name="nombreSenial"]')?.value || "",
                 cantidad: row.querySelector('[name="numeroSenial"]')?.value || "",
-                opcion: row.querySelector('[name="opcionSenial"]')?.value || "",
+                opcion: tipoSenial.substring(0, 6) === 'custom'
+                    ? row.opcion
+                    : row.querySelector('[name="opcionSenial"]')?.value || "",
             };
         });
 
@@ -134,26 +170,39 @@ function writeBlocks() {
 
     proyectosEasyPoint[portadaSelProyecSelect.value].forEach(seccion => {
 
-        estudioBloqSelect.value = seccion.bloque.tipo
-        const table = addBlock();
+        estudioBloqSelect.value = seccion.bloque.tipo;  // movemos el selecotr de añadir bloques al bloque que queremos
+        const table = addBlock();   // usamos la funcion de añadir bloque para crear un bloque del tipo seleccionado con los valores por defecto
 
+        // ajustamos el nombre del bloque segun lo que hubiese guardado en el proyecto
         const nombreBloque = table.querySelector('[name="nombreBloque"]');
-        const cantidadBloque = table.querySelector('[name="cantidadBloque"]');
-
         if (nombreBloque) nombreBloque.value = seccion.bloque.nombre;
+
+        // ajustamos la cantidad general del bloque segun lo que hubiese guardado en el proyecto
+        const cantidadBloque = table.querySelector('[name="cantidadBloque"]');
         if (cantidadBloque) cantidadBloque.value = seccion.bloque.cantidad;
 
-        const bodyRows = table.querySelectorAll("tbody tr");
+        // seleccionar el body de la tabla para añadir lineas custom
+        const tBody = table.querySelector('tbody');
+        for (const [name, value] of Object.entries(seccion.seniales)) {
+            if (name.substring(0, 6) === "custom") {
+                tBody.appendChild(addFilaBody(name, value.opcion, cantidadBloque));
+            }
+        }
 
+        // recorremos las filas del bloque
+        const bodyRows = table.querySelectorAll("tbody tr");
         bodyRows.forEach(row => {
 
+            // seleccionamos los elementos de cada fila
             const checkbox = row.querySelector('input[type="checkbox"]');
             const nombreSenial = row.querySelector('[name="nombreSenial"]');
             const numeroSenial = row.querySelector('[name="numeroSenial"]');
             const opcionSenial = row.querySelector('[name="opcionSenial"]');
 
+            // marcamos el checkbox en funcion a lo que hubiese guardado en el proyecto
             if (checkbox) checkbox.checked = seccion.seniales.hasOwnProperty(row.name);
 
+            // si el check esta marcado rellenamos el resto de valores conforme a lo que hubiese guardado en el proyecto
             if (checkbox.checked) {
                 if (nombreSenial) nombreSenial.value = seccion.seniales[row.name].nombre;
                 if (numeroSenial) numeroSenial.value = seccion.seniales[row.name].cantidad;
@@ -163,10 +212,39 @@ function writeBlocks() {
                 }
             }
 
+            // disparamos el cambio del check para el recalculo de señales
             if (checkbox) checkbox.dispatchEvent(new Event('change', { bubbles: true }));
 
         });
 
+        //añadimos una fila para insertar el boton para añadir lineas custom
+        const lastRow = document.createElement("tr");
+        tBody.appendChild(lastRow);
+
+        const lastCell = document.createElement("td");
+        lastRow.appendChild(lastCell);
+
+        const addCustom = document.createElement("button");
+        lastCell.appendChild(addCustom);
+
+        addCustom.textContent = "✚";
+        addCustom.classList = "w3-button w3-green addBtn";
+        addCustom.addEventListener('click', (e) => {
+
+            customPop.style.display = "block";
+            const divWidth = customPop.offsetWidth;
+            const divHeight = customPop.offsetHeight;
+            console.log(divWidth, divHeight);
+
+            const top = e.clientY - divHeight / 2;
+            let left = e.clientX - divWidth / 2;
+
+            if (left < 10) left = 10;
+
+            customPop.style.top = top + "px";
+            customPop.style.left = left + "px";
+
+        });
     });
 
     estudioBloqSelect.selectedIndex = 0;
@@ -293,124 +371,151 @@ function addBlockHeader(table) {
 
 function addBlockBody(table) {
 
+    // multiplicador general del bloque
+    const multipBloque = table.querySelector('[name="cantidadBloque"]');
+
     const tbody = document.createElement("tbody");
     const elements = blocksData[estudioBloqSelect.value].Seniales;
 
-    console.log(elements);
-    
-
     for (const [name, value] of Object.entries(elements)) {
-
-        // multiplicador general de la tabla
-        const multiplierInput = table.querySelector("thead input[type='number']");
-
-        const row = document.createElement("tr");
-        row.name = name;
-
-        const nameCell = document.createElement("td");
-        row.appendChild(nameCell);
-
-        const checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
-
-        const nameInput = inputNombre(name);
-        nameInput.name = "nombreSenial";
-        nameInput.placeholder = name;
-
-        const numberInput = inputNumero();
-        numberInput.name = "numeroSenial";
-
-        numberInput.addEventListener("change", () => {
-            checkbox.dispatchEvent(new Event('change', { bubbles: true }));
-        });
-
-        nameCell.appendChild(checkbox);
-        nameCell.appendChild(nameInput);
-        nameCell.appendChild(numberInput);
-
-        let code = value;
-        let select; // solo existirá si es un subobjeto
-        let signalCounts;
-
-        if (typeof value === "object" && value !== null) {
-            // Crear select si el valor es un subobjeto
-            select = document.createElement("select");
-            select.name = "opcionSenial";
-            select.className = "w3-select";
-
-            for (const [label, val] of Object.entries(value)) {
-                const option = document.createElement("option");
-                option.value = val;
-                option.textContent = label;
-                select.appendChild(option);
-            }
-
-            // Selección por defecto: primera opción cuyo valor esté en mayúsculas
-            for (const option of select.options) {
-                if (option.value === option.value.toUpperCase()) {
-                    select.value = option.value;
-                    break;
-                }
-            }
-
-            code = select.value; // usar valor seleccionado para contar señales
-
-            select.addEventListener("change", () => {
-                signalCounts = countSignals(select.value);
-                checkbox.dispatchEvent(new Event('change', { bubbles: true }));
-            });
-
-            nameCell.appendChild(select);
-        }
-
-        // verificar si la linea tiene que empezar con el check activo o no
-        checkbox.checked = code === code.toUpperCase();
-        signalCounts = countSignals(code);
-
-        // poner el numero de señales inicial
-        signalTypes.forEach(sig => {
-            const cell = document.createElement("td");
-            cell.classList.add(sig);
-            cell.classList.add("celda-numero-seniales");
-            // const count = signalCounts[sig] === 0 ? "-" : signalCounts[sig];
-            // cell.textContent = checkbox.checked
-            //     ? (count === "-" ? "-" : count)
-            //     : "-";
-            row.appendChild(cell);
-        });
-
-        checkbox.addEventListener("change", () => {
-            const checked = checkbox.checked;
-
-            // Ocultar o mostrar inputs tipo number
-            row.querySelectorAll('input[type="number"]').forEach(input => {
-                input.classList.toggle("w3-hide", !checked);
-            });
-
-            // Ocultar o mostrar selects
-            row.querySelectorAll("select").forEach(select => {
-                select.classList.toggle("w3-hide", !checked);
-            });
-
-            // Actualizar celdas de tipos de señal
-            row.querySelectorAll("td").forEach(cell => {
-                signalTypes.forEach(sig => {
-                    if (cell.classList.contains(sig)) {
-                        const count = signalCounts[sig] === 0 ? "-" : signalCounts[sig];
-                        cell.textContent = checked
-                            ? (count === "-" ? "-" : count * multiplierInput.value * numberInput.value)
-                            : "-";
-                    }
-                });
-            });
-        });
-
-        checkbox.dispatchEvent(new Event('change', { bubbles: true }));
-
-        tbody.appendChild(row);
+        tbody.appendChild(addFilaBody(name, value, multipBloque));
     }
 
     return tbody;
+}
+
+/**
+ * Crea una fila <tr> completa para la tabla de bloques
+ * @param {string} name                    Nombre de la señal
+ * @param {*} value                        Valor o subobjeto de la señal
+ * @param {HTMLInputElement} multipBloque  Input del multiplicador general del bloque
+ * @returns {HTMLTableRowElement}          Fila <tr> lista para insertar en el <tbody>
+ */
+function addFilaBody(name, value, multipBloque) {
+
+    const row = document.createElement("tr");
+    row.name = name;
+
+    const nameCell = document.createElement("td");
+    row.appendChild(nameCell);
+
+    const elimcustom = document.createElement("button");
+    elimcustom.style.display = "none";
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+
+    const nameInput = inputNombre(name);
+    nameInput.name = "nombreSenial";
+    nameInput.placeholder = name;
+
+    const numberInput = inputNumero();
+    numberInput.name = "numeroSenial";
+
+    numberInput.addEventListener("change", () => {
+        checkbox.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+
+    nameCell.appendChild(elimcustom);
+    nameCell.appendChild(checkbox);
+    nameCell.appendChild(nameInput);
+    nameCell.appendChild(numberInput);
+
+    let code = value;
+    let select;
+    let signalCounts;
+
+    if (Array.isArray(value) && value !== null) { // procesar fila custom
+
+        code = "";
+        // generar code en funcion al array de señales custom
+        for (let i = 0; i < signalTypes.length; i++) {
+            for (let j = 0; j < value[i]; j++) {
+                code += signalTypes[i];
+            }
+        }
+
+        row.opcion = value;
+        checkbox.style.display = "none";
+
+        elimcustom.textContent = "X";
+        elimcustom.className = "w3-red w3-button";
+        elimcustom.style.display = "inline-block";
+        elimcustom.addEventListener('click', () => {
+            row.remove();
+            updateSummary();
+        });
+
+    } else if (typeof value === "object" && value !== null) { // procesar linea con selector de opciones
+
+        select = document.createElement("select");
+        select.name = "opcionSenial";
+        select.className = "w3-select";
+
+        for (const [label, val] of Object.entries(value)) {
+            const option = document.createElement("option");
+            option.value = val;
+            option.textContent = label;
+            select.appendChild(option);
+        }
+
+        for (const option of select.options) {
+            if (option.value === option.value.toUpperCase()) {
+                select.value = option.value;
+                break;
+            }
+        }
+
+        code = select.value;
+
+        select.addEventListener("change", () => {
+            signalCounts = countSignals(select.value);
+            checkbox.dispatchEvent(new Event("change", { bubbles: true }));
+        });
+
+        nameCell.appendChild(select);
+
+    }
+
+    checkbox.checked = code === code.toUpperCase();
+    signalCounts = countSignals(code);
+
+    signalTypes.forEach(sig => {
+        const cell = document.createElement("td");
+        cell.classList.add(sig, "celda-numero-seniales");
+        row.appendChild(cell);
+    });
+
+    checkbox.addEventListener("change", () => {
+        const checked = checkbox.checked;
+
+        // mostrar/ocultar inputs number
+        row.querySelectorAll('input[type="number"]').forEach(input => {
+            input.classList.toggle("w3-hide", !checked);
+        });
+
+        // mostrar/ocultar selects
+        row.querySelectorAll("select").forEach(sel => {
+            sel.classList.toggle("w3-hide", !checked);
+        });
+
+        // actualizar celdas de tipos de señal
+        row.querySelectorAll("td").forEach(cell => {
+            signalTypes.forEach(sig => {
+                if (cell.classList.contains(sig)) {
+                    const count = signalCounts[sig] === 0 ? "-" : signalCounts[sig];
+                    cell.textContent = checked
+                        ? (count === "-" ? "-" : count * multipBloque.value * numberInput.value)
+                        : "-";
+                }
+            });
+        });
+    });
+
+    checkbox.dispatchEvent(new Event("change", { bubbles: true }));
+
+    return row;
+
 }
 
 function countSignals(code) {
@@ -538,8 +643,8 @@ function inputNumero() {
     numberInput.style.display = "inline-block";
     numberInput.addEventListener("input", () => {
         numberInput.value = numberInput.value.replace(/[^0-9]/g, '');
+        if (number < 0) munber = 0;
     });
 
     return numberInput;
 }
-

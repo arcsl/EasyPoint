@@ -178,6 +178,22 @@ table tbody tr:last-child {
     padding: 0;
 }
 
+#estudio tbody> tr> :first-child button {
+    width: 15px;
+    height: 15px;
+    margin-left: 5px;
+    margin-right: 20px;
+    padding: 0;           /* para que el padding no agrande el botón */
+    line-height: 15px;    /* centra el contenido verticalmente si lo necesitas */
+    font-size: 12px !important;         /* opcional, para que no influya el texto */
+    font-weight: bold;
+}
+
+#estudio tbody> tr> :first-child button.addBtn {
+    padding-right: 1px;
+    line-height: 12px;    /* centra el contenido verticalmente si lo necesitas */
+}
+
 /* checkbox de la primera celda */
 #estudio tr> :first-child input[type="checkbox"] {
     margin-left: 5px;
@@ -242,4 +258,27 @@ table tbody tr:last-child {
     animation-name: fadeinout;
     animation-duration: 1.2s;
     animation-fill-mode: forwards;
+}
+
+/* Contenedor general */
+#customPop {
+    position: absolute;
+    top: 50px;
+    left: 100px;
+    z-index: 10000;
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+
+#customPop label,
+#customPop input {
+    width: 100px;
+    height: 20px;
+}
+
+#customPop label {
+    padding: 0;
+    padding-right: 20px;
+    border: none !important;
 }

@@ -1,3 +1,10 @@
+const easyPie = {
+    text: 'Easy Point V1.2',
+    link: 'https://easypoint.arcsl.com',
+    color: 'blue',
+    decoration: 'underline'
+}
+
 function crearPDF() {
 
     facilityName = portadaSelProyecSelect.value;
@@ -168,15 +175,7 @@ function docDef() {
                     columns: [
                         { text: '', alignment: 'left', },
                         {
-                            text: [
-                                'Creado con ',
-                                {
-                                    text: 'Easy Point V1.2',
-                                    link: 'https://easypoint.arcsl.com',
-                                    color: 'blue',
-                                    decoration: 'underline'
-                                }
-                            ],
+                            text: ['Creado con: ', easyPie],
                             alignment: 'right',
                             fontSize: 8,
                             margin: [0, 0, 40, 0],
@@ -193,7 +192,7 @@ function docDef() {
                     },
                     {
                         columns: [
-                            { fontSize: 8, alignment: 'left', margin: [0, 0, 40, 0], text: 'Easy Point V1.2', },
+                            { fontSize: 8, alignment: 'left', margin: [0, 0, 40, 0], text: [easyPie], },
                             { fontSize: 8, alignment: 'center', margin: [0, 0, 0, 0], text: `${currentPage - 1} de ${pageCount - 1}`, },
                             { fontSize: 8, alignment: 'right', margin: [0, 0, 0, 0], text: printDate, },
                         ]
