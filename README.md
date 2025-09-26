@@ -13,7 +13,7 @@
 - [3. Pantalla de inicio](#3pantalla-de-inicio)
 - [4. Editor de proyecto](#4editor-de-proyecto)
   - [4.1 Gestión del proyecto](#41-gestión-del-proyecto)
-    - [4.1.1 Renombrar / Sobrescribir / Duplicar](#411-renombrar--sobrescribir--duplicar)
+    - [4.1.1 Renombrar / Sobrescribir](#411-renombrar--sobrescribir)
     - [4.1.2 Guardar proyecto](#412-guardar-proyecto)
     - [4.1.4 Generar PDF](#414-generar-pdf)
     - [4.1.5 Salir del proyecto](#415-salir-del-proyecto)
