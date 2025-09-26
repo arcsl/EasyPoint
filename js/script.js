@@ -50,39 +50,8 @@ let headerText;
 if (location.hostname === "arcsl.github.io") {
     window.location.replace("https://easypoint.arcsl.com");
 }
-
-signalTypes.forEach((signal) => {
-
-    anchosColumnas.push(28);
-
-
-    //componer tabla de ventana popup para introducir señales custom
-
-    // --- Fila de labels ---
-    const tdLabel = document.createElement("td");
-    popLabelTR.appendChild(tdLabel);
-
-    const typeLabel = document.createElement("label");
-    tdLabel.appendChild(typeLabel);
-
-    typeLabel.className = "w3-input w3-center";
-    typeLabel.textContent = signal;
-
-
-    // --- Fila de inputs ---
-    const tdInput = document.createElement("td");
-    popInputTR.appendChild(tdInput);
-    
-    const numSeniales = inputNumero();
-    tdInput.appendChild(numSeniales);
-
-    numSeniales.value = 0;
-    numSeniales.className = "w3-input w3-center";
-
-});
-
+document.title = "Easy Point";
 escuchadores();
-
 
 /* ------------------------- GENERALES ------------------------- */
 function guardadoOK() {
@@ -186,13 +155,14 @@ function writeBlocks() {
         const tBody = table.querySelector('tbody');
         for (const [name, value] of Object.entries(seccion.seniales)) {
             if (name.substring(0, 6) === "custom") {
-                tBody.appendChild(addFilaBody(name, value.opcion, cantidadBloque));
+                const customFila = addFilaBody(name, value.opcion, cantidadBloque);
+                tBody.insertBefore(customFila, tBody.lastElementChild);
             }
         }
 
         // recorremos las filas del bloque
         const bodyRows = table.querySelectorAll("tbody tr");
-        bodyRows.forEach(row => {
+        bodyRows.forEach((row, index) => {
 
             // seleccionamos los elementos de cada fila
             const checkbox = row.querySelector('input[type="checkbox"]');
@@ -200,55 +170,33 @@ function writeBlocks() {
             const numeroSenial = row.querySelector('[name="numeroSenial"]');
             const opcionSenial = row.querySelector('[name="opcionSenial"]');
 
-            // marcamos el checkbox en funcion a lo que hubiese guardado en el proyecto
-            if (checkbox) checkbox.checked = seccion.seniales.hasOwnProperty(row.name);
-
-            // si el check esta marcado rellenamos el resto de valores conforme a lo que hubiese guardado en el proyecto
-            if (checkbox.checked) {
-                if (nombreSenial) nombreSenial.value = seccion.seniales[row.name].nombre;
-                if (numeroSenial) numeroSenial.value = seccion.seniales[row.name].cantidad;
-                if (opcionSenial) {
-                    opcionSenial.value = seccion.seniales[row.name].opcion;
-                    opcionSenial.dispatchEvent(new Event('change', { bubbles: true }));
-                }
+            // si es una linea custom, asignamos el placeholder al valor que tuviera guardado
+            if (row.name?.substring(0, 6) === "custom") {
+                nombreSenial.placeholder = seccion.seniales[row.name].nombre;
             }
 
-            // disparamos el cambio del check para el recalculo de señales
-            if (checkbox) checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+            if (checkbox) {
 
+                // marcamos el checkbox en funcion a lo que hubiese guardado en el proyecto
+                checkbox.checked = seccion.seniales.hasOwnProperty(row.name);
+
+                // si el check esta marcado rellenamos el resto de valores conforme a lo que hubiese guardado en el proyecto
+                if (checkbox.checked) {
+                    if (nombreSenial) nombreSenial.value = seccion.seniales[row.name].nombre;
+                    if (numeroSenial) numeroSenial.value = seccion.seniales[row.name].cantidad;
+                    if (opcionSenial) {
+                        opcionSenial.value = seccion.seniales[row.name].opcion;
+                        opcionSenial.dispatchEvent(new Event('change', { bubbles: true }));
+                    }
+                }
+
+                // disparamos el cambio del check para el recalculo de señales
+                checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+            }
         });
-
-        //añadimos una fila para insertar el boton para añadir lineas custom
-        const lastRow = document.createElement("tr");
-        tBody.appendChild(lastRow);
-
-        const lastCell = document.createElement("td");
-        lastRow.appendChild(lastCell);
-
-        const addCustom = document.createElement("button");
-        lastCell.appendChild(addCustom);
-
-        addCustom.textContent = "✚";
-        addCustom.classList = "w3-button w3-green addBtn";
-        addCustom.addEventListener('click', (e) => {
-
-            overlay.style.display = "block";
-            customPop.bodyOrigen = tBody;
-            const divWidth = customPop.offsetWidth;
-            const divHeight = customPop.offsetHeight;
-
-            const top = e.clientY - divHeight / 2;
-            let left = e.clientX - divWidth / 2;
-
-            if (left < 10) left = 10;
-
-            customPop.style.top = top + "px";
-            customPop.style.left = left + "px";
-
-        });
-        
     });
 
+    // reiniciamos selector de bloques de proyecto
     estudioBloqSelect.selectedIndex = 0;
 
     buttonsMoveBlock();
@@ -376,14 +324,46 @@ function addBlockBody(table) {
     // multiplicador general del bloque
     const multipBloque = table.querySelector('[name="cantidadBloque"]');
 
-    const tbody = document.createElement("tbody");
+    const tBody = document.createElement("tbody");
     const elements = blocksData[estudioBloqSelect.value].Seniales;
 
     for (const [name, value] of Object.entries(elements)) {
-        tbody.appendChild(addFilaBody(name, value, multipBloque));
+        tBody.appendChild(addFilaBody(name, value, multipBloque));
     }
 
-    return tbody;
+    //añadimos una fila para insertar el boton para añadir lineas custom
+    const lastRow = document.createElement("tr");
+    tBody.appendChild(lastRow);
+
+    const lastCell = document.createElement("td");
+    lastRow.appendChild(lastCell);
+
+    const addCustom = document.createElement("button");
+    lastCell.appendChild(addCustom);
+
+    addCustom.textContent = "✚";
+    addCustom.classList = "w3-button w3-green addBtn";
+    addCustom.addEventListener('click', () => {
+
+        // Asignar el bloque desde el que se dispara
+        customPop.tablaOrigen = table;
+
+        // Vaciar todos los inputs
+        customPop.querySelectorAll('input').forEach(input => {
+            input.value = input.type === 'number'
+                ? input.value = 0
+                : input.value = '';
+        });
+
+        // mostrar centrado en pantalla
+        estudio.setAttribute('inert', ''); // bloquea todos los inputs del fondo en estudio
+        overlay.style.display = "block";
+        customPop.style.top = (window.innerHeight - customPop.offsetWidth) / 2 + "px";
+        customPop.style.left = (window.innerWidth - customPop.offsetWidth) / 2 + "px";
+
+    });
+
+    return tBody;
 }
 
 /**
@@ -408,8 +388,9 @@ function addFilaBody(name, value, multipBloque) {
     checkbox.type = "checkbox";
 
     const nameInput = inputNombre(name);
+    nameInput.type = "text";
     nameInput.name = "nombreSenial";
-    nameInput.placeholder = name;
+    if (name.substring(0, 6) !== "custom") nameInput.placeholder = name;
 
     const numberInput = inputNumero();
     numberInput.name = "numeroSenial";
@@ -429,7 +410,10 @@ function addFilaBody(name, value, multipBloque) {
 
     if (Array.isArray(value) && value !== null) { // procesar fila custom
 
-        code = "";
+        nameInput.value = "";       // no ponemos el texto "custom01" en el input
+        row.opcion = value;         // almacenamos de señales para poder guardarlo luego enel json
+        code = "";                  // vaciamos code para montar un code nuevo
+
         // generar code en funcion al array de señales custom
         for (let i = 0; i < signalTypes.length; i++) {
             for (let j = 0; j < value[i]; j++) {
@@ -437,7 +421,7 @@ function addFilaBody(name, value, multipBloque) {
             }
         }
 
-        row.opcion = value;
+        checkbox.checked = true;
         checkbox.style.display = "none";
 
         elimcustom.textContent = "X";
@@ -645,7 +629,6 @@ function inputNumero() {
     numberInput.style.display = "inline-block";
     numberInput.addEventListener("input", () => {
         numberInput.value = numberInput.value.replace(/[^0-9]/g, '');
-        if (number < 0) munber = 0;
     });
 
     return numberInput;

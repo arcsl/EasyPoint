@@ -1,5 +1,5 @@
 const easyPie = {
-    text: 'Easy Point V1.2',
+    text: 'Easy Point V1.3',
     link: 'https://easypoint.arcsl.com',
     color: 'blue',
     decoration: 'underline'

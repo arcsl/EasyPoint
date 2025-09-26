@@ -3,7 +3,35 @@ function escuchadores() {
     // ---------- GENERALES ----------
     document.addEventListener("DOMContentLoaded", () => {
 
-        document.title = "Easy Point";
+        signalTypes.forEach((signal) => {
+
+            anchosColumnas.push(28);
+
+            //componer tabla de ventana popup para introducir señales custom
+
+            // --- Fila de labels ---
+            const tdLabel = document.createElement("td");
+            popLabelTR.appendChild(tdLabel);
+
+            const typeLabel = document.createElement("label");
+            tdLabel.appendChild(typeLabel);
+
+            typeLabel.className = "w3-input w3-center";
+            typeLabel.textContent = signal;
+
+
+            // --- Fila de inputs ---
+            const tdInput = document.createElement("td");
+            popInputTR.appendChild(tdInput);
+
+            const numSeniales = inputNumero();
+            tdInput.appendChild(numSeniales);
+
+            numSeniales.value = 0;
+            numSeniales.min = 0
+            numSeniales.className = "w3-input w3-center";
+
+        });
 
         populateProyectSelect();
 
@@ -13,7 +41,7 @@ function escuchadores() {
         populateBlockSelect();
 
         const estudioCabeceraSenialesTable = document.createElement("table");
-        estudioCabeceraSenialesTable.classList = "w3-table w3-bordered w3-margin-top w3-margin-bottom";
+        estudioCabeceraSenialesTable.classList = "w3-table w3-bordered";
         estudioCabeceraSeniales.appendChild(estudioCabeceraSenialesTable);
         estudioCabeceraSenialesTable.appendChild(totalHeader());
 
@@ -23,15 +51,13 @@ function escuchadores() {
         estudioSumarioSenialesTable.appendChild(totalHeader());
         estudioSumarioSenialesTable.appendChild(totalBody());
 
-
+        // Descomentar para pruebas y cargar primer proyecto automaticamente
         // portadaAbrProyecBtn.dispatchEvent(new Event('click', { bubbles: true }));
         // portadaSelProyecAbrir.dispatchEvent(new Event('click', { bubbles: true }));
-
 
     });
 
     // ---------- BOTONES PORTADA ----------
-
     portadaNueProyecCrear.addEventListener("click", () => {
 
         // si se esta mostrando mensaje error proyecto ya existe, no hacer nada
@@ -233,7 +259,6 @@ function escuchadores() {
     });
 
     // ---------- PORTADA INPUT/SELECT ----------
-
     portadaImpProyecInput.addEventListener("change", (event) => {
 
         const file = event.target.files[0];
@@ -298,7 +323,6 @@ function escuchadores() {
             portadaNueProyecCrear.dispatchEvent(new Event('click', { bubbles: true }));
         }
     });
-
 
     // ---------- BOTONES ESTUDIO DE PUNTOS ----------
     estudioGuardarBtn.addEventListener("click", () => {
@@ -391,7 +415,7 @@ function escuchadores() {
     });
 
     // ---------- ESTUDIO INPUT/SELECT ----------
-    estudioNombProyecInput.addEventListener("input", (e) => {
+    estudioNombProyecInput.addEventListener("input", () => {
 
         const estaVacio = estudioNombProyecInput.value.trim() === "";
         const yaExiste = proyectosEasyPoint.hasOwnProperty(estudioNombProyecInput.value.trim());
@@ -431,18 +455,53 @@ function escuchadores() {
         }
     });
 
-    // ---------- BOTONES POPUP SEÑALES ----------
-    popAceptar.addEventListener("click", (event) => {
-        overlay.style.display = "none";
-    });
-    popCancel.addEventListener("click", (event) => {
-        overlay.style.display = "none";
-    });
-    overlay.addEventListener('click', () => {
-        overlay.style.display = "none";
-    });
+    // ---------- BOTONES POPUP AÑADIR ELEMENTOS ----------
+    popAceptar.addEventListener("click", () => {
+
+        const table = customPop.tablaOrigen;
+
+        const tBody = table.querySelector('tbody');
+        const cantidadBloque = table.querySelector('[name="cantidadBloque"]');
+
+        let arraySeniales = [];
+        customPop.querySelectorAll('input').forEach(input => arraySeniales.push(input.value * 1));
 
 
+        let totalseñales = 0;
+        arraySeniales.forEach(señal => totalseñales += señal);
+        let rowName;
 
+        // buscar nombre unico de fila "custom00", "custom01", ...
+        for (let i = 0; i < 101; i++) {
+            if (i===100) {
+                alert("No se pueden añadir mas elementos");
+                return;
+            }
+            rowName = "custom" + String(i).padStart(2, "0");
+            if (!Array.from(tBody.querySelectorAll('tr')).some(fila => fila.name === rowName)) break;
+        }
+
+        // Si i llegó a 100, no se encontró nombre disponible
+        if (rowName.length > 8) {
+            alert("No se pueden añadir más elementos");
+            return;
+        }
+
+        if (totalseñales > 0) {
+            //intertar antes de la ultIMAa fila, que es el boton de añadir mas filas
+            tBody.insertBefore(addFilaBody(rowName, arraySeniales, cantidadBloque), tBody.lastElementChild);
+        } else {
+            alert('Debe indicar al menos un tipo de señal');
+            return;
+        }
+        estudio.removeAttribute('inert');
+        overlay.style.display = "none";
+
+    });
+
+    popCancel.addEventListener("click", () => {
+        estudio.removeAttribute('inert');
+        overlay.style.display = "none";
+    });
 
 }

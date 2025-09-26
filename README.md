@@ -19,7 +19,8 @@
     - [4.1.5 Salir del proyecto](#415-salir-del-proyecto)
   - [4.2 Añadir bloques funcionales](#42-añadir-bloques-funcionales)
   - [4.3 Gestión general del bloque](#43-gestión-general-del-bloque)
-  - [4.4 Gestión de señales dentro del bloque](#44-gestión-de-señales-dentro-del-bloque)
+  - [4.4 Gestión de elementos dentro del bloque](#44-gestión-de-elementos-dentro-del-bloque)
+  - [4.5 Elementos personalizados](#45-elementos-personalizados)
 - [5. Acceso](#5acceso)
 - [6. Flujo pantalla de inicio (guía visual)](#6flujo-pantalla-de-inicio-guía-visual)
 - [7. Flujo para Renombrar / Sobrescribir / Duplicar](#7flujo-para-renombrar--sobrescribir--duplicar)
@@ -40,17 +41,17 @@
 
 1. En la [pantalla de inicio](#3pantalla-de-inicio), haz clic en **"Nuevo"** para crear un nuevo proyecto.
 2. Introduce el nombre del proyecto y presiona **ENTER**.
-3. Se abrirá el diálogo de selección de proyectos con el nuevo proyecto ya seleccionado. Haz clic en **"Abrir"**.
+3. Se abrirá el diálogo de selección de proyectos con el nuevo proyecto ya seleccionado. Haz clic en el boton verde con la flecha.
 4. Se mostrará el [editor de proyecto](#4editor-de-proyecto).
 5. Debajo de la cabecera, selecciona el tipo de bloque que deseas añadir (por ejemplo, **"Circuito Calefacción/Distribución"**) y haz clic en **"Añadir"**.
-6. Aparecerán todas las señales asociadas al bloque, con algunas ya seleccionadas por defecto.
-7. Puedes seleccionar o deseleccionar señales libremente, así como editar sus nombres y el del bloque.
-8. Puedes cambiar el número de instancias de una señal (por ejemplo, poner **2** en una señal de temperatura y nombrarlas como "Temperatura Impulsión y Retorno").
-9. Si aumentas el número en la fila del nombre del bloque, todas las señales se duplicarán en esa proporción. Esto es útil para crear, por ejemplo, **3 circuitos de calefacción iguales** en un solo bloque.
-10. Puedes añadir tantos bloques como necesites y modificarlos en cualquier momento.
-11. Cuando termines, puedes guardar el proyecto desde la parte superior. La información se almacenará **localmente** en tu dispositivo.
-12. Haz clic en **"PDF"** para generar y descargar un documento PDF con el contenido del proyecto, listo para incluir en la documentación técnica.
-13. El PDF generado permite **copiar y pegar texto**, facilitando su uso en editores como Word o Excel.
+6. Aparecerán todos los elementos asociados al bloque, con algunos ya seleccionadas por defecto y sus señales.
+7. Puedes seleccionar o deseleccionar elementos libremente, así como editar sus nombres y el del bloque.
+8. Puedes cambiar el número de instancias de un elemento (por ejemplo, poner **2** en un elemento temperatura y nombrarlo como "Temperatura Impulsión y Retorno").
+9. Puedes añadir elementos personalizadas y asignarle las señales que quieras si nunguno de los existentes en el bloque cuadra con lo que necesitas, tambien puedes eliminar estos elementos personalizados.
+10. Si aumentas el número al lado del nombre del bloque (en la primera fila de cada bloque), todas las señales del bloque se multiplicarán en esa proporción. Esto es útil para crear, por ejemplo, **3 circuitos de calefacción iguales** en un solo bloque.
+11. Puedes añadir tantos bloques como necesites y modificarlos en cualquier momento.
+12. Cuando termines, puedes guardar el proyecto desde la parte superior. La información se almacenará **localmente** en tu dispositivo.
+13. Haz clic en **"PDF"** para generar y descargar un documento PDF con el contenido del proyecto, listo para incluir en la documentación técnica.
 14. Al hacer clic en **"Salir"**, regresarás al selector de proyectos, donde podrás abrir o eliminar proyectos existentes.
 15. Si haces clic en la **"X"** en la parte superior, volverás a la pantalla principal para crear un nuevo proyecto.
 
@@ -90,7 +91,7 @@ Al acceder a Easy Point, se muestra una **pantalla de inicio** con tres opciones
 
 Una vez abierto un proyecto desde la pantalla de selección, se accede al editor principal.
 El editor está diseñado para agregar bloques de control, como una caldera o un conjunto de producción de ACS.
-En cada bloque se pueden definir y ajustar todas las señales que incluye dicho bloque. 
+En cada bloque se pueden definir y ajustar todos los elementos que incluye dicho bloque y añadir hasta 100 elementos personalizados por bloque.
 A continuación se detallan las opciones disponibles:
 
 ### 4.1 Gestión del proyecto
@@ -109,15 +110,15 @@ En la parte superior de la pantalla del editor, se dispone de un recuadro de tex
 - El contenido se guarda **localmente en tu navegador**, sin necesidad de conexión a internet.
 
 #### 4.1.4 Generar PDF
-- Pulsa el botón **"PDF"** para generar un documento con todos los bloques y señales del proyecto.
+- Pulsa el botón **"PDF"** para generar un documento con todos los bloques y elementos con sus señales del proyecto.
 - El documento generado:
   - Está optimizado para su uso en documentación técnica.
   - Permite **copiar y pegar texto** fácilmente en programas como Word o Excel.
 
 #### 4.1.5 Salir del proyecto
 - El botón **"Salir"** te lleva al **selector de proyectos**, donde puedes abrir o eliminar otros proyectos.
-- Si se han realizado modificaciones en los bloques o señales del proyecto, al intentar salir sin guardar aparecerá una advertencia informando que se **perderán los cambios** si se continúa.
-- Esta advertencia **no se muestra** si el único cambio ha sido editar el nombre del proyecto en el input superior (sin haber modificado el contenido del proyecto).
+- Si se han realizado modificaciones en los bloques del proyecto, al intentar salir sin guardar aparecerá una advertencia informando que se **perderán los cambios** si se continúa.
+- Esta advertencia **no se muestra** si el único cambio ha sido editar el nombre del proyecto (arriba del todo) y no se ha modificado el contenido del proyecto.
 
 ### 4.2 Añadir bloques funcionales
    - Bajo la cabecera hay un selector desplegable para elegir un tipo de bloque (por ejemplo, **"Circuito Calefacción/Distribución"**).
@@ -131,12 +132,19 @@ En la parte superior de la pantalla del editor, se dispone de un recuadro de tex
    - Un **input numérico** para indicar cuántos bloques iguales se necesitan (por ejemplo, 3 circuitos de calefacción).  
      Esto **multiplica automáticamente todas las señales** contenidas en el bloque.
 
-### 4.4 Gestión de señales dentro del bloque
-   Cada línea representa una señal y permite:
-   - Activarla o desactivarla según sea necesario. Las señales más habituales aparecen activadas por defecto al añadir un nuevo bloque.
-   - Editar el **nombre de la señal**.
-   - Usar un **input numérico** para indicar cuántas instancias específicas de esa señal se necesitan.  
-     Por ejemplo, una bomba con marcha-paro y verificación puede configurarse con 2 instancias si se trata de una **bomba gemela**, sin afectar al resto de señales del bloque.
+### 4.4 Gestión de elementos dentro del bloque
+   Cada línea representa un elemento con sus señales asociadas y permite:
+   - Activarla o desactivarla según sea necesario. Los elementos más habituales aparecen activadas por defecto al añadir un nuevo bloque.
+   - Editar el **nombre del elemento**.
+   - Usar un **input numérico** para indicar cuántas instancias específicas de ese elemento se necesitan.  
+     Por ejemplo, una bomba con marcha-paro y verificación puede configurarse con 2 instancias si se trata de una **bomba gemela**, sin afectar al resto de elementos del bloque.
+
+### 4.5 Elementos personalizados
+   Al final de cada bloque aparece una linea vacia con un pequqeño boton que añadira un elemento con señales personalizadas:
+   - Una vez presionado debes elegir el numero de señales asociadas a un elemento y darle a aceptar (o cancelar si has cambiado de opinion).
+   - Una vez creado, en vez del check para activar o desactivar el elemento aparecera un boton rojo con un aspa para poder borrar el elemento creado.
+   - Puedes asignar un nombre al elemento y modificar la cantidad que necesitas, igual que con cualquier otro elemento del bloque.
+   - Hay un maximo de 100 elementos presonalizados que se pueden añadir en cada bloque.
 
 ---
 
