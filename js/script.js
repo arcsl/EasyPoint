@@ -360,6 +360,7 @@ function addBlockBody(table) {
         overlay.style.display = "block";
         customPop.style.top = (window.innerHeight - customPop.offsetWidth) / 2 + "px";
         customPop.style.left = (window.innerWidth - customPop.offsetWidth) / 2 + "px";
+        customPop.querySelector('input').focus();
 
     });
 

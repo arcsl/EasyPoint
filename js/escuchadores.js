@@ -488,14 +488,21 @@ function escuchadores() {
         }
 
         if (totalseñales > 0) {
-            //intertar antes de la ultIMAa fila, que es el boton de añadir mas filas
-            tBody.insertBefore(addFilaBody(rowName, arraySeniales, cantidadBloque), tBody.lastElementChild);
+
+            // volver a hacer seleccionables los elementos de "estudio"
+            estudio.removeAttribute('inert');
+
+            //intertar antes de la ultima fila, que es el boton de añadir mas filas
+            const nuevaFila = addFilaBody(rowName, arraySeniales, cantidadBloque);
+            tBody.insertBefore(nuevaFila, tBody.lastElementChild);
+            nuevaFila.querySelector('input[name="nombreSenial"]').focus();
+
+            // quitar el overlay
+            overlay.style.display = "none";
         } else {
             alert('Debe indicar al menos un tipo de señal');
             return;
         }
-        estudio.removeAttribute('inert');
-        overlay.style.display = "none";
 
     });
 

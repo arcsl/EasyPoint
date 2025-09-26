@@ -16,8 +16,8 @@ const blocksData = {
 			"Temperatura": "EA",
 			"Bomba": "edsd",
 			"Control Presión": {
-				"Sonda": "ea",
 				"Presostato": "ED",
+				"Sonda": "ea",
 			},
 			"Ventilacion Forzada": "EDSD",
 			"Electroválvula de Gas": "SD",
@@ -46,8 +46,8 @@ const blocksData = {
 				"Pirostato": "ed",
 			},
 			"Control Presión": {
-				"Sonda": "ea",
 				"Presostato": "ed",
+				"Sonda": "ea",
 			},
 		},
 	},
@@ -61,8 +61,8 @@ const blocksData = {
 			"Bomba": "edsd",
 			"Válvula Calor / Frío / ACS": "ededsd",
 			"Control Presión": {
-				"Sonda": "ea",
 				"Presostato": "ed",
+				"Sonda": "ea",
 			},
 		},
 	},
@@ -86,8 +86,8 @@ const blocksData = {
 				"Todo/Nada": "edsd",
 			},
 			"Control Presión": {
-				"Sonda": "ea",
 				"Presostato": "ED",
+				"Sonda": "ea",
 			},
 		},
 	},
@@ -99,7 +99,7 @@ const blocksData = {
 				"Temperatura": "ea",
 				"Temp + Hum": "eaea",
 			},
-			"Presion Diferencial": "ea",
+			"Presión Diferencial": "ea",
 			"Bomba": {
 				"Normal": "EDSD",
 				"Modulante": "edsasd",
@@ -138,7 +138,11 @@ const blocksData = {
 			"Demanda a terceros": {
 				"Todo/Nada": "sd",
 				"0..10 Vcc": "sa",
-			}
+			},
+			"Control Presión": {
+				"Presostato": "ed",
+				"Sonda": "ea",
+			},			
 		},
 	},
 	"Climatizador": {
