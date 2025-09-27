@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Generar .doc desde HTML</title>
+</head>
+<body>
+  <button onclick="descargarDoc()">Descargar DOC</button>
+
+  <script>
+    function descargarDoc() {
+      const contenido = `
+        <html xmlns:o='urn:schemas-microsoft-com:office:office'
+              xmlns:w='urn:schemas-microsoft-com:office:word'
+              xmlns='http://www.w3.org/TR/REC-html40'>
+        <head><meta charset="utf-8"><title>Documento</title></head>
+        <body>
+          <h1 style="color: navy; font-family: Arial;">Informe de ejemplo</h1>
+          <p style="font-size: 14pt;">Este es un documento de texto generado desde HTML.</p>
+          <table border="1" cellspacing="0" cellpadding="5" style="border-collapse: collapse; width: 100%;">
+            <tr style="background-color: #f0f0f0;">
+              <th style="text-align: left;">Nombre</th>
+              <th style="text-align: left;">Valor</th>
+            </tr>
+            <tr>
+              <td>Temperatura</td>
+              <td>22°C</td>
+            </tr>
+          </table>
+        </body>
+        </html>
+      `;
+
+      const blob = new Blob(['\ufeff', contenido], { type: 'application/msword' });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "documento.doc";
+      link.click();
+    }
+  </script>
+</body>
+</html>

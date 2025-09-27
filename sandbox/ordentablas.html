@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Reordenar Tablas</title>
+  <style>
+    table {
+      border: 1px solid black;
+      margin: 10px 0;
+      width: 100%;
+    }
+    button {
+      margin: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="contenedor-tablas">
+  <!-- Se insertarán tablas aquí -->
+</div>
+
+<script>
+  function crearTabla(id) {
+    const tabla = document.createElement('table');
+    tabla.dataset.id = id;
+
+    const filaBotones = tabla.insertRow();
+    const celdaBotones = filaBotones.insertCell();
+    celdaBotones.colSpan = 2;
+
+    const btnSubir = document.createElement('button');
+    btnSubir.textContent = '↑ Subir';
+    btnSubir.onclick = () => moverTabla(tabla, -1);
+
+    const btnBajar = document.createElement('button');
+    btnBajar.textContent = '↓ Bajar';
+    btnBajar.onclick = () => moverTabla(tabla, 1);
+
+    celdaBotones.append(btnSubir, btnBajar);
+
+    const filaContenido = tabla.insertRow();
+    const celda1 = filaContenido.insertCell();
+    const celda2 = filaContenido.insertCell();
+    celda1.textContent = `Contenido de la tabla ${id}`;
+    celda2.textContent = `Más contenido ${id}`;
+
+    return tabla;
+  }
+
+  function moverTabla(tabla, direccion) {
+    const contenedor = document.getElementById('contenedor-tablas');
+    const tablas = Array.from(contenedor.children);
+    const indice = tablas.indexOf(tabla);
+
+    const nuevoIndice = indice + direccion;
+    if (nuevoIndice < 0 || nuevoIndice >= tablas.length) return;
+
+    contenedor.removeChild(tabla);
+    if (direccion === -1) {
+      contenedor.insertBefore(tabla, tablas[nuevoIndice]);
+    } else {
+      contenedor.insertBefore(tabla, tablas[nuevoIndice].nextSibling);
+    }
+
+    actualizarBotones();
+  }
+
+  function actualizarBotones() {
+    const contenedor = document.getElementById('contenedor-tablas');
+    const tablas = Array.from(contenedor.children);
+
+    tablas.forEach((tabla, i) => {
+      const botones = tabla.querySelectorAll('button');
+      botones[0].disabled = i === 0;               // Botón subir
+      botones[1].disabled = i === tablas.length - 1; // Botón bajar
+    });
+  }
+
+  // Crear tablas
+  const contenedor = document.getElementById('contenedor-tablas');
+  for (let i = 1; i <= 4; i++) {
+    contenedor.appendChild(crearTabla(i));
+  }
+  actualizarBotones();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,21 @@
+[
+  {
+    "bloque": {
+      "tipo": "Condiciones Exteriores",
+      "nombre": "Condiciones Exteriores",
+      "cantidad": "1"
+    },
+    "seniales": {
+      "Sonda exterior": {
+        "nombre": "Sonda exterior",
+        "cantidad": "1",
+        "opcion": "EA"
+      },
+      "Sonda retorno": {
+        "nombre": "Sonda retorno",
+        "cantidad": "1",
+        "opcion": "sd"
+      }	  
+    }
+  }
+]
