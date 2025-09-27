@@ -37,13 +37,7 @@ let proyectosEasyPoint = JSON.parse(localStorage.getItem('proyectosEasyPoint')) 
 let guardado = true;
 
 
-/* ------------------------- GLOBALES PARA PDFMAKE ------------------------- */
-const printDate = new Date().toLocaleDateString();
-const colorCabeceraTablasPDF = "#ddfaff"
-let anchosColumnas = [28, '*'];
-let nombresColumnas = [];
-let facilityName;
-let headerText;
+
 
 
 /* ------------------------- EJECUCIONES INICIALES ------------------------- */
@@ -52,6 +46,7 @@ if (location.hostname === "arcsl.github.io") {
 }
 document.title = "Easy Point";
 escuchadores();
+
 
 /* ------------------------- GENERALES ------------------------- */
 function guardadoOK() {
@@ -65,7 +60,7 @@ function guardadoOK() {
     }, 2000);
 }
 
-/* ------------------------- PORTADA ------------------------- */
+/* ------------------------- POBLADORES ------------------------- */
 function populateProyectSelect() {
 
     // Asegurarse de que existe el objeto
@@ -77,12 +72,14 @@ function populateProyectSelect() {
             option.value = clave;
             option.textContent = clave;
             portadaSelProyecSelect.appendChild(option);
-        });
+        });      
     }
+
+    // Deshabilitar boton abrir si no hay proyectos
+    portadaAbrProyecBtn.disabled = portadaSelProyecSelect.options.length === 0;
 
 }
 
-/* ------------------------- ESTUDIO ------------------------- */
 function populateBlockSelect() {
     Object.keys(blocksData).forEach(type => {
         const option = document.createElement("option");
@@ -93,6 +90,53 @@ function populateBlockSelect() {
     });
 }
 
+function populateCustomPop() {
+
+    //componer tabla de ventana popup para introducir señales custom
+    signalTypes.forEach((signal) => {
+
+        // --- Fila de labels ---
+        const tdLabel = document.createElement("td");
+        popLabelTR.appendChild(tdLabel);
+
+        const typeLabel = document.createElement("label");
+        tdLabel.appendChild(typeLabel);
+
+        typeLabel.className = "w3-input w3-center";
+        typeLabel.textContent = signal;
+
+        // --- Fila de inputs ---
+        const tdInput = document.createElement("td");
+        popInputTR.appendChild(tdInput);
+
+        const numSeniales = inputNumero();
+        tdInput.appendChild(numSeniales);
+
+        numSeniales.value = 0;
+        numSeniales.min = 0
+        numSeniales.className = "w3-input w3-center";
+
+    });
+
+}
+
+function populateCabeceraYPie() {
+
+    // poblar cabecera de señales en estudio
+    const estudioCabeceraSenialesTable = document.createElement("table");
+    estudioCabeceraSenialesTable.classList = "w3-table w3-bordered";
+    estudioCabeceraSeniales.appendChild(estudioCabeceraSenialesTable);
+    estudioCabeceraSenialesTable.appendChild(totalHeader());
+
+    // poblar pie con sumatorio de señales en estudio
+    const estudioSumarioSenialesTable = document.createElement("table");
+    estudioSumarioSenialesTable.classList = "w3-table w3-bordered w3-pale-green w3-margin-top w3-margin-bottom";
+    estudioSumarioCont.appendChild(estudioSumarioSenialesTable);
+    estudioSumarioSenialesTable.appendChild(totalHeader());
+    estudioSumarioSenialesTable.appendChild(totalBody());
+}
+
+/* ------------------------- ESTUDIO ------------------------- */
 function readBlocks() {
 
     let lectura = [];

@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 const signalTypes = ["EA", "ED", "SA", "SD"];
 
 // En el array estan las diferentes opciones de dibujar la señal en el esquema
@@ -81,16 +83,17 @@ const elem = {
     Demanda: (Cantidad) => ({ Cantidad, Opciones: { "0..10Vcc": opt.SimpleSA(), "Todo/Nada": opt.SimpleSD(), }, }),
 
 }
-const blocksData = {
-    "Condiciones Exteriores": () => ({
+
+const blocksData = () => ({
+    "Condiciones Exteriores": {
         "Nombre": "",
         "Cantidad": 1,
         "Seniales": {
             "Exterior": elem.SensorAire(1),
         },
-    }),
+    },
     " ----- Producción -----": null,
-    "Gestor de Cascada de Producción": () => ({
+    "Gestor de Cascada de Producción": {
         "Nombre": "",
         "Cantidad": 1,
         "Seniales": {
@@ -102,8 +105,8 @@ const blocksData = {
             "Válvula Calor / Frío": elem.ValvulaToNa(0),
             "Control Presión": elem.SondaTermos(1),
         },
-    }),
-    "Caldera": () => ({
+    },
+    "Caldera": {
         "Nombre": "",
         "Cantidad": 1,
         "Seniales": {
@@ -116,8 +119,8 @@ const blocksData = {
             "Control Humos": elem.SondaTermos(0),
             "Control Presión": elem.SensorPres(0),
         },
-    }),
-    "Aerotermia / Geotermia": () => ({
+    },
+    "Aerotermia / Geotermia": {
         "Nombre": "",
         "Cantidad": 1,
         "Seniales": {
@@ -129,8 +132,8 @@ const blocksData = {
             "Válvula Calor / Frío / ACS": elem.ValvulaToNa(0),
             "Control Presión": elem.SensorPres(0),
         },
-    }),
-    "Solar": () => ({
+    },
+    "Solar": {
         "Nombre": "",
         "Cantidad": 1,
         "Seniales": {
@@ -146,9 +149,9 @@ const blocksData = {
             "Válvula Secundario": elem.ValvTNProp(0),
             "Control Presión": elem.SensorPres(0),
         },
-    }),
+    },
     " ----- Consumo -----": null,
-    "Circuito Calefacción/Distribución": () => ({
+    "Circuito Calefacción/Distribución": {
         "Nombre": "",
         "Cantidad": 1,
         "Seniales": {
@@ -161,8 +164,8 @@ const blocksData = {
             "Válvula Calor / Frío": elem.ValvulaToNa(0),
             "Demanda a terceros": elem.Demanda(0),
         },
-    }),
-    "ACS": () => ({
+    },
+    "ACS": {
         "Nombre": "",
         "Cantidad": 1,
         "Seniales": {
@@ -177,8 +180,8 @@ const blocksData = {
             "Bypass Válvula Consumidores": elem.ValvulaToNa(0),
             "Demanda a terceros": elem.Demanda(0),
         },
-    }),
-    "Climatizador": () => ({
+    },
+    "Climatizador": {
         "Nombre": "",
         "Cantidad": 1,
         "Seniales": {
@@ -198,8 +201,8 @@ const blocksData = {
             "Cambio de regimen externo": elem.SimpleED(0),
             "Demanda a terceros": elem.Demanda(0),
         },
-    }),
-    "Fan Coil": () => ({
+    },
+    "Fan Coil": {
         "Nombre": "",
         "Cantidad": 1,
         "Seniales": {
@@ -209,16 +212,18 @@ const blocksData = {
             "Presostato filtro sucio": elem.SimpleED(0),
             "Ventilador": elem.MotorFC(1),
         },
-    }),
-}
+    },
+});
 
-// console.log(JSON.stringify(blocksData, null, 4));
-// console.log(JSON.stringify(blocksData["Circuito Calefacción/Distribución"](), null, 4));
-// console.log(JSON.stringify(blocksData["Gestor de Cascada de Producción"](), null, 4));
-// console.log(JSON.stringify(blocksData["Aerotermia / Geotermia"](), null, 4));
-// console.log(JSON.stringify(blocksData["Condiciones Exteriores"](), null, 4));
-// console.log(JSON.stringify(blocksData["Climatizador"](), null, 4));
-// console.log(JSON.stringify(blocksData["Fan Coil"](), null, 4));
-// console.log(JSON.stringify(blocksData["Caldera"](), null, 4));
-// console.log(JSON.stringify(blocksData["Solar"](), null, 4));
-// console.log(JSON.stringify(blocksData["ACS"](), null, 4));
+// fs.writeFileSync("proyFull.json", JSON.stringify(blocksData(), null, 4));
+
+// console.log(JSON.stringify(blocksData(), null, 4));
+// console.log(JSON.stringify(blocksData()["Circuito Calefacción/Distribución"], null, 4));
+// console.log(JSON.stringify(blocksData()["Gestor de Cascada de Producción"], null, 4));
+// console.log(JSON.stringify(blocksData()["Aerotermia / Geotermia"], null, 4));
+// console.log(JSON.stringify(blocksData()["Condiciones Exteriores"], null, 4));
+// console.log(JSON.stringify(blocksData()["Climatizador"], null, 4));
+// console.log(JSON.stringify(blocksData()["Fan Coil"], null, 4));
+// console.log(JSON.stringify(blocksData()["Caldera"], null, 4));
+// console.log(JSON.stringify(blocksData()["Solar"], null, 4));
+// console.log(JSON.stringify(blocksData()["ACS"], null, 4));

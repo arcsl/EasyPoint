@@ -1,3 +1,10 @@
+/* ------------------------- GLOBALES ------------------------- */
+const printDate = new Date().toLocaleDateString();
+const colorCabeceraTablasPDF = "#ddfaff"
+const anchosColumnas = [28, '*', ...Array(signalTypes.length).fill(28)];
+let nombresColumnas = [];
+let facilityName;
+let headerText;
 const easyPie = {
     text: 'Easy Point V1.3',
     link: 'https://easypoint.arcsl.com',
@@ -5,6 +12,8 @@ const easyPie = {
     decoration: 'underline'
 }
 
+
+/* ------------------------- FUNCIONES ------------------------- */
 function crearPDF() {
 
     facilityName = portadaSelProyecSelect.value;

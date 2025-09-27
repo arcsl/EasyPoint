@@ -3,53 +3,9 @@ function escuchadores() {
     // ---------- GENERALES ----------
     document.addEventListener("DOMContentLoaded", () => {
 
-        signalTypes.forEach((signal) => {
-
-            anchosColumnas.push(28);
-
-            //componer tabla de ventana popup para introducir señales custom
-
-            // --- Fila de labels ---
-            const tdLabel = document.createElement("td");
-            popLabelTR.appendChild(tdLabel);
-
-            const typeLabel = document.createElement("label");
-            tdLabel.appendChild(typeLabel);
-
-            typeLabel.className = "w3-input w3-center";
-            typeLabel.textContent = signal;
-
-
-            // --- Fila de inputs ---
-            const tdInput = document.createElement("td");
-            popInputTR.appendChild(tdInput);
-
-            const numSeniales = inputNumero();
-            tdInput.appendChild(numSeniales);
-
-            numSeniales.value = 0;
-            numSeniales.min = 0
-            numSeniales.className = "w3-input w3-center";
-
-        });
-
         populateProyectSelect();
-
-        // deshabilitar boton abrir si no hay proyectos
-        portadaAbrProyecBtn.disabled = portadaSelProyecSelect.options.length === 0;
-
         populateBlockSelect();
-
-        const estudioCabeceraSenialesTable = document.createElement("table");
-        estudioCabeceraSenialesTable.classList = "w3-table w3-bordered";
-        estudioCabeceraSeniales.appendChild(estudioCabeceraSenialesTable);
-        estudioCabeceraSenialesTable.appendChild(totalHeader());
-
-        const estudioSumarioSenialesTable = document.createElement("table");
-        estudioSumarioSenialesTable.classList = "w3-table w3-bordered w3-pale-green w3-margin-top w3-margin-bottom";
-        estudioSumarioCont.appendChild(estudioSumarioSenialesTable);
-        estudioSumarioSenialesTable.appendChild(totalHeader());
-        estudioSumarioSenialesTable.appendChild(totalBody());
+        populateCabeceraYPie();
 
         // Descomentar para pruebas y cargar primer proyecto automaticamente
         // portadaAbrProyecBtn.dispatchEvent(new Event('click', { bubbles: true }));
@@ -63,8 +19,8 @@ function escuchadores() {
         // si se esta mostrando mensaje error proyecto ya existe, no hacer nada
         if (!portadaNueProyecMsg.classList.contains("w3-hide")) return;
 
+        // verificar que se ha introducido algo de texto como nombre de proyecto
         const nuevoProyecto = portadaNueProyecInput.value.trim();
-
         if (!nuevoProyecto) return;
 
         // agregar proyecto al objeto y salvar en localstorage
@@ -79,8 +35,13 @@ function escuchadores() {
         populateProyectSelect();
         portadaSelProyecSelect.value = nuevoProyecto;
 
-        // Simular click en abrir para mostrar el select de proyectos
-        portadaAbrProyecBtn.dispatchEvent(new Event("click"));
+        // Simular click en abrir para mostrar el select de proyectos despues de haberlo creado
+        portadaAbrProyecBtn.dispatchEvent(new Event("click"), { bubbles: true });
+        
+        // Simular click en abrir proyecto para mostrar el estudio despues de haberlo creado
+        portadaSelProyecAbrir.dispatchEvent(new Event("click"), { bubbles: true });
+        
+        // O sea, al crear el proyecto nada mas darle al enter se abre el estudio del proyecto recien creado.
 
     });
 
@@ -246,10 +207,19 @@ function escuchadores() {
 
     portadaSelProyecAbrir.addEventListener("click", () => {
 
-        // por seguridad
-        if (!portadaSelProyecSelect.value.trim()) return;
-        if (!proyectosEasyPoint.hasOwnProperty(portadaSelProyecSelect.value)) return;
+        const proyectoAbierto = portadaSelProyecSelect.value.trim();
 
+        // por seguridad
+        if (!proyectoAbierto) return;
+        if (!proyectosEasyPoint.hasOwnProperty(proyectoAbierto)) return;
+
+        // TODO: copiar el proyecto seleccionado al localStorage de trabajo
+        // de modo que si se cierra la ventana, al abrirla se comprueba si existe
+        // proyectoAbierto, y se abre ese proyecto directamente
+        // asi se pueden ir dejando cosas a medias y abrirlo mas tarde
+        // localStorage.setItem("proyectoEasyPointTrabajo", JSON.stringify(proyectosEasyPoint[proyectoAbierto]));
+
+        //crear los bloques del proyecto
         writeBlocks();
 
         estudioNombProyecInput.value = portadaSelProyecSelect.value.trim();
@@ -473,7 +443,7 @@ function escuchadores() {
 
         // buscar nombre unico de fila "custom00", "custom01", ...
         for (let i = 0; i < 101; i++) {
-            if (i===100) {
+            if (i === 100) {
                 alert("No se pueden añadir mas elementos");
                 return;
             }
