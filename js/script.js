@@ -34,10 +34,10 @@ const popCancel = document.getElementById("popCancel");
 /* ------------------------- VARIABLES GLOBALES ------------------------- */
 let checkboxChangeScheduled = false;
 let proyectosEasyPoint = JSON.parse(localStorage.getItem('proyectosEasyPoint')) || {};
+let nombreProyectoActual = null;
+let proyectoActual = null;
 let guardado = true;
-
-
-
+const blocksData = blocks();
 
 
 /* ------------------------- EJECUCIONES INICIALES ------------------------- */
@@ -72,7 +72,7 @@ function populateProyectSelect() {
             option.value = clave;
             option.textContent = clave;
             portadaSelProyecSelect.appendChild(option);
-        });      
+        });
     }
 
     // Deshabilitar boton abrir si no hay proyectos
@@ -81,11 +81,11 @@ function populateProyectSelect() {
 }
 
 function populateBlockSelect() {
-    Object.keys(blocksData).forEach(type => {
+    blocksData.forEach((block, index) => {
         const option = document.createElement("option");
-        option.value = type;
-        option.textContent = type;
-        if (blocksData[type] === null) option.disabled = true;
+        option.value = index;
+        option.textContent = block.Nombre;
+        if (block.Elementos === null) option.disabled = true;
         estudioBloqSelect.appendChild(option);
     });
 }
@@ -182,79 +182,90 @@ function writeBlocks() {
 
     estudioBloqCont.innerHTML = "";
 
-    proyectosEasyPoint[portadaSelProyecSelect.value].forEach(seccion => {
+    proyectoActual.forEach(addBlock);
 
-        estudioBloqSelect.value = seccion.bloque.tipo;  // movemos el selecotr de añadir bloques al bloque que queremos
-        const table = addBlock();   // usamos la funcion de añadir bloque para crear un bloque del tipo seleccionado con los valores por defecto
+    // proyectosEasyPoint[portadaSelProyecSelect.value].forEach(seccion => {
 
-        // ajustamos el nombre del bloque segun lo que hubiese guardado en el proyecto
-        const nombreBloque = table.querySelector('[name="nombreBloque"]');
-        if (nombreBloque) nombreBloque.value = seccion.bloque.nombre;
+    //     estudioBloqSelect.value = seccion.bloque.tipo;  // movemos el selecotr de añadir bloques al bloque que queremos
+    //     const table = addBlock();   // usamos la funcion de añadir bloque para crear un bloque del tipo seleccionado con los valores por defecto
 
-        // ajustamos la cantidad general del bloque segun lo que hubiese guardado en el proyecto
-        const cantidadBloque = table.querySelector('[name="cantidadBloque"]');
-        if (cantidadBloque) cantidadBloque.value = seccion.bloque.cantidad;
+    //     // ajustamos el nombre del bloque segun lo que hubiese guardado en el proyecto
+    //     const nombreBloque = table.querySelector('[name="nombreBloque"]');
+    //     if (nombreBloque) nombreBloque.value = seccion.bloque.nombre;
 
-        // seleccionar el body de la tabla para añadir lineas custom
-        const tBody = table.querySelector('tbody');
-        for (const [name, value] of Object.entries(seccion.seniales)) {
-            if (name.substring(0, 6) === "custom") {
-                const customFila = addFilaBody(name, value.opcion, cantidadBloque);
-                tBody.insertBefore(customFila, tBody.lastElementChild);
-            }
-        }
+    //     // ajustamos la cantidad general del bloque segun lo que hubiese guardado en el proyecto
+    //     const cantidadBloque = table.querySelector('[name="cantidadBloque"]');
+    //     if (cantidadBloque) cantidadBloque.value = seccion.bloque.cantidad;
 
-        // recorremos las filas del bloque
-        const bodyRows = table.querySelectorAll("tbody tr");
-        bodyRows.forEach((row, index) => {
+    //     // seleccionar el body de la tabla para añadir lineas custom
+    //     const tBody = table.querySelector('tbody');
+    //     for (const [name, value] of Object.entries(seccion.seniales)) {
+    //         if (name.substring(0, 6) === "custom") {
+    //             const customFila = addFilaBody(name, value.opcion, cantidadBloque);
+    //             tBody.insertBefore(customFila, tBody.lastElementChild);
+    //         }
+    //     }
 
-            // seleccionamos los elementos de cada fila
-            const checkbox = row.querySelector('input[type="checkbox"]');
-            const nombreSenial = row.querySelector('[name="nombreSenial"]');
-            const numeroSenial = row.querySelector('[name="numeroSenial"]');
-            const opcionSenial = row.querySelector('[name="opcionSenial"]');
+    //     // recorremos las filas del bloque
+    //     const bodyRows = table.querySelectorAll("tbody tr");
+    //     bodyRows.forEach((row, index) => {
 
-            // si es una linea custom, asignamos el placeholder al valor que tuviera guardado
-            if (row.name?.substring(0, 6) === "custom") {
-                nombreSenial.placeholder = seccion.seniales[row.name].nombre;
-            }
+    //         // seleccionamos los elementos de cada fila
+    //         const checkbox = row.querySelector('input[type="checkbox"]');
+    //         const nombreSenial = row.querySelector('[name="nombreSenial"]');
+    //         const numeroSenial = row.querySelector('[name="numeroSenial"]');
+    //         const opcionSenial = row.querySelector('[name="opcionSenial"]');
 
-            if (checkbox) {
+    //         // si es una linea custom, asignamos el placeholder al valor que tuviera guardado
+    //         if (row.name?.substring(0, 6) === "custom") {
+    //             nombreSenial.placeholder = seccion.seniales[row.name].nombre;
+    //         }
 
-                // marcamos el checkbox en funcion a lo que hubiese guardado en el proyecto
-                checkbox.checked = seccion.seniales.hasOwnProperty(row.name);
+    //         if (checkbox) {
 
-                // si el check esta marcado rellenamos el resto de valores conforme a lo que hubiese guardado en el proyecto
-                if (checkbox.checked) {
-                    if (nombreSenial) nombreSenial.value = seccion.seniales[row.name].nombre;
-                    if (numeroSenial) numeroSenial.value = seccion.seniales[row.name].cantidad;
-                    if (opcionSenial) {
-                        opcionSenial.value = seccion.seniales[row.name].opcion;
-                        opcionSenial.dispatchEvent(new Event('change', { bubbles: true }));
-                    }
-                }
+    //             // marcamos el checkbox en funcion a lo que hubiese guardado en el proyecto
+    //             checkbox.checked = seccion.seniales.hasOwnProperty(row.name);
 
-                // disparamos el cambio del check para el recalculo de señales
-                checkbox.dispatchEvent(new Event('change', { bubbles: true }));
-            }
-        });
-    });
+    //             // si el check esta marcado rellenamos el resto de valores conforme a lo que hubiese guardado en el proyecto
+    //             if (checkbox.checked) {
+    //                 if (nombreSenial) nombreSenial.value = seccion.seniales[row.name].nombre;
+    //                 if (numeroSenial) numeroSenial.value = seccion.seniales[row.name].cantidad;
+    //                 if (opcionSenial) {
+    //                     opcionSenial.value = seccion.seniales[row.name].opcion;
+    //                     opcionSenial.dispatchEvent(new Event('change', { bubbles: true }));
+    //                 }
+    //             }
+
+    //             // disparamos el cambio del check para el recalculo de señales
+    //             checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+    //         }
+    //     });
+    // });
 
     // reiniciamos selector de bloques de proyecto
     estudioBloqSelect.selectedIndex = 0;
 
-    buttonsMoveBlock();
+    disableFirstAndLastMoveBlockButtons();
 
 }
 
-function moveBlock(tabla, direccion) {
+function moveBlock(bloque, tabla, direccion) {
 
     const tablas = Array.from(estudioBloqCont.children);
     const indice = tablas.indexOf(tabla);
+    const indiceBloque = proyectoActual.indexOf(bloque);
 
+    // si bloque no existe en el proyecto abortar
+    if (indiceBloque === -1) return;
+
+    // si el indice de bloque y de tabla no coinciden, abortar
+    if (indice !== indiceBloque) return;
+
+    // no deberia poder pasar por los botones deshabilitados, pero por si acaso    
     const nuevoIndice = indice + direccion;
     if (nuevoIndice < 0 || nuevoIndice >= tablas.length) return;
 
+    // mover la tabla en el DOM
     estudioBloqCont.removeChild(tabla);
     if (direccion === -1) {
         estudioBloqCont.insertBefore(tabla, tablas[nuevoIndice]);
@@ -262,11 +273,16 @@ function moveBlock(tabla, direccion) {
         estudioBloqCont.insertBefore(tabla, tablas[nuevoIndice].nextSibling);
     }
 
-    buttonsMoveBlock();
+    // mover el bloque en proyectoActual
+    moverElemento(proyectoActual, indice, nuevoIndice);
+    localStorage.setItem("proyectoActual", JSON.stringify(proyectoActual));
+
+    // repasar botones de movimiento
+    disableFirstAndLastMoveBlockButtons();
 
 }
 
-function buttonsMoveBlock() {
+function disableFirstAndLastMoveBlockButtons() {
 
     const tablas = Array.from(estudioBloqCont.children);
 
@@ -280,86 +296,103 @@ function buttonsMoveBlock() {
 
 }
 
-function addBlock() {
+function addBlock(bloque) {
 
-    if (!estudioBloqSelect.value) return;
+    // inserta un bloque en el DOM segun la estructura JSON 
 
     const table = document.createElement("table");
-    table.name = estudioBloqSelect.value;
+    estudioBloqCont.appendChild(table);
+
+    table.name = bloque.Nombre;
     table.className = "w3-table w3-bordered w3-margin-bottom";
 
-    table.appendChild(addBlockHeader(table));
-    table.appendChild(addBlockBody(table));
-    estudioBloqCont.appendChild(table);
+    addBlockHeader(bloque, table);
+    // table.appendChild(addBlockBody(table));
 
     updateSummary();
 
     estudioBloqSelect.focus();
 
-    return table;
-
 }
 
-function addBlockHeader(table) {
+function addBlockHeader(bloque, table) {
 
     const thead = document.createElement("thead");
+    table.appendChild(thead);
 
     const headerRow = document.createElement("tr");
+    thead.appendChild(headerRow);
+
     const headerCell = document.createElement("th");
+    headerRow.appendChild(headerCell);
 
     const deleteBtn = document.createElement("button");
-    deleteBtn.innerHTML = '<img src="./images/papelera.svg" alt="Salir" width="15" height="15">';
-    deleteBtn.className = "w3-button w3-red w3-margin-right";
-    deleteBtn.addEventListener("click", () => {
-        table.remove();
-        buttonsMoveBlock();
-        updateSummary();
-    });
+    headerCell.appendChild(deleteBtn);
 
-    const subirBtn = document.createElement('button');
-    subirBtn.className = "w3-button w3-pale-green w3-margin-left";
-    subirBtn.textContent = '▲';
-    subirBtn.addEventListener('click', () => {
-        moveBlock(table, -1)
-    });
-
-    const bajarBtn = document.createElement('button');
-    bajarBtn.className = "w3-button w3-pale-red w3-margin-right";
-    bajarBtn.textContent = '▼';
-    bajarBtn.addEventListener('click', () => {
-        moveBlock(table, 1)
-    });
-
-    const nameInput = inputNombre(estudioBloqSelect.value);
-    nameInput.classList.add("nombreBloque");
-    nameInput.name = "nombreBloque";
+    if (!bloque.NombreUsuario) bloque.NombreUsuario = bloque.Nombre;
+    const nameInput = inputNombre(bloque.NombreUsuario);
+    headerCell.appendChild(nameInput);
 
     const numberInput = inputNumero();
+    headerCell.appendChild(numberInput);
+
+    const subirBtn = document.createElement('button');
+    headerCell.appendChild(subirBtn);
+
+    const bajarBtn = document.createElement('button');
+    headerCell.appendChild(bajarBtn);
+
+    nameInput.classList.add("nombreBloque");
+    nameInput.name = "nombreBloque";
+    nameInput.addEventListener('blur', () => {
+        bloque.NombreUsuario = nameInput.value;
+        console.log(JSON.stringify(proyectoActual));
+        localStorage.setItem("proyectoActual", JSON.stringify(proyectoActual));
+    });
+
     numberInput.classList.add("cantidadBloque");
     numberInput.name = "cantidadBloque";
-
     numberInput.addEventListener("change", () => {
+        bloque.cantidad = numberInput.value * 1;
         const checkboxes = table.querySelectorAll('input[type="checkbox"]');
         checkboxes.forEach(checkbox => {
             checkbox.dispatchEvent(new Event('change', { bubbles: true }));
         });
     });
 
-    headerCell.appendChild(deleteBtn);
-    headerCell.appendChild(nameInput);
-    headerCell.appendChild(numberInput);
-    headerCell.appendChild(subirBtn);
-    headerCell.appendChild(bajarBtn);
-    headerRow.appendChild(headerCell);
+    deleteBtn.innerHTML = '<img src="./images/papelera.svg" alt="Salir" width="15" height="15">';
+    deleteBtn.className = "w3-button w3-red w3-margin-right";
+    deleteBtn.addEventListener("click", () => {
 
-    signalTypes.forEach(sig => {
+        // eliminar el bloque del proyectoActual
+        proyectoActual.splice(proyectoActual.indexOf(bloque), 1);
+
+        // eliminar la tabla
+        table.remove();
+
+        // actualizar botones mover y sumatorio
+        disableFirstAndLastMoveBlockButtons();
+        updateSummary();
+
+    });
+
+    subirBtn.className = "w3-button w3-pale-green w3-margin-left";
+    subirBtn.textContent = '▲';
+    subirBtn.addEventListener('click', () => {
+        moveBlock(bloque, table, -1)
+    });
+
+    bajarBtn.className = "w3-button w3-pale-red w3-margin-right";
+    bajarBtn.textContent = '▼';
+    bajarBtn.addEventListener('click', () => {
+        moveBlock(bloque, table, 1)
+    });
+
+    // añadir una columna por cada tiopo de señall para mantener la alineacion de toda la tabla
+    signalTypes.forEach(() => {
         const th = document.createElement("th");
         headerRow.appendChild(th);
     });
-
-    thead.appendChild(headerRow);
-
-    return thead;
 
 }
 
@@ -656,6 +689,8 @@ function totalBody() {
 
 }
 
+
+
 function inputNombre(texto) {
     const nameInput = document.createElement("input");
     nameInput.className = "w3-input w3-margin-right nobackground inputNombre";
@@ -677,4 +712,24 @@ function inputNumero() {
     });
 
     return numberInput;
+}
+
+/**
+ * Mueve un elemento dentro de un array de una posición a otra.
+ *
+ * @param {Array} array - El array que contiene el elemento a mover.
+ * @param {number} fromIndex - Índice actual del elemento que se va a mover.
+ * @param {number} toIndex - Nuevo índice donde se insertará el elemento.
+ *
+ * @returns {void} Modifica el array original en lugar de crear uno nuevo.
+ *
+ * @example
+ * const arr = ['a', 'b', 'c', 'd'];
+ * moverElemento(arr, 1, 3);
+ * console.log(arr); // ['a', 'c', 'd', 'b']
+ */
+function moverElemento(array, fromIndex, toIndex) {
+    if (toIndex < 0 || toIndex >= array.length) return; // fuera de rango
+    const [item] = array.splice(fromIndex, 1);
+    array.splice(toIndex, 0, item);
 }

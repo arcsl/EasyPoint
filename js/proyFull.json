@@ -1,12 +1,13 @@
-{
-    "Condiciones Exteriores": {
-        "Nombre": "",
-        "Cantidad": 1,
-        "Seniales": {
-            "Exterior": {
+[
+    {
+        "Nombre": "Condiciones Exteriores",
+        "Elementos": [
+            {
+                "Nombre": "Exterior",
                 "Cantidad": 1,
-                "Opciones": {
-                    "Temperatura": {
+                "Opciones": [
+                    {
+                        "Nombre": "Temperatura",
                         "Seniales": {
                             "EA": 1
                         },
@@ -18,7 +19,8 @@
                             }
                         ]
                     },
-                    "Temp + Hume": {
+                    {
+                        "Nombre": "Temp + Hume",
                         "Seniales": {
                             "EA": 2
                         },
@@ -30,7 +32,8 @@
                             }
                         ]
                     },
-                    "Temp + CO2": {
+                    {
+                        "Nombre": "Temp + CO2",
                         "Seniales": {
                             "EA": 2
                         },
@@ -42,7 +45,8 @@
                             }
                         ]
                     },
-                    "Temp Hum CO2": {
+                    {
+                        "Nombre": "Temp Hum CO2",
                         "Seniales": {
                             "EA": 3
                         },
@@ -54,19 +58,23 @@
                             }
                         ]
                     }
-                }
+                ]
             }
-        }
+        ]
     },
-    " ----- Producción -----": null,
-    "Gestor de Cascada de Producción": {
-        "Nombre": "",
-        "Cantidad": 1,
-        "Seniales": {
-            "Temperatura": {
+    {
+        "Nombre": " ----- Producción -----",
+        "Elementos": null
+    },
+    {
+        "Nombre": "Gestor de Cascada de Producción",
+        "Elementos": [
+            {
+                "Nombre": "Temperatura",
                 "Cantidad": 1,
-                "Opciones": {
-                    "Temperatura": {
+                "Opciones": [
+                    {
+                        "Nombre": "Temperatura",
                         "Seniales": {
                             "EA": 1
                         },
@@ -78,7 +86,8 @@
                             }
                         ]
                     },
-                    "Termostato": {
+                    {
+                        "Nombre": "Termostato",
                         "Seniales": {
                             "ED": 1
                         },
@@ -90,12 +99,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Bomba": {
+            {
+                "Nombre": "Bomba",
                 "Cantidad": 0,
-                "Opciones": {
-                    "Simple": {
+                "Opciones": [
+                    {
+                        "Nombre": "Simple",
                         "Seniales": {
                             "ED": 1,
                             "SD": 1
@@ -118,7 +129,8 @@
                             }
                         ]
                     },
-                    "0..10Vcc": {
+                    {
+                        "Nombre": "0..10Vcc",
                         "Seniales": {
                             "ED": 1,
                             "SA": 1,
@@ -147,12 +159,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Ventilacion Forzada": {
+            {
+                "Nombre": "Ventilacion Forzada",
                 "Cantidad": 1,
-                "Opciones": {
-                    "Simple": {
+                "Opciones": [
+                    {
+                        "Nombre": "Simple",
                         "Seniales": {
                             "ED": 1,
                             "SD": 1
@@ -175,7 +189,8 @@
                             }
                         ]
                     },
-                    "0..10Vcc": {
+                    {
+                        "Nombre": "0..10Vcc",
                         "Seniales": {
                             "ED": 1,
                             "SA": 1,
@@ -204,12 +219,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Electroválvula de Gas": {
+            {
+                "Nombre": "Electroválvula de Gas",
                 "Cantidad": 1,
-                "Opciones": {
-                    "Externa": {
+                "Opciones": [
+                    {
+                        "Nombre": "Externa",
                         "Seniales": {
                             "SD": 1
                         },
@@ -221,12 +238,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Cambio de regimen externo": {
+            {
+                "Nombre": "Cambio de regimen externo",
                 "Cantidad": 0,
-                "Opciones": {
-                    "Externa": {
+                "Opciones": [
+                    {
+                        "Nombre": "Externa",
                         "Seniales": {
                             "ED": 1
                         },
@@ -238,12 +257,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Válvula Calor / Frío": {
+            {
+                "Nombre": "Válvula Calor / Frío",
                 "Cantidad": 0,
-                "Opciones": {
-                    "1 Micro": {
+                "Opciones": [
+                    {
+                        "Nombre": "1 Micro",
                         "Seniales": {
                             "ED": 1,
                             "SD": 1
@@ -265,9 +286,10 @@
                             }
                         ]
                     },
-                    "2 Micros": {
+                    {
+                        "Nombre": "2 Micros",
                         "Seniales": {
-                            "ED": 1,
+                            "ED": 2,
                             "SD": 1
                         },
                         "Esquema": [
@@ -293,9 +315,9 @@
                             }
                         ]
                     },
-                    "Sin Micros": {
+                    {
+                        "Nombre": "Sin Micros",
                         "Seniales": {
-                            "ED": 1,
                             "SD": 1
                         },
                         "Esquema": [
@@ -309,12 +331,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Control Presión": {
+            {
+                "Nombre": "Control Presión",
                 "Cantidad": 1,
-                "Opciones": {
-                    "Temperatura": {
+                "Opciones": [
+                    {
+                        "Nombre": "Temperatura",
                         "Seniales": {
                             "EA": 1
                         },
@@ -326,7 +350,8 @@
                             }
                         ]
                     },
-                    "Termostato": {
+                    {
+                        "Nombre": "Termostato",
                         "Seniales": {
                             "ED": 1
                         },
@@ -338,18 +363,19 @@
                             }
                         ]
                     }
-                }
+                ]
             }
-        }
+        ]
     },
-    "Caldera": {
-        "Nombre": "",
-        "Cantidad": 1,
-        "Seniales": {
-            "Temperatura": {
+    {
+        "Nombre": "Caldera",
+        "Elementos": [
+            {
+                "Nombre": "Temperatura",
                 "Cantidad": 1,
-                "Opciones": {
-                    "Temperatura": {
+                "Opciones": [
+                    {
+                        "Nombre": "Temperatura",
                         "Seniales": {
                             "EA": 1
                         },
@@ -361,7 +387,8 @@
                             }
                         ]
                     },
-                    "Termostato": {
+                    {
+                        "Nombre": "Termostato",
                         "Seniales": {
                             "ED": 1
                         },
@@ -373,12 +400,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Marcha-Paro": {
+            {
+                "Nombre": "Marcha-Paro",
                 "Cantidad": 0,
-                "Opciones": {
-                    "Externa": {
+                "Opciones": [
+                    {
+                        "Nombre": "Externa",
                         "Seniales": {
                             "SD": 1
                         },
@@ -390,12 +419,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Estado / Alarma": {
+            {
+                "Nombre": "Estado / Alarma",
                 "Cantidad": 1,
-                "Opciones": {
-                    "Externa": {
+                "Opciones": [
+                    {
+                        "Nombre": "Externa",
                         "Seniales": {
                             "ED": 1
                         },
@@ -407,12 +438,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Modulación / Consigna": {
+            {
+                "Nombre": "Modulación / Consigna",
                 "Cantidad": 1,
-                "Opciones": {
-                    "0..10Vcc": {
+                "Opciones": [
+                    {
+                        "Nombre": "0..10Vcc",
                         "Seniales": {
                             "SA": 1
                         },
@@ -424,7 +457,8 @@
                             }
                         ]
                     },
-                    "3 Puntos": {
+                    {
+                        "Nombre": "3 Puntos",
                         "Seniales": {
                             "SD": 2
                         },
@@ -437,7 +471,8 @@
                             }
                         ]
                     },
-                    "2ª llama": {
+                    {
+                        "Nombre": "2ª llama",
                         "Seniales": {
                             "SD": 1
                         },
@@ -449,12 +484,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Bomba": {
+            {
+                "Nombre": "Bomba",
                 "Cantidad": 1,
-                "Opciones": {
-                    "Simple": {
+                "Opciones": [
+                    {
+                        "Nombre": "Simple",
                         "Seniales": {
                             "ED": 1,
                             "SD": 1
@@ -477,7 +514,8 @@
                             }
                         ]
                     },
-                    "0..10Vcc": {
+                    {
+                        "Nombre": "0..10Vcc",
                         "Seniales": {
                             "ED": 1,
                             "SA": 1,
@@ -506,12 +544,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Válvula Aislamiento / Retorno": {
+            {
+                "Nombre": "Válvula Aislamiento / Retorno",
                 "Cantidad": 0,
-                "Opciones": {
-                    "Todo/Nada": {
+                "Opciones": [
+                    {
+                        "Nombre": "Todo/Nada",
                         "Seniales": {
                             "ED": 1,
                             "SD": 1
@@ -533,7 +573,8 @@
                             }
                         ]
                     },
-                    "3 Puntos": {
+                    {
+                        "Nombre": "3 Puntos",
                         "Seniales": {
                             "SD": 2
                         },
@@ -546,7 +587,8 @@
                             }
                         ]
                     },
-                    "0..10Vcc": {
+                    {
+                        "Nombre": "0..10Vcc",
                         "Seniales": {
                             "SA": 1
                         },
@@ -559,12 +601,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Control Humos": {
+            {
+                "Nombre": "Control Humos",
                 "Cantidad": 0,
-                "Opciones": {
-                    "Temperatura": {
+                "Opciones": [
+                    {
+                        "Nombre": "Temperatura",
                         "Seniales": {
                             "EA": 1
                         },
@@ -576,7 +620,8 @@
                             }
                         ]
                     },
-                    "Termostato": {
+                    {
+                        "Nombre": "Termostato",
                         "Seniales": {
                             "ED": 1
                         },
@@ -588,12 +633,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Control Presión": {
+            {
+                "Nombre": "Control Presión",
                 "Cantidad": 0,
-                "Opciones": {
-                    "Presostato": {
+                "Opciones": [
+                    {
+                        "Nombre": "Presostato",
                         "Seniales": {
                             "ED": 1
                         },
@@ -605,7 +652,8 @@
                             }
                         ]
                     },
-                    "Sonda": {
+                    {
+                        "Nombre": "Sonda",
                         "Seniales": {
                             "EA": 1
                         },
@@ -617,18 +665,19 @@
                             }
                         ]
                     }
-                }
+                ]
             }
-        }
+        ]
     },
-    "Aerotermia / Geotermia": {
-        "Nombre": "",
-        "Cantidad": 1,
-        "Seniales": {
-            "Temperatura": {
+    {
+        "Nombre": "Aerotermia",
+        "Elementos": [
+            {
+                "Nombre": "Temperatura",
                 "Cantidad": 1,
-                "Opciones": {
-                    "Temperatura": {
+                "Opciones": [
+                    {
+                        "Nombre": "Temperatura",
                         "Seniales": {
                             "EA": 1
                         },
@@ -640,7 +689,8 @@
                             }
                         ]
                     },
-                    "Termostato": {
+                    {
+                        "Nombre": "Termostato",
                         "Seniales": {
                             "ED": 1
                         },
@@ -652,12 +702,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Marcha-Paro y alarma": {
+            {
+                "Nombre": "Marcha-Paro y alarma",
                 "Cantidad": 1,
-                "Opciones": {
-                    "MPyEstado": {
+                "Opciones": [
+                    {
+                        "Nombre": "MPyEstado",
                         "Seniales": {
                             "ED": 1,
                             "SD": 1
@@ -677,12 +729,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Modulación / Consigna": {
+            {
+                "Nombre": "Modulación / Consigna",
                 "Cantidad": 0,
-                "Opciones": {
-                    "Externa": {
+                "Opciones": [
+                    {
+                        "Nombre": "Externa",
                         "Seniales": {
                             "SA": 1
                         },
@@ -694,12 +748,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Bomba": {
+            {
+                "Nombre": "Bomba",
                 "Cantidad": 1,
-                "Opciones": {
-                    "Simple": {
+                "Opciones": [
+                    {
+                        "Nombre": "Simple",
                         "Seniales": {
                             "ED": 1,
                             "SD": 1
@@ -722,7 +778,8 @@
                             }
                         ]
                     },
-                    "0..10Vcc": {
+                    {
+                        "Nombre": "0..10Vcc",
                         "Seniales": {
                             "ED": 1,
                             "SA": 1,
@@ -751,12 +808,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Cambio de regimen externo": {
+            {
+                "Nombre": "Cambio de regimen externo",
                 "Cantidad": 0,
-                "Opciones": {
-                    "Externa": {
+                "Opciones": [
+                    {
+                        "Nombre": "Externa",
                         "Seniales": {
                             "ED": 1
                         },
@@ -768,12 +827,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Válvula Calor / Frío / ACS": {
+            {
+                "Nombre": "Válvula Calor / Frío / ACS",
                 "Cantidad": 0,
-                "Opciones": {
-                    "1 Micro": {
+                "Opciones": [
+                    {
+                        "Nombre": "1 Micro",
                         "Seniales": {
                             "ED": 1,
                             "SD": 1
@@ -795,9 +856,10 @@
                             }
                         ]
                     },
-                    "2 Micros": {
+                    {
+                        "Nombre": "2 Micros",
                         "Seniales": {
-                            "ED": 1,
+                            "ED": 2,
                             "SD": 1
                         },
                         "Esquema": [
@@ -823,9 +885,9 @@
                             }
                         ]
                     },
-                    "Sin Micros": {
+                    {
+                        "Nombre": "Sin Micros",
                         "Seniales": {
-                            "ED": 1,
                             "SD": 1
                         },
                         "Esquema": [
@@ -839,12 +901,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Control Presión": {
+            {
+                "Nombre": "Control Presión",
                 "Cantidad": 0,
-                "Opciones": {
-                    "Presostato": {
+                "Opciones": [
+                    {
+                        "Nombre": "Presostato",
                         "Seniales": {
                             "ED": 1
                         },
@@ -856,7 +920,8 @@
                             }
                         ]
                     },
-                    "Sonda": {
+                    {
+                        "Nombre": "Sonda",
                         "Seniales": {
                             "EA": 1
                         },
@@ -868,18 +933,19 @@
                             }
                         ]
                     }
-                }
+                ]
             }
-        }
+        ]
     },
-    "Solar": {
-        "Nombre": "",
-        "Cantidad": 1,
-        "Seniales": {
-            "Radiacion Solar": {
+    {
+        "Nombre": "Solar",
+        "Elementos": [
+            {
+                "Nombre": "Radiacion Solar",
                 "Cantidad": 0,
-                "Opciones": {
-                    "Sonda": {
+                "Opciones": [
+                    {
+                        "Nombre": "Sonda",
                         "Seniales": {
                             "EA": 1
                         },
@@ -891,12 +957,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Temperatura Paneles": {
+            {
+                "Nombre": "Temperatura Paneles",
                 "Cantidad": 1,
-                "Opciones": {
-                    "Temperatura": {
+                "Opciones": [
+                    {
+                        "Nombre": "Temperatura",
                         "Seniales": {
                             "EA": 1
                         },
@@ -908,7 +976,8 @@
                             }
                         ]
                     },
-                    "Termostato": {
+                    {
+                        "Nombre": "Termostato",
                         "Seniales": {
                             "ED": 1
                         },
@@ -920,12 +989,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Temperatura Secundario": {
+            {
+                "Nombre": "Temperatura Secundario",
                 "Cantidad": 0,
-                "Opciones": {
-                    "Temperatura": {
+                "Opciones": [
+                    {
+                        "Nombre": "Temperatura",
                         "Seniales": {
                             "EA": 1
                         },
@@ -937,7 +1008,8 @@
                             }
                         ]
                     },
-                    "Termostato": {
+                    {
+                        "Nombre": "Termostato",
                         "Seniales": {
                             "ED": 1
                         },
@@ -949,12 +1021,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Temperatura Depósito": {
+            {
+                "Nombre": "Temperatura Depósito",
                 "Cantidad": 1,
-                "Opciones": {
-                    "Temperatura": {
+                "Opciones": [
+                    {
+                        "Nombre": "Temperatura",
                         "Seniales": {
                             "EA": 1
                         },
@@ -966,7 +1040,8 @@
                             }
                         ]
                     },
-                    "Termostato": {
+                    {
+                        "Nombre": "Termostato",
                         "Seniales": {
                             "ED": 1
                         },
@@ -978,12 +1053,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Bomba Primario": {
+            {
+                "Nombre": "Bomba Primario",
                 "Cantidad": 1,
-                "Opciones": {
-                    "Simple": {
+                "Opciones": [
+                    {
+                        "Nombre": "Simple",
                         "Seniales": {
                             "ED": 1,
                             "SD": 1
@@ -1006,7 +1083,8 @@
                             }
                         ]
                     },
-                    "0..10Vcc": {
+                    {
+                        "Nombre": "0..10Vcc",
                         "Seniales": {
                             "ED": 1,
                             "SA": 1,
@@ -1035,12 +1113,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Bomba Secundario": {
+            {
+                "Nombre": "Bomba Secundario",
                 "Cantidad": 0,
-                "Opciones": {
-                    "Simple": {
+                "Opciones": [
+                    {
+                        "Nombre": "Simple",
                         "Seniales": {
                             "ED": 1,
                             "SD": 1
@@ -1063,7 +1143,8 @@
                             }
                         ]
                     },
-                    "0..10Vcc": {
+                    {
+                        "Nombre": "0..10Vcc",
                         "Seniales": {
                             "ED": 1,
                             "SA": 1,
@@ -1092,12 +1173,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Bomba Transvase": {
+            {
+                "Nombre": "Bomba Transvase",
                 "Cantidad": 0,
-                "Opciones": {
-                    "Simple": {
+                "Opciones": [
+                    {
+                        "Nombre": "Simple",
                         "Seniales": {
                             "ED": 1,
                             "SD": 1
@@ -1120,7 +1203,8 @@
                             }
                         ]
                     },
-                    "0..10Vcc": {
+                    {
+                        "Nombre": "0..10Vcc",
                         "Seniales": {
                             "ED": 1,
                             "SA": 1,
@@ -1149,12 +1233,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Aerotermo": {
+            {
+                "Nombre": "Aerotermo",
                 "Cantidad": 0,
-                "Opciones": {
-                    "Simple": {
+                "Opciones": [
+                    {
+                        "Nombre": "Simple",
                         "Seniales": {
                             "ED": 1,
                             "SD": 1
@@ -1177,7 +1263,8 @@
                             }
                         ]
                     },
-                    "0..10Vcc": {
+                    {
+                        "Nombre": "0..10Vcc",
                         "Seniales": {
                             "ED": 1,
                             "SA": 1,
@@ -1206,12 +1293,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Válvula Primario": {
+            {
+                "Nombre": "Válvula Primario",
                 "Cantidad": 0,
-                "Opciones": {
-                    "Todo/Nada": {
+                "Opciones": [
+                    {
+                        "Nombre": "Todo/Nada",
                         "Seniales": {
                             "ED": 1,
                             "SD": 1
@@ -1233,7 +1322,8 @@
                             }
                         ]
                     },
-                    "3 Puntos": {
+                    {
+                        "Nombre": "3 Puntos",
                         "Seniales": {
                             "SD": 2
                         },
@@ -1246,7 +1336,8 @@
                             }
                         ]
                     },
-                    "0..10Vcc": {
+                    {
+                        "Nombre": "0..10Vcc",
                         "Seniales": {
                             "SA": 1
                         },
@@ -1259,12 +1350,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Válvula Secundario": {
+            {
+                "Nombre": "Válvula Secundario",
                 "Cantidad": 0,
-                "Opciones": {
-                    "Todo/Nada": {
+                "Opciones": [
+                    {
+                        "Nombre": "Todo/Nada",
                         "Seniales": {
                             "ED": 1,
                             "SD": 1
@@ -1286,7 +1379,8 @@
                             }
                         ]
                     },
-                    "3 Puntos": {
+                    {
+                        "Nombre": "3 Puntos",
                         "Seniales": {
                             "SD": 2
                         },
@@ -1299,7 +1393,8 @@
                             }
                         ]
                     },
-                    "0..10Vcc": {
+                    {
+                        "Nombre": "0..10Vcc",
                         "Seniales": {
                             "SA": 1
                         },
@@ -1312,12 +1407,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Control Presión": {
+            {
+                "Nombre": "Control Presión",
                 "Cantidad": 0,
-                "Opciones": {
-                    "Presostato": {
+                "Opciones": [
+                    {
+                        "Nombre": "Presostato",
                         "Seniales": {
                             "ED": 1
                         },
@@ -1329,7 +1426,8 @@
                             }
                         ]
                     },
-                    "Sonda": {
+                    {
+                        "Nombre": "Sonda",
                         "Seniales": {
                             "EA": 1
                         },
@@ -1341,19 +1439,23 @@
                             }
                         ]
                     }
-                }
+                ]
             }
-        }
+        ]
     },
-    " ----- Consumo -----": null,
-    "Circuito Calefacción/Distribución": {
-        "Nombre": "",
-        "Cantidad": 1,
-        "Seniales": {
-            "Temp Impulsion": {
+    {
+        "Nombre": " ----- Consumo -----",
+        "Elementos": null
+    },
+    {
+        "Nombre": "Circuito Calefacción/Distribución",
+        "Elementos": [
+            {
+                "Nombre": "Temp Impulsion",
                 "Cantidad": 1,
-                "Opciones": {
-                    "Temperatura": {
+                "Opciones": [
+                    {
+                        "Nombre": "Temperatura",
                         "Seniales": {
                             "EA": 1
                         },
@@ -1365,7 +1467,8 @@
                             }
                         ]
                     },
-                    "Termostato": {
+                    {
+                        "Nombre": "Termostato",
                         "Seniales": {
                             "ED": 1
                         },
@@ -1377,12 +1480,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Sensor Ambiente": {
+            {
+                "Nombre": "Sensor Ambiente",
                 "Cantidad": 0,
-                "Opciones": {
-                    "Temperatura": {
+                "Opciones": [
+                    {
+                        "Nombre": "Temperatura",
                         "Seniales": {
                             "EA": 1
                         },
@@ -1394,7 +1499,8 @@
                             }
                         ]
                     },
-                    "Temp + Hume": {
+                    {
+                        "Nombre": "Temp + Hume",
                         "Seniales": {
                             "EA": 2
                         },
@@ -1406,7 +1512,8 @@
                             }
                         ]
                     },
-                    "Temp + CO2": {
+                    {
+                        "Nombre": "Temp + CO2",
                         "Seniales": {
                             "EA": 2
                         },
@@ -1418,7 +1525,8 @@
                             }
                         ]
                     },
-                    "Temp Hum CO2": {
+                    {
+                        "Nombre": "Temp Hum CO2",
                         "Seniales": {
                             "EA": 3
                         },
@@ -1430,12 +1538,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Presion Diferencial": {
+            {
+                "Nombre": "Presion Diferencial",
                 "Cantidad": 0,
-                "Opciones": {
-                    "Sonda": {
+                "Opciones": [
+                    {
+                        "Nombre": "Sonda",
                         "Seniales": {
                             "EA": 1
                         },
@@ -1447,12 +1557,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Bomba": {
+            {
+                "Nombre": "Bomba",
                 "Cantidad": 1,
-                "Opciones": {
-                    "Simple": {
+                "Opciones": [
+                    {
+                        "Nombre": "Simple",
                         "Seniales": {
                             "ED": 1,
                             "SD": 1
@@ -1475,7 +1587,8 @@
                             }
                         ]
                     },
-                    "0..10Vcc": {
+                    {
+                        "Nombre": "0..10Vcc",
                         "Seniales": {
                             "ED": 1,
                             "SA": 1,
@@ -1504,12 +1617,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Válvula control": {
+            {
+                "Nombre": "Válvula control",
                 "Cantidad": 1,
-                "Opciones": {
-                    "Todo/Nada": {
+                "Opciones": [
+                    {
+                        "Nombre": "Todo/Nada",
                         "Seniales": {
                             "ED": 1,
                             "SD": 1
@@ -1531,7 +1646,8 @@
                             }
                         ]
                     },
-                    "3 Puntos": {
+                    {
+                        "Nombre": "3 Puntos",
                         "Seniales": {
                             "SD": 2
                         },
@@ -1544,7 +1660,8 @@
                             }
                         ]
                     },
-                    "0..10Vcc": {
+                    {
+                        "Nombre": "0..10Vcc",
                         "Seniales": {
                             "SA": 1
                         },
@@ -1557,12 +1674,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Cambio de regimen externo": {
+            {
+                "Nombre": "Cambio de regimen externo",
                 "Cantidad": 0,
-                "Opciones": {
-                    "Externa": {
+                "Opciones": [
+                    {
+                        "Nombre": "Externa",
                         "Seniales": {
                             "ED": 1
                         },
@@ -1574,12 +1693,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Válvula Calor / Frío": {
+            {
+                "Nombre": "Válvula Calor / Frío",
                 "Cantidad": 0,
-                "Opciones": {
-                    "1 Micro": {
+                "Opciones": [
+                    {
+                        "Nombre": "1 Micro",
                         "Seniales": {
                             "ED": 1,
                             "SD": 1
@@ -1601,9 +1722,10 @@
                             }
                         ]
                     },
-                    "2 Micros": {
+                    {
+                        "Nombre": "2 Micros",
                         "Seniales": {
-                            "ED": 1,
+                            "ED": 2,
                             "SD": 1
                         },
                         "Esquema": [
@@ -1629,9 +1751,9 @@
                             }
                         ]
                     },
-                    "Sin Micros": {
+                    {
+                        "Nombre": "Sin Micros",
                         "Seniales": {
-                            "ED": 1,
                             "SD": 1
                         },
                         "Esquema": [
@@ -1645,12 +1767,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Demanda a terceros": {
+            {
+                "Nombre": "Demanda a terceros",
                 "Cantidad": 0,
-                "Opciones": {
-                    "0..10Vcc": {
+                "Opciones": [
+                    {
+                        "Nombre": "0..10Vcc",
                         "Seniales": {
                             "SA": 1
                         },
@@ -1662,7 +1786,8 @@
                             }
                         ]
                     },
-                    "Todo/Nada": {
+                    {
+                        "Nombre": "Todo/Nada",
                         "Seniales": {
                             "SD": 1
                         },
@@ -1674,18 +1799,19 @@
                             }
                         ]
                     }
-                }
+                ]
             }
-        }
+        ]
     },
-    "ACS": {
-        "Nombre": "",
-        "Cantidad": 1,
-        "Seniales": {
-            "Temperatura Secundario": {
+    {
+        "Nombre": "ACS",
+        "Elementos": [
+            {
+                "Nombre": "Temperatura Secundario",
                 "Cantidad": 0,
-                "Opciones": {
-                    "Temperatura": {
+                "Opciones": [
+                    {
+                        "Nombre": "Temperatura",
                         "Seniales": {
                             "EA": 1
                         },
@@ -1697,7 +1823,8 @@
                             }
                         ]
                     },
-                    "Termostato": {
+                    {
+                        "Nombre": "Termostato",
                         "Seniales": {
                             "ED": 1
                         },
@@ -1709,12 +1836,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Temperatura Depósito": {
+            {
+                "Nombre": "Temperatura Depósito",
                 "Cantidad": 1,
-                "Opciones": {
-                    "Temperatura": {
+                "Opciones": [
+                    {
+                        "Nombre": "Temperatura",
                         "Seniales": {
                             "EA": 1
                         },
@@ -1726,7 +1855,8 @@
                             }
                         ]
                     },
-                    "Termostato": {
+                    {
+                        "Nombre": "Termostato",
                         "Seniales": {
                             "ED": 1
                         },
@@ -1738,12 +1868,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Temperatura Consumidores": {
+            {
+                "Nombre": "Temperatura Consumidores",
                 "Cantidad": 1,
-                "Opciones": {
-                    "Temperatura": {
+                "Opciones": [
+                    {
+                        "Nombre": "Temperatura",
                         "Seniales": {
                             "EA": 1
                         },
@@ -1755,7 +1887,8 @@
                             }
                         ]
                     },
-                    "Termostato": {
+                    {
+                        "Nombre": "Termostato",
                         "Seniales": {
                             "ED": 1
                         },
@@ -1767,12 +1900,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Bomba Primario": {
+            {
+                "Nombre": "Bomba Primario",
                 "Cantidad": 1,
-                "Opciones": {
-                    "Simple": {
+                "Opciones": [
+                    {
+                        "Nombre": "Simple",
                         "Seniales": {
                             "ED": 1,
                             "SD": 1
@@ -1795,7 +1930,8 @@
                             }
                         ]
                     },
-                    "0..10Vcc": {
+                    {
+                        "Nombre": "0..10Vcc",
                         "Seniales": {
                             "ED": 1,
                             "SA": 1,
@@ -1824,12 +1960,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Bomba Secundario": {
+            {
+                "Nombre": "Bomba Secundario",
                 "Cantidad": 0,
-                "Opciones": {
-                    "Simple": {
+                "Opciones": [
+                    {
+                        "Nombre": "Simple",
                         "Seniales": {
                             "ED": 1,
                             "SD": 1
@@ -1852,7 +1990,8 @@
                             }
                         ]
                     },
-                    "0..10Vcc": {
+                    {
+                        "Nombre": "0..10Vcc",
                         "Seniales": {
                             "ED": 1,
                             "SA": 1,
@@ -1881,12 +2020,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Bomba Retorno": {
+            {
+                "Nombre": "Bomba Retorno",
                 "Cantidad": 1,
-                "Opciones": {
-                    "Simple": {
+                "Opciones": [
+                    {
+                        "Nombre": "Simple",
                         "Seniales": {
                             "ED": 1,
                             "SD": 1
@@ -1909,7 +2050,8 @@
                             }
                         ]
                     },
-                    "0..10Vcc": {
+                    {
+                        "Nombre": "0..10Vcc",
                         "Seniales": {
                             "ED": 1,
                             "SA": 1,
@@ -1938,12 +2080,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Válvula Primario": {
+            {
+                "Nombre": "Válvula Primario",
                 "Cantidad": 0,
-                "Opciones": {
-                    "Todo/Nada": {
+                "Opciones": [
+                    {
+                        "Nombre": "Todo/Nada",
                         "Seniales": {
                             "ED": 1,
                             "SD": 1
@@ -1965,7 +2109,8 @@
                             }
                         ]
                     },
-                    "3 Puntos": {
+                    {
+                        "Nombre": "3 Puntos",
                         "Seniales": {
                             "SD": 2
                         },
@@ -1978,7 +2123,8 @@
                             }
                         ]
                     },
-                    "0..10Vcc": {
+                    {
+                        "Nombre": "0..10Vcc",
                         "Seniales": {
                             "SA": 1
                         },
@@ -1991,12 +2137,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Válvula Consumidores": {
+            {
+                "Nombre": "Válvula Consumidores",
                 "Cantidad": 1,
-                "Opciones": {
-                    "0..10Vcc": {
+                "Opciones": [
+                    {
+                        "Nombre": "0..10Vcc",
                         "Seniales": {
                             "SA": 1
                         },
@@ -2009,7 +2157,8 @@
                             }
                         ]
                     },
-                    "3 Puntos": {
+                    {
+                        "Nombre": "3 Puntos",
                         "Seniales": {
                             "SD": 2
                         },
@@ -2022,12 +2171,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Bypass Válvula Consumidores": {
+            {
+                "Nombre": "Bypass Válvula Consumidores",
                 "Cantidad": 0,
-                "Opciones": {
-                    "1 Micro": {
+                "Opciones": [
+                    {
+                        "Nombre": "1 Micro",
                         "Seniales": {
                             "ED": 1,
                             "SD": 1
@@ -2049,9 +2200,10 @@
                             }
                         ]
                     },
-                    "2 Micros": {
+                    {
+                        "Nombre": "2 Micros",
                         "Seniales": {
-                            "ED": 1,
+                            "ED": 2,
                             "SD": 1
                         },
                         "Esquema": [
@@ -2077,9 +2229,9 @@
                             }
                         ]
                     },
-                    "Sin Micros": {
+                    {
+                        "Nombre": "Sin Micros",
                         "Seniales": {
-                            "ED": 1,
                             "SD": 1
                         },
                         "Esquema": [
@@ -2093,12 +2245,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Demanda a terceros": {
+            {
+                "Nombre": "Demanda a terceros",
                 "Cantidad": 0,
-                "Opciones": {
-                    "0..10Vcc": {
+                "Opciones": [
+                    {
+                        "Nombre": "0..10Vcc",
                         "Seniales": {
                             "SA": 1
                         },
@@ -2110,7 +2264,8 @@
                             }
                         ]
                     },
-                    "Todo/Nada": {
+                    {
+                        "Nombre": "Todo/Nada",
                         "Seniales": {
                             "SD": 1
                         },
@@ -2122,18 +2277,19 @@
                             }
                         ]
                     }
-                }
+                ]
             }
-        }
+        ]
     },
-    "Climatizador": {
-        "Nombre": "",
-        "Cantidad": 1,
-        "Seniales": {
-            "Sonda Ambiente / Retorno": {
+    {
+        "Nombre": "Climatizador",
+        "Elementos": [
+            {
+                "Nombre": "Sonda Ambiente / Retorno",
                 "Cantidad": 1,
-                "Opciones": {
-                    "Temperatura": {
+                "Opciones": [
+                    {
+                        "Nombre": "Temperatura",
                         "Seniales": {
                             "EA": 1
                         },
@@ -2145,7 +2301,8 @@
                             }
                         ]
                     },
-                    "Temp + Hume": {
+                    {
+                        "Nombre": "Temp + Hume",
                         "Seniales": {
                             "EA": 2
                         },
@@ -2157,7 +2314,8 @@
                             }
                         ]
                     },
-                    "Temp + CO2": {
+                    {
+                        "Nombre": "Temp + CO2",
                         "Seniales": {
                             "EA": 2
                         },
@@ -2169,7 +2327,8 @@
                             }
                         ]
                     },
-                    "Temp Hum CO2": {
+                    {
+                        "Nombre": "Temp Hum CO2",
                         "Seniales": {
                             "EA": 3
                         },
@@ -2181,12 +2340,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Sonda Impulsión": {
+            {
+                "Nombre": "Sonda Impulsión",
                 "Cantidad": 1,
-                "Opciones": {
-                    "Temperatura": {
+                "Opciones": [
+                    {
+                        "Nombre": "Temperatura",
                         "Seniales": {
                             "EA": 1
                         },
@@ -2198,7 +2359,8 @@
                             }
                         ]
                     },
-                    "Temp + Hume": {
+                    {
+                        "Nombre": "Temp + Hume",
                         "Seniales": {
                             "EA": 2
                         },
@@ -2210,7 +2372,8 @@
                             }
                         ]
                     },
-                    "Temp + CO2": {
+                    {
+                        "Nombre": "Temp + CO2",
                         "Seniales": {
                             "EA": 2
                         },
@@ -2222,7 +2385,8 @@
                             }
                         ]
                     },
-                    "Temp Hum CO2": {
+                    {
+                        "Nombre": "Temp Hum CO2",
                         "Seniales": {
                             "EA": 3
                         },
@@ -2234,12 +2398,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Sonda Recuperación": {
+            {
+                "Nombre": "Sonda Recuperación",
                 "Cantidad": 0,
-                "Opciones": {
-                    "Temperatura": {
+                "Opciones": [
+                    {
+                        "Nombre": "Temperatura",
                         "Seniales": {
                             "EA": 1
                         },
@@ -2251,7 +2417,8 @@
                             }
                         ]
                     },
-                    "Temp + Hume": {
+                    {
+                        "Nombre": "Temp + Hume",
                         "Seniales": {
                             "EA": 2
                         },
@@ -2263,7 +2430,8 @@
                             }
                         ]
                     },
-                    "Temp + CO2": {
+                    {
+                        "Nombre": "Temp + CO2",
                         "Seniales": {
                             "EA": 2
                         },
@@ -2275,7 +2443,8 @@
                             }
                         ]
                     },
-                    "Temp Hum CO2": {
+                    {
+                        "Nombre": "Temp Hum CO2",
                         "Seniales": {
                             "EA": 3
                         },
@@ -2287,12 +2456,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Sonda toma aire del Exterior": {
+            {
+                "Nombre": "Sonda toma aire del Exterior",
                 "Cantidad": 0,
-                "Opciones": {
-                    "Temperatura": {
+                "Opciones": [
+                    {
+                        "Nombre": "Temperatura",
                         "Seniales": {
                             "EA": 1
                         },
@@ -2304,7 +2475,8 @@
                             }
                         ]
                     },
-                    "Temp + Hume": {
+                    {
+                        "Nombre": "Temp + Hume",
                         "Seniales": {
                             "EA": 2
                         },
@@ -2316,7 +2488,8 @@
                             }
                         ]
                     },
-                    "Temp + CO2": {
+                    {
+                        "Nombre": "Temp + CO2",
                         "Seniales": {
                             "EA": 2
                         },
@@ -2328,7 +2501,8 @@
                             }
                         ]
                     },
-                    "Temp Hum CO2": {
+                    {
+                        "Nombre": "Temp Hum CO2",
                         "Seniales": {
                             "EA": 3
                         },
@@ -2340,12 +2514,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Sonda salida aire al Exterior": {
+            {
+                "Nombre": "Sonda salida aire al Exterior",
                 "Cantidad": 0,
-                "Opciones": {
-                    "Temperatura": {
+                "Opciones": [
+                    {
+                        "Nombre": "Temperatura",
                         "Seniales": {
                             "EA": 1
                         },
@@ -2357,7 +2533,8 @@
                             }
                         ]
                     },
-                    "Temp + Hume": {
+                    {
+                        "Nombre": "Temp + Hume",
                         "Seniales": {
                             "EA": 2
                         },
@@ -2369,7 +2546,8 @@
                             }
                         ]
                     },
-                    "Temp + CO2": {
+                    {
+                        "Nombre": "Temp + CO2",
                         "Seniales": {
                             "EA": 2
                         },
@@ -2381,7 +2559,8 @@
                             }
                         ]
                     },
-                    "Temp Hum CO2": {
+                    {
+                        "Nombre": "Temp Hum CO2",
                         "Seniales": {
                             "EA": 3
                         },
@@ -2393,12 +2572,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Válvula Batería": {
+            {
+                "Nombre": "Válvula Batería",
                 "Cantidad": 1,
-                "Opciones": {
-                    "Todo/Nada": {
+                "Opciones": [
+                    {
+                        "Nombre": "Todo/Nada",
                         "Seniales": {
                             "ED": 1,
                             "SD": 1
@@ -2420,7 +2601,8 @@
                             }
                         ]
                     },
-                    "3 Puntos": {
+                    {
+                        "Nombre": "3 Puntos",
                         "Seniales": {
                             "SD": 2
                         },
@@ -2433,7 +2615,8 @@
                             }
                         ]
                     },
-                    "0..10Vcc": {
+                    {
+                        "Nombre": "0..10Vcc",
                         "Seniales": {
                             "SA": 1
                         },
@@ -2446,12 +2629,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Bomba Batería": {
+            {
+                "Nombre": "Bomba Batería",
                 "Cantidad": 0,
-                "Opciones": {
-                    "Simple": {
+                "Opciones": [
+                    {
+                        "Nombre": "Simple",
                         "Seniales": {
                             "ED": 1,
                             "SD": 1
@@ -2474,7 +2659,8 @@
                             }
                         ]
                     },
-                    "0..10Vcc": {
+                    {
+                        "Nombre": "0..10Vcc",
                         "Seniales": {
                             "ED": 1,
                             "SA": 1,
@@ -2503,12 +2689,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Presostato filtro sucio": {
+            {
+                "Nombre": "Presostato filtro sucio",
                 "Cantidad": 0,
-                "Opciones": {
-                    "Externa": {
+                "Opciones": [
+                    {
+                        "Nombre": "Externa",
                         "Seniales": {
                             "ED": 1
                         },
@@ -2520,12 +2708,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Presión Ventilador": {
+            {
+                "Nombre": "Presión Ventilador",
                 "Cantidad": 0,
-                "Opciones": {
-                    "Sonda": {
+                "Opciones": [
+                    {
+                        "Nombre": "Sonda",
                         "Seniales": {
                             "EA": 1
                         },
@@ -2537,12 +2727,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Ventilador": {
+            {
+                "Nombre": "Ventilador",
                 "Cantidad": 1,
-                "Opciones": {
-                    "Simple": {
+                "Opciones": [
+                    {
+                        "Nombre": "Simple",
                         "Seniales": {
                             "ED": 1,
                             "SD": 1
@@ -2565,7 +2757,8 @@
                             }
                         ]
                     },
-                    "0..10Vcc": {
+                    {
+                        "Nombre": "0..10Vcc",
                         "Seniales": {
                             "ED": 1,
                             "SA": 1,
@@ -2594,12 +2787,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Humectador": {
+            {
+                "Nombre": "Humectador",
                 "Cantidad": 0,
-                "Opciones": {
-                    "Simple": {
+                "Opciones": [
+                    {
+                        "Nombre": "Simple",
                         "Seniales": {
                             "ED": 1,
                             "SD": 1
@@ -2619,7 +2814,8 @@
                             }
                         ]
                     },
-                    "0..10Vcc": {
+                    {
+                        "Nombre": "0..10Vcc",
                         "Seniales": {
                             "ED": 1,
                             "SD": 1
@@ -2644,12 +2840,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Recuperador": {
+            {
+                "Nombre": "Recuperador",
                 "Cantidad": 0,
-                "Opciones": {
-                    "Bypass": {
+                "Opciones": [
+                    {
+                        "Nombre": "Bypass",
                         "Seniales": {
                             "SD": 1
                         },
@@ -2661,7 +2859,8 @@
                             }
                         ]
                     },
-                    "Simple": {
+                    {
+                        "Nombre": "Simple",
                         "Seniales": {
                             "ED": 1,
                             "SD": 1
@@ -2684,7 +2883,8 @@
                             }
                         ]
                     },
-                    "0..10Vcc": {
+                    {
+                        "Nombre": "0..10Vcc",
                         "Seniales": {
                             "ED": 1,
                             "SA": 1,
@@ -2713,12 +2913,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Compuertas": {
+            {
+                "Nombre": "Compuertas",
                 "Cantidad": 0,
-                "Opciones": {
-                    "Todo/Nada": {
+                "Opciones": [
+                    {
+                        "Nombre": "Todo/Nada",
                         "Seniales": {
                             "ED": 1,
                             "SD": 1
@@ -2740,7 +2942,8 @@
                             }
                         ]
                     },
-                    "3 Puntos": {
+                    {
+                        "Nombre": "3 Puntos",
                         "Seniales": {
                             "SD": 2
                         },
@@ -2753,7 +2956,8 @@
                             }
                         ]
                     },
-                    "0..10Vcc": {
+                    {
+                        "Nombre": "0..10Vcc",
                         "Seniales": {
                             "SA": 1
                         },
@@ -2766,12 +2970,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Cambio de regimen externo": {
+            {
+                "Nombre": "Cambio de regimen externo",
                 "Cantidad": 0,
-                "Opciones": {
-                    "Externa": {
+                "Opciones": [
+                    {
+                        "Nombre": "Externa",
                         "Seniales": {
                             "ED": 1
                         },
@@ -2783,12 +2989,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Demanda a terceros": {
+            {
+                "Nombre": "Demanda a terceros",
                 "Cantidad": 0,
-                "Opciones": {
-                    "0..10Vcc": {
+                "Opciones": [
+                    {
+                        "Nombre": "0..10Vcc",
                         "Seniales": {
                             "SA": 1
                         },
@@ -2800,7 +3008,8 @@
                             }
                         ]
                     },
-                    "Todo/Nada": {
+                    {
+                        "Nombre": "Todo/Nada",
                         "Seniales": {
                             "SD": 1
                         },
@@ -2812,18 +3021,19 @@
                             }
                         ]
                     }
-                }
+                ]
             }
-        }
+        ]
     },
-    "Fan Coil": {
-        "Nombre": "",
-        "Cantidad": 1,
-        "Seniales": {
-            "Sonda Ambiente / Retorno": {
+    {
+        "Nombre": "Fan Coil",
+        "Elementos": [
+            {
+                "Nombre": "Sonda Ambiente / Retorno",
                 "Cantidad": 1,
-                "Opciones": {
-                    "Temperatura": {
+                "Opciones": [
+                    {
+                        "Nombre": "Temperatura",
                         "Seniales": {
                             "EA": 1
                         },
@@ -2835,7 +3045,8 @@
                             }
                         ]
                     },
-                    "Temp + Hume": {
+                    {
+                        "Nombre": "Temp + Hume",
                         "Seniales": {
                             "EA": 2
                         },
@@ -2847,7 +3058,8 @@
                             }
                         ]
                     },
-                    "Temp + CO2": {
+                    {
+                        "Nombre": "Temp + CO2",
                         "Seniales": {
                             "EA": 2
                         },
@@ -2859,7 +3071,8 @@
                             }
                         ]
                     },
-                    "Temp Hum CO2": {
+                    {
+                        "Nombre": "Temp Hum CO2",
                         "Seniales": {
                             "EA": 3
                         },
@@ -2871,12 +3084,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Temperatura Impulsión": {
+            {
+                "Nombre": "Temperatura Impulsión",
                 "Cantidad": 0,
-                "Opciones": {
-                    "Temperatura": {
+                "Opciones": [
+                    {
+                        "Nombre": "Temperatura",
                         "Seniales": {
                             "EA": 1
                         },
@@ -2888,7 +3103,8 @@
                             }
                         ]
                     },
-                    "Termostato": {
+                    {
+                        "Nombre": "Termostato",
                         "Seniales": {
                             "ED": 1
                         },
@@ -2900,12 +3116,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Válvula Batería": {
+            {
+                "Nombre": "Válvula Batería",
                 "Cantidad": 1,
-                "Opciones": {
-                    "Todo/Nada": {
+                "Opciones": [
+                    {
+                        "Nombre": "Todo/Nada",
                         "Seniales": {
                             "ED": 1,
                             "SD": 1
@@ -2927,7 +3145,8 @@
                             }
                         ]
                     },
-                    "3 Puntos": {
+                    {
+                        "Nombre": "3 Puntos",
                         "Seniales": {
                             "SD": 2
                         },
@@ -2940,7 +3159,8 @@
                             }
                         ]
                     },
-                    "0..10Vcc": {
+                    {
+                        "Nombre": "0..10Vcc",
                         "Seniales": {
                             "SA": 1
                         },
@@ -2953,12 +3173,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Presostato filtro sucio": {
+            {
+                "Nombre": "Presostato filtro sucio",
                 "Cantidad": 0,
-                "Opciones": {
-                    "Externa": {
+                "Opciones": [
+                    {
+                        "Nombre": "Externa",
                         "Seniales": {
                             "ED": 1
                         },
@@ -2970,12 +3192,14 @@
                             }
                         ]
                     }
-                }
+                ]
             },
-            "Ventilador": {
+            {
+                "Nombre": "Ventilador",
                 "Cantidad": 1,
-                "Opciones": {
-                    "0..10Vcc": {
+                "Opciones": [
+                    {
+                        "Nombre": "0..10Vcc",
                         "Seniales": {
                             "SA": 1
                         },
@@ -2987,7 +3211,8 @@
                             }
                         ]
                     },
-                    "1veloc": {
+                    {
+                        "Nombre": "1veloc",
                         "Seniales": {
                             "SD": 1
                         },
@@ -2999,7 +3224,8 @@
                             }
                         ]
                     },
-                    "3veloc": {
+                    {
+                        "Nombre": "3veloc",
                         "Seniales": {
                             "SD": 3
                         },
@@ -3011,8 +3237,8 @@
                             }
                         ]
                     }
-                }
+                ]
             }
-        }
+        ]
     }
-}
+]

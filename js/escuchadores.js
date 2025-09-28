@@ -7,13 +7,39 @@ function escuchadores() {
         populateBlockSelect();
         populateCabeceraYPie();
 
-        // Descomentar para pruebas y cargar primer proyecto automaticamente
-        // portadaAbrProyecBtn.dispatchEvent(new Event('click', { bubbles: true }));
-        // portadaSelProyecAbrir.dispatchEvent(new Event('click', { bubbles: true }));
+        // verificar si existe la clave del nombre del proyecto actual en el local storage      
+        nombreProyectoActual = localStorage.getItem('nombreProyectoActual');
+        if (nombreProyectoActual === null) return;
+
+        // verificar si existe tal proyecto en la biblioteca
+        if (!proyectosEasyPoint.hasOwnProperty(nombreProyectoActual)) return;
+
+        // intentar cargar el proyecto en memoria
+        try {
+            const data = localStorage.getItem('proyectoActual');
+            if (data) {                       // primero verificamos que exista algo
+                proyectoActual = JSON.parse(data);
+            }
+        } catch (error) {
+            console.error('Error al parsear proyectoActual:', error);
+            proyectoActual = null;
+            localStorage.removeItem('proyectoActual');
+            return;
+        }
+
+        // dejar portada preparada con el proyecto actual seleccionado, 
+        // y abrir la parte de estudio con los datos de localstorage
+        portada.classList.add("w3-hide");
+        portadaAbrProyecBtn.dispatchEvent(new Event('click', { bubbles: true }));
+        portadaSelProyecSelect.value = nombreProyectoActual;
+        estudioNombProyecInput.value = nombreProyectoActual;
+        writeBlocks();
+        estudio.classList.remove("w3-hide");
 
     });
 
     // ---------- BOTONES PORTADA ----------
+    // (verde check) Crear nuevo proyecto
     portadaNueProyecCrear.addEventListener("click", () => {
 
         // si se esta mostrando mensaje error proyecto ya existe, no hacer nada
@@ -37,14 +63,14 @@ function escuchadores() {
 
         // Simular click en abrir para mostrar el select de proyectos despues de haberlo creado
         portadaAbrProyecBtn.dispatchEvent(new Event("click"), { bubbles: true });
-        
+
         // Simular click en abrir proyecto para mostrar el estudio despues de haberlo creado
         portadaSelProyecAbrir.dispatchEvent(new Event("click"), { bubbles: true });
-        
+
         // O sea, al crear el proyecto nada mas darle al enter se abre el estudio del proyecto recien creado.
 
     });
-
+    // (verde nuevo) boton para abrir dialogo para poner nombre de nuevo proyecto
     portadaNueProyecBtn.addEventListener("click", () => {
 
         if (portadaNueProyecCont.classList.contains("w3-hide")) {
@@ -86,7 +112,7 @@ function escuchadores() {
         }
 
     });
-
+    // (morado importar) boton importar proyecto
     portadaImpProyecBtn.addEventListener("click", () => {
 
         if (portadaSelProyecCont.classList.contains("w3-hide")) {
@@ -119,7 +145,7 @@ function escuchadores() {
         }
 
     });
-
+    // (azul abrir) boton para abrir dialogo para seleccionar proyecto que se desea abrir
     portadaAbrProyecBtn.addEventListener("click", () => {
 
         if (portadaSelProyecCont.classList.contains("w3-hide")) {
@@ -167,7 +193,7 @@ function escuchadores() {
 
         }
     });
-
+    // (rojo papelera) boton borrar proyecto
     portadaSelProyecBorrar.addEventListener("click", () => {
 
         // BORRAR PROYECTO
@@ -204,20 +230,27 @@ function escuchadores() {
         }
 
     });
-
+    // (verde flecha) boton abrir proyecto seleccionado
     portadaSelProyecAbrir.addEventListener("click", () => {
 
-        const proyectoAbierto = portadaSelProyecSelect.value.trim();
+        const abrirProyecto = portadaSelProyecSelect.value.trim();
 
         // por seguridad
-        if (!proyectoAbierto) return;
-        if (!proyectosEasyPoint.hasOwnProperty(proyectoAbierto)) return;
+        if (!abrirProyecto) return;
+        if (!proyectosEasyPoint.hasOwnProperty(abrirProyecto)) return;
 
-        // TODO: copiar el proyecto seleccionado al localStorage de trabajo
+        nombreProyectoActual = abrirProyecto;
+        proyectoActual = structuredClone(proyectosEasyPoint[nombreProyectoActual]);
+
+        // guardar en local storage
         // de modo que si se cierra la ventana, al abrirla se comprueba si existe
         // proyectoAbierto, y se abre ese proyecto directamente
         // asi se pueden ir dejando cosas a medias y abrirlo mas tarde
-        // localStorage.setItem("proyectoEasyPointTrabajo", JSON.stringify(proyectosEasyPoint[proyectoAbierto]));
+        localStorage.setItem("nombreProyectoActual", nombreProyectoActual);
+        localStorage.setItem("proyectoActual", JSON.stringify(proyectoActual));
+
+        //TODO: los cambios sin guardar tambien deberian guardarse en este local storage
+        // por si se sierra el navegador poder recuperar el trabajo al abrirlo
 
         //crear los bloques del proyecto
         writeBlocks();
@@ -229,6 +262,7 @@ function escuchadores() {
     });
 
     // ---------- PORTADA INPUT/SELECT ----------
+    // importacion de proyecto una vez el usuario acepta o cancela el dialogo de seleccion de archivo
     portadaImpProyecInput.addEventListener("change", (event) => {
 
         const file = event.target.files[0];
@@ -263,7 +297,7 @@ function escuchadores() {
         };
         reader.readAsText(file);
     });
-
+    // verificar si el nombre de proyecto ya existe para indicar input y subtexto en rojo
     portadaNueProyecInput.addEventListener("input", () => {
 
         const nuevoProyecto = portadaNueProyecInput.value.trim();
@@ -287,7 +321,7 @@ function escuchadores() {
         }
 
     });
-
+    // escuchar enter como alternativa a tener que pulsar el boton de crear proyecto
     portadaNueProyecInput.addEventListener("keydown", (e) => {
         if (e.key === "Enter") {
             portadaNueProyecCrear.dispatchEvent(new Event('click', { bubbles: true }));
@@ -295,6 +329,7 @@ function escuchadores() {
     });
 
     // ---------- BOTONES ESTUDIO DE PUNTOS ----------
+    // (verde guardar) guardar el estado actual del proyecto en el local storage del navegador
     estudioGuardarBtn.addEventListener("click", () => {
 
         let sobreescribir = false;
@@ -318,6 +353,11 @@ function escuchadores() {
             }
         }
 
+        // TODO: por ahora guardamos directamente. Hace falta la logica de si se ha cambiasdo 
+        // el npombre al proyecto, renombrar o si hay que sobreescribir...
+        proyectosEasyPoint[nombreProyectoActual] = structuredClone(proyectoActual);
+
+        /* Antiguo guardar
         // si desea sobreescribir 
         if (sobreescribir) {
 
@@ -352,6 +392,7 @@ function escuchadores() {
 
             }
         }
+        */
 
         // guardar en local storage
         localStorage.setItem("proyectosEasyPoint", JSON.stringify(proyectosEasyPoint));
@@ -363,28 +404,43 @@ function escuchadores() {
         guardadoOK();
 
     });
-
+    // (azul PDF) crear pdf de lo que se ve en pantalla
     estudioCrearPDFBtn.addEventListener("click", () => {
         crearPDF();
     });
-
+    // (rojo salir) volver a la portada
     estudioSalirBtn.addEventListener("click", () => {
         let seguir = guardado
             ? true
             : confirm("Hay cambios no guardados que se perderán.\n\n¿Desea continuar?\n");
         if (seguir) {
+
+            // limpiar las claves del proyecto actual
+            localStorage.removeItem('proyectoActual');
+            localStorage.removeItem('nombreProyectoActual');
+            nombreProyectoActual = null;
+            proyectoActual = null;
+
             // poner pantalla principal en modo inicial (presionamos boton abrir que deberia estar en modo "cancelar")
             estudio.classList.add("w3-hide");
             portada.classList.remove("w3-hide");
+
         }
     });
-
+    // (verde añadir) añadir el bloque seleccionado
     estudioBloqAniaBtn.addEventListener("click", () => {
-        addBlock();
-        buttonsMoveBlock();
+        console.log("estudioBloqSelect.value", estudioBloqSelect.value);
+        const bloque = structuredClone(blocksData[estudioBloqSelect.value]);
+        if (!bloque) return;
+        bloque.id = crypto.randomUUID();
+        proyectoActual.push(bloque);
+        addBlock(bloque);
+        disableFirstAndLastMoveBlockButtons();
+        guardado = false;
     });
 
     // ---------- ESTUDIO INPUT/SELECT ----------
+    // cambiar color del input del nombre del proyecto si ya existe otro proyecto son ese nombre o esta vacio
     estudioNombProyecInput.addEventListener("input", () => {
 
         const estaVacio = estudioNombProyecInput.value.trim() === "";
@@ -398,7 +454,7 @@ function escuchadores() {
         }
 
     });
-
+    // modificar el total de señales 
     estudioBloqCont.addEventListener("change", (event) => {
         if (event.target.type === "checkbox") {
             if (!checkboxChangeScheduled) {
@@ -410,14 +466,16 @@ function escuchadores() {
             }
         }
     });
-
+    // TODO: cambiar escuchadores particulares de inputs creados programaticamente por un escuchador global
     estudioBloqCont.addEventListener('input', (event) => {
         const target = event.target;
         if (target.tagName === 'INPUT' && ['checkbox', 'number', 'text'].includes(target.type)) {
             guardado = false;
         }
     });
-
+    // TODO: esto no funciona al añadir o eliminar bloques
+    // solo funciona al cambiar el orden de los bloques
+    // al añadir funciona porque la funcion añadir ya pone el guardado a falso
     estudioBloqCont.addEventListener('click', (event) => {
         const target = event.target;
         if (target.tagName === 'BUTTON') {
@@ -426,6 +484,7 @@ function escuchadores() {
     });
 
     // ---------- BOTONES POPUP AÑADIR ELEMENTOS ----------
+    // TODO: modificar tambien el json de proyecto abierto para mantenerlo sincronizado
     popAceptar.addEventListener("click", () => {
 
         const table = customPop.tablaOrigen;
@@ -475,7 +534,7 @@ function escuchadores() {
         }
 
     });
-
+    // (rojo cancelar) ocultar la interfaz para añadir elementos custom y no hacer nada.
     popCancel.addEventListener("click", () => {
         estudio.removeAttribute('inert');
         overlay.style.display = "none";

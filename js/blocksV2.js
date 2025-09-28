@@ -1,10 +1,14 @@
-const fs = require('fs');
+// const fs = require('fs');
 
 const signalTypes = ["EA", "ED", "SA", "SD"];
 
 // En el array estan las diferentes opciones de dibujar la señal en el esquema
 // El nombre del bloque a llamar será el nombre de la propiedad + el valor elegido. p ej  ED_1 + "Contactor" = ED_1_Contactor
 const esq = {
+
+    // TODO: valorar si es mejor hacer que los objetos tengan la estructira { Nombre: "EA_1", Opciones :["Pasiva",] } 
+    // para poder tener un acceso mas facil y no tener que iterar las propiedades buscando cual es el nombre
+
     //EA
     PasivaEA_1: () => ({ EA_1: ["Pasiva",] }),
     SimpleEA_1: () => ({ EA_1: ["Externa",] }),
@@ -26,196 +30,200 @@ const esq = {
     ActuadSD_1: () => ({ SD_1: ["Externa", "Rele", "Simple", "Conmutada",] }),
     ActuadSD_2: () => ({ SD_2: ["Externa", "Actuador",] }),
 }
+
 const opt = {
+    // "Esquema" es un array de objetos y no un objeto con propiedades, por si se necesita duplicar el objeto, 
+    // como por ejemplo en el actuador todo/nada con 2 micros, donde la entrada digital esta duplicada
     //Simples
-    SimpleEA: () => ({ Seniales: { "EA": 1, }, Esquema: [esq.SimpleEA_1()], }),
-    SimpleED: () => ({ Seniales: { "ED": 1, }, Esquema: [esq.SimpleED_1()], }),
-    SimpleSA: () => ({ Seniales: { "SA": 1, }, Esquema: [esq.SimpleSA_1()], }),
-    SimpleSD: () => ({ Seniales: { "SD": 1, }, Esquema: [esq.SimpleSD_1()], }),
+    SimpleEA: (Nombre) => ({Nombre, Seniales: { "EA": 1, }, Esquema: [esq.SimpleEA_1()], }),
+    SimpleED: (Nombre) => ({Nombre, Seniales: { "ED": 1, }, Esquema: [esq.SimpleED_1()], }),
+    SimpleSA: (Nombre) => ({Nombre, Seniales: { "SA": 1, }, Esquema: [esq.SimpleSA_1()], }),
+    SimpleSD: (Nombre) => ({Nombre, Seniales: { "SD": 1, }, Esquema: [esq.SimpleSD_1()], }),
     //sensor
-    SensorPasi: () => ({ Seniales: { "EA": 1, }, Esquema: [esq.PasivaEA_1()], }),
-    SensorAct1: () => ({ Seniales: { "EA": 1, }, Esquema: [esq.ActivaEA_1()], }),
-    SensorAct2: () => ({ Seniales: { "EA": 2, }, Esquema: [esq.ActivaEA_2()], }),
-    SensorAct3: () => ({ Seniales: { "EA": 3, }, Esquema: [esq.ActivaEA_3()], }),
-    SensorDigi: () => ({ Seniales: { "ED": 1, }, Esquema: [esq.SimpleED_1()], }),
+    SensorPasi: (Nombre) => ({Nombre, Seniales: { "EA": 1, }, Esquema: [esq.PasivaEA_1()], }),
+    SensorAct1: (Nombre) => ({Nombre, Seniales: { "EA": 1, }, Esquema: [esq.ActivaEA_1()], }),
+    SensorAct2: (Nombre) => ({Nombre, Seniales: { "EA": 2, }, Esquema: [esq.ActivaEA_2()], }),
+    SensorAct3: (Nombre) => ({Nombre, Seniales: { "EA": 3, }, Esquema: [esq.ActivaEA_3()], }),
+    SensorDigi: (Nombre) => ({Nombre, Seniales: { "ED": 1, }, Esquema: [esq.SimpleED_1()], }),
     //Actuador
-    Actuador010V: () => ({ Seniales: { "SA": 1, }, Esquema: [esq.ActuadSA_1()], }),
-    Actuador3Pun: () => ({ Seniales: { "SD": 2, }, Esquema: [esq.ActuadSD_2()], }),
-    ActuadorTN0M: () => ({ Seniales: { "ED": 1, "SD": 1, }, Esquema: [esq.ActuadSD_1(),], }),
-    ActuadorTN1M: () => ({ Seniales: { "ED": 1, "SD": 1, }, Esquema: [esq.EntradED_1(), esq.ActuadSD_1(),], }),
-    ActuadorTN2M: () => ({ Seniales: { "ED": 1, "SD": 1, }, Esquema: [esq.EntradED_1(), esq.EntradED_1(), esq.ActuadSD_1(),], }),
+    Actuador010V: (Nombre) => ({Nombre, Seniales: { "SA": 1, }, Esquema: [esq.ActuadSA_1()], }),
+    Actuador3Pun: (Nombre) => ({Nombre, Seniales: { "SD": 2, }, Esquema: [esq.ActuadSD_2()], }),
+    ActuadorTN0M: (Nombre) => ({Nombre, Seniales: { "SD": 1, }, Esquema: [esq.ActuadSD_1(),], }),
+    ActuadorTN1M: (Nombre) => ({Nombre, Seniales: { "ED": 1, "SD": 1, }, Esquema: [esq.EntradED_1(), esq.ActuadSD_1(),], }),
+    ActuadorTN2M: (Nombre) => ({Nombre, Seniales: { "ED": 2, "SD": 1, }, Esquema: [esq.EntradED_1(), esq.EntradED_1(), esq.ActuadSD_1(),], }),
     //motor
-    MPyEstado: () => ({ Seniales: { "ED": 1, "SD": 1, }, Esquema: [esq.EntradED_1(), esq.SalidaSD_1(),], }),
-    MotorToNa: () => ({ Seniales: { "ED": 1, "SD": 1, }, Esquema: [esq.MotorED_1(), esq.MotorSD_1(),], }),
-    MPEst010V: () => ({ Seniales: { "ED": 1, "SD": 1, }, Esquema: [esq.EntradED_1(), esq.SimpleSA_1(), esq.SalidaSD_1(),], }),
-    Motor010V: () => ({ Seniales: { "ED": 1, "SA": 1, "SD": 1 }, Esquema: [esq.MotorED_1(), esq.SimpleSA_1(), esq.MotorSD_1(),], }),
-    Motor3vel: () => ({ Seniales: { "SD": 3 }, Esquema: [esq.MotorSD_3(),], }),
+    MPyEstado: (Nombre) => ({Nombre, Seniales: { "ED": 1, "SD": 1, }, Esquema: [esq.EntradED_1(), esq.SalidaSD_1(),], }),
+    MotorToNa: (Nombre) => ({Nombre, Seniales: { "ED": 1, "SD": 1, }, Esquema: [esq.MotorED_1(), esq.MotorSD_1(),], }),
+    MPEst010V: (Nombre) => ({Nombre, Seniales: { "ED": 1, "SD": 1, }, Esquema: [esq.EntradED_1(), esq.SimpleSA_1(), esq.SalidaSD_1(),], }),
+    Motor010V: (Nombre) => ({Nombre, Seniales: { "ED": 1, "SA": 1, "SD": 1 }, Esquema: [esq.MotorED_1(), esq.SimpleSA_1(), esq.MotorSD_1(),], }),
+    Motor3vel: (Nombre) => ({Nombre, Seniales: { "SD": 3 }, Esquema: [esq.MotorSD_3(),], }),
 }
+
 const elem = {
 
     //sencillos
-    PasivaEA: (Cantidad) => ({ Cantidad, Opciones: { "Externa": opt.SensorPasi(), }, }),
-    SimpleEA: (Cantidad) => ({ Cantidad, Opciones: { "Externa": opt.SimpleEA(), }, }),
-    SimpleED: (Cantidad) => ({ Cantidad, Opciones: { "Externa": opt.SimpleED(), }, }),
-    SimpleSA: (Cantidad) => ({ Cantidad, Opciones: { "Externa": opt.SimpleSA(), }, }),
-    SimpleSD: (Cantidad) => ({ Cantidad, Opciones: { "Externa": opt.SimpleSD(), }, }),
+    PasivaEA:    (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.SensorPasi("Externa"),], }),
+    SimpleEA:    (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.SimpleEA("Externa"),], }),
+    SimpleED:    (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.SimpleED("Externa"),], }),
+    SimpleSA:    (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.SimpleSA("Externa"),], }),
+    SimpleSD:    (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.SimpleSD("Externa"),], }),
 
     //sensores 
-    SensorAire: (Cantidad) => ({ Cantidad, Opciones: { "Temperatura": opt.SensorPasi(), "Temp + Hume": opt.SensorAct2(), "Temp + CO2": opt.SensorAct2(), "Temp Hum CO2": opt.SensorAct3(), }, }),
-    SondaTermos: (Cantidad) => ({ Cantidad, Opciones: { "Temperatura": opt.SensorPasi(), "Termostato": opt.SensorDigi(), }, }),
-    SensorPres: (Cantidad) => ({ Cantidad, Opciones: { "Presostato": opt.SensorDigi(), "Sonda": opt.SensorAct1(), }, }),
-    SoloActiva: (Cantidad) => ({ Cantidad, Opciones: { "Sonda": opt.SensorAct1(), }, }),
+    SensorAire:  (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.SensorPasi("Temperatura"), opt.SensorAct2("Temp + Hume"), opt.SensorAct2("Temp + CO2"), opt.SensorAct3("Temp Hum CO2"),], }),
+    SondaTermos: (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.SensorPasi("Temperatura"), opt.SensorDigi("Termostato"),], }),
+    SensorPres:  (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.SensorDigi("Presostato"), opt.SensorAct1("Sonda"),], }),
+    SoloActiva:  (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.SensorAct1("Sonda"),], }),
 
     //valvulas
-    ValvulaToNa: (Cantidad) => ({ Cantidad, Opciones: { "1 Micro": opt.ActuadorTN1M(), "2 Micros": opt.ActuadorTN2M(), "Sin Micros": opt.ActuadorTN0M(), }, }),
-    ValvulaProp: (Cantidad) => ({ Cantidad, Opciones: { "0..10Vcc": opt.Actuador010V(), "3 Puntos": opt.Actuador3Pun(), }, }),
-    ValvTNProp: (Cantidad) => ({ Cantidad, Opciones: { "Todo/Nada": opt.ActuadorTN1M(), "3 Puntos": opt.Actuador3Pun(), "0..10Vcc": opt.Actuador010V(), }, }),
+    ValvulaToNa: (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.ActuadorTN1M("1 Micro"), opt.ActuadorTN2M("2 Micros"), opt.ActuadorTN0M("Sin Micros"),], }),
+    ValvulaProp: (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.Actuador010V("0..10Vcc"), opt.Actuador3Pun("3 Puntos"),], }),
+    ValvTNProp:  (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.ActuadorTN1M("Todo/Nada"), opt.Actuador3Pun("3 Puntos"), opt.Actuador010V("0..10Vcc"),], }),
 
     //organos de gobierno
-    ExterModul: (Cantidad) => ({ Cantidad, Opciones: { "Simple": opt.MPyEstado(), "0..10Vcc": opt.MPEst010V(), }, }),
-    MotorModul: (Cantidad) => ({ Cantidad, Opciones: { "Simple": opt.MotorToNa(), "0..10Vcc": opt.Motor010V(), }, }),
-    MotorFC: (Cantidad) => ({ Cantidad, Opciones: { "0..10Vcc": opt.SimpleSA(), "1veloc": opt.SimpleSD(), "3veloc": opt.Motor3vel(), }, }),
-    Recuperdor: (Cantidad) => ({ Cantidad, Opciones: { "Bypass": opt.SimpleSD(), "Simple": opt.MotorToNa(), "0..10Vcc": opt.Motor010V(), }, }),
+    ExterModul:  (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.MPyEstado("Simple"), opt.MPEst010V("0..10Vcc"),], }),
+    MotorModul:  (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.MotorToNa("Simple"), opt.Motor010V("0..10Vcc"),], }),
+    MotorFC:     (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.SimpleSA("0..10Vcc"), opt.SimpleSD("1veloc"), opt.Motor3vel("3veloc"),], }),
+    Recuperdor:  (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.SimpleSD("Bypass"), opt.MotorToNa("Simple"), opt.Motor010V("0..10Vcc"),], }),
 
     //productores
-    ModulaCalde: (Cantidad) => ({ Cantidad, Opciones: { "0..10Vcc": opt.SimpleSA(), "3 Puntos": opt.Actuador3Pun(), "2ª llama": opt.SimpleSD(), }, }),
-    MPyEstado: (Cantidad) => ({ Cantidad, Opciones: { "MPyEstado": opt.MPyEstado(), }, }),
-    Demanda: (Cantidad) => ({ Cantidad, Opciones: { "0..10Vcc": opt.SimpleSA(), "Todo/Nada": opt.SimpleSD(), }, }),
+    ModulaCalde: (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.SimpleSA("0..10Vcc"), opt.Actuador3Pun("3 Puntos"), opt.SimpleSD("2ª llama"),], }),
+    MPyEstado:   (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.MPyEstado("MPyEstado"),], }),
+    Demanda:     (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.SimpleSA("0..10Vcc"), opt.SimpleSD("Todo/Nada"),], }),
 
 }
 
-const blocksData = () => ({
-    "Condiciones Exteriores": {
-        "Nombre": "",
-        "Cantidad": 1,
-        "Seniales": {
-            "Exterior": elem.SensorAire(1),
+function blocks() {
+    // Separadores identificados con "Seniales: null"
+    return [
+        {
+            "Nombre": "Condiciones Exteriores",
+            "Elementos": [
+                elem.SensorAire("Exterior", 1),
+            ],
         },
-    },
-    " ----- Producción -----": null,
-    "Gestor de Cascada de Producción": {
-        "Nombre": "",
-        "Cantidad": 1,
-        "Seniales": {
-            "Temperatura": elem.SondaTermos(1),
-            "Bomba": elem.MotorModul(0),
-            "Ventilacion Forzada": elem.MotorModul(1),
-            "Electroválvula de Gas": elem.SimpleSD(1),
-            "Cambio de regimen externo": elem.SimpleED(0),
-            "Válvula Calor / Frío": elem.ValvulaToNa(0),
-            "Control Presión": elem.SondaTermos(1),
+        {
+            "Nombre": " ----- Producción -----",
+            "Elementos": null,
         },
-    },
-    "Caldera": {
-        "Nombre": "",
-        "Cantidad": 1,
-        "Seniales": {
-            "Temperatura": elem.SondaTermos(1),
-            "Marcha-Paro": elem.SimpleSD(0),
-            "Estado / Alarma": elem.SimpleED(1),
-            "Modulación / Consigna": elem.ModulaCalde(1),
-            "Bomba": elem.MotorModul(1),
-            "Válvula Aislamiento / Retorno": elem.ValvTNProp(0),
-            "Control Humos": elem.SondaTermos(0),
-            "Control Presión": elem.SensorPres(0),
+        {
+            "Nombre": "Gestor de Cascada de Producción",
+            "Elementos": [
+                elem.SondaTermos("Temperatura", 1),
+                elem.MotorModul("Bomba", 0),
+                elem.MotorModul("Ventilacion Forzada", 1),
+                elem.SimpleSD("Electroválvula de Gas", 1),
+                elem.SimpleED("Cambio de regimen externo", 0),
+                elem.ValvulaToNa("Válvula Calor / Frío", 0),
+                elem.SondaTermos("Control Presión", 1),
+            ],
         },
-    },
-    "Aerotermia / Geotermia": {
-        "Nombre": "",
-        "Cantidad": 1,
-        "Seniales": {
-            "Temperatura": elem.SondaTermos(1),
-            "Marcha-Paro y alarma": elem.MPyEstado(1),
-            "Modulación / Consigna": elem.SimpleSA(0),
-            "Bomba": elem.MotorModul(1),
-            "Cambio de regimen externo": elem.SimpleED(0),
-            "Válvula Calor / Frío / ACS": elem.ValvulaToNa(0),
-            "Control Presión": elem.SensorPres(0),
+        {
+            "Nombre": "Caldera",
+            "Elementos": [
+                elem.SondaTermos("Temperatura", 1),
+                elem.SimpleSD("Marcha-Paro", 0),
+                elem.SimpleED("Estado / Alarma", 1),
+                elem.ModulaCalde("Modulación / Consigna", 1),
+                elem.MotorModul("Bomba", 1),
+                elem.ValvTNProp("Válvula Aislamiento / Retorno", 0),
+                elem.SondaTermos("Control Humos", 0),
+                elem.SensorPres("Control Presión", 0),
+            ],
         },
-    },
-    "Solar": {
-        "Nombre": "",
-        "Cantidad": 1,
-        "Seniales": {
-            "Radiacion Solar": elem.SoloActiva(0),
-            "Temperatura Paneles": elem.SondaTermos(1),
-            "Temperatura Secundario": elem.SondaTermos(0),
-            "Temperatura Depósito": elem.SondaTermos(1),
-            "Bomba Primario": elem.MotorModul(1),
-            "Bomba Secundario": elem.MotorModul(0),
-            "Bomba Transvase": elem.MotorModul(0),
-            "Aerotermo": elem.MotorModul(0),
-            "Válvula Primario": elem.ValvTNProp(0),
-            "Válvula Secundario": elem.ValvTNProp(0),
-            "Control Presión": elem.SensorPres(0),
+        {
+            "Nombre": "Aerotermia",
+            "Elementos": [
+                elem.SondaTermos("Temperatura", 1),
+                elem.MPyEstado("Marcha-Paro y alarma", 1),
+                elem.SimpleSA("Modulación / Consigna", 0),
+                elem.MotorModul("Bomba", 1),
+                elem.SimpleED("Cambio de regimen externo", 0),
+                elem.ValvulaToNa("Válvula Calor / Frío / ACS", 0),
+                elem.SensorPres("Control Presión", 0),
+            ],
         },
-    },
-    " ----- Consumo -----": null,
-    "Circuito Calefacción/Distribución": {
-        "Nombre": "",
-        "Cantidad": 1,
-        "Seniales": {
-            "Temp Impulsion": elem.SondaTermos(1),
-            "Sensor Ambiente": elem.SensorAire(0),
-            "Presion Diferencial": elem.SoloActiva(0),
-            "Bomba": elem.MotorModul(1),
-            "Válvula control": elem.ValvTNProp(1),
-            "Cambio de regimen externo": elem.SimpleED(0),
-            "Válvula Calor / Frío": elem.ValvulaToNa(0),
-            "Demanda a terceros": elem.Demanda(0),
+        {
+            "Nombre": "Solar",
+            "Elementos": [
+                elem.SoloActiva("Radiacion Solar", 0),
+                elem.SondaTermos("Temperatura Paneles", 1),
+                elem.SondaTermos("Temperatura Secundario", 0),
+                elem.SondaTermos("Temperatura Depósito", 1),
+                elem.MotorModul("Bomba Primario", 1),
+                elem.MotorModul("Bomba Secundario", 0),
+                elem.MotorModul("Bomba Transvase", 0),
+                elem.MotorModul("Aerotermo", 0),
+                elem.ValvTNProp("Válvula Primario", 0),
+                elem.ValvTNProp("Válvula Secundario", 0),
+                elem.SensorPres("Control Presión", 0),
+            ],
         },
-    },
-    "ACS": {
-        "Nombre": "",
-        "Cantidad": 1,
-        "Seniales": {
-            "Temperatura Secundario": elem.SondaTermos(0),
-            "Temperatura Depósito": elem.SondaTermos(1),
-            "Temperatura Consumidores": elem.SondaTermos(1),
-            "Bomba Primario": elem.MotorModul(1),
-            "Bomba Secundario": elem.MotorModul(0),
-            "Bomba Retorno": elem.MotorModul(1),
-            "Válvula Primario": elem.ValvTNProp(0),
-            "Válvula Consumidores": elem.ValvulaProp(1),
-            "Bypass Válvula Consumidores": elem.ValvulaToNa(0),
-            "Demanda a terceros": elem.Demanda(0),
+        {
+            "Nombre": " ----- Consumo -----",
+            "Elementos": null,
         },
-    },
-    "Climatizador": {
-        "Nombre": "",
-        "Cantidad": 1,
-        "Seniales": {
-            "Sonda Ambiente / Retorno": elem.SensorAire(1),
-            "Sonda Impulsión": elem.SensorAire(1),
-            "Sonda Recuperación": elem.SensorAire(0),
-            "Sonda toma aire del Exterior": elem.SensorAire(0),
-            "Sonda salida aire al Exterior": elem.SensorAire(0),
-            "Válvula Batería": elem.ValvTNProp(1),
-            "Bomba Batería": elem.MotorModul(0),
-            "Presostato filtro sucio": elem.SimpleED(0),
-            "Presión Ventilador": elem.SoloActiva(0),
-            "Ventilador": elem.MotorModul(1),
-            "Humectador": elem.ExterModul(0),
-            "Recuperador": elem.Recuperdor(0),
-            "Compuertas": elem.ValvTNProp(0),
-            "Cambio de regimen externo": elem.SimpleED(0),
-            "Demanda a terceros": elem.Demanda(0),
+        {
+            "Nombre": "Circuito Calefacción/Distribución",
+            "Elementos": [
+                elem.SondaTermos("Temp Impulsion", 1),
+                elem.SensorAire("Sensor Ambiente", 0),
+                elem.SoloActiva("Presion Diferencial", 0),
+                elem.MotorModul("Bomba", 1),
+                elem.ValvTNProp("Válvula control", 1),
+                elem.SimpleED("Cambio de regimen externo", 0),
+                elem.ValvulaToNa("Válvula Calor / Frío", 0),
+                elem.Demanda("Demanda a terceros", 0),
+            ],
         },
-    },
-    "Fan Coil": {
-        "Nombre": "",
-        "Cantidad": 1,
-        "Seniales": {
-            "Sonda Ambiente / Retorno": elem.SensorAire(1),
-            "Temperatura Impulsión": elem.SondaTermos(0),
-            "Válvula Batería": elem.ValvTNProp(1),
-            "Presostato filtro sucio": elem.SimpleED(0),
-            "Ventilador": elem.MotorFC(1),
+        {
+            "Nombre": "ACS",
+            "Elementos": [
+                elem.SondaTermos("Temperatura Secundario", 0),
+                elem.SondaTermos("Temperatura Depósito", 1),
+                elem.SondaTermos("Temperatura Consumidores", 1),
+                elem.MotorModul("Bomba Primario", 1),
+                elem.MotorModul("Bomba Secundario", 0),
+                elem.MotorModul("Bomba Retorno", 1),
+                elem.ValvTNProp("Válvula Primario", 0),
+                elem.ValvulaProp("Válvula Consumidores", 1),
+                elem.ValvulaToNa("Bypass Válvula Consumidores", 0),
+                elem.Demanda("Demanda a terceros", 0),
+            ],
         },
-    },
-});
+        {
+            "Nombre": "Climatizador",
+            "Elementos": [
+                elem.SensorAire("Sonda Ambiente / Retorno", 1),
+                elem.SensorAire("Sonda Impulsión", 1),
+                elem.SensorAire("Sonda Recuperación", 0),
+                elem.SensorAire("Sonda toma aire del Exterior", 0),
+                elem.SensorAire("Sonda salida aire al Exterior", 0),
+                elem.ValvTNProp("Válvula Batería", 1),
+                elem.MotorModul("Bomba Batería", 0),
+                elem.SimpleED("Presostato filtro sucio", 0),
+                elem.SoloActiva("Presión Ventilador", 0),
+                elem.MotorModul("Ventilador", 1),
+                elem.ExterModul("Humectador", 0),
+                elem.Recuperdor("Recuperador", 0),
+                elem.ValvTNProp("Compuertas", 0),
+                elem.SimpleED("Cambio de regimen externo", 0),
+                elem.Demanda("Demanda a terceros", 0),
+            ],
+        },
+        {
+            "Nombre": "Fan Coil",
+            "Elementos": [
+                elem.SensorAire("Sonda Ambiente / Retorno", 1),
+                elem.SondaTermos("Temperatura Impulsión", 0),
+                elem.ValvTNProp("Válvula Batería", 1),
+                elem.SimpleED("Presostato filtro sucio", 0),
+                elem.MotorFC("Ventilador", 1),
+            ],
+        },
+    ]
+}
 
-// fs.writeFileSync("proyFull.json", JSON.stringify(blocksData(), null, 4));
+// fs.writeFileSync("proyFull.json", JSON.stringify(blocks(), null, 4));
 
 // console.log(JSON.stringify(blocksData(), null, 4));
 // console.log(JSON.stringify(blocksData()["Circuito Calefacción/Distribución"], null, 4));
