@@ -36,7 +36,6 @@ let checkboxChangeScheduled = false;
 let proyectosEasyPoint = JSON.parse(localStorage.getItem('proyectosEasyPoint')) || {};
 let nombreProyectoActual = null;
 let proyectoActual = null;
-let guardado = true;
 const blocksData = blocks();
 
 
@@ -109,7 +108,7 @@ function populateCustomPop() {
         const tdInput = document.createElement("td");
         popInputTR.appendChild(tdInput);
 
-        const numSeniales = inputNumero();
+        const numSeniales = inputNumero(0);
         tdInput.appendChild(numSeniales);
 
         numSeniales.value = 0;
@@ -249,6 +248,7 @@ function writeBlocks() {
 
 }
 
+
 function moveBlock(bloque, tabla, direccion) {
 
     const tablas = Array.from(estudioBloqCont.children);
@@ -275,6 +275,7 @@ function moveBlock(bloque, tabla, direccion) {
 
     // mover el bloque en proyectoActual
     moverElemento(proyectoActual, indice, nuevoIndice);
+    proyectoActual.guardado = false;
     localStorage.setItem("proyectoActual", JSON.stringify(proyectoActual));
 
     // repasar botones de movimiento
@@ -307,7 +308,7 @@ function addBlock(bloque) {
     table.className = "w3-table w3-bordered w3-margin-bottom";
 
     addBlockHeader(bloque, table);
-    // table.appendChild(addBlockBody(table));
+    addBlockBody(bloque, table);
 
     updateSummary();
 
@@ -317,6 +318,11 @@ function addBlock(bloque) {
 
 function addBlockHeader(bloque, table) {
 
+    // iniciar valores que fuede que no existan si es un bloque nuevo
+    if (!bloque.NombreUsuario) bloque.NombreUsuario = bloque.Nombre;
+    if (!bloque.Cantidad) bloque.Cantidad = 1;
+
+    // crear y colocal los elementos del DOM
     const thead = document.createElement("thead");
     table.appendChild(thead);
 
@@ -329,11 +335,10 @@ function addBlockHeader(bloque, table) {
     const deleteBtn = document.createElement("button");
     headerCell.appendChild(deleteBtn);
 
-    if (!bloque.NombreUsuario) bloque.NombreUsuario = bloque.Nombre;
     const nameInput = inputNombre(bloque.NombreUsuario);
     headerCell.appendChild(nameInput);
 
-    const numberInput = inputNumero();
+    const numberInput = inputNumero(bloque.Cantidad);
     headerCell.appendChild(numberInput);
 
     const subirBtn = document.createElement('button');
@@ -342,18 +347,22 @@ function addBlockHeader(bloque, table) {
     const bajarBtn = document.createElement('button');
     headerCell.appendChild(bajarBtn);
 
+    // asifnar valores y dinamicas a los elementos del DOM
     nameInput.classList.add("nombreBloque");
     nameInput.name = "nombreBloque";
-    nameInput.addEventListener('blur', () => {
+    nameInput.addEventListener('change', () => {
         bloque.NombreUsuario = nameInput.value;
-        console.log(JSON.stringify(proyectoActual));
+        proyectoActual.guardado = false;
         localStorage.setItem("proyectoActual", JSON.stringify(proyectoActual));
     });
 
     numberInput.classList.add("cantidadBloque");
     numberInput.name = "cantidadBloque";
     numberInput.addEventListener("change", () => {
-        bloque.cantidad = numberInput.value * 1;
+        bloque.Cantidad = numberInput.value * 1;
+        proyectoActual.guardado = false;
+        localStorage.setItem("proyectoActual", JSON.stringify(proyectoActual));
+        // simulamos un cambio en cada checkbox para recalculas todas las señales
         const checkboxes = table.querySelectorAll('input[type="checkbox"]');
         checkboxes.forEach(checkbox => {
             checkbox.dispatchEvent(new Event('change', { bubbles: true }));
@@ -366,6 +375,8 @@ function addBlockHeader(bloque, table) {
 
         // eliminar el bloque del proyectoActual
         proyectoActual.splice(proyectoActual.indexOf(bloque), 1);
+        proyectoActual.guardado = false;
+        localStorage.setItem("proyectoActual", JSON.stringify(proyectoActual));
 
         // eliminar la tabla
         table.remove();
@@ -388,7 +399,7 @@ function addBlockHeader(bloque, table) {
         moveBlock(bloque, table, 1)
     });
 
-    // añadir una columna por cada tiopo de señall para mantener la alineacion de toda la tabla
+    // añadir una columna por cada tiopo de señal para mantener la alineacion de toda la tabla
     signalTypes.forEach(() => {
         const th = document.createElement("th");
         headerRow.appendChild(th);
@@ -396,17 +407,17 @@ function addBlockHeader(bloque, table) {
 
 }
 
-function addBlockBody(table) {
+function addBlockBody(bloque, table) {
 
     // multiplicador general del bloque
     const multipBloque = table.querySelector('[name="cantidadBloque"]');
 
     const tBody = document.createElement("tbody");
-    const elements = blocksData[estudioBloqSelect.value].Seniales;
+    table.appendChild(tBody);
 
-    for (const [name, value] of Object.entries(elements)) {
-        tBody.appendChild(addFilaBody(name, value, multipBloque));
-    }
+    bloque.Elementos.forEach (elemento => {
+        addFilaBody(elemento, tBody, multipBloque);
+    });
 
     //añadimos una fila para insertar el boton para añadir lineas custom
     const lastRow = document.createElement("tr");
@@ -427,12 +438,10 @@ function addBlockBody(table) {
 
         // Vaciar todos los inputs
         customPop.querySelectorAll('input').forEach(input => {
-            input.value = input.type === 'number'
-                ? input.value = 0
-                : input.value = '';
+            input.value = 0;
         });
 
-        // mostrar centrado en pantalla
+        // mostrar customPop centrado en pantalla
         estudio.setAttribute('inert', ''); // bloquea todos los inputs del fondo en estudio
         overlay.style.display = "block";
         customPop.style.top = (window.innerHeight - customPop.offsetWidth) / 2 + "px";
@@ -441,46 +450,54 @@ function addBlockBody(table) {
 
     });
 
-    return tBody;
 }
 
-/**
- * Crea una fila <tr> completa para la tabla de bloques
- * @param {string} name                    Nombre de la señal
- * @param {*} value                        Valor o subobjeto de la señal
- * @param {HTMLInputElement} multipBloque  Input del multiplicador general del bloque
- * @returns {HTMLTableRowElement}          Fila <tr> lista para insertar en el <tbody>
- */
-function addFilaBody(name, value, multipBloque) {
+function addFilaBody(elemento, tBody, multipBloque) {
+
+    // iniciar valores que fuede que no existan si es un bloque nuevo
+    if (!elemento.NombreUsuario) elemento.NombreUsuario = elemento.Nombre;
 
     const row = document.createElement("tr");
-    row.name = name;
+    tBody.appendChild(row);
 
     const nameCell = document.createElement("td");
     row.appendChild(nameCell);
 
     const elimcustom = document.createElement("button");
-    elimcustom.style.display = "none";
+    nameCell.appendChild(elimcustom);
 
     const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
+    nameCell.appendChild(checkbox);
 
-    const nameInput = inputNombre(name);
+    const nameInput = inputNombre(elemento.NombreUsuario);
+    nameCell.appendChild(nameInput);
+
+    const numberInput = inputNumero(elemento.Cantidad);
+    nameCell.appendChild(numberInput);
+
+
+    
+    row.name = elemento.Nombre;
+    
+    elimcustom.style.display = "none";
+    
+    checkbox.type = "checkbox"; 
+   
     nameInput.type = "text";
     nameInput.name = "nombreSenial";
+
+    // TODO: revisado hasta aqui
+
+    /*    
+
     if (name.substring(0, 6) !== "custom") nameInput.placeholder = name;
 
-    const numberInput = inputNumero();
     numberInput.name = "numeroSenial";
 
     numberInput.addEventListener("change", () => {
         checkbox.dispatchEvent(new Event("change", { bubbles: true }));
     });
 
-    nameCell.appendChild(elimcustom);
-    nameCell.appendChild(checkbox);
-    nameCell.appendChild(nameInput);
-    nameCell.appendChild(numberInput);
 
     let code = value;
     let select;
@@ -578,7 +595,7 @@ function addFilaBody(name, value, multipBloque) {
 
     checkbox.dispatchEvent(new Event("change", { bubbles: true }));
 
-    return row;
+    */
 
 }
 
@@ -689,8 +706,7 @@ function totalBody() {
 
 }
 
-
-
+/* ------------------------- AUXILIARES ------------------------- */
 function inputNombre(texto) {
     const nameInput = document.createElement("input");
     nameInput.className = "w3-input w3-margin-right nobackground inputNombre";
@@ -699,10 +715,10 @@ function inputNombre(texto) {
     return nameInput;
 }
 
-function inputNumero() {
+function inputNumero(valorDef = 1) {
     const numberInput = document.createElement("input");
     numberInput.type = "number";
-    numberInput.value = 1;
+    numberInput.value = valorDef;
     numberInput.min = 1; // evita números negativos o cero si no son deseados
     numberInput.step = 1; // solo números enteros
     numberInput.className = "w3-input w3-margin-right nobackground";

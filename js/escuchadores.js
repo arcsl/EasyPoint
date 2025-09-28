@@ -5,6 +5,7 @@ function escuchadores() {
 
         populateProyectSelect();
         populateBlockSelect();
+        populateCustomPop();
         populateCabeceraYPie();
 
         // verificar si existe la clave del nombre del proyecto actual en el local storage      
@@ -34,6 +35,7 @@ function escuchadores() {
         portadaSelProyecSelect.value = nombreProyectoActual;
         estudioNombProyecInput.value = nombreProyectoActual;
         writeBlocks();
+        proyectoActual.guardado = false;
         estudio.classList.remove("w3-hide");
 
     });
@@ -241,6 +243,7 @@ function escuchadores() {
 
         nombreProyectoActual = abrirProyecto;
         proyectoActual = structuredClone(proyectosEasyPoint[nombreProyectoActual]);
+        proyectoActual.guardado = true;
 
         // guardar en local storage
         // de modo que si se cierra la ventana, al abrirla se comprueba si existe
@@ -254,7 +257,6 @@ function escuchadores() {
 
         //crear los bloques del proyecto
         writeBlocks();
-
         estudioNombProyecInput.value = portadaSelProyecSelect.value.trim();
         portada.classList.add("w3-hide");
         estudio.classList.remove("w3-hide");
@@ -398,7 +400,7 @@ function escuchadores() {
         localStorage.setItem("proyectosEasyPoint", JSON.stringify(proyectosEasyPoint));
 
         // Marcar bandera global
-        guardado = true;
+        proyectoActual.guardado = true;
 
         // Mostar notificación
         guardadoOK();
@@ -410,7 +412,7 @@ function escuchadores() {
     });
     // (rojo salir) volver a la portada
     estudioSalirBtn.addEventListener("click", () => {
-        let seguir = guardado
+        let seguir = proyectoActual.guardado
             ? true
             : confirm("Hay cambios no guardados que se perderán.\n\n¿Desea continuar?\n");
         if (seguir) {
@@ -436,7 +438,7 @@ function escuchadores() {
         proyectoActual.push(bloque);
         addBlock(bloque);
         disableFirstAndLastMoveBlockButtons();
-        guardado = false;
+        proyectoActual.guardado = false;
     });
 
     // ---------- ESTUDIO INPUT/SELECT ----------
@@ -470,7 +472,7 @@ function escuchadores() {
     estudioBloqCont.addEventListener('input', (event) => {
         const target = event.target;
         if (target.tagName === 'INPUT' && ['checkbox', 'number', 'text'].includes(target.type)) {
-            guardado = false;
+            proyectoActual.guardado = false;
         }
     });
     // TODO: esto no funciona al añadir o eliminar bloques
@@ -479,7 +481,7 @@ function escuchadores() {
     estudioBloqCont.addEventListener('click', (event) => {
         const target = event.target;
         if (target.tagName === 'BUTTON') {
-            guardado = false;
+            proyectoActual.guardado = false;
         }
     });
 
@@ -487,6 +489,8 @@ function escuchadores() {
     // TODO: modificar tambien el json de proyecto abierto para mantenerlo sincronizado
     popAceptar.addEventListener("click", () => {
 
+
+        /*
         const table = customPop.tablaOrigen;
 
         const tBody = table.querySelector('tbody');
@@ -532,6 +536,11 @@ function escuchadores() {
             alert('Debe indicar al menos un tipo de señal');
             return;
         }
+
+        */
+       
+       estudio.removeAttribute('inert');
+       overlay.style.display = "none";
 
     });
     // (rojo cancelar) ocultar la interfaz para añadir elementos custom y no hacer nada.
