@@ -1,0 +1,70 @@
+[
+  {
+    "Nombre": "Condiciones Exteriores",
+    "Elementos": [
+      {
+        "Nombre": "Exterior",
+        "NombreUsuario": "Exterior",
+        "Cantidad": 1,
+        "Opcion": 2,
+        "Opciones": [
+          {
+            "Nombre": "Temperatura",
+            "Seniales": {
+              "EA": 1
+            },
+            "Esquema": [
+              {
+                "EA_1": [
+                  "Pasiva"
+                ]
+              }
+            ]
+          },
+          {
+            "Nombre": "Temp + Hume",
+            "Seniales": {
+              "EA": 2
+            },
+            "Esquema": [
+              {
+                "EA_2": [
+                  "Activa"
+                ]
+              }
+            ]
+          },
+          {
+            "Nombre": "Temp + CO2",
+            "Seniales": {
+              "EA": 2
+            },
+            "Esquema": [
+              {
+                "EA_2": [
+                  "Activa"
+                ]
+              }
+            ]
+          },
+          {
+            "Nombre": "Temp Hum CO2",
+            "Seniales": {
+              "EA": 3
+            },
+            "Esquema": [
+              {
+                "EA_3": [
+                  "Activa"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "id": "fa5f5ba2-4663-4ed6-bd89-b9ffbbba0ebe",
+    "NombreUsuario": "Condiciones Exteriores",
+    "Cantidad": 1
+  }
+]

@@ -322,7 +322,7 @@ function addBlockHeader(bloque, table) {
     if (!bloque.NombreUsuario) bloque.NombreUsuario = bloque.Nombre;
     if (!bloque.Cantidad) bloque.Cantidad = 1;
 
-    // crear y colocal los elementos del DOM
+    // crear los elementos del DOM
     const thead = document.createElement("thead");
     table.appendChild(thead);
 
@@ -347,7 +347,7 @@ function addBlockHeader(bloque, table) {
     const bajarBtn = document.createElement('button');
     headerCell.appendChild(bajarBtn);
 
-    // asifnar valores y dinamicas a los elementos del DOM
+    // asignar valores y dinamicas a los elementos del DOM
     nameInput.classList.add("nombreBloque");
     nameInput.name = "nombreBloque";
     nameInput.addEventListener('change', () => {
@@ -409,14 +409,12 @@ function addBlockHeader(bloque, table) {
 
 function addBlockBody(bloque, table) {
 
-    // multiplicador general del bloque
-    const multipBloque = table.querySelector('[name="cantidadBloque"]');
-
     const tBody = document.createElement("tbody");
     table.appendChild(tBody);
 
-    bloque.Elementos.forEach (elemento => {
-        addFilaBody(elemento, tBody, multipBloque);
+    //añadimos una fila por cada elemento del bloque
+    bloque.Elementos.forEach(elemento => {
+        addFilaBody(elemento, tBody, bloque);
     });
 
     //añadimos una fila para insertar el boton para añadir lineas custom
@@ -452,11 +450,13 @@ function addBlockBody(bloque, table) {
 
 }
 
-function addFilaBody(elemento, tBody, multipBloque) {
+function addFilaBody(elemento, tBody, bloque) {
 
     // iniciar valores que fuede que no existan si es un bloque nuevo
     if (!elemento.NombreUsuario) elemento.NombreUsuario = elemento.Nombre;
+    if (!elemento.Opcion) elemento.Opcion = 0;
 
+    // crear los elementos del DOM
     const row = document.createElement("tr");
     tBody.appendChild(row);
 
@@ -475,97 +475,98 @@ function addFilaBody(elemento, tBody, multipBloque) {
     const numberInput = inputNumero(elemento.Cantidad);
     nameCell.appendChild(numberInput);
 
+    const select = document.createElement("select");
+    nameCell.appendChild(select);
 
-    
+    // asignar valores y dinamicas a los elementos del DOM
     row.name = elemento.Nombre;
-    
-    elimcustom.style.display = "none";
-    
-    checkbox.type = "checkbox"; 
-   
+
+    elimcustom.textContent = "X";
+    elimcustom.className = "w3-red w3-button";
+    elimcustom.style.display = "inline-block";
+    elimcustom.addEventListener('click', () => {
+
+        // eliminar el elemento del bloque actual
+        bloque.Elementos.splice(bloque.Elementos.indexOf(elemento), 1);
+        proyectoActual.guardado = false;
+        localStorage.setItem("proyectoActual", JSON.stringify(proyectoActual));
+
+        // eliminar la fila
+        row.remove();
+
+        // actualizar sumatorio
+        updateSummary();
+    });
+
+
+    checkbox.type = "checkbox";
+    checkbox.checked = elemento.Cantidad > 0;
+
     nameInput.type = "text";
     nameInput.name = "nombreSenial";
-
-    // TODO: revisado hasta aqui
-
-    /*    
-
-    if (name.substring(0, 6) !== "custom") nameInput.placeholder = name;
+    if (elemento.Nombre.substring(0, 6) === "custom") {
+        nameInput.placeholder = elemento.NombreUsuario;
+        checkbox.style.display = "none";
+        checkbox.checked = true;
+    } else {
+        elimcustom.style.display = "none";
+        nameInput.placeholder = elemento.Nombre;
+    }
 
     numberInput.name = "numeroSenial";
-
     numberInput.addEventListener("change", () => {
+        proyectoActual.guardado = false;
+        localStorage.setItem("proyectoActual", JSON.stringify(proyectoActual));
         checkbox.dispatchEvent(new Event("change", { bubbles: true }));
     });
 
 
-    let code = value;
-    let select;
-    let signalCounts;
+    // Si hay mas de una opcion, añadir el select
+    if (elemento.Opciones.length > 1) {
 
-    if (Array.isArray(value) && value !== null) { // procesar fila custom
-
-        nameInput.value = "";       // no ponemos el texto "custom01" en el input
-        row.opcion = value;         // almacenamos de señales para poder guardarlo luego enel json
-        code = "";                  // vaciamos code para montar un code nuevo
-
-        // generar code en funcion al array de señales custom
-        for (let i = 0; i < signalTypes.length; i++) {
-            for (let j = 0; j < value[i]; j++) {
-                code += signalTypes[i];
-            }
-        }
-
-        checkbox.checked = true;
-        checkbox.style.display = "none";
-
-        elimcustom.textContent = "X";
-        elimcustom.className = "w3-red w3-button";
-        elimcustom.style.display = "inline-block";
-        elimcustom.addEventListener('click', () => {
-            row.remove();
-            updateSummary();
-        });
-
-    } else if (typeof value === "object" && value !== null) { // procesar linea con selector de opciones
-
-        select = document.createElement("select");
         select.name = "opcionSenial";
         select.className = "w3-select";
 
-        for (const [label, val] of Object.entries(value)) {
+        elemento.Opciones.forEach(seleccion => {
             const option = document.createElement("option");
-            option.value = val;
-            option.textContent = label;
             select.appendChild(option);
-        }
-
-        for (const option of select.options) {
-            if (option.value === option.value.toUpperCase()) {
-                select.value = option.value;
-                break;
-            }
-        }
-
-        code = select.value;
-
-        select.addEventListener("change", () => {
-            signalCounts = countSignals(select.value);
-            checkbox.dispatchEvent(new Event("change", { bubbles: true }));
+            option.textContent = seleccion.Nombre;
         });
 
-        nameCell.appendChild(select);
+        select.selectedIndex = elemento.Opcion;
 
+        select.addEventListener("change", () => {
+            elemento.Opcion = select.selectedIndex;
+            proyectoActual.guardado = false;
+            localStorage.setItem("proyectoActual", JSON.stringify(proyectoActual));
+            // checkbox.dispatchEvent(new Event("change", { bubbles: true }));
+        });
+
+    } else {
+        select.style.display = "none";
     }
-
-    checkbox.checked = code === code.toUpperCase();
-    signalCounts = countSignals(code);
 
     signalTypes.forEach(sig => {
         const cell = document.createElement("td");
         cell.classList.add(sig, "celda-numero-seniales");
         row.appendChild(cell);
+        const seniales = elemento.Opciones[elemento.Opcion].Seniales;
+        if (seniales.hasOwnProperty(sig)) {
+            cell.textContent = seniales[sig];
+        } else {
+            cell.textContent = "-"
+        }
     });
+
+
+    // TODO: revisado hasta aqui
+    return;
+
+
+
+
+
+
 
     checkbox.addEventListener("change", () => {
         const checked = checkbox.checked;
@@ -586,7 +587,7 @@ function addFilaBody(elemento, tBody, multipBloque) {
                 if (cell.classList.contains(sig)) {
                     const count = signalCounts[sig] === 0 ? "-" : signalCounts[sig];
                     cell.textContent = checked
-                        ? (count === "-" ? "-" : count * multipBloque.value * numberInput.value)
+                        ? (count === "-" ? "-" : count * elemento.Cantidad * numberInput.value)
                         : "-";
                 }
             });
@@ -595,31 +596,8 @@ function addFilaBody(elemento, tBody, multipBloque) {
 
     checkbox.dispatchEvent(new Event("change", { bubbles: true }));
 
-    */
 
-}
 
-function countSignals(code) {
-
-    const result = {};
-
-    // Inicializa el contador con 0 para cada tipo de señal
-    for (const type of signalTypes) {
-        result[type] = 0;
-    }
-
-    // Construye una expresión regular dinámica con los tipos del array
-    const pattern = new RegExp(signalTypes.join('|'), 'gi');
-    let match;
-
-    while ((match = pattern.exec(code))) {
-        const key = match[0].toUpperCase();
-        if (result.hasOwnProperty(key)) {
-            result[key]++;
-        }
-    }
-
-    return result;
 }
 
 function updateSummary() {
