@@ -1,3 +1,5 @@
+// TODO: Verificar que se hacen las copias structuredClone y no se asignan referencioas de objetos
+
 /* ------------------------- REFERENCIAS AL DOM ------------------------- */
 const portada = document.getElementById("portada");
 const estudio = document.getElementById("estudio");
@@ -113,6 +115,7 @@ function populateCustomPop() {
 
         numSeniales.value = 0;
         numSeniales.min = 0
+        numSeniales.name = signal;
         numSeniales.className = "w3-input w3-center";
 
     });
@@ -275,8 +278,7 @@ function moveBlock(bloque, tabla, direccion) {
 
     // mover el bloque en proyectoActual
     moverElemento(proyectoActual, indice, nuevoIndice);
-    proyectoActual.guardado = false;
-    localStorage.setItem("proyectoActual", JSON.stringify(proyectoActual));
+    proyectoNoGuardado();
 
     // repasar botones de movimiento
     disableFirstAndLastMoveBlockButtons();
@@ -352,16 +354,14 @@ function addBlockHeader(bloque, table) {
     nameInput.name = "nombreBloque";
     nameInput.addEventListener('change', () => {
         bloque.NombreUsuario = nameInput.value;
-        proyectoActual.guardado = false;
-        localStorage.setItem("proyectoActual", JSON.stringify(proyectoActual));
+        proyectoNoGuardado();
     });
 
-    numberInput.classList.add("cantidadBloque");
+    numberInput.classList.add("cantidadBloque", "w3-center");
     numberInput.name = "cantidadBloque";
     numberInput.addEventListener("change", () => {
         bloque.Cantidad = numberInput.value * 1;
-        proyectoActual.guardado = false;
-        localStorage.setItem("proyectoActual", JSON.stringify(proyectoActual));
+        proyectoNoGuardado();
         // simulamos un cambio en cada checkbox para recalculas todas las señales
         const checkboxes = table.querySelectorAll('input[type="checkbox"]');
         checkboxes.forEach(checkbox => {
@@ -375,8 +375,7 @@ function addBlockHeader(bloque, table) {
 
         // eliminar el bloque del proyectoActual
         proyectoActual.splice(proyectoActual.indexOf(bloque), 1);
-        proyectoActual.guardado = false;
-        localStorage.setItem("proyectoActual", JSON.stringify(proyectoActual));
+        proyectoNoGuardado();
 
         // eliminar la tabla
         table.remove();
@@ -431,8 +430,9 @@ function addBlockBody(bloque, table) {
     addCustom.classList = "w3-button w3-green addBtn";
     addCustom.addEventListener('click', () => {
 
-        // Asignar el bloque desde el que se dispara
+        // Asignar bloque y tabla desde el que se dispara
         customPop.tablaOrigen = table;
+        customPop.bloqueOrigen = bloque;
 
         // Vaciar todos los inputs
         customPop.querySelectorAll('input').forEach(input => {
@@ -453,8 +453,9 @@ function addBlockBody(bloque, table) {
 function addFilaBody(elemento, tBody, bloque) {
 
     // iniciar valores que fuede que no existan si es un bloque nuevo
-    if (!elemento.NombreUsuario) elemento.NombreUsuario = elemento.Nombre;
-    if (!elemento.Opcion) elemento.Opcion = 0;
+    if (!elemento.hasOwnProperty("NombreUsuario")) elemento.NombreUsuario = elemento.Nombre;
+    if (!elemento.hasOwnProperty("Opcion")) elemento.Opcion = 0;
+    if (!elemento.hasOwnProperty("Checked")) elemento.Checked = elemento.Cantidad > 0;
 
     // crear los elementos del DOM
     const row = document.createElement("tr");
@@ -488,8 +489,7 @@ function addFilaBody(elemento, tBody, bloque) {
 
         // eliminar el elemento del bloque actual
         bloque.Elementos.splice(bloque.Elementos.indexOf(elemento), 1);
-        proyectoActual.guardado = false;
-        localStorage.setItem("proyectoActual", JSON.stringify(proyectoActual));
+        proyectoNoGuardado();
 
         // eliminar la fila
         row.remove();
@@ -498,9 +498,19 @@ function addFilaBody(elemento, tBody, bloque) {
         updateSummary();
     });
 
-
     checkbox.type = "checkbox";
-    checkbox.checked = elemento.Cantidad > 0;
+    checkbox.checked = elemento.Checked;
+    checkbox.addEventListener("change", () => {
+        elemento.Checked = checkbox.checked;
+        if (checkbox.checked && elemento.Cantidad === 0) {
+            elemento.Cantidad = 1;
+            numberInput.value = 1;
+        }
+        mostrarOcultarInputsYSelects(row, checkbox.checked);
+        calculaSeniales(row, elemento, bloque, checkbox.checked);
+        updateSummary();
+        proyectoNoGuardado();
+    });
 
     nameInput.type = "text";
     nameInput.name = "nombreSenial";
@@ -512,14 +522,19 @@ function addFilaBody(elemento, tBody, bloque) {
         elimcustom.style.display = "none";
         nameInput.placeholder = elemento.Nombre;
     }
-
-    numberInput.name = "numeroSenial";
-    numberInput.addEventListener("change", () => {
-        proyectoActual.guardado = false;
-        localStorage.setItem("proyectoActual", JSON.stringify(proyectoActual));
-        checkbox.dispatchEvent(new Event("change", { bubbles: true }));
+    nameInput.addEventListener('change', () => {
+        elemento.NombreUsuario = nameInput.value;
+        proyectoNoGuardado();
     });
 
+    numberInput.name = "numeroSenial";
+    numberInput.classList.add("w3-center");
+    numberInput.addEventListener("change", () => {
+        elemento.Cantidad = numberInput.value * 1;
+        calculaSeniales(row, elemento, bloque, checkbox.checked);
+        updateSummary();
+        proyectoNoGuardado();
+    });
 
     // Si hay mas de una opcion, añadir el select
     if (elemento.Opciones.length > 1) {
@@ -537,9 +552,8 @@ function addFilaBody(elemento, tBody, bloque) {
 
         select.addEventListener("change", () => {
             elemento.Opcion = select.selectedIndex;
-            proyectoActual.guardado = false;
-            localStorage.setItem("proyectoActual", JSON.stringify(proyectoActual));
-            // checkbox.dispatchEvent(new Event("change", { bubbles: true }));
+            calculaSeniales(row, elemento, bloque, checkbox.checked);
+            proyectoNoGuardado();
         });
 
     } else {
@@ -550,53 +564,46 @@ function addFilaBody(elemento, tBody, bloque) {
         const cell = document.createElement("td");
         cell.classList.add(sig, "celda-numero-seniales");
         row.appendChild(cell);
-        const seniales = elemento.Opciones[elemento.Opcion].Seniales;
-        if (seniales.hasOwnProperty(sig)) {
-            cell.textContent = seniales[sig];
-        } else {
-            cell.textContent = "-"
-        }
     });
 
+    mostrarOcultarInputsYSelects(row, checkbox.checked);
 
-    // TODO: revisado hasta aqui
-    return;
+    function mostrarOcultarInputsYSelects(row, check) {
 
-
-
-
-
-
-
-    checkbox.addEventListener("change", () => {
-        const checked = checkbox.checked;
-
-        // mostrar/ocultar inputs number
+        // mostrar/ocultar inputs tipo number
         row.querySelectorAll('input[type="number"]').forEach(input => {
-            input.classList.toggle("w3-hide", !checked);
+            input.classList.toggle("w3-hide", !check);
         });
 
         // mostrar/ocultar selects
         row.querySelectorAll("select").forEach(sel => {
-            sel.classList.toggle("w3-hide", !checked);
+            sel.classList.toggle("w3-hide", !check);
         });
 
-        // actualizar celdas de tipos de señal
-        row.querySelectorAll("td").forEach(cell => {
-            signalTypes.forEach(sig => {
-                if (cell.classList.contains(sig)) {
-                    const count = signalCounts[sig] === 0 ? "-" : signalCounts[sig];
-                    cell.textContent = checked
-                        ? (count === "-" ? "-" : count * elemento.Cantidad * numberInput.value)
-                        : "-";
-                }
-            });
+    }
+
+    calculaSeniales(row, elemento, bloque, checkbox.checked);
+
+    function calculaSeniales(row, elemento, bloque, checked) {
+
+        signalTypes.forEach(sig => {    // verificamos por cada tipo de señal
+
+            // seleccionamos la celda que tiene la clase de la señal que estamos verificando
+            const cell = row.querySelector(`td.${sig}`)
+
+            // acortamos seleccionando el objeto
+            const seniales = elemento.Opciones[elemento.Opcion].Seniales;
+
+            // si la fila tiene el check y seniales contiene el tipo de señal que estamos evaluando
+            if (checked && seniales.hasOwnProperty(sig)) {
+                cell.textContent = seniales[sig] * elemento.Cantidad * bloque.Cantidad;
+            } else {
+                cell.textContent = "-"
+            }
+
         });
-    });
 
-    checkbox.dispatchEvent(new Event("change", { bubbles: true }));
-
-
+    }
 
 }
 
@@ -704,8 +711,17 @@ function inputNumero(valorDef = 1) {
     numberInput.addEventListener("input", () => {
         numberInput.value = numberInput.value.replace(/[^0-9]/g, '');
     });
+    numberInput.addEventListener("change", () => {
+        if (numberInput.value === "") numberInput.value = 1;
+        if (numberInput.value * 1 < numberInput.min * 1) numberInput.value = numberInput.min;
+    });
 
     return numberInput;
+}
+
+function proyectoNoGuardado() {
+    proyectoActual.guardado = false;
+    localStorage.setItem("proyectoActual", JSON.stringify(proyectoActual));
 }
 
 /**

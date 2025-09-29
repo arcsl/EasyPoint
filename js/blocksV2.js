@@ -10,30 +10,33 @@ const esq = {
     // para poder tener un acceso mas facil y no tener que iterar las propiedades buscando cual es el nombre
 
     //EA
-    PasivaEA_1: () => ({ EA_1: ["Pasiva",] }),
-    SimpleEA_1: () => ({ EA_1: ["Externa",] }),
-    ActivaEA_1: () => ({ EA_1: ["Activa",] }),
-    ActivaEA_2: () => ({ EA_2: ["Activa",] }),
-    ActivaEA_3: () => ({ EA_3: ["Activa",] }),
+    PasivaEA_1: () => ({ id: crypto.randomUUID(), EA_1: ["Pasiva",] }),
+    SimpleEA_1: () => ({ id: crypto.randomUUID(), EA_1: ["Externa",] }),
+    ActivaEA_1: () => ({ id: crypto.randomUUID(), EA_1: ["Activa",] }),
+    ActivaEA_2: () => ({ id: crypto.randomUUID(), EA_2: ["Activa",] }),
+    ActivaEA_3: () => ({ id: crypto.randomUUID(), EA_3: ["Activa",] }),
     //ED
-    SimpleED_1: () => ({ ED_1: ["Externa",] }),
-    EntradED_1: () => ({ ED_1: ["Externa", "Rele",] }),
-    MotorED_1: () => ({ ED_1: ["Externa", "Rele", "Contactor", "Termico",] }),
+    SimpleED_1: () => ({ id: crypto.randomUUID(), ED_1: ["Externa",] }),
+    EntradED_1: () => ({ id: crypto.randomUUID(), ED_1: ["Externa", "Rele",] }),
+    MotorED_1:  () => ({ id: crypto.randomUUID(), ED_1: ["Externa", "Rele", "Contactor", "Termico",] }),
     //SA
-    SimpleSA_1: () => ({ SA_1: ["Externa",] }),
-    ActuadSA_1: () => ({ SA_1: ["Externa", "Actuador",] }),
+    SimpleSA_1: () => ({ id: crypto.randomUUID(), SA_1: ["Externa",] }),
+    ActuadSA_1: () => ({ id: crypto.randomUUID(), SA_1: ["Externa", "Actuador",] }),
     //SD
-    SimpleSD_1: () => ({ SD_1: ["Externa",] }),
-    SalidaSD_1: () => ({ SD_1: ["Externa", "Rele",] }),
-    MotorSD_1: () => ({ SD_1: ["Externa", "Rele", "Contactor",] }),
-    MotorSD_3: () => ({ SD_3: ["Motor3V",] }),
-    ActuadSD_1: () => ({ SD_1: ["Externa", "Rele", "Simple", "Conmutada",] }),
-    ActuadSD_2: () => ({ SD_2: ["Externa", "Actuador",] }),
+    SimpleSD_1: () => ({ id: crypto.randomUUID(), SD_1: ["Externa",] }),
+    SalidaSD_1: () => ({ id: crypto.randomUUID(), SD_1: ["Externa", "Rele",] }),
+    MotorSD_1:  () => ({ id: crypto.randomUUID(), SD_1: ["Externa", "Rele", "Contactor",] }),
+    MotorSD_3:  () => ({ id: crypto.randomUUID(), SD_3: ["Motor3V",] }),
+    ActuadSD_1: () => ({ id: crypto.randomUUID(), SD_1: ["Externa", "Rele", "Simple", "Conmutada",] }),
+    ActuadSD_2: () => ({ id: crypto.randomUUID(), SD_2: ["Externa", "Actuador",] }),
 }
 
 const opt = {
     // "Esquema" es un array de objetos y no un objeto con propiedades, por si se necesita duplicar el objeto, 
     // como por ejemplo en el actuador todo/nada con 2 micros, donde la entrada digital esta duplicada
+
+    Vacio: (Nombre) => ({Nombre, Seniales: { }, Esquema: [], }),
+
     //Simples
     SimpleEA: (Nombre) => ({Nombre, Seniales: { "EA": 1, }, Esquema: [esq.SimpleEA_1()], }),
     SimpleED: (Nombre) => ({Nombre, Seniales: { "ED": 1, }, Esquema: [esq.SimpleED_1()], }),
@@ -60,6 +63,8 @@ const opt = {
 }
 
 const elem = {
+
+    Vacio:    (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.Vacio("Vacio"),], }),
 
     //sencillos
     PasivaEA:    (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.SensorPasi("Externa"),], }),

@@ -245,15 +245,8 @@ function escuchadores() {
         proyectoActual = structuredClone(proyectosEasyPoint[nombreProyectoActual]);
         proyectoActual.guardado = true;
 
-        // guardar en local storage
-        // de modo que si se cierra la ventana, al abrirla se comprueba si existe
-        // proyectoAbierto, y se abre ese proyecto directamente
-        // asi se pueden ir dejando cosas a medias y abrirlo mas tarde
         localStorage.setItem("nombreProyectoActual", nombreProyectoActual);
         localStorage.setItem("proyectoActual", JSON.stringify(proyectoActual));
-
-        //TODO: los cambios sin guardar tambien deberian guardarse en este local storage
-        // por si se sierra el navegador poder recuperar el trabajo al abrirlo
 
         //crear los bloques del proyecto
         writeBlocks();
@@ -438,7 +431,7 @@ function escuchadores() {
         proyectoActual.push(bloque);
         addBlock(bloque);
         disableFirstAndLastMoveBlockButtons();
-        proyectoActual.guardado = false;
+        proyectoNoGuardado();
     });
 
     // ---------- ESTUDIO INPUT/SELECT ----------
@@ -456,91 +449,118 @@ function escuchadores() {
         }
 
     });
+    // TODO: escuchador global para no repetir en cada input ?
     // modificar el total de señales 
-    estudioBloqCont.addEventListener("change", (event) => {
-        if (event.target.type === "checkbox") {
-            if (!checkboxChangeScheduled) {
-                checkboxChangeScheduled = true;
-                Promise.resolve().then(() => {
-                    updateSummary();
-                    checkboxChangeScheduled = false;
-                });
-            }
-        }
-    });
+    // estudioBloqCont.addEventListener("change", (event) => {
+    //     if (event.target.type === "checkbox") {
+    //         if (!checkboxChangeScheduled) {
+    //             checkboxChangeScheduled = true;
+    //             Promise.resolve().then(() => {
+    //                 updateSummary();
+    //                 proyectoNoGuardado ();
+    //                 checkboxChangeScheduled = false;
+    //             });
+    //         }
+    //     }
+    // });
     // TODO: cambiar escuchadores particulares de inputs creados programaticamente por un escuchador global
-    estudioBloqCont.addEventListener('input', (event) => {
-        const target = event.target;
-        if (target.tagName === 'INPUT' && ['checkbox', 'number', 'text'].includes(target.type)) {
-            proyectoActual.guardado = false;
-        }
-    });
+    // estudioBloqCont.addEventListener('input', (event) => {
+    //     const target = event.target;
+    //     if (target.tagName === 'INPUT' && ['checkbox', 'number', 'text'].includes(target.type)) {
+    //         proyectoNoGuardado ();
+    //     }
+    // });
     // TODO: esto no funciona al añadir o eliminar bloques
     // solo funciona al cambiar el orden de los bloques
     // al añadir funciona porque la funcion añadir ya pone el guardado a falso
-    estudioBloqCont.addEventListener('click', (event) => {
-        const target = event.target;
-        if (target.tagName === 'BUTTON') {
-            proyectoActual.guardado = false;
-        }
-    });
+    // estudioBloqCont.addEventListener('click', (event) => {
+    //     const target = event.target;
+    //     if (target.tagName === 'BUTTON') {
+    //         proyectoNoGuardado ();
+    //     }
+    // });
 
     // ---------- BOTONES POPUP AÑADIR ELEMENTOS ----------
     // TODO: modificar tambien el json de proyecto abierto para mantenerlo sincronizado
     popAceptar.addEventListener("click", () => {
 
-
-        /*
+        const bloque = customPop.bloqueOrigen;
         const table = customPop.tablaOrigen;
-
         const tBody = table.querySelector('tbody');
-        const cantidadBloque = table.querySelector('[name="cantidadBloque"]');
 
-        let arraySeniales = [];
-        customPop.querySelectorAll('input').forEach(input => arraySeniales.push(input.value * 1));
+        // verificar si se ha introducido al menos una señal
+        let algunoMayorQue1 = [...customPop.querySelectorAll('input')].some(input => Number(input.value) > 0);
+        if (!algunoMayorQue1) {
+            alert("Debe introducir al menos un tipo de señal.");
+            return;
+        }
 
-
-        let totalseñales = 0;
-        arraySeniales.forEach(señal => totalseñales += señal);
+        // Buscar el primer nombre tipo customXX disponible
         let rowName;
-
-        // buscar nombre unico de fila "custom00", "custom01", ...
-        for (let i = 0; i < 101; i++) {
-            if (i === 100) {
-                alert("No se pueden añadir mas elementos");
+        for (let i = 0; i < 100; i++) {
+            rowName = "custom" + String(i).padStart(2, "0");
+            const existe = bloque.Elementos.some(el => el.Nombre === rowName);
+            if (!existe) break;
+            if (i === 99) {
+                alert("No se pueden añadir más elementos");
                 return;
             }
-            rowName = "custom" + String(i).padStart(2, "0");
-            if (!Array.from(tBody.querySelectorAll('tr')).some(fila => fila.name === rowName)) break;
         }
 
-        // Si i llegó a 100, no se encontró nombre disponible
-        if (rowName.length > 8) {
-            alert("No se pueden añadir más elementos");
-            return;
-        }
+        // componemos el elemento custom a insertar en "Elementos" del bloque
+        const customElem = elem.Vacio(rowName, 1);
+        customElem.NombreUsuario = "Elemento personalizado";
+        // {
+        //     "Nombre": "custom00",
+        //     "Cantidad": 1,
+        //     "Opciones": [
+        //          {
+        //              "Nombre": "Vacio",
+        //              "Seniales": {},
+        //              "Esquema": []
+        //          }
+        //     ]
+        // }
 
-        if (totalseñales > 0) {
 
-            // volver a hacer seleccionables los elementos de "estudio"
-            estudio.removeAttribute('inert');
+        const senialesObj = customElem.Opciones[0].Seniales;
+        const esquemaArray = customElem.Opciones[0].Esquema;
+        signalTypes.forEach(sig => {
+            const inputSignal = customPop.querySelector(`input[name="${sig}"]`);
+            if (inputSignal.value * 1 > 0) {
+                senialesObj[sig] = inputSignal.value * 1;
+                const esqName = `Simple${sig}_1`; // "SimpleEA_1", "SimpleED_1", etc.
+                for (let i = 0; i < inputSignal.value * 1; i++) {
+                    esquemaArray.push(esq[esqName]());
+                }
+            }
+        });
 
-            //intertar antes de la ultima fila, que es el boton de añadir mas filas
-            const nuevaFila = addFilaBody(rowName, arraySeniales, cantidadBloque);
-            tBody.insertBefore(nuevaFila, tBody.lastElementChild);
-            nuevaFila.querySelector('input[name="nombreSenial"]').focus();
+        // añadirmos elemento custom al bloque
+        bloque.Elementos.push(structuredClone(customElem));
 
-            // quitar el overlay
-            overlay.style.display = "none";
-        } else {
-            alert('Debe indicar al menos un tipo de señal');
-            return;
-        }
+        // insertamos la fila correspondiente el elemento en la tabla
+        const ultimoElemento = bloque.Elementos[bloque.Elementos.length - 1];
+        addFilaBody(ultimoElemento, tBody, bloque);
 
-        */
-       
-       estudio.removeAttribute('inert');
-       overlay.style.display = "none";
+        const filas = tBody.querySelectorAll("tr");
+        const ultima = filas[filas.length - 1];
+        const penultima = filas[filas.length - 2];
+
+        //hacemos focus en el input del nombre para que el usuario pueda escribir el nombre del nuevo elemento
+        ultima.querySelector('input[name="nombreSenial"]').focus();
+        ultima.querySelector('input[name="nombreSenial"]').value = "";
+
+        // movemos la fila creada por encima de la que tiene el boton añadir
+        tBody.insertBefore(ultima, penultima);
+
+        // volvemos a hacer seleccionables los elementos de "estudio"
+        estudio.removeAttribute('inert');
+
+        console.log(penultima.querySelectorAll('input'));
+
+        // quitamos el overlay
+        overlay.style.display = "none";
 
     });
     // (rojo cancelar) ocultar la interfaz para añadir elementos custom y no hacer nada.

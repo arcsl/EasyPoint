@@ -1,4 +1,4 @@
 git add .
-git commit -m "Rehaciendo BlocksV2"
+git commit -m "v2.0 en progreso"
 git push
 pause
