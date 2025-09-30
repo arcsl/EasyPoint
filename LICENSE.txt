@@ -2,29 +2,49 @@ Business Source License 1.1
 
 Parameters
 
-Licensor: ARC S.L.  
-Licensed Work: Easy Point – Generador de cálculos de señales PLC y memorias de control para proyectos HVAC  
-Additional Use Grant: Internal business use only. No redistribution or modification permitted without explicit permission.  
-Change Date: 2030-01-01  
-Change License: GNU General Public License v3.0 (or a later version at Licensor’s discretion)
+Licensor: ARC S.L.
+
+Licensed Work: Easy Point – Generador de cálculos de señales PLC y memorias de control para proyectos HVAC
+
+Additional Use Grant: Internal business use only, including the right to modify the Licensed Work for internal purposes. Redistribution or commercial use is not permitted without explicit permission.
+
+Change Date: 2030-01-01
+
+Change License: GNU General Public License v3.0 (or any later version, at Licensor’s discretion)
+
 
 Terms
 
-The Licensor hereby grants you the rights to use, copy, and deploy the Licensed Work for non-commercial and internal business purposes only, subject to the following conditions:
+The Licensed Work is provided under the terms of the Business Source License 1.1, available at
+https://mariadb.com/bsl11.
 
-1. You may **not modify, adapt, or create derivative works** of the Licensed Work.
-2. You may **not redistribute** the Licensed Work or any portion of it.
-3. You may use the Licensed Work **only for internal purposes**, not for providing services or products to third parties, unless expressly permitted by the Licensor.
-4. The Licensed Work will automatically become available under the Change License on the Change Date, unless the Licensor specifies otherwise.
-5. The Licensed Work is provided “as is,” without warranty of any kind.
+Usage Rights
 
-To inquire about commercial use, redistribution, or licensing beyond these terms, please contact:
+Licensor hereby grants you the right to copy, use, and deploy the Licensed Work, provided that
+you do not use the Licensed Work for a production purpose other than the Additional Use Grant
+described above.
 
-📧 info@arcsl.com  
-🌐 https://easypoint.arcsl.com
+Change License
 
----
+On the Change Date, the Licensed Work will automatically be made available under the Change
+License, as published by the Free Software Foundation.
 
-Copyright (c) 2025 ARC S.L.  
+Additional Terms
+
+1. You may modify the Licensed Work for your own internal business purposes, but you may not
+   redistribute modifications or derivative works.
+2. You may not redistribute the Licensed Work or any portion of it.
+3. You may use the Licensed Work only for the internal purposes of your own organization, not
+   for providing services or products to third parties, unless expressly permitted by the Licensor.
+4. The Licensed Work is provided “as is,” without warranty of any kind.
+5. Nothing in this License grants rights in any trademarks, service marks, or trade names of ARC S.L.
+
+For inquiries about commercial use, redistribution, or licensing beyond these terms, please
+contact:
+
+info@arcsl.com
+https://www.arcsl.com
+
+
+Copyright (c) 2025 ARC S.L.
 All rights reserved.
-

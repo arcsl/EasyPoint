@@ -15,12 +15,13 @@
   - [4.1 Gestión del proyecto](#41-gestión-del-proyecto)
     - [4.1.1 Renombrar / Sobrescribir](#411-renombrar--sobrescribir)
     - [4.1.2 Guardar proyecto](#412-guardar-proyecto)
-    - [4.1.4 Generar PDF](#414-generar-pdf)
-    - [4.1.5 Salir del proyecto](#415-salir-del-proyecto)
+    - [4.1.3 Generar PDF](#413-generar-pdf)
+    - [4.1.4 Salir del proyecto](#414-salir-del-proyecto)
   - [4.2 Añadir bloques funcionales](#42-añadir-bloques-funcionales)
   - [4.3 Gestión general del bloque](#43-gestión-general-del-bloque)
   - [4.4 Gestión de elementos dentro del bloque](#44-gestión-de-elementos-dentro-del-bloque)
   - [4.5 Elementos personalizados](#45-elementos-personalizados)
+  - [4.6 Persistencia](#46-persistencia)
 - [5. Acceso](#5acceso)
 - [6. Flujo pantalla de inicio (guía visual)](#6flujo-pantalla-de-inicio-guía-visual)
 - [7. Flujo para Renombrar / Sobrescribir / Duplicar](#7flujo-para-renombrar--sobrescribir--duplicar)
@@ -104,18 +105,17 @@ En la parte superior de la pantalla del editor, se dispone de un recuadro de tex
 - Si introduces un nombre **ya existente** (idéntico al de otro proyecto), el campo se **sombrea en rojo** para advertir del conflicto.
 - Al pulsar **Guardar**, se solicitará confirmación para sobrescribir el proyecto existente con ese nombre.
 
-
 #### 4.1.2 Guardar proyecto
 - Pulsa el botón **"Guardar"** para almacenar el estado actual del proyecto.
 - El contenido se guarda **localmente en tu navegador**, sin necesidad de conexión a internet.
 
-#### 4.1.4 Generar PDF
+#### 4.1.3 Generar PDF
 - Pulsa el botón **"PDF"** para generar un documento con todos los bloques y elementos con sus señales del proyecto.
 - El documento generado:
   - Está optimizado para su uso en documentación técnica.
   - Permite **copiar y pegar texto** fácilmente en programas como Word o Excel.
 
-#### 4.1.5 Salir del proyecto
+#### 4.1.4 Salir del proyecto
 - El botón **"Salir"** te lleva al **selector de proyectos**, donde puedes abrir o eliminar otros proyectos.
 - Si se han realizado modificaciones en los bloques del proyecto, al intentar salir sin guardar aparecerá una advertencia informando que se **perderán los cambios** si se continúa.
 - Esta advertencia **no se muestra** si el único cambio ha sido editar el nombre del proyecto (arriba del todo) y no se ha modificado el contenido del proyecto.
@@ -145,6 +145,11 @@ En la parte superior de la pantalla del editor, se dispone de un recuadro de tex
    - Una vez creado, en vez del check para activar o desactivar el elemento aparecera un boton rojo con un aspa para poder borrar el elemento creado.
    - Puedes asignar un nombre al elemento y modificar la cantidad que necesitas, igual que con cualquier otro elemento del bloque.
    - Hay un maximo de 100 elementos presonalizados que se pueden añadir en cada bloque.
+
+### 4.6 Persistencia
+- Si el navegador se cierra con cambios pendientes de guardar, el sistema de persistencia recuperará dichos cambios al volver a abrir la página. 
+- No obstante, se recomienda no depender únicamente de esta funcionalidad y guardar siempre el proyecto de forma manual. 
+- La persistencia está diseñada como medida de seguridad frente a apagados inesperados del equipo o cierres accidentales del navegador.
 
 ---
 
