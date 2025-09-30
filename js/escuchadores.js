@@ -411,7 +411,6 @@ function escuchadores() {
     });
     // (verde añadir) añadir el bloque seleccionado
     estudioBloqAniaBtn.addEventListener("click", () => {
-        console.log("estudioBloqSelect.value", estudioBloqSelect.value);
         const bloque = structuredClone(blocksData[estudioBloqSelect.value]);
         if (!bloque) return;
         bloque.id = crypto.randomUUID();
@@ -537,18 +536,16 @@ function escuchadores() {
         const filas = tBody.querySelectorAll("tr");
         const ultima = filas[filas.length - 1];
         const penultima = filas[filas.length - 2];
-
-        //hacemos focus en el input del nombre para que el usuario pueda escribir el nombre del nuevo elemento
-        ultima.querySelector('input[name="nombreSenial"]').focus();
-        ultima.querySelector('input[name="nombreSenial"]').value = "";
-
+        
         // movemos la fila creada por encima de la que tiene el boton añadir
         tBody.insertBefore(ultima, penultima);
 
         // volvemos a hacer seleccionables los elementos de "estudio"
         estudio.removeAttribute('inert');
-
-        console.log(penultima.querySelectorAll('input'));
+        
+        //hacemos focus en el input del nombre para que el usuario pueda escribir el nombre del nuevo elemento
+        ultima.querySelector('input[name="nombreSenial"]').value = "";
+        ultima.querySelector('input[name="nombreSenial"]').focus();
 
         // quitamos el overlay
         overlay.style.display = "none";
