@@ -1,6 +1,0 @@
------ IDEAS -----
-1 reformar estructura de blocksData para que dada opcion de cada señal incluya testo para la memoria y nombre del bloque de dibujo asociado
-
-
------ FALLOS -----
-1 si cambia el nombre de los bloques en blocksData no se abren las instalaciones anteriore por fallo del javascript
