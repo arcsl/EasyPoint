@@ -25,6 +25,8 @@ const estudioBloqCont = document.getElementById("estudioBloqCont");
 const estudioBloqSelect = document.getElementById("estudioBloqSelect");
 const estudioSumarioCont = document.getElementById("estudioSumarioCont");
 
+const listado = document.getElementById("listado");
+
 const overlay = document.getElementById("overlay");
 const customPop = document.getElementById("customPop");
 const popLabelTR = document.getElementById("popLabelTR");
@@ -136,6 +138,55 @@ function populateCabeceraYPie() {
     estudioSumarioCont.appendChild(estudioSumarioSenialesTable);
     estudioSumarioSenialesTable.appendChild(totalHeader());
     estudioSumarioSenialesTable.appendChild(totalBody());
+}
+
+function populateListadoSeniales() {
+
+    listado.innerHTML = "";
+
+    const table = document.createElement('table');
+    listado.appendChild(table);
+
+    table.classList.add("w3-table");
+    table.style.backgroundColor = "red";
+
+    proyectoActual.forEach(bloque => {
+
+        bloque.Elementos.forEach(elemento => {
+
+            if (elemento.Cantidad > 0) {
+
+                const optElegida = elemento.Opciones[elemento.Opcion];
+                optElegida.Esquema.forEach(senial => {
+
+                    const row = document.createElement('tr');
+                    table.appendChild(row);
+
+                    const celda = document.createElement('td');
+                    row.appendChild(celda);
+
+                    const inputNombreSenial = document.createElement('input');
+                    celda.appendChild(inputNombreSenial);
+
+                    inputNombreSenial.classList.add("w3-input");
+                    inputNombreSenial.style.width = "1000px";
+
+                    console.log(senial.Nombre);
+                    console.log(optElegida.Nombre);
+                    console.log(elemento.NombreUsuario);
+                    console.log(bloque.NombreUsuar);
+
+                    inputNombreSenial.value =
+                        senial.Nombre + " " +
+                        // optElegida.Nombre + " " +
+                        elemento.NombreUsuario + " " +
+                        bloque.NombreUsuario + " "
+                        ;
+
+                });
+            }
+        });
+    });
 }
 
 /* ------------------------- ESTUDIO ------------------------- */

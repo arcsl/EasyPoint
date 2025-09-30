@@ -264,7 +264,6 @@ function escuchadores() {
     });
 
 
-
     // ---------- PORTADA INPUT/SELECT ----------
     // importacion de proyecto una vez el usuario acepta o cancela el dialogo de seleccion de archivo
     portadaImpProyecInput.addEventListener("change", (event) => {
@@ -334,7 +333,7 @@ function escuchadores() {
 
 
 
-    // ---------- BOTONES ESTUDIO DE PUNTOS ----------
+    /* ---------- BOTONES ESTUDIO DE PUNTOS ---------- */
     // (verde guardar) guardar el estado actual del proyecto en el local storage del navegador
     estudioGuardarBtn.addEventListener("click", () => {
 
@@ -354,14 +353,14 @@ function escuchadores() {
             if (proyectosEasyPoint.hasOwnProperty(nuevoNombreProyecto)) {
                 if (!confirm("Ya existe un proyecto con ese nombre.\n\n¿Desea sobreescribirlo?\n")) return;
 
-            // si no existe -> el usuario quiere renombrarlo
+                // si no existe -> el usuario quiere renombrarlo
             } else {
                 // copiamos la antigua clave en la nueva, borramos la antigua y actualizamos opciones de proyectoselec
                 proyectosEasyPoint[nuevoNombreProyecto] = proyectosEasyPoint[nombreProyectoActual];
                 delete proyectosEasyPoint[nombreProyectoActual];
-                populateProyectSelect();               
+                populateProyectSelect();
             }
-            
+
             // llegados a este punto (sea cual sea el caso):
             // - dejamos seleccionado el nuevo nombre en portada
             // - actualizamos el nombre del proyecto actual
@@ -409,6 +408,16 @@ function escuchadores() {
 
         }
     });
+    // (morado listado) mostrar listado de señales y estado de asignación
+    estudioListadoBtn.addEventListener("click", () => {
+
+        // mostar pantalla señales
+        estudio.classList.add("w3-hide");
+        listado.classList.remove("w3-hide");
+        populateListadoSeniales();
+
+    });
+
     // (verde añadir) añadir el bloque seleccionado
     estudioBloqAniaBtn.addEventListener("click", () => {
         const bloque = structuredClone(blocksData[estudioBloqSelect.value]);
@@ -536,13 +545,13 @@ function escuchadores() {
         const filas = tBody.querySelectorAll("tr");
         const ultima = filas[filas.length - 1];
         const penultima = filas[filas.length - 2];
-        
+
         // movemos la fila creada por encima de la que tiene el boton añadir
         tBody.insertBefore(ultima, penultima);
 
         // volvemos a hacer seleccionables los elementos de "estudio"
         estudio.removeAttribute('inert');
-        
+
         //hacemos focus en el input del nombre para que el usuario pueda escribir el nombre del nuevo elemento
         ultima.querySelector('input[name="nombreSenial"]').value = "";
         ultima.querySelector('input[name="nombreSenial"]').focus();
