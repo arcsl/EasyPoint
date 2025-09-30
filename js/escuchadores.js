@@ -15,7 +15,7 @@ function escuchadores() {
         // verificar si existe tal proyecto en la biblioteca
         if (!proyectosEasyPoint.hasOwnProperty(nombreProyectoActual)) return;
 
-        // intentar cargar el proyecto en memoria
+        // intentar cargar el proyecto desde el almacenamiento
         try {
             const data = localStorage.getItem('proyectoActual');
             if (data) {                       // primero verificamos que exista algo
@@ -33,9 +33,16 @@ function escuchadores() {
         portada.classList.add("w3-hide");
         portadaAbrProyecBtn.dispatchEvent(new Event('click', { bubbles: true }));
         portadaSelProyecSelect.value = nombreProyectoActual;
-        estudioNombProyecInput.value = nombreProyectoActual;
-        writeBlocks();
+
+        // retomar el nombre provisional del proyecto por si el usuario lo estaba cambiando
+        estudioNombProyecInput.value = localStorage.getItem('nuevoNombreProyecto') || nombreProyectoActual;
+        estudioNombProyecInput.dispatchEvent(new Event('input', { bubbles: true }));
+
+        // marcar proyecto como "no guardado"
         proyectoActual.guardado = false;
+
+        // mostrar proyecto en el DOM
+        writeBlocks();
         estudio.classList.remove("w3-hide");
 
     });
@@ -256,6 +263,8 @@ function escuchadores() {
 
     });
 
+
+
     // ---------- PORTADA INPUT/SELECT ----------
     // importacion de proyecto una vez el usuario acepta o cancela el dialogo de seleccion de archivo
     portadaImpProyecInput.addEventListener("change", (event) => {
@@ -323,11 +332,12 @@ function escuchadores() {
         }
     });
 
+
+
     // ---------- BOTONES ESTUDIO DE PUNTOS ----------
     // (verde guardar) guardar el estado actual del proyecto en el local storage del navegador
     estudioGuardarBtn.addEventListener("click", () => {
 
-        let sobreescribir = false;
 
         // leemos el nombre del proyecto en la casilla que el usuario puede modificar
         const nuevoNombreProyecto = estudioNombProyecInput.value.trim();
@@ -337,63 +347,39 @@ function escuchadores() {
             return;
         }
 
-        // Si dicho nombre ya existe y no es el nombre del proyecto que tenemos abierto (portadaSelProyecSelect.value) preguntamos al usuario si desea continuar.
-        if (nuevoNombreProyecto !== portadaSelProyecSelect.value && proyectosEasyPoint.hasOwnProperty(nuevoNombreProyecto)) {
-            if (confirm("Ya existe un proyecto con ese nombre.\n\n¿Desea sobreescribirlo?\n")) {
-                // si = activamos flag sobreescribir
-                sobreescribir = true;
+        // si el nombre de proyecto ha cambiado
+        if (nuevoNombreProyecto !== nombreProyectoActual) {
+
+            // Si dicho nombre ya existe en el listado de proyectos, preguntamos al usuario si desea sobreescribir.
+            if (proyectosEasyPoint.hasOwnProperty(nuevoNombreProyecto)) {
+                if (!confirm("Ya existe un proyecto con ese nombre.\n\n¿Desea sobreescribirlo?\n")) return;
+
+            // si no existe -> el usuario quiere renombrarlo
             } else {
-                // no = abortar guardado
-                return;
+                // copiamos la antigua clave en la nueva, borramos la antigua y actualizamos opciones de proyectoselec
+                proyectosEasyPoint[nuevoNombreProyecto] = proyectosEasyPoint[nombreProyectoActual];
+                delete proyectosEasyPoint[nombreProyectoActual];
+                populateProyectSelect();               
             }
+            
+            // llegados a este punto (sea cual sea el caso):
+            // - dejamos seleccionado el nuevo nombre en portada
+            // - actualizamos el nombre del proyecto actual
+            // - quitamos el fondo rojo del input
+            portadaSelProyecSelect.value = nuevoNombreProyecto;
+            nombreProyectoActual = nuevoNombreProyecto;
+            estudioNombProyecInput.classList.remove("w3-pale-red");
+
         }
 
-        // TODO: por ahora guardamos directamente. Hace falta la logica de si se ha cambiasdo 
-        // el npombre al proyecto, renombrar o si hay que sobreescribir...
+        // guardamos el proyecto en el listado de idem
         proyectosEasyPoint[nombreProyectoActual] = structuredClone(proyectoActual);
 
-        /* Antiguo guardar
-        // si desea sobreescribir 
-        if (sobreescribir) {
-
-            // directamente leemos los bloques en la propiedad existente
-            proyectosEasyPoint[nuevoNombreProyecto] = readBlocks();
-            // cambiamos el valor seleccionado en proyectoselec al nuevo nombre donde hemos sobreescrito
-            portadaSelProyecSelect.value = nuevoNombreProyecto;
-
-            // asi no se ha modificado el proyecto que hemos abierto originalmente y hemos podidohacer copia de un proyecto en otro
-
-
-            // si no desea sobreescribir 
-        } else {
-
-            // leemos los bloques en el proyecto abierto
-            proyectosEasyPoint[portadaSelProyecSelect.value] = readBlocks();
-
-            // verificamos si el nombre de proyecto ha cambiado por si el usuario queria renombrarlo
-            if (nuevoNombreProyecto !== portadaSelProyecSelect.value) {
-
-                // si ha cambiado copiamos la clave a una nueva clave con el nuevo nombre 
-                proyectosEasyPoint[nuevoNombreProyecto] = proyectosEasyPoint[portadaSelProyecSelect.value];
-
-                // y borramos la antigua clave.
-                delete proyectosEasyPoint[portadaSelProyecSelect.value];
-
-                // actualizamos opciones de proyectoselec usando la funcion
-                populateProyectSelect();
-
-                // y dejamos seleccionado el nuevo nombre
-                portadaSelProyecSelect.value = nuevoNombreProyecto;
-
-            }
-        }
-        */
-
-        // guardar en local storage
-        localStorage.setItem("proyectosEasyPoint", JSON.stringify(proyectosEasyPoint));
-
-        // Marcar bandera global
+        // marcar proyecto como guardado y copiamos en local storage
         proyectoActual.guardado = true;
+        localStorage.setItem("proyectosEasyPoint", JSON.stringify(proyectosEasyPoint));
+        localStorage.setItem("nombreProyectoActual", nombreProyectoActual);
+        localStorage.setItem("nuevoNombreProyecto", nuevoNombreProyecto);
 
         // Mostar notificación
         guardadoOK();
@@ -413,6 +399,7 @@ function escuchadores() {
             // limpiar las claves del proyecto actual
             localStorage.removeItem('proyectoActual');
             localStorage.removeItem('nombreProyectoActual');
+            localStorage.removeItem('nuevoNombreProyecto');
             nombreProyectoActual = null;
             proyectoActual = null;
 
@@ -434,13 +421,17 @@ function escuchadores() {
         proyectoNoGuardado();
     });
 
+
     // ---------- ESTUDIO INPUT/SELECT ----------
     // cambiar color del input del nombre del proyecto si ya existe otro proyecto son ese nombre o esta vacio
     estudioNombProyecInput.addEventListener("input", () => {
 
-        const estaVacio = estudioNombProyecInput.value.trim() === "";
-        const yaExiste = proyectosEasyPoint.hasOwnProperty(estudioNombProyecInput.value.trim());
-        const esElActual = estudioNombProyecInput.value.trim() === portadaSelProyecSelect.value;
+        const nuevoNombreProyecto = estudioNombProyecInput.value.trim();
+        localStorage.setItem("nuevoNombreProyecto", nuevoNombreProyecto);
+
+        const estaVacio = nuevoNombreProyecto === "";
+        const yaExiste = proyectosEasyPoint.hasOwnProperty(nuevoNombreProyecto);
+        const esElActual = nuevoNombreProyecto === nombreProyectoActual;
 
         if ((yaExiste && !esElActual) || estaVacio) {
             estudioNombProyecInput.classList.add("w3-pale-red");
