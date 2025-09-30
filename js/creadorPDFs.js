@@ -6,7 +6,7 @@ let nombresColumnas = [];
 let facilityName;
 let headerText;
 const easyPie = {
-    text: 'Easy Point V1.3',
+    text: 'Easy Point V2.0',
     link: 'https://easypoint.arcsl.com',
     color: 'blue',
     decoration: 'underline'
