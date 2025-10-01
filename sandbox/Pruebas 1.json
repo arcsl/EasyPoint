@@ -1,0 +1,448 @@
+[
+  {
+    "Nombre": "General Instalación",
+    "Elementos": [
+      {
+        "Nombre": "Temperatura Exterior",
+        "Cantidad": 1,
+        "Opciones": [
+          {
+            "Nombre": "Temperatura",
+            "Seniales": {
+              "EA": 1
+            },
+            "Esquema": [
+              {
+                "id": "efdc97a7-c687-48f5-b1a6-c32fab9f1fcb",
+                "Nombre": "",
+                "EA_1": [
+                  "Pasiva"
+                ]
+              }
+            ]
+          },
+          {
+            "Nombre": "Temp + Hume",
+            "Seniales": {
+              "EA": 2
+            },
+            "Esquema": [
+              {
+                "id": "3100c3c1-1bc5-4b4d-b4ff-960e7f7b2cca",
+                "Nombre": "",
+                "EA_2": [
+                  "Activa"
+                ]
+              }
+            ]
+          },
+          {
+            "Nombre": "Temp + CO2",
+            "Seniales": {
+              "EA": 2
+            },
+            "Esquema": [
+              {
+                "id": "2869c813-1fe7-4817-a922-e70eaa716462",
+                "Nombre": "",
+                "EA_2": [
+                  "Activa"
+                ]
+              }
+            ]
+          },
+          {
+            "Nombre": "Temp Hum CO2",
+            "Seniales": {
+              "EA": 3
+            },
+            "Esquema": [
+              {
+                "id": "7b1f620c-2839-4c57-9265-9670f168c4ff",
+                "Nombre": "",
+                "EA_3": [
+                  "Activa"
+                ]
+              }
+            ]
+          }
+        ],
+        "NombreUsuario": "Temperatura Exterior",
+        "Opcion": 0,
+        "Checked": true
+      }
+    ],
+    "id": "1655b8fd-cd76-41d1-b003-ba425f635ae7",
+    "NombreUsuario": "General",
+    "Cantidad": 1
+  },
+  {
+    "Nombre": "Caldera",
+    "Elementos": [
+      {
+        "Nombre": "Temperatura",
+        "Cantidad": 1,
+        "Opciones": [
+          {
+            "Nombre": "Temperatura",
+            "Seniales": {
+              "EA": 1
+            },
+            "Esquema": [
+              {
+                "id": "dd393e5c-17a4-426e-b9c3-fb3259609b9a",
+                "Nombre": "",
+                "EA_1": [
+                  "Pasiva"
+                ]
+              }
+            ]
+          },
+          {
+            "Nombre": "Termostato",
+            "Seniales": {
+              "ED": 1
+            },
+            "Esquema": [
+              {
+                "id": "6bab1141-83e9-40f2-ae1a-c4e8f96aaa20",
+                "Nombre": "",
+                "ED_1": [
+                  "Externa"
+                ]
+              }
+            ]
+          }
+        ],
+        "NombreUsuario": "Temperatura",
+        "Opcion": 0,
+        "Checked": true
+      },
+      {
+        "Nombre": "Marcha-Paro",
+        "Cantidad": 0,
+        "Opciones": [
+          {
+            "Nombre": "Externa",
+            "Seniales": {
+              "SD": 1
+            },
+            "Esquema": [
+              {
+                "id": "f76a2775-5052-43bb-9de4-cfd19cf00bb5",
+                "Nombre": "",
+                "SD_1": [
+                  "Externa"
+                ]
+              }
+            ]
+          }
+        ],
+        "NombreUsuario": "Marcha-Paro",
+        "Opcion": 0,
+        "Checked": false
+      },
+      {
+        "Nombre": "Estado / Alarma",
+        "Cantidad": 1,
+        "Opciones": [
+          {
+            "Nombre": "Externa",
+            "Seniales": {
+              "ED": 1
+            },
+            "Esquema": [
+              {
+                "id": "3fd8ce35-95a2-4f3e-834c-740d837428c5",
+                "Nombre": "",
+                "ED_1": [
+                  "Externa"
+                ]
+              }
+            ]
+          }
+        ],
+        "NombreUsuario": "Estado / Alarma",
+        "Opcion": 0,
+        "Checked": true
+      },
+      {
+        "Nombre": "Modulación / Consigna",
+        "Cantidad": 1,
+        "Opciones": [
+          {
+            "Nombre": "0..10Vcc",
+            "Seniales": {
+              "SA": 1
+            },
+            "Esquema": [
+              {
+                "id": "e2399c37-15f4-4d03-9073-ca81c8248962",
+                "Nombre": "",
+                "SA_1": [
+                  "Externa"
+                ]
+              }
+            ]
+          },
+          {
+            "Nombre": "3 Puntos",
+            "Seniales": {
+              "SD": 2
+            },
+            "Esquema": [
+              {
+                "id": "91d8d2cf-8018-4b17-ae26-2f5f5c343bb0",
+                "Nombre": "",
+                "SD_2": [
+                  "Externa",
+                  "Actuador"
+                ]
+              }
+            ]
+          },
+          {
+            "Nombre": "2ª llama",
+            "Seniales": {
+              "SD": 1
+            },
+            "Esquema": [
+              {
+                "id": "43ee265d-21b4-442d-a120-5ee83f34f712",
+                "Nombre": "",
+                "SD_1": [
+                  "Externa"
+                ]
+              }
+            ]
+          }
+        ],
+        "NombreUsuario": "Modulación / Consigna",
+        "Opcion": 0,
+        "Checked": true
+      },
+      {
+        "Nombre": "Bomba",
+        "Cantidad": 1,
+        "Opciones": [
+          {
+            "Nombre": "M/P y Estado",
+            "Seniales": {
+              "ED": 1,
+              "SD": 1
+            },
+            "Esquema": [
+              {
+                "id": "e1aafdd5-9c96-4536-a80c-ecd7e1a01d75",
+                "Nombre": "Estado",
+                "ED_1": [
+                  "Externa",
+                  "Rele",
+                  "Contactor",
+                  "Termico"
+                ]
+              },
+              {
+                "id": "40946509-0450-46ba-bc97-b6a23395165f",
+                "Nombre": "M/P",
+                "SD_1": [
+                  "Externa",
+                  "Rele",
+                  "Contactor"
+                ]
+              }
+            ]
+          },
+          {
+            "Nombre": "0..10Vcc",
+            "Seniales": {
+              "ED": 1,
+              "SA": 1,
+              "SD": 1
+            },
+            "Esquema": [
+              {
+                "id": "5e2ee98e-cd79-4994-9fa2-0bf3241b6ce4",
+                "Nombre": "Estado",
+                "ED_1": [
+                  "Externa",
+                  "Rele",
+                  "Contactor",
+                  "Termico"
+                ]
+              },
+              {
+                "id": "cda89e59-0491-425d-87b3-5bdb1757e4c7",
+                "Nombre": "Modulación",
+                "SA_1": [
+                  "Externa"
+                ]
+              },
+              {
+                "id": "70b160b4-4162-4616-bf42-f62e723a52e0",
+                "Nombre": "M/P",
+                "SD_1": [
+                  "Externa",
+                  "Rele",
+                  "Contactor"
+                ]
+              }
+            ]
+          }
+        ],
+        "NombreUsuario": "Bomba",
+        "Opcion": 0,
+        "Checked": true
+      },
+      {
+        "Nombre": "Válvula Aislamiento / Retorno",
+        "Cantidad": 0,
+        "Opciones": [
+          {
+            "Nombre": "Todo/Nada",
+            "Seniales": {
+              "ED": 1,
+              "SD": 1
+            },
+            "Esquema": [
+              {
+                "id": "ddaed3b1-1174-4f98-bea0-16973731e7b3",
+                "Nombre": "FC Abierto",
+                "ED_1": [
+                  "Externa",
+                  "Rele"
+                ]
+              },
+              {
+                "id": "c88dd28d-4d01-4bdb-bbfb-e69cbf51693e",
+                "Nombre": "",
+                "SD_1": [
+                  "Externa",
+                  "Rele",
+                  "Simple",
+                  "Conmutada"
+                ]
+              }
+            ]
+          },
+          {
+            "Nombre": "3 Puntos",
+            "Seniales": {
+              "SD": 2
+            },
+            "Esquema": [
+              {
+                "id": "cb507a75-7f30-4b0c-9c1a-b29ed2ea7268",
+                "Nombre": "",
+                "SD_2": [
+                  "Externa",
+                  "Actuador"
+                ]
+              }
+            ]
+          },
+          {
+            "Nombre": "0..10Vcc",
+            "Seniales": {
+              "SA": 1
+            },
+            "Esquema": [
+              {
+                "id": "7f2e800e-bf82-4af4-a8c4-91a055d6a949",
+                "Nombre": "",
+                "SA_1": [
+                  "Externa",
+                  "Actuador"
+                ]
+              }
+            ]
+          }
+        ],
+        "NombreUsuario": "Válvula Aislamiento / Retorno",
+        "Opcion": 0,
+        "Checked": false
+      },
+      {
+        "Nombre": "Control Humos",
+        "Cantidad": 0,
+        "Opciones": [
+          {
+            "Nombre": "Temperatura",
+            "Seniales": {
+              "EA": 1
+            },
+            "Esquema": [
+              {
+                "id": "7678debb-7253-45fa-8144-be528da631a2",
+                "Nombre": "",
+                "EA_1": [
+                  "Pasiva"
+                ]
+              }
+            ]
+          },
+          {
+            "Nombre": "Termostato",
+            "Seniales": {
+              "ED": 1
+            },
+            "Esquema": [
+              {
+                "id": "a7dddf68-ba6d-4a2a-9423-52a67b06d973",
+                "Nombre": "",
+                "ED_1": [
+                  "Externa"
+                ]
+              }
+            ]
+          }
+        ],
+        "NombreUsuario": "Control Humos",
+        "Opcion": 0,
+        "Checked": false
+      },
+      {
+        "Nombre": "Control Presión",
+        "Cantidad": 0,
+        "Opciones": [
+          {
+            "Nombre": "Presostato",
+            "Seniales": {
+              "ED": 1
+            },
+            "Esquema": [
+              {
+                "id": "ffbb2ceb-4efc-436e-aee0-3cca548cc1ab",
+                "Nombre": "",
+                "ED_1": [
+                  "Externa"
+                ]
+              }
+            ]
+          },
+          {
+            "Nombre": "Sonda",
+            "Seniales": {
+              "EA": 1
+            },
+            "Esquema": [
+              {
+                "id": "4958e102-bcce-4391-956c-cda715cb039a",
+                "Nombre": "",
+                "EA_1": [
+                  "Activa"
+                ]
+              }
+            ]
+          }
+        ],
+        "NombreUsuario": "Control Presión",
+        "Opcion": 0,
+        "Checked": false
+      }
+    ],
+    "id": "cbdba68a-9274-4c23-bbbb-6b46e5f1dc78",
+    "NombreUsuario": "Caldera",
+    "Cantidad": 1
+  }
+]

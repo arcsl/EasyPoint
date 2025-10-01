@@ -148,7 +148,6 @@ function populateListadoSeniales() {
     listado.appendChild(table);
 
     table.classList.add("w3-table");
-    table.style.backgroundColor = "red";
 
     proyectoActual.forEach(bloque => {
 
@@ -157,36 +156,115 @@ function populateListadoSeniales() {
             if (elemento.Cantidad > 0) {
 
                 const optElegida = elemento.Opciones[elemento.Opcion];
+
                 optElegida.Esquema.forEach(senial => {
 
-                    const row = document.createElement('tr');
-                    table.appendChild(row);
+                    let nombresSeniales = procesaNombres(bloque.NombreUsuario, bloque.Cantidad, elemento.NombreUsuario, elemento.Cantidad);
 
-                    const celda = document.createElement('td');
-                    row.appendChild(celda);
+                    console.log({ nombresSeniales });
 
-                    const inputNombreSenial = document.createElement('input');
-                    celda.appendChild(inputNombreSenial);
+                    nombresSeniales.forEach(nombre => {
 
-                    inputNombreSenial.classList.add("w3-input");
-                    inputNombreSenial.style.width = "1000px";
+                        const row = document.createElement('tr');
+                        table.appendChild(row);
 
-                    console.log(senial.Nombre);
-                    console.log(optElegida.Nombre);
-                    console.log(elemento.NombreUsuario);
-                    console.log(bloque.NombreUsuar);
+                        const celda = document.createElement('td');
+                        row.appendChild(celda);
 
-                    inputNombreSenial.value =
-                        senial.Nombre + " " +
-                        // optElegida.Nombre + " " +
-                        elemento.NombreUsuario + " " +
-                        bloque.NombreUsuario + " "
-                        ;
+                        const inputNombreSenial = document.createElement('input');
+                        celda.appendChild(inputNombreSenial);
+
+                        inputNombreSenial.classList.add("w3-input");
+                        inputNombreSenial.style.fontSize = "12px";
+                        inputNombreSenial.style.height = "15px";
+                        inputNombreSenial.style.width = "5000px";
+
+                        inputNombreSenial.value = (senial.Nombre + " " + nombre).toUpperCase().trim();
+
+                    });
 
                 });
             }
         });
     });
+
+    /**
+     * Genera un array de nombres combinados de bloques y elementos.
+     * Aplica prefijos y numeración automática si el nombre contiene comas o "y".
+     *
+     * @param {string} bName - Nombre del bloque.
+     * @param {number} bCant - Cantidad de bloques.
+     * @param {string} eName - Nombre del elemento.
+     * @param {number} eCant - Cantidad de elementos.
+     * @returns {string[]} Array con todos los nombres combinados de elementos y bloques.
+     */
+    function procesaNombres(bName, bCant, eName, eCant) {
+        /**
+         * Divide un nombre compuesto en un prefijo y un array de partes.
+         * Aplica una early exit si no hay exactamente una ocurrencia de " y ".
+         *
+         * @param {string} nombre - El nombre a procesar, puede contener comas y " y ".
+         * @returns {{prefijo: string, partes: string[]} | null} Objeto con el prefijo y las partes,
+         *          o null si no se cumple la condición de una sola "y" o si las partes son insuficientes.
+         */
+        function splitNombre(nombre) {
+            // Contar cuántas veces aparece " y " -> Early exit: si no hay exactamente una "y"
+            const countY = (nombre.match(/ y /g) || []).length;
+            if (countY !== 1) return null;
+
+            // Dividir por comas, luego cada parte por " y ", aplanar el array resultante y eliminar espacios
+            let partes = nombre.split(",");
+            partes = partes.flatMap(p => p.split(" y "));
+            partes = partes.map(p => p.trim());
+
+            // Separar prefijo del primer elemento
+            let primerElemento = partes[0];
+            let palabras = primerElemento.split(" ");
+            partes[0] = palabras.pop();        // último elemento del primer elemento
+            const prefijo = palabras.join(" "); // resto de palabras como prefijo
+
+            // Validaciones finales o retornar objeto valido
+            if (prefijo === "" || partes[0] === "" || partes.length < 2) return null;
+            return { prefijo, partes };
+        }
+
+        // array de bloques
+        let arrayBloques = [];
+        if (bCant > 1) {
+            let splitBloques = splitNombre(bName);
+            if (!splitBloques || splitBloques.partes.length !== bCant) {
+                for (let i = 1; i <= bCant; i++) { arrayBloques.push(bName + " " + i); }
+            } else {
+                splitBloques.partes.forEach(parte => arrayBloques.push(splitBloques.prefijo + " " + parte));
+            }
+        } else {
+            arrayBloques = [bName];
+        }
+
+        // array de elementos
+        let arrayElems = [];
+        if (eCant > 1) {
+            let splitElems = splitNombre(eName);
+            if (!splitElems || splitElems.partes.length !== eCant) {
+                for (let i = 1; i <= eCant; i++) { arrayElems.push(eName + " " + i); }
+            } else {
+                splitElems.partes.forEach(parte => arrayElems.push(splitElems.prefijo + " " + parte));
+            }
+        } else {
+            arrayElems = [eName];
+        }
+
+        // --- Combinar bloques y elementos ---
+        const resultado = [];
+        for (let b of arrayBloques) {
+            for (let e of arrayElems) {
+                resultado.push(e + " " + b);
+            }
+        }
+
+        return resultado;
+    }
+
 }
 
 /* ------------------------- ESTUDIO ------------------------- */
@@ -232,74 +310,10 @@ function readBlocks() {
 }
 
 function writeBlocks() {
-
     estudioBloqCont.innerHTML = "";
-
     proyectoActual.forEach(addBlock);
-
-    // proyectosEasyPoint[portadaSelProyecSelect.value].forEach(seccion => {
-
-    //     estudioBloqSelect.value = seccion.bloque.tipo;  // movemos el selecotr de añadir bloques al bloque que queremos
-    //     const table = addBlock();   // usamos la funcion de añadir bloque para crear un bloque del tipo seleccionado con los valores por defecto
-
-    //     // ajustamos el nombre del bloque segun lo que hubiese guardado en el proyecto
-    //     const nombreBloque = table.querySelector('[name="nombreBloque"]');
-    //     if (nombreBloque) nombreBloque.value = seccion.bloque.nombre;
-
-    //     // ajustamos la cantidad general del bloque segun lo que hubiese guardado en el proyecto
-    //     const cantidadBloque = table.querySelector('[name="cantidadBloque"]');
-    //     if (cantidadBloque) cantidadBloque.value = seccion.bloque.cantidad;
-
-    //     // seleccionar el body de la tabla para añadir lineas custom
-    //     const tBody = table.querySelector('tbody');
-    //     for (const [name, value] of Object.entries(seccion.seniales)) {
-    //         if (name.substring(0, 6) === "custom") {
-    //             const customFila = addFilaBody(name, value.opcion, cantidadBloque);
-    //             tBody.insertBefore(customFila, tBody.lastElementChild);
-    //         }
-    //     }
-
-    //     // recorremos las filas del bloque
-    //     const bodyRows = table.querySelectorAll("tbody tr");
-    //     bodyRows.forEach((row, index) => {
-
-    //         // seleccionamos los elementos de cada fila
-    //         const checkbox = row.querySelector('input[type="checkbox"]');
-    //         const nombreSenial = row.querySelector('[name="nombreSenial"]');
-    //         const numeroSenial = row.querySelector('[name="numeroSenial"]');
-    //         const opcionSenial = row.querySelector('[name="opcionSenial"]');
-
-    //         // si es una linea custom, asignamos el placeholder al valor que tuviera guardado
-    //         if (row.name?.substring(0, 6) === "custom") {
-    //             nombreSenial.placeholder = seccion.seniales[row.name].nombre;
-    //         }
-
-    //         if (checkbox) {
-
-    //             // marcamos el checkbox en funcion a lo que hubiese guardado en el proyecto
-    //             checkbox.checked = seccion.seniales.hasOwnProperty(row.name);
-
-    //             // si el check esta marcado rellenamos el resto de valores conforme a lo que hubiese guardado en el proyecto
-    //             if (checkbox.checked) {
-    //                 if (nombreSenial) nombreSenial.value = seccion.seniales[row.name].nombre;
-    //                 if (numeroSenial) numeroSenial.value = seccion.seniales[row.name].cantidad;
-    //                 if (opcionSenial) {
-    //                     opcionSenial.value = seccion.seniales[row.name].opcion;
-    //                     opcionSenial.dispatchEvent(new Event('change', { bubbles: true }));
-    //                 }
-    //             }
-
-    //             // disparamos el cambio del check para el recalculo de señales
-    //             checkbox.dispatchEvent(new Event('change', { bubbles: true }));
-    //         }
-    //     });
-    // });
-
-    // reiniciamos selector de bloques de proyecto
     estudioBloqSelect.selectedIndex = 0;
-
     disableFirstAndLastMoveBlockButtons();
-
 }
 
 
