@@ -1,0 +1,127 @@
+/* ---------- LISTADO ---------- */
+#listadoCabeceraCont,
+#listadoSenialesCont,
+#listadoSumarioCont {
+    width: 1000px;
+}
+
+#listado tr> :first-child {
+    width: 800px;
+}
+
+#listado tr> :not(:first-child) {
+    text-align: center;
+}
+
+#divGenerar button,
+#listadoBotonera button {
+    width: 130px !important;
+}
+
+
+/* ---------- LISTADO SEPARADORES SUPERIOR E INFERIOR ---------- */
+#listadoSepTop {
+    height: 138px;
+}
+
+#listadoSepPie {
+    height: 112px;
+}
+
+/* ---------- LISTADO CABECERA ---------- */
+#listadoNombProyecLabel {
+    width: 415px;
+    font-weight: bold;
+    line-height: 1.9em;
+}
+
+/* ---------- LISTADO SELECTOR DE BLOQUES ---------- */
+#listadoGenerarLabel {
+    width: 415px;
+    border: none;
+}
+
+/* ---------- LISTADO BLOQUES ---------- */
+#listadoSenialesCont table:nth-of-type(odd) {
+    background-color: #EEE;
+}
+
+/* elementos de la primera celda de cabecera */
+#listado thead tr> :first-child * {
+    height: 30px;
+    vertical-align: top;
+}
+
+
+/* elementos de las filas del cuerpo */
+#listadoSenialesCont tbody tr * {
+    height: 25px;
+    font-size: 1em !important;
+}
+
+#listadoSenialesCont tbody td {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+/* botones de la primera celda */
+#listado tr> :first-child button {
+    width: 30px;
+    height: 30px;
+    padding: 0;
+}
+
+/* nombre del bloque */
+#listado thead>tr> :first-child input:first-of-type {
+    width: 395px !important;
+}
+
+/* botones eliminar linea custom */
+#listado tbody>tr> :first-child button {
+    margin-left: 5px;
+    margin-right: 15px;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    line-height: 15px;
+    font-size: 12px !important;
+    font-weight: bold;
+}
+
+/* boton añadir lñinea custom */
+#listado tbody>tr> :first-child button.addBtn {
+    font-weight: normal;
+    line-height: 12px;
+}
+
+/* checkbox lineas predefinidas */
+#listado tr> :first-child input[type="checkbox"] {
+    margin-left: 5px;
+    margin-right: 15px;
+    width: 20px;
+    height: 20px;
+    vertical-align: middle; 
+}
+
+/* inputs de la primera celda */
+#listado tr> :first-child input.inputNombre {
+    width: 400px;
+    border: none !important;
+}
+
+/* input numbers de la primera celda */
+#listado tr> :first-child input[type="number"] {
+    width: 60px;
+    text-align: right;
+    border: none !important;
+}
+
+/* selects de la primera celda */
+#listado tr> :first-child select {
+    width: 225px;
+    padding: 0 8px;
+    display: inline-block;
+    background-color: transparent;
+    text-overflow: ellipsis;
+    border: none !important;
+}

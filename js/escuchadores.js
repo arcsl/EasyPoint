@@ -332,8 +332,8 @@ function escuchadores() {
     });
 
 
-
     /* ---------- BOTONES ESTUDIO DE PUNTOS ---------- */
+
     // (verde guardar) guardar el estado actual del proyecto en el local storage del navegador
     estudioGuardarBtn.addEventListener("click", () => {
 
@@ -410,12 +410,9 @@ function escuchadores() {
     });
     // (morado listado) mostrar listado de señales y estado de asignación
     estudioListadoBtn.addEventListener("click", () => {
-
-        // mostar pantalla señales
         estudio.classList.add("w3-hide");
         listado.classList.remove("w3-hide");
-        populateListadoSeniales();
-
+        listadoNombProyecLabel.innerText = estudioNombProyecInput.value;
     });
 
     // (verde añadir) añadir el bloque seleccionado
@@ -565,5 +562,23 @@ function escuchadores() {
         estudio.removeAttribute('inert');
         overlay.style.display = "none";
     });
+
+    /* ---------- BOTONES ESTUDIO DE PUNTOS ---------- */
+    listadoImportarBtn.addEventListener("click", () => {
+        
+    });  
+    listadoVolverBtn.addEventListener("click", () => {
+        estudio.classList.remove("w3-hide");
+        listado.classList.add("w3-hide");
+    });
+    listadoAsignarBtn.addEventListener("click", () => {
+    });
+    listadoGenerarBtn.addEventListener("click", () => {
+        populateListadoSeniales();
+        // Generar
+        // cambiar boton a 
+    });
+
+
 
 }

@@ -1,6 +1,7 @@
 // const fs = require('fs');
 
 const signalTypes = ["EA", "ED", "SA", "SD"];
+const signalTexts = ["Entradas Analógicas", "Entradas Digitales", "Salidas Analógicas", "Salidas Digitales"];
 
 // En el array estan las diferentes opciones de dibujar la señal en el esquema
 // El nombre del bloque a llamar será el nombre de la propiedad + el valor elegido. p ej  ED_1 + "Contactor" = ED_1_Contactor
@@ -9,26 +10,28 @@ const esq = {
     // TODO: valorar si es mejor hacer que los objetos tengan la estructira { Nombre: "EA_1", Opciones :["Pasiva",] } 
     // para poder tener un acceso mas facil y no tener que iterar las propiedades buscando cual es el nombre
 
+    // TODO: id: crypto.randomUUID(), ??? sera necesario ???
+
     //EA
-    PasivaEA_1: (Nombre) => ({ id: crypto.randomUUID(), Nombre, EA_1: ["Pasiva",], }),
-    SimpleEA_1: (Nombre) => ({ id: crypto.randomUUID(), Nombre, EA_1: ["Externa",], }),
-    ActivaEA_1: (Nombre) => ({ id: crypto.randomUUID(), Nombre, EA_1: ["Activa",], }),
-    ActivaEA_2: (Nombre) => ({ id: crypto.randomUUID(), Nombre, EA_2: ["Activa",], }),
-    ActivaEA_3: (Nombre) => ({ id: crypto.randomUUID(), Nombre, EA_3: ["Activa",], }),
+    PasivaEA_1: (Nombre) => ({ Nombre, EA_1: ["Pasiva",], }),
+    SimpleEA_1: (Nombre) => ({ Nombre, EA_1: ["Externa",], }),
+    ActivaEA_1: (Nombre) => ({ Nombre, EA_1: ["Activa",], }),
+    ActivaEA_2: (Nombre) => ({ Nombre, EA_2: ["Activa",], }),
+    ActivaEA_3: (Nombre) => ({ Nombre, EA_3: ["Activa",], }),
     //ED
-    SimpleED_1: (Nombre) => ({ id: crypto.randomUUID(), Nombre, ED_1: ["Externa",], }),
-    EntradED_1: (Nombre) => ({ id: crypto.randomUUID(), Nombre, ED_1: ["Externa", "Rele",], }),
-    MotorED_1:  (Nombre) => ({ id: crypto.randomUUID(), Nombre, ED_1: ["Externa", "Rele", "Contactor", "Termico",], }),
+    SimpleED_1: (Nombre) => ({ Nombre, ED_1: ["Externa",], }),
+    EntradED_1: (Nombre) => ({ Nombre, ED_1: ["Externa", "Rele",], }),
+    MotorED_1:  (Nombre) => ({ Nombre, ED_1: ["Externa", "Rele", "Contactor", "Termico",], }),
     //SA
-    SimpleSA_1: (Nombre) => ({ id: crypto.randomUUID(), Nombre, SA_1: ["Externa",], }),
-    ActuadSA_1: (Nombre) => ({ id: crypto.randomUUID(), Nombre, SA_1: ["Externa", "Actuador",], }),
+    SimpleSA_1: (Nombre) => ({ Nombre, SA_1: ["Externa",], }),
+    ActuadSA_1: (Nombre) => ({ Nombre, SA_1: ["Externa", "Actuador",], }),
     //SD
-    SimpleSD_1: (Nombre) => ({ id: crypto.randomUUID(), Nombre, SD_1: ["Externa",], }),
-    SalidaSD_1: (Nombre) => ({ id: crypto.randomUUID(), Nombre, SD_1: ["Externa", "Rele",], }),
-    MotorSD_1:  (Nombre) => ({ id: crypto.randomUUID(), Nombre, SD_1: ["Externa", "Rele", "Contactor",], }),
-    MotorSD_3:  (Nombre) => ({ id: crypto.randomUUID(), Nombre, SD_3: ["Motor3V",], }),
-    ActuadSD_1: (Nombre) => ({ id: crypto.randomUUID(), Nombre, SD_1: ["Externa", "Rele", "Simple", "Conmutada",], }),
-    ActuadSD_2: (Nombre) => ({ id: crypto.randomUUID(), Nombre, SD_2: ["Externa", "Actuador",], }),
+    SimpleSD_1: (Nombre) => ({ Nombre, SD_1: ["Externa",], }),
+    SalidaSD_1: (Nombre) => ({ Nombre, SD_1: ["Externa", "Rele",], }),
+    MotorSD_1:  (Nombre) => ({ Nombre, SD_1: ["Externa", "Rele", "Contactor",], }),
+    MotorSD_3:  (Nombre) => ({ Nombre, SD_3: ["Motor3V",], }),
+    ActuadSD_1: (Nombre) => ({ Nombre, SD_1: ["Externa", "Rele", "Simple", "Conmutada",], }),
+    ActuadSD_2: (Nombre) => ({ Nombre, SD_2: ["Externa", "Actuador",], }),
 }
 
 const opt = {

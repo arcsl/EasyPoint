@@ -3,6 +3,7 @@
 /* ------------------------- REFERENCIAS AL DOM ------------------------- */
 const portada = document.getElementById("portada");
 const estudio = document.getElementById("estudio");
+const listado = document.getElementById("listado");
 
 const portadaNueProyecBtn = document.getElementById("portadaNueProyecBtn");
 const portadaImpProyecBtn = document.getElementById("portadaImpProyecBtn");
@@ -20,12 +21,24 @@ const portadaSelProyecSelect = document.getElementById("portadaSelProyecSelect")
 
 const estudioBotonera = document.getElementById("estudioBotonera");
 const estudioNombProyecInput = document.getElementById("estudioNombProyecInput");
+const estudioGuardarBtn = document.getElementById("estudioGuardarBtn");
+const estudioCrearPDFBtn = document.getElementById("estudioCrearPDFBtn");
+const estudioSalirBtn = document.getElementById("estudioSalirBtn");
+const estudioListadoBtn = document.getElementById("estudioListadoBtn");
 const estudioCabeceraSeniales = document.getElementById("estudioCabeceraSeniales");
 const estudioBloqCont = document.getElementById("estudioBloqCont");
 const estudioBloqSelect = document.getElementById("estudioBloqSelect");
 const estudioSumarioCont = document.getElementById("estudioSumarioCont");
 
-const listado = document.getElementById("listado");
+const listadoBotonera = document.getElementById("listadoBotonera");
+const listadoNombProyecInput = document.getElementById("listadoNombProyecInput");
+const listadoGenerarBtn = document.getElementById("listadoGenerarBtn");
+const listadoImportarBtn = document.getElementById("listadoImportarBtn");
+const listadoVolverBtn = document.getElementById("listadoVolverBtn");
+const listadoAsignarBtn = document.getElementById("listadoAsignarBtn");
+const listadoCabeceraSeniales = document.getElementById("listadoCabeceraSeniales");
+const listadoSenialesCont = document.getElementById("listadoSenialesCont");
+const listadoSumarioCont = document.getElementById("listadoSumarioCont");
 
 const overlay = document.getElementById("overlay");
 const customPop = document.getElementById("customPop");
@@ -142,12 +155,37 @@ function populateCabeceraYPie() {
 
 function populateListadoSeniales() {
 
-    listado.innerHTML = "";
+    listadoSenialesCont.innerHTML = "";
 
-    const table = document.createElement('table');
-    listado.appendChild(table);
+    signalTexts.forEach(signalText => {
 
-    table.classList.add("w3-table");
+        const table = document.createElement('table');
+        listadoSenialesCont.appendChild(table);
+        table.classList.add("w3-table", "w3-bordered", "w3-margin-bottom");
+
+        const thead = document.createElement('thead');
+        table.appendChild(thead);
+
+        const tbody = document.createElement('tbody');
+        table.appendChild(tbody);
+
+        const rowHead = document.createElement('tr');
+        thead.appendChild(rowHead);
+
+        const celda = document.createElement('th');
+        rowHead.appendChild(celda);
+
+        celda.innerHTML = signalText;
+
+    });
+
+    const nodosTablas = listadoSenialesCont.querySelectorAll("table");
+
+    // Mapeamos las tablas en un objeto con nombles tableEA, tableED, tableSA, tableSD
+    const tablesObj = {};
+    signalTypes.forEach((signal, i) => {
+        tablesObj["table" + signal] = nodosTablas[i];
+    });
 
     proyectoActual.forEach(bloque => {
 
@@ -157,16 +195,21 @@ function populateListadoSeniales() {
 
                 const optElegida = elemento.Opciones[elemento.Opcion];
 
+                // descomponer el nombre en varios si hay mas de una unidad en el elemento
+                // tipo 2 bombas -> daria 4 nombres: M/P Bomba 1, M/P Bomba 2, estado bomba 1, estado bomba 2
+                let nombresSeniales = procesaNombres(bloque.NombreUsuario, bloque.Cantidad, elemento.NombreUsuario, elemento.Cantidad);
+
                 optElegida.Esquema.forEach(senial => {
 
-                    let nombresSeniales = procesaNombres(bloque.NombreUsuario, bloque.Cantidad, elemento.NombreUsuario, elemento.Cantidad);
+                    // asignar la tabla ( EA ED SA o SD ) en funcion al tipo de señal
+                    // si no encuentra tabla lo metemos a pelo en el container
+                    const tablaAsignada = getTableFor(senial, tablesObj, signalTypes) || listadoSenialesCont;
 
-                    console.log({ nombresSeniales });
-
+                    //añadir una linea a la tabla 
                     nombresSeniales.forEach(nombre => {
 
                         const row = document.createElement('tr');
-                        table.appendChild(row);
+                        tablaAsignada.querySelector("tbody").appendChild(row);
 
                         const celda = document.createElement('td');
                         row.appendChild(celda);
@@ -175,18 +218,48 @@ function populateListadoSeniales() {
                         celda.appendChild(inputNombreSenial);
 
                         inputNombreSenial.classList.add("w3-input");
-                        inputNombreSenial.style.fontSize = "12px";
-                        inputNombreSenial.style.height = "15px";
-                        inputNombreSenial.style.width = "5000px";
+                        // inputNombreSenial.style.fontSize = "12px";
+                        // inputNombreSenial.style.height = "15px";
+                        inputNombreSenial.style.width = "600px";
 
                         inputNombreSenial.value = (senial.Nombre + " " + nombre).toUpperCase().trim();
 
                     });
 
                 });
+
+                // TODO: eliminar las tablas sin rows en el tbody
+
             }
         });
     });
+
+    /**
+     * Retorna la tabla (elemento del DOM) correspondiente a un objeto,
+     * según el prefijo de sus claves (EA, ED, SA, SD).
+     *
+     * @param {Object} obj - Objeto a analizar (ejemplo: { EA_2: ["Activa"], ... }).
+     * @param {Object.<string, HTMLElement>} tables - Objeto con las tablas mapeadas, 
+     *        con claves tipo "tableEA", "tableED", etc.
+     * @param {string[]} [prefixes=["EA","ED","SA","SD"]] - Lista de prefijos válidos.
+     * @returns {HTMLElement|null} - La tabla correspondiente, o `null` si no hay coincidencia.
+     *
+     * @example
+     * const obj = { id: "1", EA_2: ["Activa"] };
+     * const tables = { tableEA: document.createElement("table") };
+     *
+     * const table = getTableFor(obj, tables);
+     * console.log(table); // <table>...</table>
+     */
+    function getTableFor(obj, tables, prefixes = ["EA", "ED", "SA", "SD"]) {
+        const foundPrefix = prefixes.find(prefix =>
+            Object.keys(obj).some(k => k.startsWith(prefix))
+        );
+
+        if (!foundPrefix) return null;
+        return tables["table" + foundPrefix];
+    }
+
 
     /**
      * Genera un array de nombres combinados de bloques y elementos.
@@ -372,7 +445,7 @@ function addBlock(bloque) {
     estudioBloqCont.appendChild(table);
 
     table.name = bloque.Nombre;
-    table.className = "w3-table w3-bordered w3-margin-bottom";
+    table.classList.add("w3-table", "w3-bordered", "w3-margin-bottom");
 
     addBlockHeader(bloque, table);
     addBlockBody(bloque, table);

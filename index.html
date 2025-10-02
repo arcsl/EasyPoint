@@ -25,6 +25,8 @@
 	<link rel="icon" type="image/png" href="./images/ARClogo.png">
 	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 	<link rel="stylesheet" href="./css/style.css" />
+	<link rel="stylesheet" href="./css/estudio.css" />
+	<link rel="stylesheet" href="./css/listado.css" />
 
 </head>
 
@@ -98,10 +100,9 @@
 			<div id="estudioBotonera" class="w3-margin-top contenidoFlex">
 				<input id="estudioNombProyecInput" class="w3-input w3-margin-right" placeholder="Nombre del proyecto" />
 				<button id="estudioGuardarBtn" class="w3-button w3-green w3-margin-right">Guardar</button>
-				<button id="estudioCrearPDFBtn" class="w3-button w3-blue w3-margin-right">PDF</button>
+				<button id="estudioCrearPDFBtn" class="w3-button w3-purple w3-margin-right">PDF</button>
 				<button id="estudioSalirBtn" class="w3-button w3-red w3-margin-right">Salir</button>
-				<button id="estudioListadoBtn" class="w3-button w3-purple">Listado</button>
-				<!-- <a href="informe.html" class="w3-button w3-blue">Informe</a> -->
+				<button id="estudioListadoBtn" class="w3-button w3-blue">Listado</button>
 			</div>
 			<!-- Cabecera EA ED SA SD -->
 			<div id="estudioCabeceraSeniales"></div>
@@ -114,7 +115,7 @@
 		<div class="w3-margin-bottom" id="estudioBloqCont"></div>
 
 		<!-- Añadidor de bloques -->
-		<div class="contenidoFlex" id="divAniadir">
+		<div id="divAniadir" class="contenidoFlex">
 			<select id="estudioBloqSelect" class="w3-select w3-margin-right w3-padding"></select>
 			<button id="estudioBloqAniaBtn" class="w3-button w3-green">Añadir</button>
 		</div>
@@ -151,6 +152,43 @@
 
 	<!-- LISTADO DE SEÑALES Y ESTADO DE ASIGNACION -->
 	<div class="w3-container w3-display-container seccion w3-hide" id="listado">
+
+		<!-- Cabecera -->
+		<div id="listadoCabeceraCont" class="w3-top w3-white">
+			<!-- Nombre de proyecto y botones de control -->
+			<div id="listadoBotonera" class="w3-margin-top contenidoFlex">
+				<label id="listadoNombProyecLabel" class="w3-input w3-margin-right" placeholder="Nombre del proyecto"></label>
+				<button id="listadoGuardarBtn" class="w3-button w3-green w3-margin-right">Guardar</button>
+				<button id="listadoImportarBtn" class="w3-button w3-purple w3-margin-right">Importar</button>
+				<button id="listadoVolverBtn" class="w3-button w3-red w3-margin-right">Volver</button>
+				<button id="listadoAsignarBtn" class="w3-button w3-blue">Asignación</button>
+			</div>
+			<!-- Cabecera EA ED SA SD -->
+			<div id="listadoCabeceraSeniales" class="w3-center">
+				<table class="w3-table w3-bordered">
+					<thead><tr><th class="w3-center"> LISTADO DE SEÑALES DE CONTROL </th></tr></thead>
+				</table>
+			</div>
+		</div>
+
+		<!-- Separador cabecera -->
+		<div id="listadoSepTop"></div>
+
+		<!-- Bloques -->
+		<div class="w3-margin-bottom" id="listadoSenialesCont"></div>
+
+		<!-- Generador -->
+		<div id="divGenerar" class="contenidoFlex">
+			<label id="listadoGenerarLabel" class="w3-select w3-margin-right w3-padding"></label>
+			<button id="listadoGenerarBtn" class="w3-button w3-green">Generar</button>
+		</div>
+
+		<!-- Separador pie -->
+		<div id="listadoSepPie"></div>
+
+		<!-- Pie -->
+		<div id="listadoSumarioCont" class="w3-bottom w3-white"></div>
+
 	</div>
 
 </body>
