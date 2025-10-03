@@ -565,8 +565,47 @@ function escuchadores() {
 
     /* ---------- BOTONES ESTUDIO DE PUNTOS ---------- */
     listadoImportarBtn.addEventListener("click", () => {
-        
-    });  
+
+        let listadoNombresSeñales = [];
+
+        const nodosTablas = listadoSenialesCont.querySelectorAll("table");
+
+        nodosTablas.forEach(tabla => {
+            // Buscar filas en thead y tbody
+            const filas = tabla.querySelectorAll("thead tr, tbody tr");
+
+            filas.forEach(fila => {
+                const primeraCelda = fila.querySelector("td, th"); // primera celda de la fila
+                if (primeraCelda) {
+                    const input = primeraCelda.querySelector("input");
+                    const label = primeraCelda.querySelector("label");
+
+                    if (input) {
+                        listadoNombresSeñales.push(input.value.trim());
+                    } else if (label) {
+                        listadoNombresSeñales.push("");
+                        listadoNombresSeñales.push(label.textContent.trim());
+                    }
+                }
+            });
+        });
+
+        // Convertir a texto separado por líneas
+        const contenido = listadoNombresSeñales.join("\n");
+
+        // Crear Blob
+        const blob = new Blob([contenido], { type: "text/plain" });
+
+        // Crear enlace temporal
+        const enlace = document.createElement("a");
+        enlace.href = URL.createObjectURL(blob);
+        enlace.download = "listadoNombres.txt";
+        enlace.click();
+
+        // Liberar la URL
+        URL.revokeObjectURL(enlace.href);
+
+    });
     listadoVolverBtn.addEventListener("click", () => {
         estudio.classList.remove("w3-hide");
         listado.classList.add("w3-hide");

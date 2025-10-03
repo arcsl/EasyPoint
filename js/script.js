@@ -175,7 +175,10 @@ function populateListadoSeniales() {
         const celda = document.createElement('th');
         rowHead.appendChild(celda);
 
-        celda.innerHTML = signalText;
+        const labelTitulo = document.createElement('label');
+        celda.appendChild(labelTitulo);
+
+        labelTitulo.innerText = signalText;
 
     });
 
