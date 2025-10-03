@@ -122,7 +122,7 @@ function blocks() {
                 elem.SimpleSD("Electroválvula de Gas", 1),
                 elem.SimpleED("Cambio de regimen externo", 0),
                 elem.ValvulaToNa("Válvula Calor / Frío", 0),
-                elem.SondaTermos("Control Presión", 1),
+                elem.SensorPres("Control Presión", 1),
             ],
         },
         {
