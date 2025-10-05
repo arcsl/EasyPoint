@@ -39,10 +39,12 @@ function escuchadores() {
         estudioNombProyecInput.dispatchEvent(new Event('input', { bubbles: true }));
 
         // marcar proyecto como "no guardado"
-        proyectoActual.guardado = false;
+        proyectoActual.Guardado = false;
 
         // mostrar proyecto en el DOM
         writeBlocks();
+        writeSignals();
+        console.log(proyectoActual.Listado);
         estudio.classList.remove("w3-hide");
 
     });
@@ -59,7 +61,7 @@ function escuchadores() {
         if (!nuevoProyecto) return;
 
         // agregar proyecto al objeto y salvar en localstorage
-        proyectosEasyPoint[nuevoProyecto] = [];
+        proyectosEasyPoint[nuevoProyecto] = structuredClone(nuevoProyectoVacio);
         localStorage.setItem("proyectosEasyPoint", JSON.stringify(proyectosEasyPoint));
 
         // borrar contenido del input y ocultarlo
@@ -250,14 +252,14 @@ function escuchadores() {
 
         nombreProyectoActual = abrirProyecto;
         proyectoActual = structuredClone(proyectosEasyPoint[nombreProyectoActual]);
-        proyectoActual.guardado = true;
+        proyectoActual.Guardado = true;
 
         localStorage.setItem("nombreProyectoActual", nombreProyectoActual);
         localStorage.setItem("proyectoActual", JSON.stringify(proyectoActual));
 
         //crear los bloques del proyecto
         writeBlocks();
-        estudioNombProyecInput.value = portadaSelProyecSelect.value.trim();
+        writeSignals();
         portada.classList.add("w3-hide");
         estudio.classList.remove("w3-hide");
 
@@ -375,7 +377,7 @@ function escuchadores() {
         proyectosEasyPoint[nombreProyectoActual] = structuredClone(proyectoActual);
 
         // marcar proyecto como guardado y copiamos en local storage
-        proyectoActual.guardado = true;
+        proyectoActual.Guardado = true;
         localStorage.setItem("proyectosEasyPoint", JSON.stringify(proyectosEasyPoint));
         localStorage.setItem("nombreProyectoActual", nombreProyectoActual);
         localStorage.setItem("nuevoNombreProyecto", nuevoNombreProyecto);
@@ -384,13 +386,13 @@ function escuchadores() {
         guardadoOK();
 
     });
-    // (azul PDF) crear pdf de lo que se ve en pantalla
+    // (morado PDF) crear pdf de lo que se ve en pantalla
     estudioCrearPDFBtn.addEventListener("click", () => {
         crearPDF();
     });
     // (rojo salir) volver a la portada
     estudioSalirBtn.addEventListener("click", () => {
-        let seguir = proyectoActual.guardado
+        let seguir = proyectoActual.Guardado
             ? true
             : confirm("Hay cambios no guardados que se perderán.\n\n¿Desea continuar?\n");
         if (seguir) {
@@ -408,19 +410,18 @@ function escuchadores() {
 
         }
     });
-    // (morado listado) mostrar listado de señales y estado de asignación
+    // (azul listado) mostrar listado de señales y estado de asignación
     estudioListadoBtn.addEventListener("click", () => {
         estudio.classList.add("w3-hide");
         listado.classList.remove("w3-hide");
         listadoNombProyecLabel.innerText = estudioNombProyecInput.value;
     });
-
     // (verde añadir) añadir el bloque seleccionado
     estudioBloqAniaBtn.addEventListener("click", () => {
         const bloque = structuredClone(blocksData[estudioBloqSelect.value]);
         if (!bloque) return;
         bloque.id = crypto.randomUUID();
-        proyectoActual.push(bloque);
+        proyectoActual.Estudio.push(bloque);
         addBlock(bloque);
         disableFirstAndLastMoveBlockButtons();
         proyectoNoGuardado();
@@ -563,8 +564,18 @@ function escuchadores() {
         overlay.style.display = "none";
     });
 
-    /* ---------- BOTONES ESTUDIO DE PUNTOS ---------- */
-    listadoImportarBtn.addEventListener("click", () => {
+    /* ---------- BOTONES LISTADO DE PUNTOS ---------- */
+    listadoGenerarBtn.addEventListener("click", () => {
+
+        if (Object.values(proyectoActual.Listado).some(arr => arr.length > 0)) {
+            if (!confirm("Se borraran todas las señales actuales.\n¿Desea continuar?")) return;
+        }
+
+        asignarValoresListado();
+        writeSignals();
+
+    });
+    listadoExportarBtn.addEventListener("click", () => {
 
         let listadoNombresSeñales = [];
 
@@ -572,34 +583,37 @@ function escuchadores() {
 
         nodosTablas.forEach(tabla => {
             // Buscar filas en thead y tbody
-            const filas = tabla.querySelectorAll("thead tr, tbody tr");
+            const label = tabla.querySelector("thead tr th label");
+            listadoNombresSeñales.push("");
+            listadoNombresSeñales.push(label.textContent.trim());
 
+            const filas = tabla.querySelectorAll("tbody tr");
             filas.forEach(fila => {
-                const primeraCelda = fila.querySelector("td, th"); // primera celda de la fila
-                if (primeraCelda) {
-                    const input = primeraCelda.querySelector("input");
-                    const label = primeraCelda.querySelector("label");
-
-                    if (input) {
-                        listadoNombresSeñales.push(input.value.trim());
-                    } else if (label) {
-                        listadoNombresSeñales.push("");
-                        listadoNombresSeñales.push(label.textContent.trim());
+                const listaCeldas = fila.querySelectorAll("td, th"); // primera celda de la fila
+                if (listaCeldas) {
+                    if (listaCeldas.length > 1) {
+                        const inputs = listaCeldas[1].querySelectorAll("input");
+                        if (inputs) {
+                            if (inputs.length > 1) {
+                                listadoNombresSeñales.push(inputs[0].value.trim() + ";" + inputs[1].value.trim());
+                            }
+                        }
                     }
                 }
             });
         });
 
-        // Convertir a texto separado por líneas
+        // Crear texto CSV
         const contenido = listadoNombresSeñales.join("\n");
 
-        // Crear Blob
-        const blob = new Blob([contenido], { type: "text/plain" });
+        // Agregar BOM UTF-8 para Excel
+        const BOM = "\uFEFF";
+        const blob = new Blob([BOM + contenido], { type: "text/csv;charset=utf-8" });
 
         // Crear enlace temporal
         const enlace = document.createElement("a");
         enlace.href = URL.createObjectURL(blob);
-        enlace.download = "listadoNombres.txt";
+        enlace.download = nombreProyectoActual + " - listado señales.csv";
         enlace.click();
 
         // Liberar la URL
@@ -612,12 +626,4 @@ function escuchadores() {
     });
     listadoAsignarBtn.addEventListener("click", () => {
     });
-    listadoGenerarBtn.addEventListener("click", () => {
-        populateListadoSeniales();
-        // Generar
-        // cambiar boton a 
-    });
-
-
-
 }

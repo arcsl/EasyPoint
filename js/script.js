@@ -54,7 +54,11 @@ let proyectosEasyPoint = JSON.parse(localStorage.getItem('proyectosEasyPoint')) 
 let nombreProyectoActual = null;
 let proyectoActual = null;
 const blocksData = blocks();
-
+const nuevoProyectoVacio = {
+    Estudio: [],
+    Listado: Object.fromEntries(signalTypes.map(key => [key, []])),
+    Asignacion: [],
+}
 
 /* ------------------------- EJECUCIONES INICIALES ------------------------- */
 if (location.hostname === "arcsl.github.io") {
@@ -153,251 +157,61 @@ function populateCabeceraYPie() {
     estudioSumarioSenialesTable.appendChild(totalBody());
 }
 
-function populateListadoSeniales() {
-
-    listadoSenialesCont.innerHTML = "";
-
-    signalTexts.forEach(signalText => {
-
-        const table = document.createElement('table');
-        listadoSenialesCont.appendChild(table);
-        table.classList.add("w3-table", "w3-bordered", "w3-margin-bottom");
-
-        const thead = document.createElement('thead');
-        table.appendChild(thead);
-
-        const tbody = document.createElement('tbody');
-        table.appendChild(tbody);
-
-        const rowHead = document.createElement('tr');
-        thead.appendChild(rowHead);
-
-        const celda = document.createElement('th');
-        rowHead.appendChild(celda);
-
-        const labelTitulo = document.createElement('label');
-        celda.appendChild(labelTitulo);
-
-        labelTitulo.innerText = signalText;
-
-    });
-
-    const nodosTablas = listadoSenialesCont.querySelectorAll("table");
-
-    // Mapeamos las tablas en un objeto con nombles tableEA, tableED, tableSA, tableSD
-    const tablesObj = {};
-    signalTypes.forEach((signal, i) => {
-        tablesObj["table" + signal] = nodosTablas[i];
-    });
-
-    proyectoActual.forEach(bloque => {
-
-        bloque.Elementos.forEach(elemento => {
-
-            if (elemento.Cantidad > 0) {
-
-                const optElegida = elemento.Opciones[elemento.Opcion];
-
-                // descomponer el nombre en varios si hay mas de una unidad en el elemento
-                // tipo 2 bombas -> daria 4 nombres: M/P Bomba 1, M/P Bomba 2, estado bomba 1, estado bomba 2
-                let nombresSeniales = procesaNombres(bloque.NombreUsuario, bloque.Cantidad, elemento.NombreUsuario, elemento.Cantidad);
-
-                optElegida.Esquema.forEach(senial => {
-
-                    // asignar la tabla ( EA ED SA o SD ) en funcion al tipo de señal
-                    // si no encuentra tabla lo metemos a pelo en el container
-                    const tablaAsignada = getTableFor(senial, tablesObj, signalTypes) || listadoSenialesCont;
-
-                    //añadir una linea a la tabla 
-                    nombresSeniales.forEach(nombre => {
-
-                        const row = document.createElement('tr');
-                        tablaAsignada.querySelector("tbody").appendChild(row);
-
-                        const celda = document.createElement('td');
-                        row.appendChild(celda);
-
-                        const inputNombreSenial = document.createElement('input');
-                        celda.appendChild(inputNombreSenial);
-
-                        inputNombreSenial.classList.add("w3-input");
-                        // inputNombreSenial.style.fontSize = "12px";
-                        // inputNombreSenial.style.height = "15px";
-                        inputNombreSenial.style.width = "600px";
-
-                        inputNombreSenial.value = (senial.Nombre + " " + nombre).toUpperCase().trim();
-
-                    });
-
-                });
-
-                // TODO: eliminar las tablas sin rows en el tbody
-
-            }
-        });
-    });
-
-    /**
-     * Retorna la tabla (elemento del DOM) correspondiente a un objeto,
-     * según el prefijo de sus claves (EA, ED, SA, SD).
-     *
-     * @param {Object} obj - Objeto a analizar (ejemplo: { EA_2: ["Activa"], ... }).
-     * @param {Object.<string, HTMLElement>} tables - Objeto con las tablas mapeadas, 
-     *        con claves tipo "tableEA", "tableED", etc.
-     * @param {string[]} [prefixes=["EA","ED","SA","SD"]] - Lista de prefijos válidos.
-     * @returns {HTMLElement|null} - La tabla correspondiente, o `null` si no hay coincidencia.
-     *
-     * @example
-     * const obj = { id: "1", EA_2: ["Activa"] };
-     * const tables = { tableEA: document.createElement("table") };
-     *
-     * const table = getTableFor(obj, tables);
-     * console.log(table); // <table>...</table>
-     */
-    function getTableFor(obj, tables, prefixes = ["EA", "ED", "SA", "SD"]) {
-        const foundPrefix = prefixes.find(prefix =>
-            Object.keys(obj).some(k => k.startsWith(prefix))
-        );
-
-        if (!foundPrefix) return null;
-        return tables["table" + foundPrefix];
-    }
-
-
-    /**
-     * Genera un array de nombres combinados de bloques y elementos.
-     * Aplica prefijos y numeración automática si el nombre contiene comas o "y".
-     *
-     * @param {string} bName - Nombre del bloque.
-     * @param {number} bCant - Cantidad de bloques.
-     * @param {string} eName - Nombre del elemento.
-     * @param {number} eCant - Cantidad de elementos.
-     * @returns {string[]} Array con todos los nombres combinados de elementos y bloques.
-     */
-    function procesaNombres(bName, bCant, eName, eCant) {
-        /**
-         * Divide un nombre compuesto en un prefijo y un array de partes.
-         * Aplica una early exit si no hay exactamente una ocurrencia de " y ".
-         *
-         * @param {string} nombre - El nombre a procesar, puede contener comas y " y ".
-         * @returns {{prefijo: string, partes: string[]} | null} Objeto con el prefijo y las partes,
-         *          o null si no se cumple la condición de una sola "y" o si las partes son insuficientes.
-         */
-        function splitNombre(nombre) {
-            // Contar cuántas veces aparece " y " -> Early exit: si no hay exactamente una "y"
-            const countY = (nombre.match(/ y /g) || []).length;
-            if (countY !== 1) return null;
-
-            // Dividir por comas, luego cada parte por " y ", aplanar el array resultante y eliminar espacios
-            let partes = nombre.split(",");
-            partes = partes.flatMap(p => p.split(" y "));
-            partes = partes.map(p => p.trim());
-
-            // Separar prefijo del primer elemento
-            let primerElemento = partes[0];
-            let palabras = primerElemento.split(" ");
-            partes[0] = palabras.pop();        // último elemento del primer elemento
-            const prefijo = palabras.join(" "); // resto de palabras como prefijo
-
-            // Validaciones finales o retornar objeto valido
-            if (prefijo === "" || partes[0] === "" || partes.length < 2) return null;
-            return { prefijo, partes };
-        }
-
-        // array de bloques
-        let arrayBloques = [];
-        if (bCant > 1) {
-            let splitBloques = splitNombre(bName);
-            if (!splitBloques || splitBloques.partes.length !== bCant) {
-                for (let i = 1; i <= bCant; i++) { arrayBloques.push(bName + " " + i); }
-            } else {
-                splitBloques.partes.forEach(parte => arrayBloques.push(splitBloques.prefijo + " " + parte));
-            }
-        } else {
-            arrayBloques = [bName];
-        }
-
-        // array de elementos
-        let arrayElems = [];
-        if (eCant > 1) {
-            let splitElems = splitNombre(eName);
-            if (!splitElems || splitElems.partes.length !== eCant) {
-                for (let i = 1; i <= eCant; i++) { arrayElems.push(eName + " " + i); }
-            } else {
-                splitElems.partes.forEach(parte => arrayElems.push(splitElems.prefijo + " " + parte));
-            }
-        } else {
-            arrayElems = [eName];
-        }
-
-        // --- Combinar bloques y elementos ---
-        const resultado = [];
-        for (let b of arrayBloques) {
-            for (let e of arrayElems) {
-                resultado.push(e + " " + b);
-            }
-        }
-
-        return resultado;
-    }
-
-}
-
 /* ------------------------- ESTUDIO ------------------------- */
-function readBlocks() {
+// function readBlocks() {
 
-    let lectura = [];
+//     let lectura = [];
 
-    const tables = estudioBloqCont.querySelectorAll("table");
+//     const tables = estudioBloqCont.querySelectorAll("table");
 
-    tables.forEach(table => {
+//     tables.forEach(table => {
 
-        const block = {
-            bloque: {
-                tipo: table.name,
-                nombre: table.querySelector('[name="nombreBloque"]')?.value || "",
-                cantidad: table.querySelector('[name="cantidadBloque"]')?.value || ""
-            },
-            seniales: {},
-        };
+//         const block = {
+//             bloque: {
+//                 tipo: table.name,
+//                 nombre: table.querySelector('[name="nombreBloque"]')?.value || "",
+//                 cantidad: table.querySelector('[name="cantidadBloque"]')?.value || ""
+//             },
+//             seniales: {},
+//         };
 
-        const bodyRows = table.querySelectorAll("tbody tr");
+//         const bodyRows = table.querySelectorAll("tbody tr");
 
-        bodyRows.forEach(row => {
+//         bodyRows.forEach(row => {
 
-            const checkbox = row.querySelector('input[type="checkbox"]');
-            if (!checkbox || !checkbox.checked) return;
+//             const checkbox = row.querySelector('input[type="checkbox"]');
+//             if (!checkbox || !checkbox.checked) return;
 
-            const tipoSenial = row.name;
-            block.seniales[tipoSenial] = {
-                nombre: row.querySelector('[name="nombreSenial"]')?.value || "",
-                cantidad: row.querySelector('[name="numeroSenial"]')?.value || "",
-                opcion: tipoSenial.substring(0, 6) === 'custom'
-                    ? row.opcion
-                    : row.querySelector('[name="opcionSenial"]')?.value || "",
-            };
-        });
+//             const tipoSenial = row.name;
+//             block.seniales[tipoSenial] = {
+//                 nombre: row.querySelector('[name="nombreSenial"]')?.value || "",
+//                 cantidad: row.querySelector('[name="numeroSenial"]')?.value || "",
+//                 opcion: tipoSenial.substring(0, 6) === 'custom'
+//                     ? row.opcion
+//                     : row.querySelector('[name="opcionSenial"]')?.value || "",
+//             };
+//         });
 
-        lectura.push(block);
-    });
+//         lectura.push(block);
+//     });
 
-    return lectura;
+//     return lectura;
 
-}
+// }
 
 function writeBlocks() {
+    estudioNombProyecInput.value = nombreProyectoActual;
     estudioBloqCont.innerHTML = "";
-    proyectoActual.forEach(addBlock);
+    proyectoActual.Estudio.forEach(addBlock);
     estudioBloqSelect.selectedIndex = 0;
     disableFirstAndLastMoveBlockButtons();
 }
-
 
 function moveBlock(bloque, tabla, direccion) {
 
     const tablas = Array.from(estudioBloqCont.children);
     const indice = tablas.indexOf(tabla);
-    const indiceBloque = proyectoActual.indexOf(bloque);
+    const indiceBloque = proyectoActual.Estudio.indexOf(bloque);
 
     // si bloque no existe en el proyecto abortar
     if (indiceBloque === -1) return;
@@ -418,7 +232,7 @@ function moveBlock(bloque, tabla, direccion) {
     }
 
     // mover el bloque en proyectoActual
-    moverElemento(proyectoActual, indice, nuevoIndice);
+    moverElemento(proyectoActual.Estudio, indice, nuevoIndice);
     proyectoNoGuardado();
 
     // repasar botones de movimiento
@@ -515,7 +329,7 @@ function addBlockHeader(bloque, table) {
     deleteBtn.addEventListener("click", () => {
 
         // eliminar el bloque del proyectoActual
-        proyectoActual.splice(proyectoActual.indexOf(bloque), 1);
+        proyectoActual.Estudio.splice(proyectoActual.Estudio.indexOf(bloque), 1);
         proyectoNoGuardado();
 
         // eliminar la tabla
@@ -624,8 +438,7 @@ function addFilaBody(elemento, tBody, bloque) {
     row.name = elemento.Nombre;
 
     elimcustom.textContent = "X";
-    elimcustom.className = "w3-red w3-button";
-    elimcustom.style.display = "inline-block";
+    elimcustom.classList.add("w3-red", "w3-button");
     elimcustom.addEventListener('click', () => {
 
         // eliminar el elemento del bloque actual
@@ -681,7 +494,7 @@ function addFilaBody(elemento, tBody, bloque) {
     if (elemento.Opciones.length > 1) {
 
         select.name = "opcionSenial";
-        select.className = "w3-select";
+        select.classList.add("w3-select");
 
         elemento.Opciones.forEach(seleccion => {
             const option = document.createElement("option");
@@ -832,10 +645,233 @@ function totalBody() {
 
 }
 
+
+/* ------------------------- LISTADO SEÑALES ------------------------- */
+function asignarValoresListado() {
+
+    proyectoActual.Listado = Object.fromEntries(signalTypes.map(key => [key, []]));
+
+    proyectoActual.Estudio.forEach(bloque => {
+
+        bloque.Elementos.forEach(elemento => {
+
+            if (elemento.Cantidad > 0) {
+
+                const optElegida = elemento.Opciones[elemento.Opcion];
+
+                // descomponer el nombre en varios si hay mas de una unidad en el elemento
+                // tipo 2 bombas -> daria 4 nombres: M/P Bomba 1, M/P Bomba 2, estado bomba 1, estado bomba 2
+                let nombresSenialesProcesados = procesaNombres(bloque.NombreUsuario, bloque.Cantidad, elemento.NombreUsuario, elemento.Cantidad);
+
+                optElegida.Esquema.forEach(senialesDeEsquema => {
+
+                    //añadir señal al array correspondiente, una señal por nombre generado
+                    // una "senial" puede generar por ejemplo 4 señales si estamos en el bloque 
+                    // calderas y hay 2 y ademas dentro del bloque hay 2 temperaturas por caldera
+                    nombresSenialesProcesados.forEach(nombreProcesado => {
+
+                        const { Nombre, Tipo, ...senialParaListado } = structuredClone(senialesDeEsquema);
+
+                        senialParaListado.Linea1 = (Nombre + " " + nombreProcesado).trim().toUpperCase();
+                        senialParaListado.Linea2 = "";
+                        senialParaListado.Opcion = 0;
+
+                        // TODO: Esto es un poco ñapa pero me sirve para los esquemas de ARC
+                        if ( Tipo === "ED" && senialParaListado.Opciones?.[0]?.toUpperCase().startsWith("EXT")) {
+                            senialParaListado.Linea2 = "(CONTACTO LIBRE DE POTENCIAL)";
+                        }
+
+                        proyectoActual.Listado[Tipo].push(senialParaListado);
+
+                    });
+                });
+            }
+        });
+    });
+
+    proyectoNoGuardado();
+
+    /**
+     * Genera un array de nombres combinados de bloques y elementos.
+     * Aplica prefijos y numeración automática si el nombre contiene comas o "y".
+     *
+     * @param {string} bName - Nombre del bloque.
+     * @param {number} bCant - Cantidad de bloques.
+     * @param {string} eName - Nombre del elemento.
+     * @param {number} eCant - Cantidad de elementos.
+     * @returns {string[]} Array con todos los nombres combinados de elementos y bloques.
+     */
+    function procesaNombres(bName, bCant, eName, eCant) {
+        /**
+         * Divide un nombre compuesto en un prefijo y un array de partes.
+         * Aplica una early exit si no hay exactamente una ocurrencia de " y ".
+         *
+         * @param {string} nombre - El nombre a procesar, puede contener comas y " y ".
+         * @returns {{prefijo: string, partes: string[]} | null} Objeto con el prefijo y las partes,
+         *          o null si no se cumple la condición de una sola "y" o si las partes son insuficientes.
+         */
+        function splitNombre(nombre) {
+            // Contar cuántas veces aparece " y " -> Early exit: si no hay exactamente una "y"
+            const countY = (nombre.match(/ y /g) || []).length;
+            if (countY !== 1) return null;
+
+            // Dividir por comas, luego cada parte por " y ", aplanar el array resultante y eliminar espacios
+            let partes = nombre.split(",");
+            partes = partes.flatMap(p => p.split(" y "));
+            partes = partes.map(p => p.trim());
+
+            // Separar prefijo del primer elemento
+            let primerElemento = partes[0];
+            let palabras = primerElemento.split(" ");
+            partes[0] = palabras.pop();        // último elemento del primer elemento
+            const prefijo = palabras.join(" "); // resto de palabras como prefijo
+
+            // Validaciones finales o retornar objeto valido
+            if (prefijo === "" || partes[0] === "" || partes.length < 2) return null;
+            return { prefijo, partes };
+        }
+
+        // array de bloques
+        let arrayBloques = [];
+        if (bCant > 1) {
+            let splitBloques = splitNombre(bName);
+            if (!splitBloques || splitBloques.partes.length !== bCant) {
+                for (let i = 1; i <= bCant; i++) { arrayBloques.push(bName + " " + i); }
+            } else {
+                splitBloques.partes.forEach(parte => arrayBloques.push(splitBloques.prefijo + " " + parte));
+            }
+        } else {
+            arrayBloques = [bName];
+        }
+
+        // array de elementos
+        let arrayElems = [];
+        if (eCant > 1) {
+            let splitElems = splitNombre(eName);
+            if (!splitElems || splitElems.partes.length !== eCant) {
+                for (let i = 1; i <= eCant; i++) { arrayElems.push(eName + " " + i); }
+            } else {
+                splitElems.partes.forEach(parte => arrayElems.push(splitElems.prefijo + " " + parte));
+            }
+        } else {
+            arrayElems = [eName];
+        }
+
+        // --- Combinar bloques y elementos ---
+        const resultado = [];
+        for (let b of arrayBloques) {
+            for (let e of arrayElems) {
+                resultado.push(e + " " + b);
+            }
+        }
+
+        return resultado;
+    }
+
+}
+
+function writeSignals() {
+
+    listadoSenialesCont.innerHTML = "";
+
+    signalTypes.forEach((signalType, signalIndex) => {
+
+        const listaSeñales = proyectoActual.Listado[signalType];
+
+        if (listaSeñales.length > 0) {
+
+            const table = document.createElement('table');
+            listadoSenialesCont.appendChild(table);
+            table.classList.add("w3-table", "w3-bordered", "w3-margin-bottom");
+
+            const thead = document.createElement('thead');
+            table.appendChild(thead);
+
+            const tbody = document.createElement('tbody');
+            table.appendChild(tbody);
+
+            const rowHead = document.createElement('tr');
+            thead.appendChild(rowHead);
+            thead.classList.add("w3-pale-green");
+
+            const celda = document.createElement('th');
+            celda.colSpan = 2;
+            rowHead.appendChild(celda);
+
+            const labelTitulo = document.createElement('label');
+            celda.appendChild(labelTitulo);
+
+            labelTitulo.innerText = signalTexts[signalIndex];
+
+            listaSeñales.forEach((listaSenial, indexListaSenial) => {
+
+                const row = document.createElement('tr');
+                table.querySelector("tbody").appendChild(row);
+
+                const celdaEstadoAsignacion = document.createElement('td');
+                celdaEstadoAsignacion.classList.add("w3-pale-yellow");
+                row.appendChild(celdaEstadoAsignacion);
+
+                const labelNumSenial = document.createElement('label');
+                labelNumSenial.innerText = signalType + "_" + (indexListaSenial + 1).toString().padStart(2, 0);
+                celdaEstadoAsignacion.appendChild(labelNumSenial);
+
+                const celdaTextos = document.createElement('td');
+                row.appendChild(celdaTextos);
+
+                if (listaSenial.Opciones.length > 1) {
+
+                    const selectDibujoSenial = document.createElement('select');
+                    selectDibujoSenial.classList.add("w3-margin-right");
+                    celdaTextos.appendChild(selectDibujoSenial);
+
+                    listaSenial.Opciones.forEach(opcion => {
+                        const opcionDibujoSenial = document.createElement('option');
+                        opcionDibujoSenial.innerText = opcion.toUpperCase();
+                        selectDibujoSenial.appendChild(opcionDibujoSenial);
+                    });
+
+                    selectDibujoSenial.selectedIndex = listaSenial.Opcion ?? 0;
+
+                    selectDibujoSenial.addEventListener('change', (event) => {
+                        listaSenial.Opcion = event.target.selectedIndex;
+                        proyectoNoGuardado();
+                    });
+
+                } else {
+                    const noSelectSenial = document.createElement('label');
+                    noSelectSenial.classList.add("w3-margin-right");
+                    celdaTextos.appendChild(noSelectSenial);
+
+                }
+
+                const inputListaSenialLinea1 = inputNombre(listaSenial.Linea1);
+                celdaTextos.appendChild(inputListaSenialLinea1);
+                inputListaSenialLinea1.placeholder = "Linea 1";
+                inputListaSenialLinea1.addEventListener('change', (event) => {
+                    listaSenial.Linea1 = event.target.value;
+                    proyectoNoGuardado();
+                });
+
+                const inputListaSenialLinea2 = inputNombre(listaSenial.Linea2);
+                celdaTextos.appendChild(inputListaSenialLinea2);
+                inputListaSenialLinea2.placeholder = "Linea 2";
+                inputListaSenialLinea2.addEventListener('change', (event) => {
+                    listaSenial.Linea2 = event.target.value;
+                    proyectoNoGuardado();
+                });
+
+
+            });
+        }
+    });
+}
+
+
 /* ------------------------- AUXILIARES ------------------------- */
 function inputNombre(texto) {
     const nameInput = document.createElement("input");
-    nameInput.className = "w3-input w3-margin-right nobackground inputNombre";
+    nameInput.classList.add("w3-input", "w3-margin-right", "nobackground", "inputNombre");
     nameInput.value = texto;
     nameInput.style.display = "inline-block";
     return nameInput;
@@ -861,7 +897,7 @@ function inputNumero(valorDef = 1) {
 }
 
 function proyectoNoGuardado() {
-    proyectoActual.guardado = false;
+    proyectoActual.Guardado = false;
     localStorage.setItem("proyectoActual", JSON.stringify(proyectoActual));
 }
 

@@ -10,31 +10,30 @@ const esq = {
     // TODO: valorar si es mejor hacer que los objetos tengan la estructira { Nombre: "EA_1", Opciones :["Pasiva",] } 
     // para poder tener un acceso mas facil y no tener que iterar las propiedades buscando cual es el nombre
 
-    // TODO: id: crypto.randomUUID(), ??? sera necesario ???
-
     //EA
-    PasivaEA_1: (Nombre) => ({ Nombre, EA_1: ["Pasiva",], }),
-    SimpleEA_1: (Nombre) => ({ Nombre, EA_1: ["Externa",], }),
-    ActivaEA_1: (Nombre) => ({ Nombre, EA_1: ["Activa",], }),
-    ActivaEA_2: (Nombre) => ({ Nombre, EA_2: ["Activa",], }),
-    ActivaEA_3: (Nombre) => ({ Nombre, EA_3: ["Activa",], }),
+    PasivaEA_1: (Nombre) => ({ Nombre, Tipo:"EA", Numero: 1, Opciones: ["Pasiva",], }),
+    SimpleEA_1: (Nombre) => ({ Nombre, Tipo:"EA", Numero: 1, Opciones: ["Externa",], }),
+    ActivaEA_1: (Nombre) => ({ Nombre, Tipo:"EA", Numero: 1, Opciones: ["Activa",], }),
+    ActivaEA_2: (Nombre) => ({ Nombre, Tipo:"EA", Numero: 2, Opciones: ["Activa",], }),
+    ActivaEA_3: (Nombre) => ({ Nombre, Tipo:"EA", Numero: 3, Opciones: ["Activa",], }),
     //ED
-    SimpleED_1: (Nombre) => ({ Nombre, ED_1: ["Externa",], }),
-    EntradED_1: (Nombre) => ({ Nombre, ED_1: ["Externa", "Rele",], }),
-    MotorED_1:  (Nombre) => ({ Nombre, ED_1: ["Externa", "Rele", "Contactor", "Termico",], }),
+    SimpleED_1: (Nombre) => ({ Nombre, Tipo:"ED", Numero: 1, Opciones: ["Externa",], }),
+    EntradED_1: (Nombre) => ({ Nombre, Tipo:"ED", Numero: 1, Opciones: ["Externa", "Rele",], }),
+    MotorED_1:  (Nombre) => ({ Nombre, Tipo:"ED", Numero: 1, Opciones: ["Externa", "Rele", "Contactor", "Termico",], }),
     //SA
-    SimpleSA_1: (Nombre) => ({ Nombre, SA_1: ["Externa",], }),
-    ActuadSA_1: (Nombre) => ({ Nombre, SA_1: ["Externa", "Actuador",], }),
+    SimpleSA_1: (Nombre) => ({ Nombre, Tipo:"SA", Numero: 1, Opciones: ["Externa",], }),
+    ActuadSA_1: (Nombre) => ({ Nombre, Tipo:"SA", Numero: 1, Opciones: ["Externa", "Actuador",], }),
     //SD
-    SimpleSD_1: (Nombre) => ({ Nombre, SD_1: ["Externa",], }),
-    SalidaSD_1: (Nombre) => ({ Nombre, SD_1: ["Externa", "Rele",], }),
-    MotorSD_1:  (Nombre) => ({ Nombre, SD_1: ["Externa", "Rele", "Contactor",], }),
-    MotorSD_3:  (Nombre) => ({ Nombre, SD_3: ["Motor3V",], }),
-    ActuadSD_1: (Nombre) => ({ Nombre, SD_1: ["Externa", "Rele", "Simple", "Conmutada",], }),
-    ActuadSD_2: (Nombre) => ({ Nombre, SD_2: ["Externa", "Actuador",], }),
+    SimpleSD_1: (Nombre) => ({ Nombre, Tipo:"SD", Numero: 1, Opciones: ["Externa",], }),
+    SalidaSD_1: (Nombre) => ({ Nombre, Tipo:"SD", Numero: 1, Opciones: ["Externa", "Rele",], }),
+    MotorSD_1:  (Nombre) => ({ Nombre, Tipo:"SD", Numero: 1, Opciones: ["Externa", "Rele", "Contactor",], }),
+    MotorSD_3:  (Nombre) => ({ Nombre, Tipo:"SD", Numero: 3, Opciones: ["Motor3V",], }),
+    ActuadSD_1: (Nombre) => ({ Nombre, Tipo:"SD", Numero: 1, Opciones: ["Externa", "Rele", "Simple", "Conmutada",], }),
+    ActuadSD_2: (Nombre) => ({ Nombre, Tipo:"SD", Numero: 2, Opciones: ["Externa", "Actuador",], }),
 }
 
 const opt = {
+    
     // "Esquema" es un array de objetos y no un objeto con propiedades, por si se necesita duplicar el objeto, 
     // como por ejemplo en el actuador todo/nada con 2 micros, donde la entrada digital esta duplicada
 
@@ -51,6 +50,8 @@ const opt = {
     SensorAct2: (Nombre) => ({Nombre, Seniales: { "EA": 2, }, Esquema: [esq.ActivaEA_2("")], }),
     SensorAct3: (Nombre) => ({Nombre, Seniales: { "EA": 3, }, Esquema: [esq.ActivaEA_3("")], }),
     SensorDigi: (Nombre) => ({Nombre, Seniales: { "ED": 1, }, Esquema: [esq.SimpleED_1("")], }),
+    //Alarma
+    AlamEstTerceros: (Nombre) => ({Nombre, Seniales: { "ED": 1, }, Esquema: [esq.EntradED_1(""), ], }),
     //Actuador
     Actuador010V: (Nombre) => ({Nombre, Seniales: { "SA": 1, }, Esquema: [esq.ActuadSA_1("")], }),
     Actuador3Pun: (Nombre) => ({Nombre, Seniales: { "SD": 2, }, Esquema: [esq.ActuadSD_2("")], }),
@@ -75,12 +76,15 @@ const elem = {
     SimpleED:    (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.SimpleED("Externa"),], }),
     SimpleSA:    (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.SimpleSA("Externa"),], }),
     SimpleSD:    (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.SimpleSD("Externa"),], }),
-
+    
     //sensores 
     SensorAire:  (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.SensorPasi("Temperatura"), opt.SensorAct2("Temp + Hume"), opt.SensorAct2("Temp + CO2"), opt.SensorAct3("Temp Hum CO2"),], }),
     SondaTermos: (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.SensorPasi("Temperatura"), opt.SensorDigi("Termostato"),], }),
     SensorPres:  (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.SensorDigi("Presostato"), opt.SensorAct1("Sonda"),], }),
     SoloActiva:  (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.SensorAct1("Sonda"),], }),
+    
+    //Alarma
+    AlamEstTerceros:    (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.AlamEstTerceros("Externa"),], }),
 
     //valvulas
     ValvulaToNa: (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.ActuadorTN1M("1 Micro"), opt.ActuadorTN2M("2 Micros"), opt.ActuadorTN0M("Sin Micros"),], }),
@@ -130,7 +134,7 @@ function blocks() {
             "Elementos": [
                 elem.SondaTermos("Temperatura", 1),
                 elem.SimpleSD("Marcha-Paro", 0),
-                elem.SimpleED("Estado / Alarma", 1),
+                elem.AlamEstTerceros("Estado / Alarma", 1),
                 elem.ModulaCalde("Modulación / Consigna", 1),
                 elem.MotorModul("Bomba", 1),
                 elem.ValvTNProp("Válvula Aislamiento / Retorno", 0),
