@@ -81,7 +81,7 @@
     font-weight: bold;
 }
 
-/* boton añadir lñinea custom */
+/* boton añadir linea custom */
 #estudio tbody>tr> :first-child button.addBtn {
     font-weight: normal;
     line-height: 12px;

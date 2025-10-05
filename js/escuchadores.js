@@ -1,6 +1,7 @@
 function escuchadores() {
 
     // ---------- GENERALES ----------
+
     document.addEventListener("DOMContentLoaded", () => {
 
         populateProyectSelect();
@@ -44,12 +45,13 @@ function escuchadores() {
         // mostrar proyecto en el DOM
         writeBlocks();
         writeSignals();
-        console.log(proyectoActual.Listado);
         estudio.classList.remove("w3-hide");
 
     });
 
-    // ---------- BOTONES PORTADA ----------
+
+    /* ---------- BOTONES PORTADA ---------- */
+ 
     // (verde check) Crear nuevo proyecto
     portadaNueProyecCrear.addEventListener("click", () => {
 
@@ -265,8 +267,8 @@ function escuchadores() {
 
     });
 
+    /* ---------- EVENTOS PORTADA ---------- */
 
-    // ---------- PORTADA INPUT/SELECT ----------
     // importacion de proyecto una vez el usuario acepta o cancela el dialogo de seleccion de archivo
     portadaImpProyecInput.addEventListener("change", (event) => {
 
@@ -427,8 +429,8 @@ function escuchadores() {
         proyectoNoGuardado();
     });
 
+    /* ---------- EVENTOS ESTUDIO DE PUNTOS ---------- */
 
-    // ---------- ESTUDIO INPUT/SELECT ----------
     // cambiar color del input del nombre del proyecto si ya existe otro proyecto son ese nombre o esta vacio
     estudioNombProyecInput.addEventListener("input", () => {
 
@@ -446,39 +448,11 @@ function escuchadores() {
         }
 
     });
-    // TODO: escuchador global para no repetir en cada input ?
-    // modificar el total de señales 
-    // estudioBloqCont.addEventListener("change", (event) => {
-    //     if (event.target.type === "checkbox") {
-    //         if (!checkboxChangeScheduled) {
-    //             checkboxChangeScheduled = true;
-    //             Promise.resolve().then(() => {
-    //                 updateSummary();
-    //                 proyectoNoGuardado ();
-    //                 checkboxChangeScheduled = false;
-    //             });
-    //         }
-    //     }
-    // });
-    // TODO: cambiar escuchadores particulares de inputs creados programaticamente por un escuchador global
-    // estudioBloqCont.addEventListener('input', (event) => {
-    //     const target = event.target;
-    //     if (target.tagName === 'INPUT' && ['checkbox', 'number', 'text'].includes(target.type)) {
-    //         proyectoNoGuardado ();
-    //     }
-    // });
-    // TODO: esto no funciona al añadir o eliminar bloques
-    // solo funciona al cambiar el orden de los bloques
-    // al añadir funciona porque la funcion añadir ya pone el guardado a falso
-    // estudioBloqCont.addEventListener('click', (event) => {
-    //     const target = event.target;
-    //     if (target.tagName === 'BUTTON') {
-    //         proyectoNoGuardado ();
-    //     }
-    // });
 
-    // ---------- BOTONES POPUP AÑADIR ELEMENTOS ----------
-    // TODO: modificar tambien el json de proyecto abierto para mantenerlo sincronizado
+
+    /* ---------- BOTONES VENTANA POPUP ---------- */
+
+    // (verde aceptar) ocultar la interfaz y añadir elementos
     popAceptar.addEventListener("click", () => {
 
         const bloque = customPop.bloqueOrigen;
@@ -558,13 +532,16 @@ function escuchadores() {
         overlay.style.display = "none";
 
     });
-    // (rojo cancelar) ocultar la interfaz para añadir elementos custom y no hacer nada.
+    // (rojo cancelar) ocultar la interfaz y no hacer nada.
     popCancel.addEventListener("click", () => {
         estudio.removeAttribute('inert');
         overlay.style.display = "none";
     });
 
+
     /* ---------- BOTONES LISTADO DE PUNTOS ---------- */
+
+    // ( verde generar ) generar el listado de señales borrando todo lo anterior
     listadoGenerarBtn.addEventListener("click", () => {
 
         if (Object.values(proyectoActual.Listado).some(arr => arr.length > 0)) {
@@ -575,6 +552,7 @@ function escuchadores() {
         writeSignals();
 
     });
+    // ( morado exportar ) crear un csv para poder copiar, pegar, ...
     listadoExportarBtn.addEventListener("click", () => {
 
         let listadoNombresSeñales = [];
@@ -620,10 +598,12 @@ function escuchadores() {
         URL.revokeObjectURL(enlace.href);
 
     });
+    // ( rojo volver ) Volver al estudio de puntos
     listadoVolverBtn.addEventListener("click", () => {
         estudio.classList.remove("w3-hide");
         listado.classList.add("w3-hide");
     });
+    // ( azul asignar ) Avanzar a la seleccion de controladores y asignacion de señales
     listadoAsignarBtn.addEventListener("click", () => {
     });
 }

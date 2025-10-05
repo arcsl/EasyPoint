@@ -158,47 +158,6 @@ function populateCabeceraYPie() {
 }
 
 /* ------------------------- ESTUDIO ------------------------- */
-// function readBlocks() {
-
-//     let lectura = [];
-
-//     const tables = estudioBloqCont.querySelectorAll("table");
-
-//     tables.forEach(table => {
-
-//         const block = {
-//             bloque: {
-//                 tipo: table.name,
-//                 nombre: table.querySelector('[name="nombreBloque"]')?.value || "",
-//                 cantidad: table.querySelector('[name="cantidadBloque"]')?.value || ""
-//             },
-//             seniales: {},
-//         };
-
-//         const bodyRows = table.querySelectorAll("tbody tr");
-
-//         bodyRows.forEach(row => {
-
-//             const checkbox = row.querySelector('input[type="checkbox"]');
-//             if (!checkbox || !checkbox.checked) return;
-
-//             const tipoSenial = row.name;
-//             block.seniales[tipoSenial] = {
-//                 nombre: row.querySelector('[name="nombreSenial"]')?.value || "",
-//                 cantidad: row.querySelector('[name="numeroSenial"]')?.value || "",
-//                 opcion: tipoSenial.substring(0, 6) === 'custom'
-//                     ? row.opcion
-//                     : row.querySelector('[name="opcionSenial"]')?.value || "",
-//             };
-//         });
-
-//         lectura.push(block);
-//     });
-
-//     return lectura;
-
-// }
-
 function writeBlocks() {
     estudioNombProyecInput.value = nombreProyectoActual;
     estudioBloqCont.innerHTML = "";
@@ -677,7 +636,7 @@ function asignarValoresListado() {
                         senialParaListado.Opcion = 0;
 
                         // TODO: Esto es un poco ñapa pero me sirve para los esquemas de ARC
-                        if ( Tipo === "ED" && senialParaListado.Opciones?.[0]?.toUpperCase().startsWith("EXT")) {
+                        if (Tipo === "ED" && senialParaListado.Opciones?.[0]?.toUpperCase().startsWith("EXT")) {
                             senialParaListado.Linea2 = "(CONTACTO LIBRE DE POTENCIAL)";
                         }
 
@@ -776,94 +735,119 @@ function writeSignals() {
 
     signalTypes.forEach((signalType, signalIndex) => {
 
-        const listaSeñales = proyectoActual.Listado[signalType];
+        const listaSeniales = proyectoActual.Listado[signalType];
 
-        if (listaSeñales.length > 0) {
+        const table = document.createElement('table');
+        listadoSenialesCont.appendChild(table);
+        table.classList.add("w3-table", "w3-bordered", "w3-margin-bottom");
 
-            const table = document.createElement('table');
-            listadoSenialesCont.appendChild(table);
-            table.classList.add("w3-table", "w3-bordered", "w3-margin-bottom");
+        const thead = document.createElement('thead');
+        table.appendChild(thead);
 
-            const thead = document.createElement('thead');
-            table.appendChild(thead);
+        const tbody = document.createElement('tbody');
+        table.appendChild(tbody);
 
-            const tbody = document.createElement('tbody');
-            table.appendChild(tbody);
+        const rowHead = document.createElement('tr');
+        thead.appendChild(rowHead);
+        thead.classList.add("w3-pale-green");
 
-            const rowHead = document.createElement('tr');
-            thead.appendChild(rowHead);
-            thead.classList.add("w3-pale-green");
+        const celda = document.createElement('th');
+        celda.colSpan = 2;
+        rowHead.appendChild(celda);
 
-            const celda = document.createElement('th');
-            celda.colSpan = 2;
-            rowHead.appendChild(celda);
+        const labelTitulo = document.createElement('label');
+        celda.appendChild(labelTitulo);
 
-            const labelTitulo = document.createElement('label');
-            celda.appendChild(labelTitulo);
+        labelTitulo.innerText = signalTexts[signalIndex];
 
-            labelTitulo.innerText = signalTexts[signalIndex];
+        listaSeniales.forEach((listaSenial, indexListaSenial) => {
 
-            listaSeñales.forEach((listaSenial, indexListaSenial) => {
+            const row = document.createElement('tr');
+            table.querySelector("tbody").appendChild(row);
 
-                const row = document.createElement('tr');
-                table.querySelector("tbody").appendChild(row);
+            const celdaEstadoAsignacion = document.createElement('td');
+            celdaEstadoAsignacion.classList.add("w3-pale-yellow");
+            row.appendChild(celdaEstadoAsignacion);
 
-                const celdaEstadoAsignacion = document.createElement('td');
-                celdaEstadoAsignacion.classList.add("w3-pale-yellow");
-                row.appendChild(celdaEstadoAsignacion);
-
-                const labelNumSenial = document.createElement('label');
-                labelNumSenial.innerText = signalType + "_" + (indexListaSenial + 1).toString().padStart(2, 0);
-                celdaEstadoAsignacion.appendChild(labelNumSenial);
-
-                const celdaTextos = document.createElement('td');
-                row.appendChild(celdaTextos);
-
-                if (listaSenial.Opciones.length > 1) {
-
-                    const selectDibujoSenial = document.createElement('select');
-                    selectDibujoSenial.classList.add("w3-margin-right");
-                    celdaTextos.appendChild(selectDibujoSenial);
-
-                    listaSenial.Opciones.forEach(opcion => {
-                        const opcionDibujoSenial = document.createElement('option');
-                        opcionDibujoSenial.innerText = opcion.toUpperCase();
-                        selectDibujoSenial.appendChild(opcionDibujoSenial);
-                    });
-
-                    selectDibujoSenial.selectedIndex = listaSenial.Opcion ?? 0;
-
-                    selectDibujoSenial.addEventListener('change', (event) => {
-                        listaSenial.Opcion = event.target.selectedIndex;
-                        proyectoNoGuardado();
-                    });
-
-                } else {
-                    const noSelectSenial = document.createElement('label');
-                    noSelectSenial.classList.add("w3-margin-right");
-                    celdaTextos.appendChild(noSelectSenial);
-
-                }
-
-                const inputListaSenialLinea1 = inputNombre(listaSenial.Linea1);
-                celdaTextos.appendChild(inputListaSenialLinea1);
-                inputListaSenialLinea1.placeholder = "Linea 1";
-                inputListaSenialLinea1.addEventListener('change', (event) => {
-                    listaSenial.Linea1 = event.target.value;
-                    proyectoNoGuardado();
-                });
-
-                const inputListaSenialLinea2 = inputNombre(listaSenial.Linea2);
-                celdaTextos.appendChild(inputListaSenialLinea2);
-                inputListaSenialLinea2.placeholder = "Linea 2";
-                inputListaSenialLinea2.addEventListener('change', (event) => {
-                    listaSenial.Linea2 = event.target.value;
-                    proyectoNoGuardado();
-                });
-
-
+            const elimSenial = document.createElement("button");
+            celdaEstadoAsignacion.appendChild(elimSenial);
+            elimSenial.textContent = "X";
+            elimSenial.classList.add("w3-red", "w3-button");
+            elimSenial.addEventListener('click', () => {
+                if (!confirm("Esta acción no se puede deshacer.\n¿Desea continuar?")) return;
+                listaSeniales.splice(listaSeniales.indexOf(listaSenial), 1);
+                proyectoNoGuardado();
+                row.remove();
             });
-        }
+
+            const labelNumSenial = document.createElement('label');
+            labelNumSenial.innerText = signalType + "_" + (indexListaSenial + 1).toString().padStart(2, 0);
+            celdaEstadoAsignacion.appendChild(labelNumSenial);
+
+            const celdaTextos = document.createElement('td');
+            row.appendChild(celdaTextos);
+
+            if (listaSenial.Opciones.length > 1) {
+
+                const selectDibujoSenial = document.createElement('select');
+                selectDibujoSenial.classList.add("w3-margin-right");
+                celdaTextos.appendChild(selectDibujoSenial);
+
+                listaSenial.Opciones.forEach(opcion => {
+                    const opcionDibujoSenial = document.createElement('option');
+                    opcionDibujoSenial.innerText = opcion.toUpperCase();
+                    selectDibujoSenial.appendChild(opcionDibujoSenial);
+                });
+
+                selectDibujoSenial.selectedIndex = listaSenial.Opcion ?? 0;
+
+                selectDibujoSenial.addEventListener('change', (event) => {
+                    listaSenial.Opcion = event.target.selectedIndex;
+                    proyectoNoGuardado();
+                });
+
+            } else {
+                const noSelectSenial = document.createElement('label');
+                noSelectSenial.classList.add("w3-margin-right");
+                celdaTextos.appendChild(noSelectSenial);
+
+            }
+
+            const inputListaSenialLinea1 = inputNombre(listaSenial.Linea1);
+            celdaTextos.appendChild(inputListaSenialLinea1);
+            inputListaSenialLinea1.placeholder = "Linea 1";
+            inputListaSenialLinea1.addEventListener('change', (event) => {
+                listaSenial.Linea1 = event.target.value;
+                proyectoNoGuardado();
+            });
+
+            const inputListaSenialLinea2 = inputNombre(listaSenial.Linea2);
+            celdaTextos.appendChild(inputListaSenialLinea2);
+            inputListaSenialLinea2.placeholder = "Linea 2";
+            inputListaSenialLinea2.addEventListener('change', (event) => {
+                listaSenial.Linea2 = event.target.value;
+                proyectoNoGuardado();
+            });
+        });
+
+
+        //boton añadir senial
+        const row = document.createElement('tr');
+        table.querySelector("tbody").appendChild(row);
+
+        const celdaBotonAniadir = document.createElement('td');
+        row.appendChild(celdaBotonAniadir);
+
+        const addSenial = document.createElement("button");
+        celdaBotonAniadir.appendChild(addSenial);
+
+        addSenial.textContent = "✚";
+        addSenial.classList = "w3-button w3-green";
+
+        addSenial.addEventListener('click', () => {
+            
+        });
+
     });
 }
 
