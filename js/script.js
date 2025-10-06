@@ -161,7 +161,7 @@ function populateCabeceraYPie() {
 function writeBlocks() {
     estudioNombProyecInput.value = nombreProyectoActual;
     estudioBloqCont.innerHTML = "";
-    proyectoActual.Estudio.forEach(addBlock);
+    proyectoActual?.Estudio?.forEach?.(addBlock);
     estudioBloqSelect.selectedIndex = 0;
     disableFirstAndLastMoveBlockButtons();
 }
@@ -735,7 +735,7 @@ function writeSignals() {
 
     signalTypes.forEach((signalType, signalIndex) => {
 
-        const listaSeniales = proyectoActual.Listado[signalType];
+        const listaSeniales = proyectoActual?.Listado?.[signalType];
 
         const table = document.createElement('table');
         listadoSenialesCont.appendChild(table);
@@ -760,7 +760,7 @@ function writeSignals() {
 
         labelTitulo.innerText = signalTexts[signalIndex];
 
-        listaSeniales.forEach((listaSenial, indexListaSenial) => {
+        listaSeniales?.forEach?.((listaSenial, indexListaSenial) => {
 
             const row = document.createElement('tr');
             table.querySelector("tbody").appendChild(row);
