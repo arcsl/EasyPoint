@@ -10,97 +10,103 @@ const esq = {
     // TODO: valorar si es mejor hacer que los objetos tengan la estructira { Nombre: "EA_1", Opciones :["Pasiva",] } 
     // para poder tener un acceso mas facil y no tener que iterar las propiedades buscando cual es el nombre
 
+    // Vacio para añadir señales en listado de señales
+    VacioEA_1:  (Nombre = "") => ({                     Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa", "Pasiva", "Activa"], }),
+    VacioED_1:  (Nombre = "") => ({                     Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa", "Relé", "Contactor", "Térmico",], }),
+    VacioSA_1:  (Nombre = "") => ({                     Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa", "Actuador",], }),
+    VacioSD_1:  (Nombre = "") => ({                     Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa", "Relé", "Contactor",], }),
+
     //EA
-    PasivaEA_1: (Nombre) => ({ Nombre, Tipo:"EA", Numero: 1, Opciones: ["Pasiva",], }),
-    SimpleEA_1: (Nombre) => ({ Nombre, Tipo:"EA", Numero: 1, Opciones: ["Externa",], }),
-    ActivaEA_1: (Nombre) => ({ Nombre, Tipo:"EA", Numero: 1, Opciones: ["Activa",], }),
-    ActivaEA_2: (Nombre) => ({ Nombre, Tipo:"EA", Numero: 2, Opciones: ["Activa",], }),
-    ActivaEA_3: (Nombre) => ({ Nombre, Tipo:"EA", Numero: 3, Opciones: ["Activa",], }),
+    PasivaEA_1: (Nombre = "") => ({ Nombre, Tipo: "EA", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Pasiva",], }),
+    SimpleEA_1: (Nombre = "") => ({ Nombre, Tipo: "EA", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa",], }),
+    ActivaEA_1: (Nombre = "") => ({ Nombre, Tipo: "EA", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Activa",], }),
+    ActivaEA_2: (Nombre = "") => ({ Nombre, Tipo: "EA", Numero: 2, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Activa",], }),
+    ActivaEA_3: (Nombre = "") => ({ Nombre, Tipo: "EA", Numero: 3, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Activa",], }),
     //ED
-    SimpleED_1: (Nombre) => ({ Nombre, Tipo:"ED", Numero: 1, Opciones: ["Externa",], }),
-    EntradED_1: (Nombre) => ({ Nombre, Tipo:"ED", Numero: 1, Opciones: ["Externa", "Rele",], }),
-    MotorED_1:  (Nombre) => ({ Nombre, Tipo:"ED", Numero: 1, Opciones: ["Externa", "Rele", "Contactor", "Termico",], }),
+    SimpleED_1: (Nombre = "") => ({ Nombre, Tipo: "ED", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa",], }),
+    EntradED_1: (Nombre = "") => ({ Nombre, Tipo: "ED", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa", "Relé",], }),
+    MotorED_1:  (Nombre = "") => ({ Nombre, Tipo: "ED", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa", "Relé", "Contactor", "Térmico",], }),
     //SA
-    SimpleSA_1: (Nombre) => ({ Nombre, Tipo:"SA", Numero: 1, Opciones: ["Externa",], }),
-    ActuadSA_1: (Nombre) => ({ Nombre, Tipo:"SA", Numero: 1, Opciones: ["Externa", "Actuador",], }),
+    SimpleSA_1: (Nombre = "") => ({ Nombre, Tipo: "SA", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa",], }),
+    ActuadSA_1: (Nombre = "") => ({ Nombre, Tipo: "SA", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa", "Actuador",], }),
     //SD
-    SimpleSD_1: (Nombre) => ({ Nombre, Tipo:"SD", Numero: 1, Opciones: ["Externa",], }),
-    SalidaSD_1: (Nombre) => ({ Nombre, Tipo:"SD", Numero: 1, Opciones: ["Externa", "Rele",], }),
-    MotorSD_1:  (Nombre) => ({ Nombre, Tipo:"SD", Numero: 1, Opciones: ["Externa", "Rele", "Contactor",], }),
-    MotorSD_3:  (Nombre) => ({ Nombre, Tipo:"SD", Numero: 3, Opciones: ["Motor3V",], }),
-    ActuadSD_1: (Nombre) => ({ Nombre, Tipo:"SD", Numero: 1, Opciones: ["Externa", "Rele", "Simple", "Conmutada",], }),
-    ActuadSD_2: (Nombre) => ({ Nombre, Tipo:"SD", Numero: 2, Opciones: ["Externa", "Actuador",], }),
+    SimpleSD_1: (Nombre = "") => ({ Nombre, Tipo: "SD", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa",], }),
+    SalidaSD_1: (Nombre = "") => ({ Nombre, Tipo: "SD", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa", "Relé",], }),
+    MotorSD_1:  (Nombre = "") => ({ Nombre, Tipo: "SD", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa", "Relé", "Contactor",], }),
+    MotorSD_3:  (Nombre = "") => ({ Nombre, Tipo: "SD", Numero: 3, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Motor3V",], }),
+    ActuadSD_1: (Nombre = "") => ({ Nombre, Tipo: "SD", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa", "Relé", "Simple", "Conmutada",], }),
+    ActuadSD_2: (Nombre = "") => ({ Nombre, Tipo: "SD", Numero: 2, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa", "Actuador",], }),
 }
 
 const opt = {
-    
+
     // "Esquema" es un array de objetos y no un objeto con propiedades, por si se necesita duplicar el objeto, 
     // como por ejemplo en el actuador todo/nada con 2 micros, donde la entrada digital esta duplicada
 
-    Vacio: (Nombre) => ({Nombre, Seniales: { }, Esquema: [], }),
+    Vacio: (Nombre) => ({ Nombre, Seniales: {}, Esquema: [], }),
 
     //Simples
-    SimpleEA: (Nombre) => ({Nombre, Seniales: { "EA": 1, }, Esquema: [esq.SimpleEA_1("")], }),
-    SimpleED: (Nombre) => ({Nombre, Seniales: { "ED": 1, }, Esquema: [esq.SimpleED_1("")], }),
-    SimpleSA: (Nombre) => ({Nombre, Seniales: { "SA": 1, }, Esquema: [esq.SimpleSA_1("")], }),
-    SimpleSD: (Nombre) => ({Nombre, Seniales: { "SD": 1, }, Esquema: [esq.SimpleSD_1("")], }),
+    SimpleEA: (Nombre) => ({ Nombre, Seniales: { "EA": 1, }, Esquema: [esq.SimpleEA_1(),], }),
+    SimpleED: (Nombre) => ({ Nombre, Seniales: { "ED": 1, }, Esquema: [esq.SimpleED_1(),], }),
+    SimpleSA: (Nombre) => ({ Nombre, Seniales: { "SA": 1, }, Esquema: [esq.SimpleSA_1(),], }),
+    SimpleSD: (Nombre) => ({ Nombre, Seniales: { "SD": 1, }, Esquema: [esq.SimpleSD_1(),], }),
     //sensor
-    SensorPasi: (Nombre) => ({Nombre, Seniales: { "EA": 1, }, Esquema: [esq.PasivaEA_1("")], }),
-    SensorAct1: (Nombre) => ({Nombre, Seniales: { "EA": 1, }, Esquema: [esq.ActivaEA_1("")], }),
-    SensorAct2: (Nombre) => ({Nombre, Seniales: { "EA": 2, }, Esquema: [esq.ActivaEA_2("")], }),
-    SensorAct3: (Nombre) => ({Nombre, Seniales: { "EA": 3, }, Esquema: [esq.ActivaEA_3("")], }),
-    SensorDigi: (Nombre) => ({Nombre, Seniales: { "ED": 1, }, Esquema: [esq.SimpleED_1("")], }),
+    SensorPasi: (Nombre) => ({ Nombre, Seniales: { "EA": 1, }, Esquema: [esq.PasivaEA_1(),], }),
+    SensorAct1: (Nombre) => ({ Nombre, Seniales: { "EA": 1, }, Esquema: [esq.ActivaEA_1(),], }),
+    SensorAct2: (Nombre) => ({ Nombre, Seniales: { "EA": 2, }, Esquema: [esq.ActivaEA_2(),], }),
+    SensorAct3: (Nombre) => ({ Nombre, Seniales: { "EA": 3, }, Esquema: [esq.ActivaEA_3(),], }),
+    SensorDigi: (Nombre) => ({ Nombre, Seniales: { "ED": 1, }, Esquema: [esq.SimpleED_1(),], }),
     //Alarma
-    AlamEstTerceros: (Nombre) => ({Nombre, Seniales: { "ED": 1, }, Esquema: [esq.EntradED_1(""), ], }),
+    AlamEstTerceros: (Nombre) => ({ Nombre, Seniales: { "ED": 1, }, Esquema: [esq.EntradED_1(""),], }),
     //Actuador
-    Actuador010V: (Nombre) => ({Nombre, Seniales: { "SA": 1, }, Esquema: [esq.ActuadSA_1("")], }),
-    Actuador3Pun: (Nombre) => ({Nombre, Seniales: { "SD": 2, }, Esquema: [esq.ActuadSD_2("")], }),
-    ActuadorTN0M: (Nombre) => ({Nombre, Seniales: { "SD": 1, }, Esquema: [esq.ActuadSD_1(""),], }),
-    ActuadorTN1M: (Nombre) => ({Nombre, Seniales: { "ED": 1, "SD": 1, }, Esquema: [esq.EntradED_1("FC Abierto"), esq.ActuadSD_1(""),], }),
-    ActuadorTN2M: (Nombre) => ({Nombre, Seniales: { "ED": 2, "SD": 1, }, Esquema: [esq.EntradED_1("FC Abierto"), esq.EntradED_1("FC Cerrado"), esq.ActuadSD_1(""),], }),
+    Actuador010V: (Nombre) => ({ Nombre, Seniales: { "SA": 1, }, Esquema: [esq.ActuadSA_1(),], }),
+    Actuador3Pun: (Nombre) => ({ Nombre, Seniales: { "SD": 2, }, Esquema: [esq.ActuadSD_2(),], }),
+    ActuadorTN0M: (Nombre) => ({ Nombre, Seniales: { "SD": 1, }, Esquema: [esq.ActuadSD_1(),], }),
+    ActuadorTN1M: (Nombre) => ({ Nombre, Seniales: { "ED": 1, "SD": 1, }, Esquema: [esq.EntradED_1("FC Abierto"), esq.ActuadSD_1(),], }),
+    ActuadorTN2M: (Nombre) => ({ Nombre, Seniales: { "ED": 2, "SD": 1, }, Esquema: [esq.EntradED_1("FC Abierto"), esq.EntradED_1("FC Cerrado"), esq.ActuadSD_1(),], }),
     //motor
-    MPyEstado: (Nombre) => ({Nombre, Seniales: { "ED": 1, "SD": 1, }, Esquema: [esq.EntradED_1("Estado"), esq.SalidaSD_1("M/P"),], }),
-    MotorToNa: (Nombre) => ({Nombre, Seniales: { "ED": 1, "SD": 1, }, Esquema: [esq.MotorED_1("Estado"), esq.MotorSD_1("M/P"),], }),
-    MPEst010V: (Nombre) => ({Nombre, Seniales: { "ED": 1, "SD": 1, }, Esquema: [esq.EntradED_1("Estado"), esq.SimpleSA_1("Modulación"), esq.SalidaSD_1("M/P"),], }),
-    Motor010V: (Nombre) => ({Nombre, Seniales: { "ED": 1, "SA": 1, "SD": 1 }, Esquema: [esq.MotorED_1("Estado"), esq.SimpleSA_1("Modulación"), esq.MotorSD_1("M/P"),], }),
-    Motor3vel: (Nombre) => ({Nombre, Seniales: { "SD": 3 }, Esquema: [esq.MotorSD_3(),], }),
+    MPyEstado: (Nombre) => ({ Nombre, Seniales: { "ED": 1, "SD": 1, }, Esquema: [esq.EntradED_1("Estado"), esq.SalidaSD_1("M/P"),], }),
+    MotorToNa: (Nombre) => ({ Nombre, Seniales: { "ED": 1, "SD": 1, }, Esquema: [esq.MotorED_1("Estado"), esq.MotorSD_1("M/P"),], }),
+    MPEst010V: (Nombre) => ({ Nombre, Seniales: { "ED": 1, "SD": 1, }, Esquema: [esq.EntradED_1("Estado"), esq.SimpleSA_1("Modulación"), esq.SalidaSD_1("M/P"),], }),
+    Motor010V: (Nombre) => ({ Nombre, Seniales: { "ED": 1, "SA": 1, "SD": 1 }, Esquema: [esq.MotorED_1("Estado"), esq.SimpleSA_1("Modulación"), esq.MotorSD_1("M/P"),], }),
+    Motor3vel: (Nombre) => ({ Nombre, Seniales: { "SD": 3 }, Esquema: [esq.MotorSD_3(),], }),
 }
 
 const elem = {
 
-    Vacio:    (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.Vacio("Vacio"),], }),
+    Vacio: (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.Vacio("Vacio"),], }),
 
     //sencillos
-    PasivaEA:    (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.SensorPasi("Externa"),], }),
-    SimpleEA:    (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.SimpleEA("Externa"),], }),
-    SimpleED:    (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.SimpleED("Externa"),], }),
-    SimpleSA:    (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.SimpleSA("Externa"),], }),
-    SimpleSD:    (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.SimpleSD("Externa"),], }),
-    
+    PasivaEA: (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.SensorPasi("Externa"),], }),
+    SimpleEA: (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.SimpleEA("Externa"),], }),
+    SimpleED: (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.SimpleED("Externa"),], }),
+    SimpleSA: (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.SimpleSA("Externa"),], }),
+    SimpleSD: (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.SimpleSD("Externa"),], }),
+
     //sensores 
-    SensorAire:  (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.SensorPasi("Temperatura"), opt.SensorAct2("Temp + Hume"), opt.SensorAct2("Temp + CO2"), opt.SensorAct3("Temp Hum CO2"),], }),
+    SensorAire: (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.SensorPasi("Temperatura"), opt.SensorAct2("Temp + Hume"), opt.SensorAct2("Temp + CO2"), opt.SensorAct3("Temp Hum CO2"),], }),
     SondaTermos: (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.SensorPasi("Temperatura"), opt.SensorDigi("Termostato"),], }),
-    SensorPres:  (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.SensorDigi("Presostato"), opt.SensorAct1("Sonda"),], }),
-    SoloActiva:  (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.SensorAct1("Sonda"),], }),
-    
+    SensorPres: (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.SensorDigi("Presostato"), opt.SensorAct1("Sonda"),], }),
+    SoloActiva: (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.SensorAct1("Sonda"),], }),
+
     //Alarma
-    AlamEstTerceros:    (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.AlamEstTerceros("Externa"),], }),
+    AlamEstTerceros: (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.AlamEstTerceros("Externa"),], }),
 
     //valvulas
     ValvulaToNa: (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.ActuadorTN1M("1 Micro"), opt.ActuadorTN2M("2 Micros"), opt.ActuadorTN0M("Sin Micros"),], }),
     ValvulaProp: (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.Actuador010V("0..10Vcc"), opt.Actuador3Pun("3 Puntos"),], }),
-    ValvTNProp:  (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.Actuador3Pun("3 Puntos"), opt.ActuadorTN1M("Todo/Nada"), opt.Actuador010V("0..10Vcc"),], }),
+    ValvTNProp: (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.Actuador3Pun("3 Puntos"), opt.ActuadorTN1M("Todo/Nada"), opt.Actuador010V("0..10Vcc"),], }),
 
     //organos de gobierno
-    ExterModul:  (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.MPyEstado("M/P y Estado"), opt.MPEst010V("0..10Vcc"),], }),
-    MotorModul:  (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.MotorToNa("M/P y Estado"), opt.Motor010V("0..10Vcc"),], }),
-    MotorFC:     (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.SimpleSA("0..10Vcc"), opt.SimpleSD("1veloc"), opt.Motor3vel("3veloc"),], }),
-    Recuperdor:  (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.SimpleSD("Bypass"), opt.MotorToNa("M/P y Estado"), opt.Motor010V("0..10Vcc"),], }),
+    ExterModul: (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.MPyEstado("M/P y Estado"), opt.MPEst010V("0..10Vcc"),], }),
+    MotorModul: (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.MotorToNa("M/P y Estado"), opt.Motor010V("0..10Vcc"),], }),
+    MotorFC: (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.SimpleSA("0..10Vcc"), opt.SimpleSD("1veloc"), opt.Motor3vel("3veloc"),], }),
+    Recuperdor: (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.SimpleSD("Bypass"), opt.MotorToNa("M/P y Estado"), opt.Motor010V("0..10Vcc"),], }),
 
     //productores
     ModulaCalde: (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.SimpleSA("0..10Vcc"), opt.Actuador3Pun("3 Puntos"), opt.SimpleSD("2ª llama"),], }),
-    MPyEstado:   (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.MPyEstado("M/P y Estado"),], }),
-    Demanda:     (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.SimpleSA("0..10Vcc"), opt.SimpleSD("Todo/Nada"),], }),
+    MPyEstado: (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.MPyEstado("M/P y Estado"),], }),
+    Demanda: (Nombre, Cantidad) => ({ Nombre, Cantidad, Opciones: [opt.SimpleSA("0..10Vcc"), opt.SimpleSD("Todo/Nada"),], }),
 
 }
 

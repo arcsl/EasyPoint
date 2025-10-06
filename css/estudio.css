@@ -45,6 +45,10 @@
     background-color: #EEE;
 }
 
+#estudio table input {
+    display: inline-block;
+}
+
 /* elementos de la primera celda de cabecera */
 #estudio thead tr> :first-child * {
     height: 30px;
@@ -97,7 +101,7 @@
 }
 
 /* inputs de la primera celda */
-#estudio tr> :first-child input.inputNombre {
+#estudio tr> :first-child input {
     width: 400px;
     border: none !important;
 }

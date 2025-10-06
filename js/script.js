@@ -632,8 +632,6 @@ function asignarValoresListado() {
                         const { Nombre, Tipo, ...senialParaListado } = structuredClone(senialesDeEsquema);
 
                         senialParaListado.Linea1 = (Nombre + " " + nombreProcesado).trim().toUpperCase();
-                        senialParaListado.Linea2 = "";
-                        senialParaListado.Opcion = 0;
 
                         // TODO: Esto es un poco ñapa pero me sirve para los esquemas de ARC
                         if (Tipo === "ED" && senialParaListado.Opciones?.[0]?.toUpperCase().startsWith("EXT")) {
@@ -755,15 +753,34 @@ function writeSignals() {
         celda.colSpan = 2;
         rowHead.appendChild(celda);
 
+        const addSenial = document.createElement("button");
+        celda.appendChild(addSenial);
+
         const labelTitulo = document.createElement('label');
+        labelTitulo.innerText = signalTexts[signalIndex];
         celda.appendChild(labelTitulo);
 
-        labelTitulo.innerText = signalTexts[signalIndex];
+        addSenial.textContent = "✚";
+        addSenial.classList = "w3-button w3-green";
 
-        listaSeniales?.forEach?.((listaSenial, indexListaSenial) => {
+        addSenial.addEventListener('click', () => {
+            const listaSenial = esq[`Vacio${signalType}_1`]();
+            listaSeniales.push(listaSenial);
+            proyectoNoGuardado();
+            crearFilaSenial(listaSenial);
+            renumerarFilas();
+        });
+
+        // crear una fila por cada senial del array
+        listaSeniales?.forEach?.(crearFilaSenial);
+
+        function crearFilaSenial(listaSenial) {
+
+            const indexListaSenial = table.querySelector("tbody").querySelectorAll("tr").length;
 
             const row = document.createElement('tr');
-            table.querySelector("tbody").appendChild(row);
+            tbody.appendChild(row);
+            // tbody.insertBefore(row, tbody.lastElementChild);
 
             const celdaEstadoAsignacion = document.createElement('td');
             celdaEstadoAsignacion.classList.add("w3-pale-yellow");
@@ -771,13 +788,15 @@ function writeSignals() {
 
             const elimSenial = document.createElement("button");
             celdaEstadoAsignacion.appendChild(elimSenial);
-            elimSenial.textContent = "X";
+            // elimSenial.textContent = "X";
+            elimSenial.innerHTML = '<img src="./images/papelera.svg" alt="Salir" width="12" height="12">';
             elimSenial.classList.add("w3-red", "w3-button");
             elimSenial.addEventListener('click', () => {
                 if (!confirm("Esta acción no se puede deshacer.\n¿Desea continuar?")) return;
                 listaSeniales.splice(listaSeniales.indexOf(listaSenial), 1);
                 proyectoNoGuardado();
                 row.remove();
+                renumerarFilas();
             });
 
             const labelNumSenial = document.createElement('label');
@@ -787,66 +806,67 @@ function writeSignals() {
             const celdaTextos = document.createElement('td');
             row.appendChild(celdaTextos);
 
+            const selectDibujoSenial = document.createElement('select');
+            selectDibujoSenial.classList.add("w3-margin-right", "nobackground");
+            celdaTextos.appendChild(selectDibujoSenial);
+
+
             if (listaSenial.Opciones.length > 1) {
-
-                const selectDibujoSenial = document.createElement('select');
-                selectDibujoSenial.classList.add("w3-margin-right");
-                celdaTextos.appendChild(selectDibujoSenial);
-
                 listaSenial.Opciones.forEach(opcion => {
                     const opcionDibujoSenial = document.createElement('option');
-                    opcionDibujoSenial.innerText = opcion.toUpperCase();
+                    opcionDibujoSenial.value = opcion.toUpperCase();
+                    opcionDibujoSenial.innerText = opcion;
                     selectDibujoSenial.appendChild(opcionDibujoSenial);
                 });
-
-                selectDibujoSenial.selectedIndex = listaSenial.Opcion ?? 0;
-
                 selectDibujoSenial.addEventListener('change', (event) => {
+                    const val = selectDibujoSenial.value;
+                    inputIndex.style.visibility = (val === "RELÉ" || val === "CONTACTOR" || val === "TÉRMICO") ? "visible" : "hidden";
                     listaSenial.Opcion = event.target.selectedIndex;
                     proyectoNoGuardado();
                 });
-
+                selectDibujoSenial.selectedIndex = listaSenial.Opcion ?? 0;
             } else {
-                const noSelectSenial = document.createElement('label');
-                noSelectSenial.classList.add("w3-margin-right");
-                celdaTextos.appendChild(noSelectSenial);
-
+                selectDibujoSenial.style.visibility = "hidden";
             }
 
-            const inputListaSenialLinea1 = inputNombre(listaSenial.Linea1);
+            const val = selectDibujoSenial.value;
+
+            const inputIndex = inputNombre("");
+            celdaTextos.appendChild(inputIndex);
+            inputIndex.style.visibility = (val === "RELÉ" || val === "CONTACTOR" || val === "TÉRMICO") ? "visible" : "hidden";
+            inputIndex.placeholder = "##";
+            inputIndex.addEventListener('change', (event) => {
+                listaSenial.tagNumber = event.target.value;
+                proyectoNoGuardado();
+            });
+
+            const inputListaSenialLinea1 = inputNombre(listaSenial.Linea1 ?? "");
             celdaTextos.appendChild(inputListaSenialLinea1);
-            inputListaSenialLinea1.placeholder = "Linea 1";
+            inputListaSenialLinea1.placeholder = "Nombre de la señal";
             inputListaSenialLinea1.addEventListener('change', (event) => {
                 listaSenial.Linea1 = event.target.value;
                 proyectoNoGuardado();
             });
 
-            const inputListaSenialLinea2 = inputNombre(listaSenial.Linea2);
+            const inputListaSenialLinea2 = inputNombre(listaSenial.Linea2 ?? "");
             celdaTextos.appendChild(inputListaSenialLinea2);
-            inputListaSenialLinea2.placeholder = "Linea 2";
+            inputListaSenialLinea2.placeholder = "Modelo / Anotaciones";
             inputListaSenialLinea2.addEventListener('change', (event) => {
                 listaSenial.Linea2 = event.target.value;
                 proyectoNoGuardado();
             });
-        });
 
+        }
 
-        //boton añadir senial
-        const row = document.createElement('tr');
-        table.querySelector("tbody").appendChild(row);
-
-        const celdaBotonAniadir = document.createElement('td');
-        row.appendChild(celdaBotonAniadir);
-
-        const addSenial = document.createElement("button");
-        celdaBotonAniadir.appendChild(addSenial);
-
-        addSenial.textContent = "✚";
-        addSenial.classList = "w3-button w3-green";
-
-        addSenial.addEventListener('click', () => {
-            
-        });
+        function renumerarFilas() {
+            const filas = tbody?.querySelectorAll("tr") ?? [];
+            filas.forEach((fila, i) => {
+                const label = fila.querySelector("td:first-child label");
+                if (label) {
+                    label.innerText = `${signalType}_${(i + 1).toString().padStart(2, '0')}`;
+                }
+            });
+        }
 
     });
 }
@@ -855,9 +875,8 @@ function writeSignals() {
 /* ------------------------- AUXILIARES ------------------------- */
 function inputNombre(texto) {
     const nameInput = document.createElement("input");
-    nameInput.classList.add("w3-input", "w3-margin-right", "nobackground", "inputNombre");
+    nameInput.classList.add("w3-input", "w3-margin-right", "nobackground");
     nameInput.value = texto;
-    nameInput.style.display = "inline-block";
     return nameInput;
 }
 

@@ -18,66 +18,78 @@
 
 /* ---------- LISTADO SEPARADOR SUPERIOR ---------- */
 #listadoSepTop {
-    height: 106px;
+    height: 117px;
 }
 
 /* ---------- LISTADO TABLAS DE SEÑALES ---------- */
-#listado tbody tr {
-    height: 25px !important;
+#listado table * {
+    padding: 0;
 }
 
-#listado tbody tr td * {
-    font-size: 1em !important;
+#listado thead>tr {
+    height: 50px;
+}
+
+#listado tbody>tr {
+    height: 40px;
+}
+
+#listado th,
+#listado td {
     vertical-align: middle;
 }
 
-#listado tbody tr td:first-child {
-    width: 110px !important;
-    text-align: center;
-    padding: 10px 0 10px 0;
+#listado tbody * {
+    font-size: 1em;
 }
 
-/* botones eliminar linea */
-#listado tbody>tr>td:first-child>button {
-    margin-left: 5px;
-    margin-right: 15px;
+#listado tbody tr td:first-child {
+    width: 110px;
+    text-align: center;
+}
+
+#listado table button {
+    margin: 0 10px 2px 0;
     width: 20px;
     height: 20px;
-    padding: 0;
-    line-height: 15px;
+    line-height: 12px;
     font-size: 12px !important;
     font-weight: bold;
 }
 
-/* fila boton aniadir */
-#listado tbody>tr:last-child>td {
-    text-align: left;
-    padding-left: 10px;
+#listado thead button {
+    margin-left: 16px;
 }
 
-/* botones añadir linea */
-#listado tbody>tr:last-child>td>button {
-    font-weight: normal;
-    line-height: 12px;
+#listado tbody button {
+    padding-bottom: 2px;
 }
 
-
-#listado tbody tr td:not(:first-child) {
-    vertical-align: middle;
-}
-
-#listado tbody tr td:nth-child(2) label,
-#listado tbody tr td:nth-child(2) select {
+#listado tbody>tr>td:nth-child(2)>label,
+#listado tbody>tr>td:nth-child(2)>select,
+#listado tbody>tr>td:nth-child(2)>input {
     width: 125px;
     height: 1.7em;
-    padding: 0 0 0 5px;
+    padding-left: 5px;
+    margin-left: 16px;
+    margin-right: 0px !important;
     display: inline-block;
-    margin-left: 10px;
+    box-sizing: border-box;
+    line-height: 1.7em;
+    vertical-align: middle;
+    border: none;
 }
 
-#listado tbody tr td input {
-    width: 340px;
-    height: 1.5em;
-    display: inline-block;
-    border: none;
+#listado tbody>tr>td:nth-child(2)>input {
+    width: 300px;
+}
+
+#listado tbody>tr>td:nth-child(2)> :nth-child(2) {
+    padding: 0;
+    text-align: center;
+    width: 50px;
+}
+
+#listadoSepPie{
+    height: 25px;
 }

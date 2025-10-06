@@ -77,7 +77,7 @@
           "Checked": true
         }
       ],
-      "id": "fc72d111-1b70-475e-a3a7-15b24e5eeb70",
+      "id": "d9039a52-cec7-4a8f-bd6c-de7e3206a2da",
       "NombreUsuario": "General",
       "Cantidad": 1
     },
@@ -86,7 +86,7 @@
       "Elementos": [
         {
           "Nombre": "Temperatura",
-          "Cantidad": 1,
+          "Cantidad": 2,
           "Opciones": [
             {
               "Nombre": "Temperatura",
@@ -121,7 +121,7 @@
               ]
             }
           ],
-          "NombreUsuario": "Temperatura Ida y Retorno",
+          "NombreUsuario": "Temperatura ida y retorno",
           "Opcion": 0,
           "Checked": true
         },
@@ -165,13 +165,14 @@
                   "Tipo": "ED",
                   "Numero": 1,
                   "Opciones": [
-                    "Externa"
+                    "Externa",
+                    "Rele"
                   ]
                 }
               ]
             }
           ],
-          "NombreUsuario": "Estado / Alarma",
+          "NombreUsuario": "Alarma",
           "Opcion": 0,
           "Checked": true
         },
@@ -229,7 +230,7 @@
               ]
             }
           ],
-          "NombreUsuario": "Modulación / Consigna",
+          "NombreUsuario": "Consigna",
           "Opcion": 0,
           "Checked": true
         },
@@ -385,7 +386,7 @@
         },
         {
           "Nombre": "Control Humos",
-          "Cantidad": 0,
+          "Cantidad": 1,
           "Opciones": [
             {
               "Nombre": "Temperatura",
@@ -420,9 +421,9 @@
               ]
             }
           ],
-          "NombreUsuario": "Control Humos",
+          "NombreUsuario": "Temperatura Humos",
           "Opcion": 0,
-          "Checked": false
+          "Checked": true
         },
         {
           "Nombre": "Control Presión",
@@ -466,38 +467,33 @@
           "Checked": false
         }
       ],
-      "id": "e4ce1f75-ac93-47e2-a655-22fb43dad347",
+      "id": "e52ca6aa-fe6d-4d91-9cce-7db740bc416a",
       "NombreUsuario": "Caldera",
-      "Cantidad": 1
+      "Cantidad": 2
     }
   ],
   "Listado": {
-    "EA": [
-      {
-        "Numero": 1,
-        "Opciones": [
-          "Pasiva"
-        ],
-        "Linea1": "Temperatura Exterior General",
-        "Linea2": ""
-      },
-      {
-        "Numero": 1,
-        "Opciones": [
-          "Pasiva"
-        ],
-        "Linea1": "Temperatura Ida y Retorno Caldera",
-        "Linea2": ""
-      }
-    ],
+    "EA": [],
     "ED": [
       {
         "Numero": 1,
         "Opciones": [
-          "Externa"
+          "Externa",
+          "Rele"
         ],
-        "Linea1": "Estado / Alarma Caldera",
-        "Linea2": ""
+        "Linea1": "ALARMA CALDERA 1",
+        "Linea2": "(CONTACTO LIBRE DE POTENCIAL)",
+        "Opcion": 0
+      },
+      {
+        "Numero": 1,
+        "Opciones": [
+          "Externa",
+          "Rele"
+        ],
+        "Linea1": "ALARMA CALDERA 2",
+        "Linea2": "(CONTACTO LIBRE DE POTENCIAL)",
+        "Opcion": 0
       },
       {
         "Numero": 1,
@@ -507,8 +503,9 @@
           "Contactor",
           "Termico"
         ],
-        "Linea1": "Estado Bomba 1 Caldera",
-        "Linea2": ""
+        "Linea1": "ESTADO BOMBA 1 CALDERA 1",
+        "Linea2": "(CONTACTO LIBRE DE POTENCIAL)",
+        "Opcion": 0
       },
       {
         "Numero": 1,
@@ -518,8 +515,21 @@
           "Contactor",
           "Termico"
         ],
-        "Linea1": "Estado Bomba 2 Caldera",
-        "Linea2": ""
+        "Linea1": "ESTADO BOMBA 1 CALDERA 2",
+        "Linea2": "(CONTACTO LIBRE DE POTENCIAL)",
+        "Opcion": 0
+      },
+      {
+        "Numero": 1,
+        "Opciones": [
+          "Externa",
+          "Rele",
+          "Contactor",
+          "Termico"
+        ],
+        "Linea1": "ESTADO BOMBA 2 CALDERA 2",
+        "Linea2": "(CONTACTO LIBRE DE POTENCIAL)",
+        "Opcion": 0
       }
     ],
     "SA": [
@@ -528,8 +538,18 @@
         "Opciones": [
           "Externa"
         ],
-        "Linea1": "Modulación / Consigna Caldera",
-        "Linea2": ""
+        "Linea1": "CONSIGNA CALDERA 1",
+        "Linea2": "",
+        "Opcion": 0
+      },
+      {
+        "Numero": 1,
+        "Opciones": [
+          "Externa"
+        ],
+        "Linea1": "CONSIGNA CALDERA 2",
+        "Linea2": "",
+        "Opcion": 0
       }
     ],
     "SD": [
@@ -540,8 +560,9 @@
           "Rele",
           "Contactor"
         ],
-        "Linea1": "M/P Bomba 1 Caldera",
-        "Linea2": ""
+        "Linea1": "M/P BOMBA 1 CALDERA 1",
+        "Linea2": "",
+        "Opcion": 0
       },
       {
         "Numero": 1,
@@ -550,8 +571,31 @@
           "Rele",
           "Contactor"
         ],
-        "Linea1": "M/P Bomba 2 Caldera",
-        "Linea2": ""
+        "Linea1": "M/P BOMBA 2 CALDERA 1",
+        "Linea2": "",
+        "Opcion": 0
+      },
+      {
+        "Numero": 1,
+        "Opciones": [
+          "Externa",
+          "Rele",
+          "Contactor"
+        ],
+        "Linea1": "M/P BOMBA 1 CALDERA 2",
+        "Linea2": "",
+        "Opcion": 0
+      },
+      {
+        "Numero": 1,
+        "Opciones": [
+          "Externa",
+          "Rele",
+          "Contactor"
+        ],
+        "Linea1": "M/P BOMBA 2 CALDERA 2",
+        "Linea2": "",
+        "Opcion": 0
       }
     ]
   },
