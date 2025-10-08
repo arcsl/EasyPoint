@@ -51,7 +51,7 @@ function escuchadores() {
 
 
     /* ---------- BOTONES PORTADA ---------- */
- 
+
     // (verde check) Crear nuevo proyecto
     portadaNueProyecCrear.addEventListener("click", () => {
 
@@ -388,9 +388,17 @@ function escuchadores() {
         guardadoOK();
 
     });
-    // (morado PDF) crear pdf de lo que se ve en pantalla
-    estudioCrearPDFBtn.addEventListener("click", () => {
-        crearPDF();
+    // (morado Exportar) mostar exportPop para seleccionar el formato de la exportación
+    estudioExportarBtn.addEventListener("click", () => {
+
+        // Asignar seccion desde el que se dispara
+        exportPop.seccion = "estudio";
+
+        // mostrar exportPop centrado bajo el boton export
+        estudio.setAttribute('inert', ''); // bloquea todos los inputs del fondo en estudio
+        overlay.style.display = "block";
+        exportPop.style.display = "block";
+
     });
     // (rojo salir) volver a la portada
     estudioSalirBtn.addEventListener("click", () => {
@@ -450,7 +458,7 @@ function escuchadores() {
     });
 
 
-    /* ---------- BOTONES VENTANA POPUP ---------- */
+    /* ---------- BOTONES VENTANA POPUP SEÑALES---------- */
 
     // (verde aceptar) ocultar la interfaz y añadir elementos
     popAceptar.addEventListener("click", () => {
@@ -529,12 +537,14 @@ function escuchadores() {
         ultima.querySelector('input[name="nombreSenial"]').focus();
 
         // quitamos el overlay
+        customPop.style.display = "none";
         overlay.style.display = "none";
 
     });
     // (rojo cancelar) ocultar la interfaz y no hacer nada.
     popCancel.addEventListener("click", () => {
         estudio.removeAttribute('inert');
+        customPop.style.display = "none";
         overlay.style.display = "none";
     });
 
@@ -555,47 +565,13 @@ function escuchadores() {
     // ( morado exportar ) crear un csv para poder copiar, pegar, ...
     listadoExportarBtn.addEventListener("click", () => {
 
-        let listadoNombresSeñales = [];
+        // Asignar seccion desde el que se dispara
+        exportPop.seccion = "listado";
 
-        const nodosTablas = listadoSenialesCont.querySelectorAll("table");
-
-        nodosTablas.forEach(tabla => {
-            // Buscar filas en thead y tbody
-            const label = tabla.querySelector("thead tr th label");
-            listadoNombresSeñales.push("");
-            listadoNombresSeñales.push(label.textContent.trim());
-
-            const filas = tabla.querySelectorAll("tbody tr");
-            filas.forEach(fila => {
-                const listaCeldas = fila.querySelectorAll("td, th"); // primera celda de la fila
-                if (listaCeldas) {
-                    if (listaCeldas.length > 1) {
-                        const inputs = listaCeldas[1].querySelectorAll("input");
-                        if (inputs) {
-                            if (inputs.length > 1) {
-                                listadoNombresSeñales.push(inputs[0].value.trim() + ";" + inputs[1].value.trim());
-                            }
-                        }
-                    }
-                }
-            });
-        });
-
-        // Crear texto CSV
-        const contenido = listadoNombresSeñales.join("\n");
-
-        // Agregar BOM UTF-8 para Excel
-        const BOM = "\uFEFF";
-        const blob = new Blob([BOM + contenido], { type: "text/csv;charset=utf-8" });
-
-        // Crear enlace temporal
-        const enlace = document.createElement("a");
-        enlace.href = URL.createObjectURL(blob);
-        enlace.download = nombreProyectoActual + " - listado señales.csv";
-        enlace.click();
-
-        // Liberar la URL
-        URL.revokeObjectURL(enlace.href);
+        // mostrar exportPop centrado bajo el boton export
+        estudio.setAttribute('inert', ''); // bloquea todos los inputs del fondo en estudio
+        overlay.style.display = "block";
+        exportPop.style.display = "block";
 
     });
     // ( rojo volver ) Volver al estudio de puntos
@@ -605,5 +581,30 @@ function escuchadores() {
     });
     // ( azul asignar ) Avanzar a la seleccion de controladores y asignacion de señales
     listadoAsignarBtn.addEventListener("click", () => {
+    });
+
+
+    /* ---------- BOTONES VENTANA POPUP EXPORTAR ---------- */
+
+    // (morado PDF) Generar informe PDF y ocultar la interfaz.
+    expPDFBtn.addEventListener("click", () => {
+        //TODO: exportacion en PDF
+        if (exportPop.seccion === "listado") {
+            alert("Próximamente.\nPor ahora solo CSV")
+            return;
+        }
+        crearPDF(exportPop.seccion);
+        expCerrarBtn.dispatchEvent(new Event('click', { bubbles: true }));
+    });
+    // (morado CSV) Generar listado en CSV y ocultar la interfaz.
+    expCSVBtn.addEventListener("click", () => {
+        crearCSV(exportPop.seccion);
+        expCerrarBtn.dispatchEvent(new Event('click', { bubbles: true }));
+    });
+    // (rojo aspa) ocultar la interfaz y no hacer nada.
+    expCerrarBtn.addEventListener("click", () => {
+        estudio.removeAttribute('inert');
+        exportPop.style.display = "none";
+        overlay.style.display = "none";
     });
 }

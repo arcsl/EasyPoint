@@ -22,7 +22,7 @@ const portadaSelProyecSelect = document.getElementById("portadaSelProyecSelect")
 const estudioBotonera = document.getElementById("estudioBotonera");
 const estudioNombProyecInput = document.getElementById("estudioNombProyecInput");
 const estudioGuardarBtn = document.getElementById("estudioGuardarBtn");
-const estudioCrearPDFBtn = document.getElementById("estudioCrearPDFBtn");
+const estudioExportarBtn = document.getElementById("estudioExportarBtn");
 const estudioSalirBtn = document.getElementById("estudioSalirBtn");
 const estudioListadoBtn = document.getElementById("estudioListadoBtn");
 const estudioCabeceraSeniales = document.getElementById("estudioCabeceraSeniales");
@@ -33,7 +33,7 @@ const estudioSumarioCont = document.getElementById("estudioSumarioCont");
 const listadoBotonera = document.getElementById("listadoBotonera");
 const listadoNombProyecInput = document.getElementById("listadoNombProyecInput");
 const listadoGenerarBtn = document.getElementById("listadoGenerarBtn");
-const listadoImportarBtn = document.getElementById("listadoImportarBtn");
+const listadoExportarBtn = document.getElementById("listadoExportarBtn");
 const listadoVolverBtn = document.getElementById("listadoVolverBtn");
 const listadoAsignarBtn = document.getElementById("listadoAsignarBtn");
 const listadoCabeceraSeniales = document.getElementById("listadoCabeceraSeniales");
@@ -41,11 +41,16 @@ const listadoSenialesCont = document.getElementById("listadoSenialesCont");
 const listadoSumarioCont = document.getElementById("listadoSumarioCont");
 
 const overlay = document.getElementById("overlay");
+
 const customPop = document.getElementById("customPop");
 const popLabelTR = document.getElementById("popLabelTR");
 const popInputTR = document.getElementById("popInputTR");
 const popAceptar = document.getElementById("popAceptar");
 const popCancel = document.getElementById("popCancel");
+
+const expPDFBtn = document.getElementById("expPDFBtn");
+const expCSVBtn = document.getElementById("expCSVBtn");
+const expCerrarBtn = document.getElementById("expCerrarBtn");
 
 
 /* ------------------------- VARIABLES GLOBALES ------------------------- */
@@ -356,6 +361,7 @@ function addBlockBody(bloque, table) {
         // mostrar customPop centrado en pantalla
         estudio.setAttribute('inert', ''); // bloquea todos los inputs del fondo en estudio
         overlay.style.display = "block";
+        customPop.style.display = "block";
         customPop.style.top = (window.innerHeight - customPop.offsetWidth) / 2 + "px";
         customPop.style.left = (window.innerWidth - customPop.offsetWidth) / 2 + "px";
         customPop.querySelector('input').focus();
@@ -648,84 +654,86 @@ function asignarValoresListado() {
 
     proyectoNoGuardado();
 
-    /**
-     * Genera un array de nombres combinados de bloques y elementos.
-     * Aplica prefijos y numeración automática si el nombre contiene comas o "y".
-     *
-     * @param {string} bName - Nombre del bloque.
-     * @param {number} bCant - Cantidad de bloques.
-     * @param {string} eName - Nombre del elemento.
-     * @param {number} eCant - Cantidad de elementos.
-     * @returns {string[]} Array con todos los nombres combinados de elementos y bloques.
-     */
-    function procesaNombres(bName, bCant, eName, eCant) {
-        /**
-         * Divide un nombre compuesto en un prefijo y un array de partes.
-         * Aplica una early exit si no hay exactamente una ocurrencia de " y ".
-         *
-         * @param {string} nombre - El nombre a procesar, puede contener comas y " y ".
-         * @returns {{prefijo: string, partes: string[]} | null} Objeto con el prefijo y las partes,
-         *          o null si no se cumple la condición de una sola "y" o si las partes son insuficientes.
-         */
-        function splitNombre(nombre) {
-            // Contar cuántas veces aparece " y " -> Early exit: si no hay exactamente una "y"
-            const countY = (nombre.match(/ y /g) || []).length;
-            if (countY !== 1) return null;
-
-            // Dividir por comas, luego cada parte por " y ", aplanar el array resultante y eliminar espacios
-            let partes = nombre.split(",");
-            partes = partes.flatMap(p => p.split(" y "));
-            partes = partes.map(p => p.trim());
-
-            // Separar prefijo del primer elemento
-            let primerElemento = partes[0];
-            let palabras = primerElemento.split(" ");
-            partes[0] = palabras.pop();        // último elemento del primer elemento
-            const prefijo = palabras.join(" "); // resto de palabras como prefijo
-
-            // Validaciones finales o retornar objeto valido
-            if (prefijo === "" || partes[0] === "" || partes.length < 2) return null;
-            return { prefijo, partes };
-        }
-
-        // array de bloques
-        let arrayBloques = [];
-        if (bCant > 1) {
-            let splitBloques = splitNombre(bName);
-            if (!splitBloques || splitBloques.partes.length !== bCant) {
-                for (let i = 1; i <= bCant; i++) { arrayBloques.push(bName + " " + i); }
-            } else {
-                splitBloques.partes.forEach(parte => arrayBloques.push(splitBloques.prefijo + " " + parte));
-            }
-        } else {
-            arrayBloques = [bName];
-        }
-
-        // array de elementos
-        let arrayElems = [];
-        if (eCant > 1) {
-            let splitElems = splitNombre(eName);
-            if (!splitElems || splitElems.partes.length !== eCant) {
-                for (let i = 1; i <= eCant; i++) { arrayElems.push(eName + " " + i); }
-            } else {
-                splitElems.partes.forEach(parte => arrayElems.push(splitElems.prefijo + " " + parte));
-            }
-        } else {
-            arrayElems = [eName];
-        }
-
-        // --- Combinar bloques y elementos ---
-        const resultado = [];
-        for (let b of arrayBloques) {
-            for (let e of arrayElems) {
-                resultado.push(e + " " + b);
-            }
-        }
-
-        return resultado;
-    }
 
 }
+
+/**
+ * Genera un array de nombres combinados de bloques y elementos.
+ * Aplica prefijos y numeración automática si el nombre contiene comas o "y".
+ *
+ * @param {string} bName - Nombre del bloque.
+ * @param {number} bCant - Cantidad de bloques.
+ * @param {string} eName - Nombre del elemento.
+ * @param {number} eCant - Cantidad de elementos.
+ * @returns {string[]} Array con todos los nombres combinados de elementos y bloques.
+ */
+function procesaNombres(bName, bCant, eName, eCant) {
+    /**
+     * Divide un nombre compuesto en un prefijo y un array de partes.
+     * Aplica una early exit si no hay exactamente una ocurrencia de " y ".
+     *
+     * @param {string} nombre - El nombre a procesar, puede contener comas y " y ".
+     * @returns {{prefijo: string, partes: string[]} | null} Objeto con el prefijo y las partes,
+     *          o null si no se cumple la condición de una sola "y" o si las partes son insuficientes.
+     */
+    function splitNombre(nombre) {
+        // Contar cuántas veces aparece " y " -> Early exit: si no hay exactamente una "y"
+        const countY = (nombre.match(/ y /g) || []).length;
+        if (countY !== 1) return null;
+
+        // Dividir por comas, luego cada parte por " y ", aplanar el array resultante y eliminar espacios
+        let partes = nombre.split(",");
+        partes = partes.flatMap(p => p.split(" y "));
+        partes = partes.map(p => p.trim());
+
+        // Separar prefijo del primer elemento
+        let primerElemento = partes[0];
+        let palabras = primerElemento.split(" ");
+        partes[0] = palabras.pop();        // último elemento del primer elemento
+        const prefijo = palabras.join(" "); // resto de palabras como prefijo
+
+        // Validaciones finales o retornar objeto valido
+        if (prefijo === "" || partes[0] === "" || partes.length < 2) return null;
+        return { prefijo, partes };
+    }
+
+    // array de bloques
+    let arrayBloques = [];
+    if (bCant > 1) {
+        let splitBloques = splitNombre(bName);
+        if (!splitBloques || splitBloques.partes.length !== bCant) {
+            for (let i = 1; i <= bCant; i++) { arrayBloques.push(bName + " " + i); }
+        } else {
+            splitBloques.partes.forEach(parte => arrayBloques.push(splitBloques.prefijo + " " + parte));
+        }
+    } else {
+        arrayBloques = [bName];
+    }
+
+    // array de elementos
+    let arrayElems = [];
+    if (eCant > 1) {
+        let splitElems = splitNombre(eName);
+        if (!splitElems || splitElems.partes.length !== eCant) {
+            for (let i = 1; i <= eCant; i++) { arrayElems.push(eName + " " + i); }
+        } else {
+            splitElems.partes.forEach(parte => arrayElems.push(splitElems.prefijo + " " + parte));
+        }
+    } else {
+        arrayElems = [eName];
+    }
+
+    // --- Combinar bloques y elementos ---
+    const resultado = [];
+    for (let b of arrayBloques) {
+        for (let e of arrayElems) {
+            resultado.push(e + " " + b);
+        }
+    }
+
+    return resultado;
+}
+
 
 function writeSignals() {
 

@@ -18,7 +18,8 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
 
 	<script src="./js/blocks.js"></script>
-	<script src="./js/creadorPDFs.js"></script>
+	<script src="./js/creadorCSV.js"></script>
+	<script src="./js/creadorPDF.js"></script>
 	<script src="./js/escuchadores.js" defer></script>
 	<script src="./js/script.js" defer></script>
 
@@ -100,7 +101,7 @@
 			<div id="estudioBotonera" class="w3-margin-top contenidoFlex">
 				<input id="estudioNombProyecInput" class="w3-input w3-margin-right" placeholder="Nombre del proyecto" />
 				<button id="estudioGuardarBtn" class="w3-button w3-green w3-margin-right">Guardar</button>
-				<button id="estudioCrearPDFBtn" class="w3-button w3-purple w3-margin-right">PDF</button>
+				<button id="estudioExportarBtn" class="w3-button w3-purple w3-margin-right">Exportar</button>
 				<button id="estudioSalirBtn" class="w3-button w3-red w3-margin-right">Salir</button>
 				<button id="estudioListadoBtn" class="w3-button w3-blue">Listado</button>
 			</div>
@@ -130,6 +131,7 @@
 
 	<!-- Ventana emergente para añadir lineas con señales custom -->
 	<div id="overlay">
+
 		<div class="w3-container" id="customPop" class="w3-card">
 
 			<div class="w3-padding w3-center">
@@ -147,7 +149,15 @@
 				<button id="popAceptar" class="w3-button w3-green w3-margin">Aceptar</button>
 				<button id="popCancel" class="w3-button w3-red w3-margin">Cancelar</button>
 			</div>
+
 		</div>
+
+		<div class="w3-container" id="exportPop" class="w3-card">
+			<button id="expPDFBtn" class="w3-button w3-purple expBtn w3-margin-right"><img src="./images/pdf.svg" alt="Salir" width="40" height="40"></button>
+			<button id="expCSVBtn" class="w3-button w3-purple expBtn w3-margin-right"><img src="./images/csv.svg" alt="Salir" width="40" height="40"></button>
+ 			<button id="expCerrarBtn"class="w3-button w3-red corner" aria-label="Cerrar">✕</button>
+		</div>
+
 	</div>
 
 	<!-- LISTADO DE SEÑALES Y ESTADO DE ASIGNACION -->
@@ -166,7 +176,11 @@
 			<!-- Cabecera EA ED SA SD -->
 			<div id="listadoCabeceraSeniales" class="w3-center">
 				<table class="w3-table w3-bordered">
-					<thead><tr><th class="w3-center"> LISTADO DE SEÑALES DE CONTROL </th></tr></thead>
+					<thead>
+						<tr>
+							<th class="w3-center"> LISTADO DE SEÑALES DE CONTROL </th>
+						</tr>
+					</thead>
 				</table>
 			</div>
 		</div>

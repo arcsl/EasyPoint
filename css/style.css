@@ -135,10 +135,21 @@ table tbody tr:last-child {
 }
 
 @keyframes fadeinout {
-    0% { opacity: 0; }
-    20% { opacity: 1; }
-    80% { opacity: 1; }
-    100% { opacity: 0; }
+    0% {
+        opacity: 0;
+    }
+
+    20% {
+        opacity: 1;
+    }
+
+    80% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
 }
 
 .fadeinout {
@@ -151,12 +162,12 @@ table tbody tr:last-child {
 /* Ventana seleccion de señales custom */
 
 #customPop {
+    display: none;
     position: absolute;
     top: 50px;
     left: 100px;
     z-index: 10000;
     background-color: white;
-    border: 1px solid #ccc;
     border-radius: 8px;
     padding: 1.5rem;
 }
@@ -180,6 +191,7 @@ table tbody tr:last-child {
 }
 
 #overlay {
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
@@ -189,7 +201,35 @@ table tbody tr:last-child {
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
     z-index: 9999;
+    align-items: center;
+    justify-content: center;
+}
+
+#exportPop {
     display: none;
+    position: absolute;
+    top: 50px;
+    left: 590px;
+    z-index: 10000;
+    background-color: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+#exportPop button.expBtn {
+    padding: 0 0 0 5px;;
+    width: 60px;
+}
+
+#exportPop button.corner {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 20px;
+    display: flex;
     align-items: center;
     justify-content: center;
 }
