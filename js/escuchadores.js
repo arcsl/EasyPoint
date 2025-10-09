@@ -588,11 +588,6 @@ function escuchadores() {
 
     // (morado PDF) Generar informe PDF y ocultar la interfaz.
     expPDFBtn.addEventListener("click", () => {
-        //TODO: exportacion en PDF
-        if (exportPop.seccion === "listado") {
-            alert("Próximamente.\nPor ahora solo CSV")
-            return;
-        }
         crearPDF(exportPop.seccion);
         expCerrarBtn.dispatchEvent(new Event('click', { bubbles: true }));
     });

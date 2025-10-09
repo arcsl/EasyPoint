@@ -1,10 +1,5 @@
 /* ------------------------- GLOBALES ------------------------- */
-const printDate = new Date().toLocaleDateString();
 const colorCabeceraTablasPDF = "#ddfaff"
-const anchosColumnas = [28, '*', ...Array(signalTypes.length).fill(28)];
-let nombresColumnas = [];
-let facilityName;
-let headerText;
 const easyPie = {
     text: 'Easy Point V2.0',
     link: 'https://easypoint.arcsl.com',
@@ -14,142 +9,151 @@ const easyPie = {
 
 
 /* ------------------------- FUNCIONES ------------------------- */
-function crearPDF() {
+function crearPDF(seccion) {
 
-    facilityName = portadaSelProyecSelect.value;
-    headerText = portadaSelProyecSelect.value;
+    const objDocumento = docDef(seccion);
 
-    const textosColumnas = ["", "", ...signalTypes];
+    let textosColumnas = [];
+    let tables = [];
+    let anchosCols = [];
 
-    nombresColumnas = [];
-    textosColumnas.forEach(texto => {
-        nombresColumnas.push({ text: texto, fillColor: colorCabeceraTablasPDF });
-    });
+    // Configuración según sección
+    if (seccion === "estudio") {
+        textosColumnas = ["", "", ...signalTypes]; // cabecera de tablas de estudio
+        tables = estudioBloqCont.querySelectorAll("table"); // tablas de estudio
+    } else if (seccion === "listado") {
+        textosColumnas = ["", ""];
+        tables = document.querySelectorAll("#listadoSenialesCont table");
+        anchosCols = ['*', 36];
+    } else {
+        console.error("Sección desconocida:", seccion);
+        return;
+    }
+
+    // Construcción de nombres de columnas para PDF
+    let nombresCols = textosColumnas.map(texto => ({ text: texto, fillColor: colorCabeceraTablasPDF }));
 
     let extraPages = [{ pageBreak: 'before', text: null }];
 
-    const tables = estudioBloqCont.querySelectorAll("table");
-
     tables.forEach(table => {
 
-        let tablaSeniales = JSON.parse(JSON.stringify(tablaSig()));
-        tablaSeniales.layout = (tablaSig()).layout;
+        // Crear tabla PDF con anchos y nombres de columnas específicos pero copiando la funcion layout
+        let tablaPDF = JSON.parse(JSON.stringify(cuerpoTablaPDF(anchosCols, nombresCols, seccion)));
+        tablaPDF.layout = (cuerpoTablaPDF(anchosCols, nombresCols, seccion)).layout;
 
         const bodyRows = table.querySelectorAll("tbody tr");
 
-        bodyRows.forEach(row => {
+        bodyRows.forEach(linea => {
+            if (seccion === "estudio") {
+                const checkbox = linea.querySelector('input[type="checkbox"]');
+                if (!checkbox || !checkbox.checked) return;
 
-            const checkbox = row.querySelector('input[type="checkbox"]');
-            if (!checkbox || !checkbox.checked) return;
+                const numeroSenial = linea.querySelector('[name="numeroSenial"]')?.value || "";
+                const nombreSenial = linea.querySelector('[name="nombreSenial"]')?.value || "";
+                const opcionSenial = linea.querySelector('[name="opcionSenial"]');
 
-            const numeroSenial = row.querySelector('[name="numeroSenial"]')?.value || "";
-            const nombreSenial = row.querySelector('[name="nombreSenial"]')?.value || "";
-            const opcionSenial = row.querySelector('[name="opcionSenial"]');
+                const opcionTexto = opcionSenial?.options[opcionSenial.selectedIndex]?.text || "";
 
-            const opcionTexto = opcionSenial?.options[opcionSenial.selectedIndex]?.text || "";
+                const textoCeldaNombre = opcionTexto
+                    ? `${nombreSenial} ( ${opcionTexto} )`
+                    : nombreSenial;
 
-            const textoCeldaNombre = opcionTexto
-                ? `${nombreSenial} ( ${opcionTexto} )`
-                : nombreSenial;
+                const celdaNombre = { text: textoCeldaNombre, alignment: 'left' };
 
-            const celdaNombre = {
-                text: textoCeldaNombre,
-                alignment: 'left',
+                let numeroSeñales = [];
+                signalTypes.forEach(sig => {
+                    const celdaSenial = linea.querySelector(`.${sig}`);
+                    numeroSeñales.push(celdaSenial?.textContent || "");
+                });
+
+                tablaPDF.table.body.push([numeroSenial, celdaNombre, ...numeroSeñales]);
+
+            } else if (seccion === "listado") {
+
+                // Extraemos valor del segundo input dentro del segundo td
+                const tdSegundo = linea.children[1];
+                const inputs = tdSegundo.querySelectorAll('input');
+                const valorSegundoInput = inputs[1]?.value || "";
+
+                // Fila PDF: [valorSegundoInput, linea.Numero]
+                tablaPDF.table.body.push([
+                    { text: valorSegundoInput, alignment: 'left' },
+                    { text: linea.Numero, alignment: 'center' }
+                ]);
             }
-
-            let numeroSeñales = [];
-            signalTypes.forEach(sig => {
-                const celdaSenial = row.querySelector(`.${sig}`);
-                numeroSeñales.push(celdaSenial?.textContent || "");
-            });
-
-            tablaSeniales.table.body.push([numeroSenial, celdaNombre, ...numeroSeñales]);
-
         });
 
-        const nombreBloque = table.querySelector('[name="nombreBloque"]')?.value || "";
-        const cantidadBloque = table.querySelector('[name="cantidadBloque"]')?.value || "";
-
-        let extPagElem = JSON.parse(JSON.stringify(extraPagesElem()));
-        if (cantidadBloque > 1) {
-            extPagElem.stack[0].table.body[0][0].text = nombreBloque + " (x" + cantidadBloque + ")";
-        } else {
-            extPagElem.stack[0].table.body[0][0].text = nombreBloque;
+        // Título de tabla
+        let tituloTabla = "";
+        if (seccion === "estudio") {
+            const nombreBloque = table.querySelector('[name="nombreBloque"]')?.value || "";
+            const cantidadBloque = table.querySelector('[name="cantidadBloque"]')?.value || "";
+            tituloTabla = cantidadBloque > 1 ? `${nombreBloque} (x${cantidadBloque})` : nombreBloque;
+        } else if (seccion === "listado") {
+            tituloTabla = table.querySelector('thead th label')?.textContent || "Tabla";
         }
-        extPagElem.stack.push(tablaSeniales);
+
+        let extPagElem;
+        if (seccion === "listado") {
+            extPagElem = JSON.parse(JSON.stringify(extraPagesListado()));
+            // cambiar el titulo en la segunda celdea de la primera fila de la tabla 
+            extPagElem.stack[0].table.body[0][1].text = "Num.";
+        } else {
+            extPagElem = JSON.parse(JSON.stringify(tablaPDF()));
+        }
+
+        extPagElem.stack[0].table.body[0][0].text = tituloTabla;
+        extPagElem.stack.push(tablaPDF);
         extraPages.push(extPagElem);
-
     });
 
-    const totalRow = estudioSumarioCont.querySelector("table tbody tr");
+    // --- Fila de totales ---
+    if (seccion === "estudio") {
+        // Totales por signalTypes, como en tu código original
+        const totalRow = estudioSumarioCont.querySelector("table tbody tr");
+        let tablaTotales = cuerpoTablaPDF(anchosCols, nombresCols, seccion);
+        tablaTotales.layout = cuerpoTablaPDF(anchosCols, nombresCols, seccion).layout;
 
-    // let tablaTotales = JSON.parse(JSON.stringify(tablaSig()));
-    let tablaTotales = JSON.parse(JSON.stringify(tablaSig()));
-    tablaTotales.layout = (tablaSig()).layout;
+        let numeroTotalSeñales = [];
+        signalTypes.forEach(sig => {
+            const celdaSenial = totalRow.querySelector(`.${sig}`);
+            numeroTotalSeñales.push(celdaSenial?.textContent || "");
+        });
 
-    let numeroTotalSeñales = [];
-    signalTypes.forEach(sig => {
-        const celdaSenial = totalRow.querySelector(`.${sig}`);
-        numeroTotalSeñales.push(celdaSenial?.textContent || "");
-    });
+        tablaTotales.table.body.push(["", "", ...numeroTotalSeñales]);
 
-    tablaTotales.table.body.push(["", "", ...numeroTotalSeñales]);
+        let extPagElemTotal = JSON.parse(JSON.stringify(tablaPDF()));
+        extPagElemTotal.stack[0].table.body[0][0].text = "TOTAL";
+        extPagElemTotal.stack.push(tablaTotales);
+        extraPages.push(extPagElemTotal);
 
-    let extPagElemTotal = JSON.parse(JSON.stringify(extraPagesElem()));
-    extPagElemTotal.stack[0].table.body[0][0].text = "TOTAL";
-    extPagElemTotal.stack.push(tablaTotales);
-    extraPages.push(extPagElemTotal);
+    }
 
-    let docDefinition = docDef();
-    docDefinition.content = docDefinition.content.concat(extraPages);
-    pdfMake.createPdf(docDefinition).download(portadaSelProyecSelect.value + ' - Listado de Puntos.pdf');
+    // Generar el PDF final
 
+    objDocumento.content = objDocumento.content.concat(extraPages);
+    pdfMake.createPdf(objDocumento).download(`${nombreProyectoActual} - ${seccion}.pdf`);
 }
 
-function tablaSig() {
-    return {
-        table: {
-            widths: anchosColumnas,
-            body: [nombresColumnas]
-        },
-        alignment: 'center',
-        margin: [10, 0, 10, 50],
-        layout: {
-            hLineWidth: function (i, node) {
-                return (i === 1) ? 1 : 0; // línea sólo bajo la fila 1 (header)
-            },
-            vLineWidth: function (i, node) {
-                return (i >= 2) ? 1 : 0; // línea vertical sólo entre columnas desde la 2
-            },
-            hLineColor: function (i, node) {
-                return (i === 1) ? '#AAA' : null;
-            },
-            vLineColor: function (i, node) {
-                return (i >= 2) ? '#AAA' : null;
-            },
-            paddingLeft: function (i, node) { return 4; },
-            paddingRight: function (i, node) { return 4; },
-        },
-    };
-}
 
-function docDef() {
+// portada del documento y estilo general
+function docDef(seccion) {
     return {
         // Portada
         content: [
             {
-                text: facilityName,
+                text: nombreProyectoActual,
                 style: 'header',
                 margin: [0, 200, 0, 20],
                 alignment: 'center'
             },
             {
-                text: 'Listado de puntos de control',
+                text: `${seccion.charAt(0).toUpperCase() + seccion.slice(1).toLowerCase()} de puntos de control`,
                 style: 'subheader',
                 alignment: 'center'
             },
             {
-                text: 'Fecha creacion: ' + printDate,
+                text: 'Fecha creacion: ' + new Date().toLocaleDateString(),
                 margin: [0, 20, 0, 0],
                 alignment: 'center'
             }
@@ -173,7 +177,7 @@ function docDef() {
             return {
                 margin: [40, 20, 40, 10],
                 stack: [
-                    { text: headerText, fontSize: 10, bold: true, alignment: 'right', margin: [0, 5, 0, 0] },
+                    { text: nombreProyectoActual, fontSize: 10, bold: true, alignment: 'right', margin: [0, 5, 0, 0] },
                     { canvas: [{ type: 'line', x1: 0, y1: 0, x2: 515, y2: 0, lineWidth: 0.5 }] },
                 ]
             };
@@ -203,7 +207,7 @@ function docDef() {
                         columns: [
                             { fontSize: 8, alignment: 'left', margin: [0, 0, 40, 0], text: [easyPie], },
                             { fontSize: 8, alignment: 'center', margin: [0, 0, 0, 0], text: `${currentPage - 1} de ${pageCount - 1}`, },
-                            { fontSize: 8, alignment: 'right', margin: [0, 0, 0, 0], text: printDate, },
+                            { fontSize: 8, alignment: 'right', margin: [0, 0, 0, 0], text: new Date().toLocaleDateString(), },
                         ]
                     }
                 ]
@@ -213,29 +217,71 @@ function docDef() {
     };
 }
 
-function extraPagesElem() {
+/**
+ * Genera un bloque de tabla para PDF con un título y subtítulos (columnas de señales).
+ * @param {string} titulo - El texto que se mostrará como título de la tabla.
+ * @param {string[]} subtitulos - Array de subtítulos (por ejemplo nombres de señales) que se mostrarán en la primera fila.
+ * @returns {object} Objeto de definición de tabla para pdfMake, con formato y estilos aplicados.
+ */
+function tablaPDF(titulo, subtitulos, filaTipo) {
+
+    // la tablaPDF es un stack indibisible compuesto por 2 tablas:
+    // - titulo y subtitulos (de las columnas a la derecha)
+    // - el resto de filas que es el listado de señales
+
     return {
         unbreakable: true,
         stack: [
             {
                 table: {
-                    widths: ['*'],
+                    widths: ['*', ...Array(subtitulos.length).fill(28)],
                     body: [
                         [
                             {
-                                text: 'NombreTabla',
+                                text: titulo,
                                 fontSize: 18,
                                 bold: true,
-                                margin: [10, 5, 10, 0]
-                            }
-                        ]
+                                margin: [10, 5, 0, 0],
+                            },
+                            ...signalTypes.map(sig => ({
+                                text: sig,
+                                alignment: 'center', // ← corregido
+                                margin: [-8, 12, 0, 0],
+                            })),
+                        ],
                     ]
                 },
-                layout: 'noBorders',
+                layout: {
+                    // Línea horizontal bajo la fila 1
+                    hLineWidth: function (i, node) {
+                        return (i === 1) ? 1 : 0;
+                    },
+                    hLineColor: function (i, node) {
+                        return (i === 1) ? '#AAA' : null;
+                    }
+                },
                 fillColor: colorCabeceraTablasPDF,
-                margin: [10, 0, 10, 0]
-            }
+            },
+            {
+                table: {
+                    widths: [28, '*', ...Array(filaTipo.length - 2).fill(28)],
+                    body: [filaTipo],
+                },
+                alignment: 'center',
+                layout: {
+                    // lineas verticales a partir de la columna 2
+                    vLineWidth: function (i, node) {
+                        return (i >= 2) ? 1 : 0;
+                    },
+                    vLineColor: function (i, node) {
+                        return (i >= 2) ? '#AAA' : null;
+                    },
+                    // separacion lateral
+                    paddingLeft: function (i, node) { return 4; },
+                    paddingRight: function (i, node) { return 4; },
+                },
+            },
         ],
+        margin: [10, 0, 10, 50],
     }
 }
-
