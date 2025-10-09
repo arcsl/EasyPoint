@@ -734,7 +734,6 @@ function procesaNombres(bName, bCant, eName, eCant) {
     return resultado;
 }
 
-
 function writeSignals() {
 
     listadoSenialesCont.innerHTML = "";
@@ -784,11 +783,13 @@ function writeSignals() {
 
         function crearFilaSenial(listaSenial) {
 
+            if (listaSenial.Numero === 0) return;
+
             const indexListaSenial = table.querySelector("tbody").querySelectorAll("tr").length;
 
             const row = document.createElement('tr');
             tbody.appendChild(row);
-            // tbody.insertBefore(row, tbody.lastElementChild);
+            row.Numero = listaSenial.Numero;
 
             const celdaEstadoAsignacion = document.createElement('td');
             celdaEstadoAsignacion.classList.add("w3-pale-yellow");

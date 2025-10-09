@@ -22,7 +22,7 @@ function crearCSV(seccion) {
                         const inputs = listaCeldas[1].querySelectorAll("input");
                         if (inputs) {
                             if (inputs.length > 1) {
-                                lineasCSV.push(inputs[0].value.trim() + ";" + inputs[1].value.trim());
+                                lineasCSV.push(";" + inputs[1].value.trim() + ";" + inputs[2].value.trim() + ";" + fila.Numero);
                             }
                         }
                     }
