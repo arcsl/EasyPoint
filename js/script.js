@@ -620,7 +620,7 @@ function asignarValoresListado() {
 
         bloque.Elementos.forEach(elemento => {
 
-            if (elemento.Cantidad > 0) {
+            if (elemento.Checked) {
 
                 const optElegida = elemento.Opciones[elemento.Opcion];
 
@@ -782,8 +782,6 @@ function writeSignals() {
         listaSeniales?.forEach?.(crearFilaSenial);
 
         function crearFilaSenial(listaSenial) {
-
-            if (listaSenial.Numero === 0) return;
 
             const indexListaSenial = table.querySelector("tbody").querySelectorAll("tr").length;
 
