@@ -160,6 +160,14 @@ function populateCabeceraYPie() {
     estudioSumarioCont.appendChild(estudioSumarioSenialesTable);
     estudioSumarioSenialesTable.appendChild(totalHeader());
     estudioSumarioSenialesTable.appendChild(totalBody());
+
+    // poblar pie con sumatorio de señales en listado
+    const listadoSumarioSenialesTable = document.createElement("table");
+    listadoSumarioSenialesTable.classList = "w3-table w3-bordered w3-pale-green w3-margin-top w3-margin-bottom";
+    listadoSumarioCont.appendChild(listadoSumarioSenialesTable);
+    listadoSumarioSenialesTable.appendChild(totalHeader());
+    listadoSumarioSenialesTable.appendChild(totalBody());
+
 }
 
 /* ------------------------- ESTUDIO ------------------------- */
@@ -231,7 +239,7 @@ function addBlock(bloque) {
     addBlockHeader(bloque, table);
     addBlockBody(bloque, table);
 
-    updateSummary();
+    updateSummaryEstudio();
 
     estudioBloqSelect.focus();
 
@@ -301,7 +309,7 @@ function addBlockHeader(bloque, table) {
 
         // actualizar botones mover y sumatorio
         disableFirstAndLastMoveBlockButtons();
-        updateSummary();
+        updateSummaryEstudio();
 
     });
 
@@ -414,7 +422,7 @@ function addFilaBody(elemento, tBody, bloque) {
         row.remove();
 
         // actualizar sumatorio
-        updateSummary();
+        updateSummaryEstudio();
     });
 
     checkbox.type = "checkbox";
@@ -427,7 +435,7 @@ function addFilaBody(elemento, tBody, bloque) {
         }
         mostrarOcultarInputsYSelects(row, checkbox.checked);
         calculaSeniales(row, elemento, bloque, checkbox.checked);
-        updateSummary();
+        updateSummaryEstudio();
         proyectoNoGuardado();
     });
 
@@ -451,7 +459,7 @@ function addFilaBody(elemento, tBody, bloque) {
     numberInput.addEventListener("change", () => {
         elemento.Cantidad = numberInput.value * 1;
         calculaSeniales(row, elemento, bloque, checkbox.checked);
-        updateSummary();
+        updateSummaryEstudio();
         proyectoNoGuardado();
     });
 
@@ -473,6 +481,7 @@ function addFilaBody(elemento, tBody, bloque) {
             elemento.Opcion = select.selectedIndex;
             calculaSeniales(row, elemento, bloque, checkbox.checked);
             proyectoNoGuardado();
+            updateSummaryEstudio();
         });
 
     } else {
@@ -526,7 +535,7 @@ function addFilaBody(elemento, tBody, bloque) {
 
 }
 
-function updateSummary() {
+function updateSummaryEstudio() {
 
     const sumTableBodyRow = estudioSumarioCont.querySelector("table tbody tr");
     sumTableBodyRow.innerHTML = "";
@@ -637,11 +646,20 @@ function asignarValoresListado() {
 
                         const { Nombre, Tipo, ...senialParaListado } = structuredClone(senialesDeEsquema);
 
-                        senialParaListado.Linea1 = (Nombre + " " + nombreProcesado).trim().toUpperCase();
+                        const textoCompuesto = ((Nombre + " " + nombreProcesado).trim()).toLowerCase();
 
-                        // TODO: Esto es un poco ñapa pero me sirve para los esquemas de ARC
+                        // Primera letra en mayuscula
+                        const primMayus = textoCompuesto[0].toUpperCase() + textoCompuesto.slice(1);
+
+                        // Abreviamos textos genericos
+                        senialParaListado.Linea1 = primMayus
+                            .replace("Marcha-paro", "M/P")
+                            .replace("M/p", "M/P")
+                            .replace("Temperatura", "Temp");
+
+                        // Añadir linea2 solo en ciertos casos
                         if (Tipo === "ED" && senialParaListado.Opciones?.[0]?.toUpperCase().startsWith("EXT")) {
-                            senialParaListado.Linea2 = "(CONTACTO LIBRE DE POTENCIAL)";
+                            senialParaListado.Linea2 = "(Contacto libre de potencial)";
                         }
 
                         proyectoActual.Listado[Tipo].push(senialParaListado);
@@ -653,7 +671,6 @@ function asignarValoresListado() {
     });
 
     proyectoNoGuardado();
-
 
 }
 
@@ -754,7 +771,6 @@ function writeSignals() {
 
         const rowHead = document.createElement('tr');
         thead.appendChild(rowHead);
-        thead.classList.add("w3-pale-green");
 
         const celda = document.createElement('th');
         celda.colSpan = 2;
@@ -776,6 +792,7 @@ function writeSignals() {
             proyectoNoGuardado();
             crearFilaSenial(listaSenial);
             renumerarFilas();
+            updateSummaryListado();
         });
 
         // crear una fila por cada senial del array
@@ -804,10 +821,11 @@ function writeSignals() {
                 proyectoNoGuardado();
                 row.remove();
                 renumerarFilas();
+                updateSummaryListado();
             });
 
             const labelNumSenial = document.createElement('label');
-            labelNumSenial.innerText = signalType + "_" + (indexListaSenial + 1).toString().padStart(2, 0);
+            labelNumSenial.innerText = (indexListaSenial + 1).toString().padStart(2, '0');
             celdaEstadoAsignacion.appendChild(labelNumSenial);
 
             const celdaTextos = document.createElement('td');
@@ -863,6 +881,11 @@ function writeSignals() {
                 proyectoNoGuardado();
             });
 
+            const labelCantSenial = document.createElement('label');
+            labelCantSenial.innerText = listaSenial.Numero;
+            celdaTextos.appendChild(labelCantSenial);
+
+
         }
 
         function renumerarFilas() {
@@ -870,14 +893,36 @@ function writeSignals() {
             filas.forEach((fila, i) => {
                 const label = fila.querySelector("td:first-child label");
                 if (label) {
-                    label.innerText = `${signalType}_${(i + 1).toString().padStart(2, '0')}`;
+                    label.innerText = (i + 1).toString().padStart(2, '0');
                 }
             });
         }
 
     });
+
+    updateSummaryListado();
+
 }
 
+function updateSummaryListado() {
+
+    const sumTableBodyRow = listadoSumarioCont.querySelector("table tbody tr");
+
+    const totalGlobal = Array(signalTypes.length).fill(0);
+
+    const tables = listadoSenialesCont.querySelectorAll("table");
+    tables.forEach((table, indexTable) => {
+        const rows = table.querySelectorAll("tbody tr");
+        rows.forEach(row => {
+            totalGlobal[indexTable] += Number(row.Numero);
+        });
+    });
+
+    const celdasTotales = Array.from(sumTableBodyRow.querySelectorAll('td'));
+
+    celdasTotales.forEach((celda, i) => celda.innerHTML = totalGlobal[i].toString());
+
+}
 
 /* ------------------------- AUXILIARES ------------------------- */
 function inputNombre(texto) {

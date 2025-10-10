@@ -5,6 +5,19 @@
     width: 1000px;
 }
 
+/* ---------- LISTADO PIE ---------- */
+#listadoSumarioCont tr> :first-child {
+    width: 800px;
+}
+
+#listadoSumarioCont tr> :not(:first-child) {
+    text-align: center;
+}
+
+#listadoSepPie {
+    height: 110px;
+}
+
 /* ---------- LISTADO CABECERA ---------- */
 #listadoNombProyecLabel {
     width: 415px;
@@ -16,39 +29,43 @@
     width: 130px !important;
 }
 
-/* ---------- LISTADO SEPARADOR SUPERIOR ---------- */
 #listadoSepTop {
     height: 117px;
 }
 
 /* ---------- LISTADO TABLAS DE SEÑALES ---------- */
-#listado table * {
+#listadoSenialesCont table:nth-of-type(even) {
+    background-color: #EEE;
+}
+
+#listadoSenialesCont table * {
     padding: 0;
 }
 
-#listado thead>tr {
+#listadoSenialesCont thead>tr {
     height: 50px;
 }
 
-#listado tbody>tr {
+#listadoSenialesCont tbody>tr {
     height: 40px;
 }
 
-#listado th,
-#listado td {
+#listadoSenialesCont th,
+#listadoSenialesCont td {
     vertical-align: middle;
 }
 
-#listado tbody * {
+#listadoSenialesCont tbody * {
     font-size: 1em;
 }
 
-#listado tbody tr td:first-child {
-    width: 110px;
+#listadoSenialesCont tbody tr td:first-child {
+    width: 75px;
     text-align: center;
 }
 
-#listado table button {
+/* botones de las filas */
+#listadoSenialesCont table button {
     margin: 0 10px 2px 0;
     width: 20px;
     height: 20px;
@@ -57,17 +74,18 @@
     font-weight: bold;
 }
 
-#listado thead button {
+/* botones de la primera fila */
+#listadoSenialesCont thead button {
     margin-left: 16px;
 }
 
-#listado tbody button {
+#listadoSenialesCont tbody button {
     padding-bottom: 2px;
 }
 
-#listado tbody>tr>td:nth-child(2)>label,
-#listado tbody>tr>td:nth-child(2)>select,
-#listado tbody>tr>td:nth-child(2)>input {
+#listadoSenialesCont tbody>tr>td:nth-child(2)>label,
+#listadoSenialesCont tbody>tr>td:nth-child(2)>select,
+#listadoSenialesCont tbody>tr>td:nth-child(2)>input {
     width: 125px;
     height: 1.7em;
     padding-left: 5px;
@@ -80,16 +98,16 @@
     border: none;
 }
 
-#listado tbody>tr>td:nth-child(2)>input {
-    width: 300px;
+#listadoSenialesCont tbody>tr>td:nth-child(2)>input {
+    width: 320px;
 }
 
-#listado tbody>tr>td:nth-child(2)> :nth-child(2) {
+#listadoSenialesCont tbody>tr>td:nth-child(2)>label {
+    width: 20px;
+}    
+
+#listadoSenialesCont tbody>tr>td:nth-child(2)> :nth-child(2) {
     padding: 0;
     text-align: center;
     width: 50px;
-}
-
-#listadoSepPie{
-    height: 25px;
 }

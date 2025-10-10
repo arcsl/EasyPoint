@@ -4,17 +4,14 @@ const signalTypes = ["EA", "ED", "SA", "SD"];
 const signalTexts = ["Entradas Analógicas", "Entradas Digitales", "Salidas Analógicas", "Salidas Digitales"];
 
 // En el array estan las diferentes opciones de dibujar la señal en el esquema
-// El nombre del bloque a llamar será el nombre de la propiedad + el valor elegido. p ej  ED_1 + "Contactor" = ED_1_Contactor
+// El nombre del bloque a llamar será el Tipo + el numero + opcion elejida: ej  ED + 1 + "Contactor" = ED_1_Contactor
 const esq = {
 
-    // TODO: valorar si es mejor hacer que los objetos tengan la estructira { Nombre: "EA_1", Opciones :["Pasiva",] } 
-    // para poder tener un acceso mas facil y no tener que iterar las propiedades buscando cual es el nombre
-
     // Vacio para añadir señales en listado de señales
-    VacioEA_1:  (Nombre = "") => ({                     Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa", "Pasiva", "Activa"], }),
-    VacioED_1:  (Nombre = "") => ({                     Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa", "Relé", "Contactor", "Térmico",], }),
-    VacioSA_1:  (Nombre = "") => ({                     Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa", "Actuador",], }),
-    VacioSD_1:  (Nombre = "") => ({                     Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa", "Relé", "Contactor",], }),
+    VacioEA_1: (Nombre = "") => ({ Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa", "Pasiva", "Activa"], }),
+    VacioED_1: (Nombre = "") => ({ Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa", "Relé", "Contactor", "Térmico",], }),
+    VacioSA_1: (Nombre = "") => ({ Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa", "Actuador",], }),
+    VacioSD_1: (Nombre = "") => ({ Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa", "Relé", "Contactor",], }),
 
     //EA
     PasivaEA_1: (Nombre = "") => ({ Nombre, Tipo: "EA", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Pasiva",], }),
@@ -25,15 +22,15 @@ const esq = {
     //ED
     SimpleED_1: (Nombre = "") => ({ Nombre, Tipo: "ED", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa",], }),
     EntradED_1: (Nombre = "") => ({ Nombre, Tipo: "ED", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa", "Relé",], }),
-    MotorED_1:  (Nombre = "") => ({ Nombre, Tipo: "ED", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa", "Relé", "Contactor", "Térmico",], }),
+    MotorED_1: (Nombre = "") => ({ Nombre, Tipo: "ED", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa", "Relé", "Contactor", "Térmico",], }),
     //SA
     SimpleSA_1: (Nombre = "") => ({ Nombre, Tipo: "SA", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa",], }),
     ActuadSA_1: (Nombre = "") => ({ Nombre, Tipo: "SA", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa", "Actuador",], }),
     //SD
     SimpleSD_1: (Nombre = "") => ({ Nombre, Tipo: "SD", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa",], }),
     SalidaSD_1: (Nombre = "") => ({ Nombre, Tipo: "SD", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa", "Relé",], }),
-    MotorSD_1:  (Nombre = "") => ({ Nombre, Tipo: "SD", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa", "Relé", "Contactor",], }),
-    MotorSD_3:  (Nombre = "") => ({ Nombre, Tipo: "SD", Numero: 3, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Motor3V",], }),
+    MotorSD_1: (Nombre = "") => ({ Nombre, Tipo: "SD", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa", "Relé", "Contactor",], }),
+    MotorSD_3: (Nombre = "") => ({ Nombre, Tipo: "SD", Numero: 3, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Motor3V",], }),
     ActuadSD_1: (Nombre = "") => ({ Nombre, Tipo: "SD", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa", "Relé", "Simple", "Conmutada",], }),
     ActuadSD_2: (Nombre = "") => ({ Nombre, Tipo: "SD", Numero: 2, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa", "Actuador",], }),
 }
@@ -64,11 +61,12 @@ const opt = {
     ActuadorTN0M: (Nombre) => ({ Nombre, Seniales: { "SD": 1, }, Esquema: [esq.ActuadSD_1(),], }),
     ActuadorTN1M: (Nombre) => ({ Nombre, Seniales: { "ED": 1, "SD": 1, }, Esquema: [esq.EntradED_1("FC Abierto"), esq.ActuadSD_1(),], }),
     ActuadorTN2M: (Nombre) => ({ Nombre, Seniales: { "ED": 2, "SD": 1, }, Esquema: [esq.EntradED_1("FC Abierto"), esq.EntradED_1("FC Cerrado"), esq.ActuadSD_1(),], }),
+
     //motor
     MPyEstado: (Nombre) => ({ Nombre, Seniales: { "ED": 1, "SD": 1, }, Esquema: [esq.EntradED_1("Estado"), esq.SalidaSD_1("M/P"),], }),
     MotorToNa: (Nombre) => ({ Nombre, Seniales: { "ED": 1, "SD": 1, }, Esquema: [esq.MotorED_1("Estado"), esq.MotorSD_1("M/P"),], }),
-    MPEst010V: (Nombre) => ({ Nombre, Seniales: { "ED": 1, "SD": 1, }, Esquema: [esq.EntradED_1("Estado"), esq.SimpleSA_1("Modulación"), esq.SalidaSD_1("M/P"),], }),
-    Motor010V: (Nombre) => ({ Nombre, Seniales: { "ED": 1, "SA": 1, "SD": 1 }, Esquema: [esq.MotorED_1("Estado"), esq.SimpleSA_1("Modulación"), esq.MotorSD_1("M/P"),], }),
+    MPEst010V: (Nombre) => ({ Nombre, Seniales: { "ED": 1, "SA": 1, "SD": 1, }, Esquema: [esq.EntradED_1("Estado"), esq.SimpleSA_1("Modulación"), esq.SalidaSD_1("M/P"),], }),
+    Motor010V: (Nombre) => ({ Nombre, Seniales: { "ED": 1, "SA": 1, "SD": 1, }, Esquema: [esq.MotorED_1("Estado"), esq.SimpleSA_1("Modulación"), esq.MotorSD_1("M/P"),], }),
     Motor3vel: (Nombre) => ({ Nombre, Seniales: { "SD": 3 }, Esquema: [esq.MotorSD_3(),], }),
 }
 
@@ -152,10 +150,11 @@ function blocks() {
             "Nombre": "Aerotermia",
             "Elementos": [
                 elem.SondaTermos("Temperatura", 1),
-                elem.MPyEstado("Marcha-Paro y alarma", 1),
-                elem.SimpleSA("Modulación / Consigna", 0),
-                elem.MotorModul("Bomba", 1),
-                elem.SimpleED("Cambio de regimen externo", 0),
+                elem.SimpleSD("Marcha-Paro", 1),
+                elem.AlamEstTerceros("Estado / Alarma", 1),
+                elem.ModulaCalde("Modulación / Consigna", 0),
+                elem.MotorModul("Bomba", 0),
+                elem.SimpleSD("Cambio de regimen", 1),
                 elem.ValvulaToNa("Válvula Calor / Frío / ACS", 0),
                 elem.SensorPres("Control Presión", 0),
             ],

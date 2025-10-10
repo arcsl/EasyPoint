@@ -11,40 +11,47 @@ const easyPie = {
 /* ------------------------- FUNCIONES ------------------------- */
 function crearPDF(seccion) {
 
-    const objDocumento = docDef(seccion);
+    const docPDF = docPDFDef(nombreProyectoActual, seccion); // creamos el objeto principal con la estructura para pasarselo a PDFmake
 
-    let textosColumnas = [];
-    let tables = [];
-    let anchosCols = [];
+    let tables = [];            // coleccion de tablas a iterar en funcion a la seccion elegida
+    let tilulosColumnas = [];    // titulos de cabecera de cada columna
 
-    // Configuración según sección
     if (seccion === "estudio") {
-        textosColumnas = ["", "", ...signalTypes]; // cabecera de tablas de estudio
-        tables = estudioBloqCont.querySelectorAll("table"); // tablas de estudio
+        tilulosColumnas = ["", "", ...signalTypes];
+        tables = estudioBloqCont.querySelectorAll("table");
+
     } else if (seccion === "listado") {
-        textosColumnas = ["", ""];
-        tables = document.querySelectorAll("#listadoSenialesCont table");
-        anchosCols = ['*', 36];
+        tilulosColumnas = ["", "", "Num."];
+        tables = listadoSenialesCont.querySelectorAll("table");
+
     } else {
+        alert("❌ Error: no se pudo generar el PDF");
         console.error("Sección desconocida:", seccion);
         return;
     }
 
-    // Construcción de nombres de columnas para PDF
-    let nombresCols = textosColumnas.map(texto => ({ text: texto, fillColor: colorCabeceraTablasPDF }));
-
-    let extraPages = [{ pageBreak: 'before', text: null }];
-
     tables.forEach(table => {
 
-        // Crear tabla PDF con anchos y nombres de columnas específicos pero copiando la funcion layout
-        let tablaPDF = JSON.parse(JSON.stringify(cuerpoTablaPDF(anchosCols, nombresCols, seccion)));
-        tablaPDF.layout = (cuerpoTablaPDF(anchosCols, nombresCols, seccion)).layout;
+        let tituloTabla = "";
 
-        const bodyRows = table.querySelectorAll("tbody tr");
+        if (seccion === "estudio") {
+            const cabeceraInputs = table.querySelectorAll('thead th input');
+            const nombreBloque = cabeceraInputs[0]?.value || "Tabla";
+            const cantidadBloque = Number(cabeceraInputs[1]?.value) || 1;
+            tituloTabla = cantidadBloque > 1 ? `${nombreBloque} (x${cantidadBloque})` : nombreBloque;
 
-        bodyRows.forEach(linea => {
+        } else if (seccion === "listado") {
+            tituloTabla = table.querySelector('thead th label')?.textContent || "Tabla";
+        }
+
+        const tablaPDF = tablaPDFdef(tituloTabla, [...tilulosColumnas]); // creamos el objeto tabla 
+
+        table.querySelectorAll("tbody tr").forEach((linea, indexLinea) => {
+
+            const filasPDF = filasPDFdef(tilulosColumnas.length); // creamos el objeto filas 
+
             if (seccion === "estudio") {
+
                 const checkbox = linea.querySelector('input[type="checkbox"]');
                 if (!checkbox || !checkbox.checked) return;
 
@@ -60,89 +67,69 @@ function crearPDF(seccion) {
 
                 const celdaNombre = { text: textoCeldaNombre, alignment: 'left' };
 
-                let numeroSeñales = [];
-                signalTypes.forEach(sig => {
-                    const celdaSenial = linea.querySelector(`.${sig}`);
-                    numeroSeñales.push(celdaSenial?.textContent || "");
-                });
+                let numeroSeñales = signalTypes.map(sig => linea.querySelector(`.${sig}`)?.textContent || "");
 
-                tablaPDF.table.body.push([numeroSenial, celdaNombre, ...numeroSeñales]);
+                filasPDF.table.body.push([...[numeroSenial, celdaNombre, ...numeroSeñales]]); // añadimos la fila al objeto filas
 
             } else if (seccion === "listado") {
+                const nombreSenial = linea.querySelector('td:nth-child(2) input:nth-of-type(2)').value;                // segundo input dentro del segundo td
+                const cantidadSenial = linea.Numero;
+                filasPDF.table.body.push([...[indexLinea + 1, { text: nombreSenial, alignment: 'left' }, cantidadSenial]]); // añadimos la fila al objeto filas
 
-                // Extraemos valor del segundo input dentro del segundo td
-                const tdSegundo = linea.children[1];
-                const inputs = tdSegundo.querySelectorAll('input');
-                const valorSegundoInput = inputs[1]?.value || "";
-
-                // Fila PDF: [valorSegundoInput, linea.Numero]
-                tablaPDF.table.body.push([
-                    { text: valorSegundoInput, alignment: 'left' },
-                    { text: linea.Numero, alignment: 'center' }
-                ]);
             }
+
+            tablaPDF.stack.push(filasPDF); // añadimos el objeto filas al objeto tabla
+
         });
 
-        // Título de tabla
-        let tituloTabla = "";
-        if (seccion === "estudio") {
-            const nombreBloque = table.querySelector('[name="nombreBloque"]')?.value || "";
-            const cantidadBloque = table.querySelector('[name="cantidadBloque"]')?.value || "";
-            tituloTabla = cantidadBloque > 1 ? `${nombreBloque} (x${cantidadBloque})` : nombreBloque;
-        } else if (seccion === "listado") {
-            tituloTabla = table.querySelector('thead th label')?.textContent || "Tabla";
-        }
+        docPDF.content.push(tablaPDF); // añadimos el objeto tabla al objeto documento
 
-        let extPagElem;
-        if (seccion === "listado") {
-            extPagElem = JSON.parse(JSON.stringify(extraPagesListado()));
-            // cambiar el titulo en la segunda celdea de la primera fila de la tabla 
-            extPagElem.stack[0].table.body[0][1].text = "Num.";
-        } else {
-            extPagElem = JSON.parse(JSON.stringify(tablaPDF()));
-        }
-
-        extPagElem.stack[0].table.body[0][0].text = tituloTabla;
-        extPagElem.stack.push(tablaPDF);
-        extraPages.push(extPagElem);
     });
 
     // --- Fila de totales ---
-    if (seccion === "estudio") {
-        // Totales por signalTypes, como en tu código original
-        const totalRow = estudioSumarioCont.querySelector("table tbody tr");
-        let tablaTotales = cuerpoTablaPDF(anchosCols, nombresCols, seccion);
-        tablaTotales.layout = cuerpoTablaPDF(anchosCols, nombresCols, seccion).layout;
 
-        let numeroTotalSeñales = [];
-        signalTypes.forEach(sig => {
-            const celdaSenial = totalRow.querySelector(`.${sig}`);
-            numeroTotalSeñales.push(celdaSenial?.textContent || "");
-        });
+    // elejimos la seccion en la que leer los totales
+    const totalRow = seccion === "estudio"
+        ? estudioSumarioCont.querySelector("table tbody tr")
+        : listadoSumarioCont.querySelector("table tbody tr");
 
-        tablaTotales.table.body.push(["", "", ...numeroTotalSeñales]);
+    // montamos el array con el total de cada señal
+    let numeroTotalSeñales = [];
+    signalTypes.forEach(sig => {
+        const celdaSenial = totalRow.querySelector(`.${sig}`);
+        numeroTotalSeñales.push(celdaSenial?.textContent || "");
+    });
 
-        let extPagElemTotal = JSON.parse(JSON.stringify(tablaPDF()));
-        extPagElemTotal.stack[0].table.body[0][0].text = "TOTAL";
-        extPagElemTotal.stack.push(tablaTotales);
-        extraPages.push(extPagElemTotal);
+    const tablaTotalesPDF = tablaPDFdef("Totales", ["", "", ...signalTypes]); // creamos el objeto tabla con la cabecera de los tipos de señal
+    tablaTotalesPDF.stack[0].table.body.push(                           // añadimos a la tabla el objeto representando la fila con el total de cada tipo de señal
+        [
+            {
+                text: "",
+                fontSize: 12,
+                colSpan: 2,
+            },
+            {}, // celda vacia para el colspan
+            ...numeroTotalSeñales.map(numero => ({
+                text: numero,
+                alignment: 'center', // ← corregido
+                margin: [-8, 4, 0, 4],
+            })),
+        ],
+    );
 
-    }
+    docPDF.content.push(tablaTotalesPDF); // añadimos el objeto tablaTotalesPDF al objeto documento
+    pdfMake.createPdf(docPDF).download(`${nombreProyectoActual} - ${seccion}.pdf`);     // Generar el PDF final
 
-    // Generar el PDF final
-
-    objDocumento.content = objDocumento.content.concat(extraPages);
-    pdfMake.createPdf(objDocumento).download(`${nombreProyectoActual} - ${seccion}.pdf`);
 }
 
 
 // portada del documento y estilo general
-function docDef(seccion) {
+function docPDFDef(proyecto, seccion) {
     return {
         // Portada
         content: [
             {
-                text: nombreProyectoActual,
+                text: proyecto,
                 style: 'header',
                 margin: [0, 200, 0, 20],
                 alignment: 'center'
@@ -156,7 +143,11 @@ function docDef(seccion) {
                 text: 'Fecha creacion: ' + new Date().toLocaleDateString(),
                 margin: [0, 20, 0, 0],
                 alignment: 'center'
-            }
+            },
+            {
+                pageBreak: 'before',
+                text: null,
+            },
         ],
         defaultStyle: {
             color: '#003366',
@@ -223,7 +214,7 @@ function docDef(seccion) {
  * @param {string[]} subtitulos - Array de subtítulos (por ejemplo nombres de señales) que se mostrarán en la primera fila.
  * @returns {object} Objeto de definición de tabla para pdfMake, con formato y estilos aplicados.
  */
-function tablaPDF(titulo, subtitulos, filaTipo) {
+function tablaPDFdef(titulo, subtitulos) {
 
     // la tablaPDF es un stack indibisible compuesto por 2 tablas:
     // - titulo y subtitulos (de las columnas a la derecha)
@@ -234,17 +225,19 @@ function tablaPDF(titulo, subtitulos, filaTipo) {
         stack: [
             {
                 table: {
-                    widths: ['*', ...Array(subtitulos.length).fill(28)],
+                    widths: [28, '*', ...Array(subtitulos.length - 2).fill(28)],
                     body: [
                         [
                             {
                                 text: titulo,
-                                fontSize: 18,
+                                fontSize: 16,
                                 bold: true,
                                 margin: [10, 5, 0, 0],
+                                colSpan: 2,
                             },
-                            ...signalTypes.map(sig => ({
-                                text: sig,
+                            {}, // celda vacia para el colspan
+                            ...subtitulos.slice(2).map(sub => ({
+                                text: sub,
                                 alignment: 'center', // ← corregido
                                 margin: [-8, 12, 0, 0],
                             })),
@@ -252,36 +245,47 @@ function tablaPDF(titulo, subtitulos, filaTipo) {
                     ]
                 },
                 layout: {
+
+                    // lineas verticales no
+                    vLineWidth: function (i, node) { return 0; },
+                    vLineColor: function (i, node) { return null; },
+
                     // Línea horizontal bajo la fila 1
                     hLineWidth: function (i, node) {
                         return (i === 1) ? 1 : 0;
                     },
                     hLineColor: function (i, node) {
                         return (i === 1) ? '#AAA' : null;
-                    }
+                    },
                 },
                 fillColor: colorCabeceraTablasPDF,
             },
-            {
-                table: {
-                    widths: [28, '*', ...Array(filaTipo.length - 2).fill(28)],
-                    body: [filaTipo],
-                },
-                alignment: 'center',
-                layout: {
-                    // lineas verticales a partir de la columna 2
-                    vLineWidth: function (i, node) {
-                        return (i >= 2) ? 1 : 0;
-                    },
-                    vLineColor: function (i, node) {
-                        return (i >= 2) ? '#AAA' : null;
-                    },
-                    // separacion lateral
-                    paddingLeft: function (i, node) { return 4; },
-                    paddingRight: function (i, node) { return 4; },
-                },
-            },
+
         ],
         margin: [10, 0, 10, 50],
     }
+}
+
+function filasPDFdef(numeroColumnas) {
+    return {
+        table: {
+            widths: [28, '*', ...Array(numeroColumnas - 2).fill(28)],
+            body: [],
+        },
+        alignment: 'center',
+        layout: {
+
+            // lineas verticales a partir de la columna 2
+            vLineWidth: function (i, node) { return (i >= 2) ? 1 : 0; },
+            vLineColor: function (i, node) { return (i >= 2) ? '#AAA' : null; },
+
+            // Línea horizontal no
+            hLineWidth: function (i, node) { return 0; },
+            hLineColor: function (i, node) { return null; },
+
+            // separacion lateral
+            // paddingLeft: function (i, node) { return 14; },
+            // paddingRight: function (i, node) { return 14; },
+        },
+    };
 }

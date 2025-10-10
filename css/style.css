@@ -209,7 +209,7 @@ table tbody tr:last-child {
     display: none;
     position: absolute;
     top: 50px;
-    left: 590px;
+    left: 555px;
     z-index: 10000;
     background-color: white;
     border-radius: 8px;
