@@ -1,92 +1,12 @@
 {
   "Estudio": [
     {
-      "Nombre": "General",
-      "Elementos": [
-        {
-          "Nombre": "Temperatura Exterior",
-          "Cantidad": 1,
-          "Opciones": [
-            {
-              "Nombre": "Temperatura",
-              "Seniales": {
-                "EA": 1
-              },
-              "Esquema": [
-                {
-                  "Nombre": "",
-                  "Tipo": "EA",
-                  "Numero": 1,
-                  "Opciones": [
-                    "Pasiva"
-                  ]
-                }
-              ]
-            },
-            {
-              "Nombre": "Temp + Hume",
-              "Seniales": {
-                "EA": 2
-              },
-              "Esquema": [
-                {
-                  "Nombre": "",
-                  "Tipo": "EA",
-                  "Numero": 2,
-                  "Opciones": [
-                    "Activa"
-                  ]
-                }
-              ]
-            },
-            {
-              "Nombre": "Temp + CO2",
-              "Seniales": {
-                "EA": 2
-              },
-              "Esquema": [
-                {
-                  "Nombre": "",
-                  "Tipo": "EA",
-                  "Numero": 2,
-                  "Opciones": [
-                    "Activa"
-                  ]
-                }
-              ]
-            },
-            {
-              "Nombre": "Temp Hum CO2",
-              "Seniales": {
-                "EA": 3
-              },
-              "Esquema": [
-                {
-                  "Nombre": "",
-                  "Tipo": "EA",
-                  "Numero": 3,
-                  "Opciones": [
-                    "Activa"
-                  ]
-                }
-              ]
-            }
-          ],
-          "NombreUsuario": "Temperatura Exterior",
-          "Opcion": 0,
-          "Checked": true
-        }
-      ],
-      "id": "d9039a52-cec7-4a8f-bd6c-de7e3206a2da",
-      "NombreUsuario": "General",
-      "Cantidad": 1
-    },
-    {
       "Nombre": "Caldera",
       "Elementos": [
         {
           "Nombre": "Temperatura",
-          "Cantidad": 2,
+          "Cantidad": 1,
+          "Ref": "CaldTemp",
           "Opciones": [
             {
               "Nombre": "Temperatura",
@@ -98,6 +18,10 @@
                   "Nombre": "",
                   "Tipo": "EA",
                   "Numero": 1,
+                  "Linea1": "",
+                  "Linea2": "",
+                  "tagNumber": "",
+                  "Opcion": 0,
                   "Opciones": [
                     "Pasiva"
                   ]
@@ -114,6 +38,10 @@
                   "Nombre": "",
                   "Tipo": "ED",
                   "Numero": 1,
+                  "Linea1": "",
+                  "Linea2": "",
+                  "tagNumber": "",
+                  "Opcion": 0,
                   "Opciones": [
                     "Externa"
                   ]
@@ -121,13 +49,14 @@
               ]
             }
           ],
-          "NombreUsuario": "Temperatura ida y retorno",
+          "NombreUsuario": "Temp. Ida",
           "Opcion": 0,
           "Checked": true
         },
         {
           "Nombre": "Marcha-Paro",
           "Cantidad": 0,
+          "Ref": "CaldMaPa",
           "Opciones": [
             {
               "Nombre": "Externa",
@@ -139,6 +68,10 @@
                   "Nombre": "",
                   "Tipo": "SD",
                   "Numero": 1,
+                  "Linea1": "",
+                  "Linea2": "",
+                  "tagNumber": "",
+                  "Opcion": 0,
                   "Opciones": [
                     "Externa"
                   ]
@@ -153,6 +86,7 @@
         {
           "Nombre": "Estado / Alarma",
           "Cantidad": 1,
+          "Ref": "CaldEsAl",
           "Opciones": [
             {
               "Nombre": "Externa",
@@ -164,21 +98,26 @@
                   "Nombre": "",
                   "Tipo": "ED",
                   "Numero": 1,
+                  "Linea1": "",
+                  "Linea2": "",
+                  "tagNumber": "",
+                  "Opcion": 0,
                   "Opciones": [
                     "Externa",
-                    "Rele"
+                    "Relé"
                   ]
                 }
               ]
             }
           ],
-          "NombreUsuario": "Alarma",
+          "NombreUsuario": "Estado / Alarma",
           "Opcion": 0,
           "Checked": true
         },
         {
           "Nombre": "Modulación / Consigna",
           "Cantidad": 1,
+          "Ref": "CaldModu",
           "Opciones": [
             {
               "Nombre": "0..10Vcc",
@@ -190,6 +129,10 @@
                   "Nombre": "",
                   "Tipo": "SA",
                   "Numero": 1,
+                  "Linea1": "",
+                  "Linea2": "",
+                  "tagNumber": "",
+                  "Opcion": 0,
                   "Opciones": [
                     "Externa"
                   ]
@@ -206,6 +149,10 @@
                   "Nombre": "",
                   "Tipo": "SD",
                   "Numero": 2,
+                  "Linea1": "",
+                  "Linea2": "",
+                  "tagNumber": "",
+                  "Opcion": 0,
                   "Opciones": [
                     "Externa",
                     "Actuador"
@@ -223,6 +170,10 @@
                   "Nombre": "",
                   "Tipo": "SD",
                   "Numero": 1,
+                  "Linea1": "",
+                  "Linea2": "",
+                  "tagNumber": "",
+                  "Opcion": 0,
                   "Opciones": [
                     "Externa"
                   ]
@@ -230,13 +181,14 @@
               ]
             }
           ],
-          "NombreUsuario": "Consigna",
+          "NombreUsuario": "Modulación / Consigna",
           "Opcion": 0,
           "Checked": true
         },
         {
           "Nombre": "Bomba",
-          "Cantidad": 2,
+          "Cantidad": 1,
+          "Ref": "CaldBomb",
           "Opciones": [
             {
               "Nombre": "M/P y Estado",
@@ -249,20 +201,28 @@
                   "Nombre": "Estado",
                   "Tipo": "ED",
                   "Numero": 1,
+                  "Linea1": "",
+                  "Linea2": "",
+                  "tagNumber": "",
+                  "Opcion": 0,
                   "Opciones": [
                     "Externa",
-                    "Rele",
+                    "Relé",
                     "Contactor",
-                    "Termico"
+                    "Térmico"
                   ]
                 },
                 {
                   "Nombre": "M/P",
                   "Tipo": "SD",
                   "Numero": 1,
+                  "Linea1": "",
+                  "Linea2": "",
+                  "tagNumber": "",
+                  "Opcion": 0,
                   "Opciones": [
                     "Externa",
-                    "Rele",
+                    "Relé",
                     "Contactor"
                   ]
                 }
@@ -280,17 +240,25 @@
                   "Nombre": "Estado",
                   "Tipo": "ED",
                   "Numero": 1,
+                  "Linea1": "",
+                  "Linea2": "",
+                  "tagNumber": "",
+                  "Opcion": 0,
                   "Opciones": [
                     "Externa",
-                    "Rele",
+                    "Relé",
                     "Contactor",
-                    "Termico"
+                    "Térmico"
                   ]
                 },
                 {
                   "Nombre": "Modulación",
                   "Tipo": "SA",
                   "Numero": 1,
+                  "Linea1": "",
+                  "Linea2": "",
+                  "tagNumber": "",
+                  "Opcion": 0,
                   "Opciones": [
                     "Externa"
                   ]
@@ -299,9 +267,13 @@
                   "Nombre": "M/P",
                   "Tipo": "SD",
                   "Numero": 1,
+                  "Linea1": "",
+                  "Linea2": "",
+                  "tagNumber": "",
+                  "Opcion": 0,
                   "Opciones": [
                     "Externa",
-                    "Rele",
+                    "Relé",
                     "Contactor"
                   ]
                 }
@@ -315,6 +287,7 @@
         {
           "Nombre": "Válvula Aislamiento / Retorno",
           "Cantidad": 0,
+          "Ref": "CaldValv",
           "Opciones": [
             {
               "Nombre": "3 Puntos",
@@ -326,6 +299,10 @@
                   "Nombre": "",
                   "Tipo": "SD",
                   "Numero": 2,
+                  "Linea1": "",
+                  "Linea2": "",
+                  "tagNumber": "",
+                  "Opcion": 0,
                   "Opciones": [
                     "Externa",
                     "Actuador"
@@ -344,18 +321,26 @@
                   "Nombre": "FC Abierto",
                   "Tipo": "ED",
                   "Numero": 1,
+                  "Linea1": "",
+                  "Linea2": "",
+                  "tagNumber": "",
+                  "Opcion": 0,
                   "Opciones": [
                     "Externa",
-                    "Rele"
+                    "Relé"
                   ]
                 },
                 {
                   "Nombre": "",
                   "Tipo": "SD",
                   "Numero": 1,
+                  "Linea1": "",
+                  "Linea2": "",
+                  "tagNumber": "",
+                  "Opcion": 0,
                   "Opciones": [
                     "Externa",
-                    "Rele",
+                    "Relé",
                     "Simple",
                     "Conmutada"
                   ]
@@ -372,6 +357,10 @@
                   "Nombre": "",
                   "Tipo": "SA",
                   "Numero": 1,
+                  "Linea1": "",
+                  "Linea2": "",
+                  "tagNumber": "",
+                  "Opcion": 0,
                   "Opciones": [
                     "Externa",
                     "Actuador"
@@ -386,7 +375,8 @@
         },
         {
           "Nombre": "Control Humos",
-          "Cantidad": 1,
+          "Cantidad": 0,
+          "Ref": "CaldHumo",
           "Opciones": [
             {
               "Nombre": "Temperatura",
@@ -398,6 +388,10 @@
                   "Nombre": "",
                   "Tipo": "EA",
                   "Numero": 1,
+                  "Linea1": "",
+                  "Linea2": "",
+                  "tagNumber": "",
+                  "Opcion": 0,
                   "Opciones": [
                     "Pasiva"
                   ]
@@ -414,6 +408,10 @@
                   "Nombre": "",
                   "Tipo": "ED",
                   "Numero": 1,
+                  "Linea1": "",
+                  "Linea2": "",
+                  "tagNumber": "",
+                  "Opcion": 0,
                   "Opciones": [
                     "Externa"
                   ]
@@ -421,13 +419,14 @@
               ]
             }
           ],
-          "NombreUsuario": "Temperatura Humos",
+          "NombreUsuario": "Control Humos",
           "Opcion": 0,
-          "Checked": true
+          "Checked": false
         },
         {
           "Nombre": "Control Presión",
           "Cantidad": 0,
+          "Ref": "CaldPres",
           "Opciones": [
             {
               "Nombre": "Presostato",
@@ -439,6 +438,10 @@
                   "Nombre": "",
                   "Tipo": "ED",
                   "Numero": 1,
+                  "Linea1": "",
+                  "Linea2": "",
+                  "tagNumber": "",
+                  "Opcion": 0,
                   "Opciones": [
                     "Externa"
                   ]
@@ -455,6 +458,10 @@
                   "Nombre": "",
                   "Tipo": "EA",
                   "Numero": 1,
+                  "Linea1": "",
+                  "Linea2": "",
+                  "tagNumber": "",
+                  "Opcion": 0,
                   "Opciones": [
                     "Activa"
                   ]
@@ -467,138 +474,30 @@
           "Checked": false
         }
       ],
-      "id": "e52ca6aa-fe6d-4d91-9cce-7db740bc416a",
+      "Narrativa": {
+        "Descripción": "El conjunto de caldera[s]{MainBloc} constituye el elemento principal de producción térmica del sistema, aportando la energía necesaria a los distintos circuitos consumidores. El control será [manual | horario | demanda]{ModoControl} y, cuando proceda, se realizará regulación [todo/nada / modulante] en el quemador.",
+        "Elementos": [
+          "Caldera[s]{MainBloc} con capacidad de control [todo/nada / modulante].",
+          "Sonda[s]{CaldTemp} de temperatura de [impulsión / impulsión y retorno]{CaldTemp}.",
+          "Bomba[s]{CaldBomb} de circulación configurada[s]{CaldBomb} para funcionamiento [individual / alterno]{CaldBomb}.",
+          "Válvula motorizada de aislamiento / retorno{CaldValv}.",
+          "Sensor de presión del circuito{CaldPres}.",
+          "Señal[es]{CaldEsAl} de [alarma / estado y alarma]{CaldEsAl}.",
+          "[Control de temperatura de humos]{CaldHumo}."
+        ],
+        "Funcionamiento": "El arranque se producirá por [manual | horario | demanda]{Arranque}, verificándose previamente la marcha de [la bomba / las bombas]{Bomba} y las condiciones de presión del circuito. La potencia del quemador se ajustará por consigna [[introducir valor de consigna]] con regulación [todo/nada / modulante], actuando en función de [la temperatura de impulsión / la demanda térmica]{Temperatura}. En presencia de dos bombas, el sistema gestionará la rotación automática por horas de servicio y por fallo. Se supervisará la [alarma / el estado y las alarmas]{Estado / Alarma} del equipo y la temperatura de los humos, generando las alarmas correspondientes cuando proceda."
+      },
+      "id": "e016fdbe-3aa4-4b94-8dc1-12255355233d",
       "NombreUsuario": "Caldera",
-      "Cantidad": 2
+      "Cantidad": 1
     }
   ],
   "Listado": {
     "EA": [],
-    "ED": [
-      {
-        "Numero": 1,
-        "Opciones": [
-          "Externa",
-          "Rele"
-        ],
-        "Linea1": "ALARMA CALDERA 1",
-        "Linea2": "(CONTACTO LIBRE DE POTENCIAL)",
-        "Opcion": 0
-      },
-      {
-        "Numero": 1,
-        "Opciones": [
-          "Externa",
-          "Rele"
-        ],
-        "Linea1": "ALARMA CALDERA 2",
-        "Linea2": "(CONTACTO LIBRE DE POTENCIAL)",
-        "Opcion": 0
-      },
-      {
-        "Numero": 1,
-        "Opciones": [
-          "Externa",
-          "Rele",
-          "Contactor",
-          "Termico"
-        ],
-        "Linea1": "ESTADO BOMBA 1 CALDERA 1",
-        "Linea2": "(CONTACTO LIBRE DE POTENCIAL)",
-        "Opcion": 0
-      },
-      {
-        "Numero": 1,
-        "Opciones": [
-          "Externa",
-          "Rele",
-          "Contactor",
-          "Termico"
-        ],
-        "Linea1": "ESTADO BOMBA 1 CALDERA 2",
-        "Linea2": "(CONTACTO LIBRE DE POTENCIAL)",
-        "Opcion": 0
-      },
-      {
-        "Numero": 1,
-        "Opciones": [
-          "Externa",
-          "Rele",
-          "Contactor",
-          "Termico"
-        ],
-        "Linea1": "ESTADO BOMBA 2 CALDERA 2",
-        "Linea2": "(CONTACTO LIBRE DE POTENCIAL)",
-        "Opcion": 0
-      }
-    ],
-    "SA": [
-      {
-        "Numero": 1,
-        "Opciones": [
-          "Externa"
-        ],
-        "Linea1": "CONSIGNA CALDERA 1",
-        "Linea2": "",
-        "Opcion": 0
-      },
-      {
-        "Numero": 1,
-        "Opciones": [
-          "Externa"
-        ],
-        "Linea1": "CONSIGNA CALDERA 2",
-        "Linea2": "",
-        "Opcion": 0
-      }
-    ],
-    "SD": [
-      {
-        "Numero": 1,
-        "Opciones": [
-          "Externa",
-          "Rele",
-          "Contactor"
-        ],
-        "Linea1": "M/P BOMBA 1 CALDERA 1",
-        "Linea2": "",
-        "Opcion": 0
-      },
-      {
-        "Numero": 1,
-        "Opciones": [
-          "Externa",
-          "Rele",
-          "Contactor"
-        ],
-        "Linea1": "M/P BOMBA 2 CALDERA 1",
-        "Linea2": "",
-        "Opcion": 0
-      },
-      {
-        "Numero": 1,
-        "Opciones": [
-          "Externa",
-          "Rele",
-          "Contactor"
-        ],
-        "Linea1": "M/P BOMBA 1 CALDERA 2",
-        "Linea2": "",
-        "Opcion": 0
-      },
-      {
-        "Numero": 1,
-        "Opciones": [
-          "Externa",
-          "Rele",
-          "Contactor"
-        ],
-        "Linea1": "M/P BOMBA 2 CALDERA 2",
-        "Linea2": "",
-        "Opcion": 0
-      }
-    ]
+    "ED": [],
+    "SA": [],
+    "SD": []
   },
   "Asignacion": [],
-  "Guardado": false
+  "Guardado": true
 }

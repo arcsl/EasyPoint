@@ -341,7 +341,6 @@ function escuchadores() {
     // (verde guardar) guardar el estado actual del proyecto en el local storage del navegador
     estudioGuardarBtn.addEventListener("click", () => {
 
-
         // leemos el nombre del proyecto en la casilla que el usuario puede modificar
         const nuevoNombreProyecto = estudioNombProyecInput.value.trim();
 
@@ -375,14 +374,16 @@ function escuchadores() {
 
         }
 
+        // marcar proyecto como guardado 
+        proyectoActual.Guardado = true;
+
         // guardamos el proyecto en el listado de idem
         proyectosEasyPoint[nombreProyectoActual] = structuredClone(proyectoActual);
 
-        // marcar proyecto como guardado y copiamos en local storage
-        proyectoActual.Guardado = true;
-        localStorage.setItem("proyectosEasyPoint", JSON.stringify(proyectosEasyPoint));
-        localStorage.setItem("nombreProyectoActual", nombreProyectoActual);
+        // copiamos en local storage
         localStorage.setItem("nuevoNombreProyecto", nuevoNombreProyecto);
+        localStorage.setItem("nombreProyectoActual", nombreProyectoActual);
+        localStorage.setItem("proyectosEasyPoint", JSON.stringify(proyectosEasyPoint));
 
         // Mostar notificación
         guardadoOK();
@@ -420,11 +421,18 @@ function escuchadores() {
 
         }
     });
-    // (azul listado) mostrar listado de señales y estado de asignación
-    estudioListadoBtn.addEventListener("click", () => {
-        estudio.classList.add("w3-hide");
-        listado.classList.remove("w3-hide");
-        listadoNombProyecLabel.innerText = estudioNombProyecInput.value;
+    // (azul docum) mostrar listado de señales y estado de asignación
+    estudioDocumBtn.addEventListener("click", () => {
+
+        // Asignar seccion desde el que se dispara
+        creaDocusPop.seccion = "estudio";
+
+        // mostrar creaDocusPop centrado bajo el boton Docum.
+        estudio.setAttribute('inert', ''); // bloquea todos los inputs del fondo en estudio
+        overlay.style.display = "block";
+        creaDocusPop.style.display = "block";
+
+
     });
     // (verde añadir) añadir el bloque seleccionado
     estudioBloqAniaBtn.addEventListener("click", () => {
@@ -436,6 +444,7 @@ function escuchadores() {
         disableFirstAndLastMoveBlockButtons();
         proyectoNoGuardado();
     });
+
 
     /* ---------- EVENTOS ESTUDIO DE PUNTOS ---------- */
 
@@ -602,4 +611,43 @@ function escuchadores() {
         exportPop.style.display = "none";
         overlay.style.display = "none";
     });
+
+
+    /* ---------- BOTONES VENTANA POPUP DOCUMENTACION ---------- */
+
+    // (azul memoria) pasar al creador de memoria de control
+    crearMemoBtn.addEventListener("click", () => {
+
+        estudio.classList.add("w3-hide");
+
+        estudio.removeAttribute('inert');
+        exportPop.style.display = "none";
+        overlay.style.display = "none";
+
+        memoria.classList.remove("w3-hide");
+        crearMemoria();
+
+    });
+    // (azul listado) pasar al creador de listado de señales
+    crearListBtn.addEventListener("click", () => {
+
+        estudio.classList.add("w3-hide");
+
+        estudio.removeAttribute('inert');
+        exportPop.style.display = "none";
+        overlay.style.display = "none";
+
+        listado.classList.remove("w3-hide");
+        listadoNombProyecLabel.innerText = nombreProyectoActual;
+
+    });
+    // (rojo aspa) ocultar la interfaz y no hacer nada.
+    crearCerrarBtn.addEventListener("click", () => {
+        estudio.removeAttribute('inert');
+        exportPop.style.display = "none";
+        overlay.style.display = "none";
+    });
+
+
+
 }

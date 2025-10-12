@@ -621,6 +621,7 @@ function totalBody() {
 
 
 /* ------------------------- LISTADO SEÑALES ------------------------- */
+
 function asignarValoresListado() {
 
     proyectoActual.Listado = Object.fromEntries(signalTypes.map(key => [key, []]));
@@ -924,6 +925,132 @@ function updateSummaryListado() {
 
 }
 
+/* ------------------------- MEMORIA ------------------------- */
+
+function crearMemoria() {
+
+    const divMemoria = document.getElementById("memoria");
+    if (!divMemoria) return console.error("No se encontró el contenedor #memoria");
+
+    divMemoria.innerHTML = "";
+
+    // Recorremos los bloques del estudio
+    proyectoActual.Estudio.forEach(bloque => {
+
+        if (!Narrativa[bloque.Nombre]) return; // sin narrativa, no genera nada
+
+        const divBloque = document.createElement("div");
+        divBloque.classList.add("bloque-memoria");
+
+        const titulo = document.createElement("h2");
+        titulo.textContent = bloque.NombreUsuario || bloque.Nombre;
+        divBloque.appendChild(titulo);
+
+
+        partesNarrativa.forEach(seccionNombre => {
+
+
+            const seccion = Narrativa[bloque.Nombre][seccionNombre];
+            if (!seccion) return; // si no existe, la salta
+
+            const subtitulo = document.createElement("h3");
+            subtitulo.textContent = seccionNombre;
+            divBloque.appendChild(subtitulo);
+
+            const listado = document.createElement("ul");
+            divBloque.appendChild(listado);
+
+            const seccionArray = Array.isArray(seccion) ? seccion : [seccion];
+
+            seccionArray.forEach(texto => {
+                const textoPuntoListado = interpretarNarrativa(texto, bloque).trim();
+                if (textoPuntoListado !== "") {
+                    const puntoListado = document.createElement("li");
+                    puntoListado.innerHTML = textoPuntoListado;
+                    listado.appendChild(puntoListado);
+                }
+            });
+        });
+        divMemoria.appendChild(divBloque);
+    });
+    generarMemoriaDOCX();
+}
+
+function interpretarNarrativa(texto, bloque) {
+
+    if (!texto) return "";
+
+    // 1 Condicional: {{ ... }}{Ref} → Muestra solo si el elemento Ref está "checked"
+    texto = texto.replace(/\{\{(.*?)\}\}\{(.*?)\}/g, (match, contenido, ref) => {
+        const elem = bloque.Elementos.find(e => e.Ref === ref);
+        return (elem && elem.Checked) ? contenido : "";
+    });
+
+    // 2 Condicional por cantidad > 1: [[ ... ]]{Ref}
+    texto = texto.replace(/\[\[(.*?)\]\]\{(.*?)\}/g, (match, contenido, ref) => {
+        const elem = bloque.Elementos.find(e => e.Ref === ref);
+        return (elem && elem.Cantidad > 1) ? contenido : "";
+    });
+
+    // 3 Multiples checks <opcion1 / opcion2>
+    texto = texto.replace(/<(.*?)>/g, (match, opciones) => {
+        if (opciones.includes("|")) {
+            const opts = opciones.split("|").map(o => o.trim());
+            const checkboxes = opts.map(o => {
+                const checked = o.startsWith("+");
+                const label = o.replace(/^\+/, "").trim();
+                return `<br><label class="narrativa-checkbox"><input type="checkbox" ${checked ? "checked" : ""}>${label}</label>`;
+            }).join("\n");
+            return `<span class="narrativa-checkbox-group">${checkboxes}</span>`;
+        }
+        return match;
+    });
+
+    // 4 Propiedad de un elemento: [{Propiedad}]{Ref}
+    texto = texto.replace(/\[\{(.*?)\}\]\{(.*?)\}/g, (match, prop, ref) => {
+        const elem = bloque.Elementos.find(e => e.Ref === ref) || (ref === "MainBloc" ? bloque : null);
+        if (!elem) return "";
+
+        // Si la propiedad es "Opcion", se devuelve el nombre de la opción seleccionada
+        if (prop === "Opcion" && elem.Opciones && elem.Opciones.length > 0) {
+            const seleccion = elem.Opciones[elem.Opcion] || {};
+            return seleccion.Nombre || "";
+        }
+
+        // Caso general
+        return (elem && prop in elem) ? elem[prop] : "";
+    });
+
+    // 5 Selección por cantidad: [opcion1 / opcion2]{Ref}
+    texto = texto.replace(/\[(?=[^[\]]*\/)(.*?)\/(.*?)\]\{(.*?)\}/g, (match, singular, plural, ref) => {
+        const elem = bloque.Elementos.find(e => e.Ref === ref);
+        const cantidad = elem ? (elem.Cantidad || 0) : 0;
+        return cantidad > 1 ? plural : singular;
+    });
+
+    // 6 Selector editable por el usuario: [op1 | op2 | op3]
+    texto = texto.replace(/\[(?=[^[\]]*\|)(.*?)\]/g, (match, opciones) => {
+        if (opciones.includes("|")) {
+            const opts = opciones.split("|").map(o => o.trim());
+            const select = `<select class="narrativa-select">${opts.map(o => `<option>${o}</option>`).join("")}</select>`;
+            return select;
+        }
+        return match; // se deja intacto si no contiene "|"
+    });
+
+    // 7 Limpieza de referencias sueltas: {...}
+    texto = texto.replace(/\{.*?\}/g, "");
+
+    // 8 Eliminar abreviaturas
+    texto = texto
+        .replace(/\bTemp /g, "Temperatura ")
+        .replace(/\bHum /g, "Humedad ")
+        .replace(/\bCO2\b/gi, "CO<sub>2</sub>");
+
+    return texto.trim();
+
+}
+
 /* ------------------------- AUXILIARES ------------------------- */
 function inputNombre(texto) {
     const nameInput = document.createElement("input");
@@ -974,4 +1101,8 @@ function moverElemento(array, fromIndex, toIndex) {
     if (toIndex < 0 || toIndex >= array.length) return; // fuera de rango
     const [item] = array.splice(fromIndex, 1);
     array.splice(toIndex, 0, item);
+}
+
+function nomPropio(texto) {
+    return texto[1].toUpperCase() + texto.slice(1);
 }

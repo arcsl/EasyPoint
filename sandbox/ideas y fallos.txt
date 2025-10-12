@@ -1,6 +1,7 @@
 ----- IDEAS -----
 1 reformar estructura de blocksData para que dada opcion de cada señal incluya testo para la memoria y nombre del bloque de dibujo asociado
-
+limitar la cantidad de elementos, por ejemplo solo 2 temperaturas o 2 bombas
+elementos en los que la cantidad esté limitada a 1 que no se pueda elegir el numero, por ejemplo Marcha-paro de caldera o modulacion
+en los elementos que haya posibilidad de elegir , p ej en bomba m/p y Estado, que el valor (u otra propiedad) sea "Marcha paro y estado"  para usarlo en la generacion de la memoria
 
 ----- FALLOS -----
-1 si cambia el nombre de los bloques en blocksData no se abren las instalaciones anteriore por fallo del javascript
