@@ -79,7 +79,7 @@
 			</button>
 			<select id="portadaSelProyecSelect" class="w3-select w3-padding w3-margin-right"></select>
 			<button id="portadaSelProyecAbrir" class="w3-button w3-green botonCuadrado">
-				<img src="./images/entrar.svg" alt="Salir" width="30" height="30">
+				<img src="./images/entrar.svg" alt="Salir" width="35" height="35">
 			</button>
 		</div>
 
@@ -90,7 +90,7 @@
 
 		<!-- Copyright + Version pie de pagina -->
 		<div class="w3-small w3-text-gray w3-right w3-padding-small copyVersion">
-			EasyPoint V1.3 - Copyright ARC S.L. - 2025
+			EasyPoint V2.1 - Copyright ARC S.L. - 2025
 		</div>
 
 	</div>
@@ -103,10 +103,12 @@
 			<!-- Nombre de proyecto y botones de control -->
 			<div id="estudioBotonera" class="w3-margin-top contenidoFlex">
 				<input id="estudioNombProyecInput" class="w3-input w3-margin-right" placeholder="Nombre del proyecto" />
-				<button id="estudioGuardarBtn" class="w3-button w3-green w3-margin-right">Guardar</button>
-				<button id="estudioExportarBtn" class="w3-button w3-purple w3-margin-right">Exportar</button>
-				<button id="estudioSalirBtn" class="w3-button w3-red w3-margin-right">Salir</button>
-				<button id="estudioDocumBtn" class="w3-button w3-blue">Docum.</button>
+				<button id="estudioSalirBtn" class="w3-button w3-red w3-margin-right botonCuadrado"><img src="./images/salir.svg" alt="Salir" width="35" height="35"></button>
+				<button id="estudioGuardarBtn" class="w3-button w3-green w3-margin-right botonCuadrado"><img src="./images/guardar.svg" alt="Guardar" width="40" height="40"></button>
+				<button id="estudioExportarBtn" class="w3-button w3-purple w3-margin-right botonCuadrado"><img src="./images/filedown.svg" alt="Descargar" width="40" height="40"></button>
+				<button id="estudioDisenioBtn" class="w3-button w3-grey botonCuadrado w3-margin-right"><img src="./images/disenio.svg" alt="Diseño" width="40" height="40"></button>
+				<button id="estudioMemoBtn" class="w3-button w3-orange botonCuadrado w3-margin-right"><img src="./images/book.svg" alt="Memoria" width="40" height="40"></button>
+				<button id="estudioListBtn" class="w3-button w3-blue botonCuadrado w3-margin-right"><img src="./images/listanum.svg" alt="Listado" width="40" height="40"></button>				
 			</div>
 			<!-- Cabecera EA ED SA SD -->
 			<div id="estudioCabeceraSeniales"></div>
@@ -132,9 +134,9 @@
 
 	</div>
 
-	<!-- Ventana emergente para añadir lineas con señales custom -->
 	<div id="overlay">
-
+		
+		<!-- Ventana emergente para añadir lineas con señales custom -->
 		<div class="w3-container" id="customPop" class="w3-card">
 
 			<div class="w3-padding w3-center">
@@ -156,14 +158,14 @@
 		</div>
 
 		<div class="w3-container" id="exportPop" class="w3-card">
-			<button id="expPDFBtn" class="w3-button w3-purple expBtn w3-margin-right"><img src="./images/pdf.svg" alt="EstudioPDF" width="40" height="40"></button>
-			<button id="expCSVBtn" class="w3-button w3-purple expBtn w3-margin-right"><img src="./images/csv.svg" alt="EstudioCSC" width="40" height="40"></button>
+			<button id="expPDFBtn" class="w3-button w3-purple botonCuadrado w3-margin-right"><img src="./images/pdf.svg" alt="EstudioPDF" width="40" height="40"></button>
+			<button id="expCSVBtn" class="w3-button w3-purple botonCuadrado w3-margin-right"><img src="./images/csv.svg" alt="EstudioCSC" width="40" height="40"></button>
  			<button id="expCerrarBtn"class="w3-button w3-red corner" aria-label="Cerrar">✕</button>
 		</div>
 
 		<div class="w3-container" id="creaDocusPop" class="w3-card">
-			<button id="crearMemoBtn" class="w3-button w3-blue expBtn w3-margin-right"><img src="./images/book.svg" alt="Memoria" width="40" height="40"></button>
-			<button id="crearListBtn" class="w3-button w3-blue expBtn w3-margin-right"><img src="./images/listanum.svg" alt="Listado" width="40" height="40"></button>
+			<button id="crearMemoBtn" class="w3-button w3-blue botonCuadrado w3-margin-right"><img src="./images/book.svg" alt="Memoria" width="40" height="40"></button>
+			<button id="crearListBtn" class="w3-button w3-blue botonCuadrado w3-margin-right"><img src="./images/listanum.svg" alt="Listado" width="40" height="40"></button>
  			<button id="crearCerrarBtn"class="w3-button w3-red corner" aria-label="Cerrar">✕</button>
 		</div>
 
@@ -212,8 +214,6 @@
 
 	<!-- MEMORIA DE CONTROL -->
 	<div class="w3-container w3-display-container seccion w3-hide" id="memoria">
-
-
 	</div>
 
 </body>

@@ -225,8 +225,8 @@ table tbody tr:last-child {
     left: 855px;
 }
 
-#creaDocusPop button.expBtn,
-#exportPop button.expBtn {
+#creaDocusPop button.iconBtn,
+#exportPop button.iconBtn {
     padding: 0 0 0 5px;
     width: 60px;
 }

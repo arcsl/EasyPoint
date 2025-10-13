@@ -13,12 +13,6 @@
     text-align: center;
 }
 
-#divAniadir button,
-#estudioBotonera button {
-    width: 130px !important;
-}
-
-
 /* ---------- ESTUDIO SEPARADORES SUPERIOR E INFERIOR ---------- */
 #estudioSepTop {
     height: 138px;
