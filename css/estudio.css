@@ -1,29 +1,22 @@
 /* ---------- ESTUDIO ---------- */
-#estudioCabeceraCont,
-#estudioBloqCont,
+#proyectoCabecera,
+#estudioCont,
 #estudioSumarioCont {
     width: 1000px;
 }
 
-#estudio tr> :first-child {
+#estudioCont tr> :first-child {
     width: 800px;
 }
 
-#estudio tr> :not(:first-child) {
+#estudioCont tr> :not(:first-child) {
     text-align: center;
 }
 
-/* ---------- ESTUDIO SEPARADORES SUPERIOR E INFERIOR ---------- */
-#estudioSepTop {
-    height: 138px;
-}
 
-#estudioSepPie {
-    height: 112px;
-}
 
 /* ---------- ESTUDIO CABECERA ---------- */
-#estudioNombProyecInput {
+#inputNombreProyecto {
     width: 415px;
     font-weight: bold;
     
@@ -35,40 +28,40 @@
 }
 
 /* ---------- ESTUDIO BLOQUES ---------- */
-#estudioBloqCont table:nth-of-type(odd) {
+#estudioCont table:nth-of-type(odd) {
     background-color: #EEE;
 }
 
-#estudio table input {
+#estudioCont table input {
     display: inline-block;
 }
 
 /* elementos de la primera celda de cabecera */
-#estudio thead tr> :first-child * {
+#estudioCont thead tr> :first-child * {
     height: 30px;
     vertical-align: top;
 }
 
 /* elementos de las filas del cuerpo */
-#estudioBloqCont tbody tr * {
+#estudioCont tbody tr * {
     height: 25px;
     font-size: 1em !important;
 }
 
 /* botones de la primera celda */
-#estudio tr> :first-child button {
+#estudioCont tr> :first-child button {
     width: 30px;
     height: 30px;
     padding: 0;
 }
 
 /* nombre del bloque */
-#estudio thead>tr> :first-child input:first-of-type {
+#estudioCont thead>tr> :first-child input:first-of-type {
     width: 395px !important;
 }
 
 /* botones eliminar linea custom */
-#estudio tbody>tr> :first-child button {
+#estudioCont tbody>tr> :first-child button {
     margin-left: 5px;
     margin-right: 15px;
     width: 20px;
@@ -80,13 +73,13 @@
 }
 
 /* boton añadir linea custom */
-#estudio tbody>tr> :first-child button.addBtn {
+#estudioCont tbody>tr> :first-child button.addBtn {
     font-weight: normal;
     line-height: 12px;
 }
 
 /* checkbox lineas predefinidas */
-#estudio tr> :first-child input[type="checkbox"] {
+#estudioCont tr> :first-child input[type="checkbox"] {
     margin-left: 5px;
     margin-right: 15px;
     width: 20px;
@@ -95,20 +88,20 @@
 }
 
 /* inputs de la primera celda */
-#estudio tr> :first-child input {
+#estudioCont tr> :first-child input {
     width: 400px;
     border: none !important;
 }
 
 /* input numbers de la primera celda */
-#estudio tr> :first-child input[type="number"] {
+#estudioCont tr> :first-child input[type="number"] {
     width: 60px;
     text-align: right;
     border: none !important;
 }
 
 /* selects de la primera celda */
-#estudio tr> :first-child select {
+#estudioCont tr> :first-child select {
     width: 225px;
     padding: 0 8px;
     display: inline-block;

@@ -91,7 +91,7 @@ function crearPDF(seccion) {
     // elejimos la seccion en la que leer los totales
     const totalRow = seccion === "estudio"
         ? estudioSumarioCont.querySelector("table tbody tr")
-        : listadoSumarioCont.querySelector("table tbody tr");
+        : UI.proyectoPie.querySelector("table tbody tr");
 
     // montamos el array con el total de cada señal
     let numeroTotalSeñales = [];

@@ -35,7 +35,7 @@ function crearCSV(seccion) {
 
     if (seccion === "estudio") {
 
-        const nodosTablas = estudioBloqCont.querySelectorAll("table");
+        const nodosTablas = UI.estudioCont.querySelectorAll("table");
         nodosTablas.forEach(tabla => {
 
             // Obtener nombre del bloque y cantidad

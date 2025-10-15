@@ -31,13 +31,13 @@ function escuchadores() {
 
         // dejar portada preparada con el proyecto actual seleccionado, 
         // y abrir la parte de estudio con los datos de localstorage
-        portada.classList.add("w3-hide");
-        portadaAbrProyecBtn.dispatchEvent(new Event('click', { bubbles: true }));
+        UI.portada.classList.add("w3-hide");
+        UI.portadaAbrProyecBtn.dispatchEvent(new Event('click', { bubbles: true }));
         portadaSelProyecSelect.value = nombreProyectoActual;
 
         // retomar el nombre provisional del proyecto por si el usuario lo estaba cambiando
-        estudioNombProyecInput.value = localStorage.getItem('nuevoNombreProyecto') || nombreProyectoActual;
-        estudioNombProyecInput.dispatchEvent(new Event('input', { bubbles: true }));
+        UI.proyectoInputNombre.value = localStorage.getItem('nuevoNombreProyecto') || nombreProyectoActual;
+        UI.proyectoInputNombre.dispatchEvent(new Event('input', { bubbles: true }));
 
         // marcar proyecto como "no guardado"
         proyectoActual.Guardado = false;
@@ -45,7 +45,7 @@ function escuchadores() {
         // mostrar proyecto en el DOM
         writeBlocks();
         writeSignals();
-        estudio.classList.remove("w3-hide");
+        UI.proyecto.classList.remove("w3-hide");
 
     });
 
@@ -53,13 +53,13 @@ function escuchadores() {
     /* ---------- BOTONES PORTADA ---------- */
 
     // (verde check) Crear nuevo proyecto
-    portadaNueProyecCrear.addEventListener("click", () => {
+    UI.portadaNueProyecCrear.addEventListener("click", () => {
 
         // si se esta mostrando mensaje error proyecto ya existe, no hacer nada
-        if (!portadaNueProyecMsg.classList.contains("w3-hide")) return;
+        if (!UI.portadaNueProyecMsg.classList.contains("w3-hide")) return;
 
         // verificar que se ha introducido algo de texto como nombre de proyecto
-        const nuevoProyecto = portadaNueProyecInput.value.trim();
+        const nuevoProyecto = UI.portadaNueProyecInput.value.trim();
         if (!nuevoProyecto) return;
 
         // agregar proyecto al objeto y salvar en localstorage
@@ -67,43 +67,43 @@ function escuchadores() {
         localStorage.setItem("proyectosEasyPoint", JSON.stringify(proyectosEasyPoint));
 
         // borrar contenido del input y ocultarlo
-        portadaNueProyecInput.value = "";
-        portadaNueProyecCont.classList.add("w3-hide");
+        UI.portadaNueProyecInput.value = "";
+        UI.portadaNueProyecCont.classList.add("w3-hide");
 
         // actualizar opciones del select de proyectos y seleccionar 
         populateProyectSelect();
         portadaSelProyecSelect.value = nuevoProyecto;
 
         // Simular click en abrir para mostrar el select de proyectos despues de haberlo creado
-        portadaAbrProyecBtn.dispatchEvent(new Event("click"), { bubbles: true });
+        UI.portadaAbrProyecBtn.dispatchEvent(new Event("click"), { bubbles: true });
 
         // Simular click en abrir proyecto para mostrar el estudio despues de haberlo creado
-        portadaSelProyecAbrir.dispatchEvent(new Event("click"), { bubbles: true });
+        UI.portadaSelProyecAbrir.dispatchEvent(new Event("click"), { bubbles: true });
 
         // O sea, al crear el proyecto nada mas darle al enter se abre el estudio del proyecto recien creado.
 
     });
     // (verde nuevo) boton para abrir dialogo para poner nombre de nuevo proyecto
-    portadaNueProyecBtn.addEventListener("click", () => {
+    UI.portadaNueProyecBtn.addEventListener("click", () => {
 
-        if (portadaNueProyecCont.classList.contains("w3-hide")) {
+        if (UI.portadaNueProyecCont.classList.contains("w3-hide")) {
 
             // si no se esta mostrando el input, mostrarlo
 
             // mostrar input y hacer focus (y ocultar select por si acaso)
-            portadaSelProyecCont.classList.add("w3-hide"); // por si acaso
-            portadaNueProyecCont.classList.remove("w3-hide");
-            portadaNueProyecInput.value = "";
-            portadaNueProyecInput.focus();
+            UI.portadaSelProyecCont.classList.add("w3-hide"); // por si acaso
+            UI.portadaNueProyecCont.classList.remove("w3-hide");
+            UI.portadaNueProyecInput.value = "";
+            UI.portadaNueProyecInput.focus();
 
             // boton Nuevo pasa a ser "Cancelar"
-            portadaNueProyecBtn.textContent = "Cancelar";
-            portadaNueProyecBtn.classList.remove("w3-green");
-            portadaNueProyecBtn.classList.add("w3-red");
+            UI.portadaNueProyecBtn.textContent = "Cancelar";
+            UI.portadaNueProyecBtn.classList.remove("w3-green");
+            UI.portadaNueProyecBtn.classList.add("w3-red");
 
             // Deshabilitar botones de importar y abrir
-            portadaImpProyecBtn.disabled = true;
-            portadaAbrProyecBtn.disabled = true;
+            UI.portadaImpProyecBtn.disabled = true;
+            UI.portadaAbrProyecBtn.disabled = true;
 
 
         } else {
@@ -111,27 +111,27 @@ function escuchadores() {
             // si se esta mostrando el input, se quiere cancelar y volver atras
 
             //ocultar input
-            portadaNueProyecCont.classList.add("w3-hide");
+            UI.portadaNueProyecCont.classList.add("w3-hide");
 
             // boton Nuevo vuelve a ser "Nuevo"
-            portadaNueProyecBtn.textContent = "Nuevo";
-            portadaNueProyecBtn.classList.remove("w3-red");
-            portadaNueProyecBtn.classList.add("w3-green");
+            UI.portadaNueProyecBtn.textContent = "Nuevo";
+            UI.portadaNueProyecBtn.classList.remove("w3-red");
+            UI.portadaNueProyecBtn.classList.add("w3-green");
 
             //habilitar botones
-            portadaImpProyecBtn.disabled = false;
-            portadaAbrProyecBtn.disabled = portadaSelProyecSelect.options.length === 0;
+            UI.portadaImpProyecBtn.disabled = false;
+            UI.portadaAbrProyecBtn.disabled = portadaSelProyecSelect.options.length === 0;
 
         }
 
     });
     // (morado importar) boton importar proyecto
-    portadaImpProyecBtn.addEventListener("click", () => {
+    UI.portadaImpProyecBtn.addEventListener("click", () => {
 
-        if (portadaSelProyecCont.classList.contains("w3-hide")) {
+        if (UI.portadaSelProyecCont.classList.contains("w3-hide")) {
 
             // importar proyecto = simulamos click en input oculto
-            portadaImpProyecInput.click();
+            UI.portadaImpProyecInput.click();
 
         } else {
 
@@ -159,55 +159,55 @@ function escuchadores() {
 
     });
     // (azul abrir) boton para abrir dialogo para seleccionar proyecto que se desea abrir
-    portadaAbrProyecBtn.addEventListener("click", () => {
+    UI.portadaAbrProyecBtn.addEventListener("click", () => {
 
-        if (portadaSelProyecCont.classList.contains("w3-hide")) {
+        if (UI.portadaSelProyecCont.classList.contains("w3-hide")) {
 
             // si no se esta mostrando el select, lo mostramos
 
             // mostrar select y hacer focus (y ocultar input por si acaso)
-            portadaNueProyecCont.classList.add("w3-hide"); // por si acaso
-            portadaSelProyecCont.classList.remove("w3-hide");
+            UI.portadaNueProyecCont.classList.add("w3-hide"); // por si acaso
+            UI.portadaSelProyecCont.classList.remove("w3-hide");
             portadaSelProyecSelect.focus();
 
             // restaurar boton nuevo deshabilitado
-            portadaNueProyecBtn.textContent = "Nuevo";
-            portadaNueProyecBtn.classList.remove("w3-red");
-            portadaNueProyecBtn.classList.add("w3-green");
-            portadaNueProyecBtn.disabled = true;
+            UI.portadaNueProyecBtn.textContent = "Nuevo";
+            UI.portadaNueProyecBtn.classList.remove("w3-red");
+            UI.portadaNueProyecBtn.classList.add("w3-green");
+            UI.portadaNueProyecBtn.disabled = true;
 
             // boton importar pasa a ser exportar
-            portadaImpProyecBtn.textContent = "Exportar";
-            portadaImpProyecBtn.disabled = false;
+            UI.portadaImpProyecBtn.textContent = "Exportar";
+            UI.portadaImpProyecBtn.disabled = false;
 
             // boton "Abrir" pasa a ser Cancelar para poder volver atras
-            portadaAbrProyecBtn.textContent = "Cancelar";
-            portadaAbrProyecBtn.classList.remove("w3-blue");
-            portadaAbrProyecBtn.classList.add("w3-red");
-            portadaAbrProyecBtn.disabled = false;
+            UI.portadaAbrProyecBtn.textContent = "Cancelar";
+            UI.portadaAbrProyecBtn.classList.remove("w3-blue");
+            UI.portadaAbrProyecBtn.classList.add("w3-red");
+            UI.portadaAbrProyecBtn.disabled = false;
 
         } else {
 
             // es para abrir el select
-            portadaSelProyecCont.classList.add("w3-hide");
-            portadaNueProyecCont.classList.add("w3-hide"); // por si acaso
+            UI.portadaSelProyecCont.classList.add("w3-hide");
+            UI.portadaNueProyecCont.classList.add("w3-hide"); // por si acaso
 
             // boton nuevo pasa a estar habilitado
-            portadaNueProyecBtn.disabled = false;
+            UI.portadaNueProyecBtn.disabled = false;
 
             // boton exportar pasa a ser importar
-            portadaImpProyecBtn.textContent = "Importar";
+            UI.portadaImpProyecBtn.textContent = "Importar";
 
             // boton "Abrir" pasa a ser Abrir para poder abrir
-            portadaAbrProyecBtn.textContent = "Abrir";
-            portadaAbrProyecBtn.classList.add("w3-blue");
-            portadaAbrProyecBtn.classList.remove("w3-red");
-            portadaAbrProyecBtn.disabled = portadaSelProyecSelect.options.length === 0;
+            UI.portadaAbrProyecBtn.textContent = "Abrir";
+            UI.portadaAbrProyecBtn.classList.add("w3-blue");
+            UI.portadaAbrProyecBtn.classList.remove("w3-red");
+            UI.portadaAbrProyecBtn.disabled = portadaSelProyecSelect.options.length === 0;
 
         }
     });
     // (rojo papelera) boton borrar proyecto
-    portadaSelProyecBorrar.addEventListener("click", () => {
+    UI.portadaSelProyecBorrar.addEventListener("click", () => {
 
         // BORRAR PROYECTO
 
@@ -225,26 +225,26 @@ function escuchadores() {
         if (portadaSelProyecSelect.length === 0) {
 
             // Ocultar select
-            portadaSelProyecCont.classList.add("w3-hide");
+            UI.portadaSelProyecCont.classList.add("w3-hide");
 
             // Restaurar botón Abrir
-            portadaAbrProyecBtn.textContent = "Abrir";
-            portadaAbrProyecBtn.classList.remove("w3-red");
-            portadaAbrProyecBtn.classList.add("w3-blue");
+            UI.portadaAbrProyecBtn.textContent = "Abrir";
+            UI.portadaAbrProyecBtn.classList.remove("w3-red");
+            UI.portadaAbrProyecBtn.classList.add("w3-blue");
 
             // Restaurar botón Importar
-            portadaImpProyecBtn.textContent = "Importar";
+            UI.portadaImpProyecBtn.textContent = "Importar";
 
             // Habilitar/Deshabilitar botones
-            portadaNueProyecBtn.disabled = false;
-            portadaImpProyecBtn.disabled = false;
-            portadaAbrProyecBtn.disabled = true;
+            UI.portadaNueProyecBtn.disabled = false;
+            UI.portadaImpProyecBtn.disabled = false;
+            UI.portadaAbrProyecBtn.disabled = true;
 
         }
 
     });
     // (verde flecha) boton abrir proyecto seleccionado
-    portadaSelProyecAbrir.addEventListener("click", () => {
+    UI.portadaSelProyecAbrir.addEventListener("click", () => {
 
         const abrirProyecto = portadaSelProyecSelect.value.trim();
 
@@ -262,15 +262,15 @@ function escuchadores() {
         //crear los bloques del proyecto
         writeBlocks();
         writeSignals();
-        portada.classList.add("w3-hide");
-        estudio.classList.remove("w3-hide");
+        UI.portada.classList.add("w3-hide");
+        UI.proyecto.classList.remove("w3-hide");
 
     });
 
     /* ---------- EVENTOS PORTADA ---------- */
 
     // importacion de proyecto una vez el usuario acepta o cancela el dialogo de seleccion de archivo
-    portadaImpProyecInput.addEventListener("change", (event) => {
+    UI.portadaImpProyecInput.addEventListener("change", (event) => {
 
         const file = event.target.files[0];
         if (!file) return;
@@ -296,7 +296,7 @@ function escuchadores() {
                 populateProyectSelect();
                 portadaSelProyecSelect.value = nombreArchivo;
 
-                portadaAbrProyecBtn.dispatchEvent(new Event('click', { bubbles: true }));
+                UI.portadaAbrProyecBtn.dispatchEvent(new Event('click', { bubbles: true }));
 
             } catch (err) {
                 alert("Archivo inválido o corrupto.");
@@ -305,44 +305,44 @@ function escuchadores() {
         reader.readAsText(file);
     });
     // verificar si el nombre de proyecto ya existe para indicar input y subtexto en rojo
-    portadaNueProyecInput.addEventListener("input", () => {
+    UI.portadaNueProyecInput.addEventListener("input", () => {
 
-        const nuevoProyecto = portadaNueProyecInput.value.trim();
+        const nuevoProyecto = UI.portadaNueProyecInput.value.trim();
 
         // verificar si el proyecto ya existe
         if (proyectosEasyPoint.hasOwnProperty(nuevoProyecto)) {
 
             // Mostrar mensaje de error y desactivar boton check
-            portadaNueProyecCrear.disabled = true;
-            portadaNueProyecMsg.textContent = `El proyecto "${nuevoProyecto}" ya existe.`;
-            portadaNueProyecMsg.classList.remove("w3-hide");
-            portadaNueProyecInput.classList.add("w3-pale-red");
+            UI.portadaNueProyecCrear.disabled = true;
+            UI.portadaNueProyecMsg.textContent = `El proyecto "${nuevoProyecto}" ya existe.`;
+            UI.portadaNueProyecMsg.classList.remove("w3-hide");
+            UI.portadaNueProyecInput.classList.add("w3-pale-red");
 
         } else {
 
             // Ocultar mensaje de error
-            portadaNueProyecCrear.disabled = false;
-            portadaNueProyecMsg.classList.add("w3-hide");
-            portadaNueProyecInput.classList.remove("w3-pale-red");
+            UI.portadaNueProyecCrear.disabled = false;
+            UI.portadaNueProyecMsg.classList.add("w3-hide");
+            UI.portadaNueProyecInput.classList.remove("w3-pale-red");
 
         }
 
     });
     // escuchar enter como alternativa a tener que pulsar el boton de crear proyecto
-    portadaNueProyecInput.addEventListener("keydown", (e) => {
+    UI.portadaNueProyecInput.addEventListener("keydown", (e) => {
         if (e.key === "Enter") {
-            portadaNueProyecCrear.dispatchEvent(new Event('click', { bubbles: true }));
+            UI.portadaNueProyecCrear.dispatchEvent(new Event('click', { bubbles: true }));
         }
     });
 
 
-    /* ---------- BOTONES ESTUDIO DE PUNTOS ---------- */
+    /* ---------- BOTONES PROYECTO ---------- */
 
     // (verde guardar) guardar el estado actual del proyecto en el local storage del navegador
-    estudioGuardarBtn.addEventListener("click", () => {
+    UI.proyectoGuardarBtn.addEventListener("click", () => {
 
         // leemos el nombre del proyecto en la casilla que el usuario puede modificar
-        const nuevoNombreProyecto = estudioNombProyecInput.value.trim();
+        const nuevoNombreProyecto = UI.proyectoInputNombre.value.trim();
 
         if (!nuevoNombreProyecto) {
             alert("El nombre del proyecto no puede estar vacio.\n\n");
@@ -370,7 +370,7 @@ function escuchadores() {
             // - quitamos el fondo rojo del input
             portadaSelProyecSelect.value = nuevoNombreProyecto;
             nombreProyectoActual = nuevoNombreProyecto;
-            estudioNombProyecInput.classList.remove("w3-pale-red");
+            UI.proyectoInputNombre.classList.remove("w3-pale-red");
 
         }
 
@@ -390,19 +390,19 @@ function escuchadores() {
 
     });
     // (morado Exportar) mostar exportPop para seleccionar el formato de la exportación
-    estudioExportarBtn.addEventListener("click", () => {
+    UI.proyectoExportarBtn.addEventListener("click", () => {
 
         // Asignar seccion desde el que se dispara
-        exportPop.seccion = "estudio";
+        UI.overlayPopExport.seccion = "estudio";
 
         // mostrar exportPop centrado bajo el boton export
-        estudio.setAttribute('inert', ''); // bloquea todos los inputs del fondo en estudio
-        overlay.style.display = "block";
-        exportPop.style.display = "block";
+        UI.proyecto.setAttribute('inert', ''); // bloquea todos los inputs del fondo en estudio
+        UI.overlay.style.display = "block";
+        UI.overlayPopExport.style.display = "block";
 
     });
     // (rojo salir) volver a la portada
-    estudioSalirBtn.addEventListener("click", () => {
+    UI.proyectoSalirBtn.addEventListener("click", () => {
         let seguir = proyectoActual.Guardado
             ? true
             : confirm("Hay cambios no guardados que se perderán.\n\n¿Desea continuar?\n");
@@ -416,27 +416,27 @@ function escuchadores() {
             proyectoActual = null;
 
             // poner pantalla principal en modo inicial (presionamos boton abrir que deberia estar en modo "cancelar")
-            estudio.classList.add("w3-hide");
-            portada.classList.remove("w3-hide");
+            UI.proyecto.classList.add("w3-hide");
+            UI.portada.classList.remove("w3-hide");
 
         }
     });
-    // (azul docum) mostrar listado de señales y estado de asignación
-    estudioDocumBtn.addEventListener("click", () => {
+    // (azul seccion) cambiar de seccion en el estudio
+    UI.proyectoSeccionBtn.addEventListener("click", () => {
 
         // Asignar seccion desde el que se dispara
-        creaDocusPop.seccion = "estudio";
+        seccionPop.seccion = "estudio";
 
-        // mostrar creaDocusPop centrado bajo el boton Docum.
-        estudio.setAttribute('inert', ''); // bloquea todos los inputs del fondo en estudio
-        overlay.style.display = "block";
-        creaDocusPop.style.display = "block";
+        // mostrar seccionPop centrado bajo el boton Docum.
+        UI.proyecto.setAttribute('inert', ''); // bloquea todos los inputs del fondo en estudio
+        UI.overlay.style.display = "block";
+        seccionPop.style.display = "block";
 
 
     });
     // (verde añadir) añadir el bloque seleccionado
-    estudioBloqAniaBtn.addEventListener("click", () => {
-        const bloque = structuredClone(blocksData[estudioBloqSelect.value]);
+    UI.estudioBloqAniaBtn.addEventListener("click", () => {
+        const bloque = structuredClone(blocksData[UI.estudioBloqSelect.value]);
         if (!bloque) return;
         bloque.id = crypto.randomUUID();
         proyectoActual.Estudio.push(bloque);
@@ -449,9 +449,9 @@ function escuchadores() {
     /* ---------- EVENTOS ESTUDIO DE PUNTOS ---------- */
 
     // cambiar color del input del nombre del proyecto si ya existe otro proyecto son ese nombre o esta vacio
-    estudioNombProyecInput.addEventListener("input", () => {
+    UI.proyectoInputNombre.addEventListener("input", () => {
 
-        const nuevoNombreProyecto = estudioNombProyecInput.value.trim();
+        const nuevoNombreProyecto = UI.proyectoInputNombre.value.trim();
         localStorage.setItem("nuevoNombreProyecto", nuevoNombreProyecto);
 
         const estaVacio = nuevoNombreProyecto === "";
@@ -459,9 +459,9 @@ function escuchadores() {
         const esElActual = nuevoNombreProyecto === nombreProyectoActual;
 
         if ((yaExiste && !esElActual) || estaVacio) {
-            estudioNombProyecInput.classList.add("w3-pale-red");
+            UI.proyectoInputNombre.classList.add("w3-pale-red");
         } else {
-            estudioNombProyecInput.classList.remove("w3-pale-red");
+            UI.proyectoInputNombre.classList.remove("w3-pale-red");
         }
 
     });
@@ -470,14 +470,14 @@ function escuchadores() {
     /* ---------- BOTONES VENTANA POPUP SEÑALES---------- */
 
     // (verde aceptar) ocultar la interfaz y añadir elementos
-    popAceptar.addEventListener("click", () => {
+    UI.popCustomAceptarBtn.addEventListener("click", () => {
 
-        const bloque = customPop.bloqueOrigen;
-        const table = customPop.tablaOrigen;
+        const bloque = UI.overlayPopCustom.bloqueOrigen;
+        const table = UI.overlayPopCustom.tablaOrigen;
         const tBody = table.querySelector('tbody');
 
         // verificar si se ha introducido al menos una señal
-        let algunoMayorQue1 = [...customPop.querySelectorAll('input')].some(input => Number(input.value) > 0);
+        let algunoMayorQue1 = [...UI.overlayPopCustom.querySelectorAll('input')].some(input => Number(input.value) > 0);
         if (!algunoMayorQue1) {
             alert("Debe introducir al menos un tipo de señal.");
             return;
@@ -514,7 +514,7 @@ function escuchadores() {
         const senialesObj = customElem.Opciones[0].Seniales;
         const esquemaArray = customElem.Opciones[0].Esquema;
         signalTypes.forEach(sig => {
-            const inputSignal = customPop.querySelector(`input[name="${sig}"]`);
+            const inputSignal = UI.overlayPopCustom.querySelector(`input[name="${sig}"]`);
             if (inputSignal.value * 1 > 0) {
                 senialesObj[sig] = inputSignal.value * 1;
                 const esqName = `Simple${sig}_1`; // "SimpleEA_1", "SimpleED_1", etc.
@@ -538,23 +538,23 @@ function escuchadores() {
         // movemos la fila creada por encima de la que tiene el boton añadir
         tBody.insertBefore(ultima, penultima);
 
-        // volvemos a hacer seleccionables los elementos de "estudio"
-        estudio.removeAttribute('inert');
+        // volvemos a hacer seleccionables los elementos de "proyecto"
+        UI.proyecto.removeAttribute('inert');
 
         //hacemos focus en el input del nombre para que el usuario pueda escribir el nombre del nuevo elemento
         ultima.querySelector('input[name="nombreSenial"]').value = "";
         ultima.querySelector('input[name="nombreSenial"]').focus();
 
         // quitamos el overlay
-        customPop.style.display = "none";
-        overlay.style.display = "none";
+        UI.overlayPopCustom.style.display = "none";
+        UI.overlay.style.display = "none";
 
     });
     // (rojo cancelar) ocultar la interfaz y no hacer nada.
-    popCancel.addEventListener("click", () => {
-        estudio.removeAttribute('inert');
-        customPop.style.display = "none";
-        overlay.style.display = "none";
+    UI.popCustomCancelBtn.addEventListener("click", () => {
+        UI.proyecto.removeAttribute('inert');
+        UI.overlayPopCustom.style.display = "none";
+        UI.overlay.style.display = "none";
     });
 
 
@@ -575,18 +575,18 @@ function escuchadores() {
     listadoExportarBtn.addEventListener("click", () => {
 
         // Asignar seccion desde el que se dispara
-        exportPop.seccion = "listado";
+        UI.overlayPopExport.seccion = "listado";
 
         // mostrar exportPop centrado bajo el boton export
-        estudio.setAttribute('inert', ''); // bloquea todos los inputs del fondo en estudio
-        overlay.style.display = "block";
-        exportPop.style.display = "block";
+        UI.proyecto.setAttribute('inert', ''); // bloquea todos los inputs del fondo en estudio
+        UI.overlay.style.display = "block";
+        UI.overlayPopExport.style.display = "block";
 
     });
     // ( rojo volver ) Volver al estudio de puntos
     listadoVolverBtn.addEventListener("click", () => {
-        estudio.classList.remove("w3-hide");
-        listado.classList.add("w3-hide");
+        UI.proyecto.classList.remove("w3-hide");
+        UI.listado.classList.add("w3-hide");
     });
     // ( azul asignar ) Avanzar a la seleccion de controladores y asignacion de señales
     listadoAsignarBtn.addEventListener("click", () => {
@@ -596,56 +596,56 @@ function escuchadores() {
     /* ---------- BOTONES VENTANA POPUP EXPORTAR ---------- */
 
     // (morado PDF) Generar informe PDF y ocultar la interfaz.
-    expPDFBtn.addEventListener("click", () => {
-        crearPDF(exportPop.seccion);
-        expCerrarBtn.dispatchEvent(new Event('click', { bubbles: true }));
+    UI.popExportPDFBtn.addEventListener("click", () => {
+        crearPDF(UI.overlayPopExport.seccion);
+        UI.popExportCerrarBtn.dispatchEvent(new Event('click', { bubbles: true }));
     });
     // (morado CSV) Generar listado en CSV y ocultar la interfaz.
-    expCSVBtn.addEventListener("click", () => {
-        crearCSV(exportPop.seccion);
-        expCerrarBtn.dispatchEvent(new Event('click', { bubbles: true }));
+    UI.popExportCSVBtn.addEventListener("click", () => {
+        crearCSV(UI.overlayPopExport.seccion);
+        UI.popExportCerrarBtn.dispatchEvent(new Event('click', { bubbles: true }));
     });
     // (rojo aspa) ocultar la interfaz y no hacer nada.
-    expCerrarBtn.addEventListener("click", () => {
-        estudio.removeAttribute('inert');
-        exportPop.style.display = "none";
-        overlay.style.display = "none";
+    UI.popExportCerrarBtn.addEventListener("click", () => {
+        UI.proyecto.removeAttribute('inert');
+        UI.overlayPopExport.style.display = "none";
+        UI.overlay.style.display = "none";
     });
 
 
     /* ---------- BOTONES VENTANA POPUP DOCUMENTACION ---------- */
 
     // (azul memoria) pasar al creador de memoria de control
-    crearMemoBtn.addEventListener("click", () => {
+    UI.memoriaMostrarBtn.addEventListener("click", () => {
 
-        estudio.classList.add("w3-hide");
+        UI.proyecto.classList.add("w3-hide");
 
-        estudio.removeAttribute('inert');
-        exportPop.style.display = "none";
-        overlay.style.display = "none";
+        UI.proyecto.removeAttribute('inert');
+        UI.overlayPopExport.style.display = "none";
+        UI.overlay.style.display = "none";
 
-        memoria.classList.remove("w3-hide");
+        UI.memoria.classList.remove("w3-hide");
         crearMemoria();
 
     });
     // (azul listado) pasar al creador de listado de señales
-    crearListBtn.addEventListener("click", () => {
+    UI.listadoMostrarBtn.addEventListener("click", () => {
 
-        estudio.classList.add("w3-hide");
+        UI.proyecto.classList.add("w3-hide");
 
-        estudio.removeAttribute('inert');
-        exportPop.style.display = "none";
-        overlay.style.display = "none";
+        UI.proyecto.removeAttribute('inert');
+        UI.overlayPopExport.style.display = "none";
+        UI.overlay.style.display = "none";
 
-        listado.classList.remove("w3-hide");
+        UI.listado.classList.remove("w3-hide");
         listadoNombProyecLabel.innerText = nombreProyectoActual;
 
     });
     // (rojo aspa) ocultar la interfaz y no hacer nada.
-    crearCerrarBtn.addEventListener("click", () => {
-        estudio.removeAttribute('inert');
-        exportPop.style.display = "none";
-        overlay.style.display = "none";
+    UI.crearCerrarBtn.addEventListener("click", () => {
+        UI.proyecto.removeAttribute('inert');
+        UI.overlayPopExport.style.display = "none";
+        UI.overlay.style.display = "none";
     });
 
 

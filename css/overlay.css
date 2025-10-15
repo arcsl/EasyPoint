@@ -1,0 +1,86 @@
+
+/* Ventana seleccion de señales custom */
+
+#customPop {
+    display: none;
+    position: absolute;
+    top: 50px;
+    left: 100px;
+    z-index: 10000;
+    background-color: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+#customPop label,
+#customPop input {
+    width: 100px;
+    height: 20px;
+}
+
+#customPop label {
+    padding: 0;
+    padding-right: 20px;
+    border: none !important;
+}
+
+#customPop #nombreNuevaSenial {
+    display: inline-block;
+    width: 100%;
+    font-size: 1.5em;
+}
+
+#overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    min-width: 1200px;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+}
+
+#seccionPop,
+#exportPop {
+    display: none;
+    position: absolute;
+    top: 50px;
+    z-index: 10000;
+    background-color: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+#exportPop {
+    left: 555px;
+}
+
+#seccionPop {
+    left: 855px;
+}
+
+#seccionPop button.iconBtn,
+#exportPop button.iconBtn {
+    padding: 0 0 0 5px;
+    width: 60px;
+}
+
+#seccionPop button.corner,
+#exportPop button.corner {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

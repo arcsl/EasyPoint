@@ -28,6 +28,7 @@
 	<link rel="icon" type="image/png" href="./images/ARClogo.png">
 	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 	<link rel="stylesheet" href="./css/style.css" />
+	<link rel="stylesheet" href="./css/overlay.css" />
 	<link rel="stylesheet" href="./css/estudio.css" />
 	<link rel="stylesheet" href="./css/listado.css" />
 	<link rel="stylesheet" href="./css/memoria.css" />
@@ -95,49 +96,57 @@
 
 	</div>
 
-	<!-- ESTUDIO DE PUNTOS -->
-	<div class="w3-container w3-display-container seccion w3-hide" id="estudio">
+	<!-- PROYECTO -->
+	<div class="w3-container w3-display-container seccion w3-hide" id="proyecto">
 
 		<!-- Cabecera -->
-		<div id="estudioCabeceraCont" class="w3-top w3-white">
+		<div id="proyectoCabecera" class="w3-top w3-white">
 			<!-- Nombre de proyecto y botones de control -->
-			<div id="estudioBotonera" class="w3-margin-top contenidoFlex">
-				<input id="estudioNombProyecInput" class="w3-input w3-margin-right" placeholder="Nombre del proyecto" />
-				<button id="estudioSalirBtn" class="w3-button w3-red w3-margin-right botonCuadrado"><img src="./images/salir.svg" alt="Salir" width="35" height="35"></button>
-				<button id="estudioGuardarBtn" class="w3-button w3-green w3-margin-right botonCuadrado"><img src="./images/guardar.svg" alt="Guardar" width="40" height="40"></button>
-				<button id="estudioExportarBtn" class="w3-button w3-purple w3-margin-right botonCuadrado"><img src="./images/filedown.svg" alt="Descargar" width="40" height="40"></button>
-				<button id="estudioDisenioBtn" class="w3-button w3-grey botonCuadrado w3-margin-right"><img src="./images/disenio.svg" alt="Diseño" width="40" height="40"></button>
-				<button id="estudioMemoBtn" class="w3-button w3-orange botonCuadrado w3-margin-right"><img src="./images/book.svg" alt="Memoria" width="40" height="40"></button>
-				<button id="estudioListBtn" class="w3-button w3-blue botonCuadrado w3-margin-right"><img src="./images/listanum.svg" alt="Listado" width="40" height="40"></button>				
+			<div class="w3-margin-top contenidoFlex">
+				<input id="proyectoInputNombre" class="w3-input w3-margin-right" placeholder="Nombre del proyecto" />
+				<button id="proyectoSalirBtn" class="w3-button w3-red w3-margin-right botonCuadrado"><img src="./images/salir.svg" alt="Salir" width="35" height="35"></button>
+				<button id="proyectoGuardarBtn" class="w3-button w3-green w3-margin-right botonCuadrado"><img src="./images/guardar.svg" alt="Guardar" width="40" height="40"></button>
+				<button id="proyectoExportarBtn" class="w3-button w3-purple w3-margin-right botonCuadrado"><img src="./images/filedown.svg" alt="Descargar" width="40" height="40"></button>
+				<button id="proyectoSeccionBtn" class="w3-button w3-grey botonCuadrado w3-margin-right"><img src="./images/disenio.svg" alt="Diseño" width="40" height="40"></button>
 			</div>
-			<!-- Cabecera EA ED SA SD -->
-			<div id="estudioCabeceraSeniales"></div>
+			<!-- Subtitulo Cabecera -->
+			<div>
+				<label id="proyectoLabelSeccion">ESTUDIO DE LA INSTALACIÓN</label>
+			</div>
 		</div>
 
 		<!-- Separador cabecera -->
-		<div id="estudioSepTop"></div>
+		<div id="proyectoSepTop"></div>
 
-		<!-- Bloques -->
-		<div class="w3-margin-bottom" id="estudioBloqCont"></div>
+		<!-- Estudio -->
+		<div class="w3-margin-bottom" id="estudioCont">
 
-		<!-- Añadidor de bloques -->
-		<div id="divAniadir" class="contenidoFlex">
-			<select id="estudioBloqSelect" class="w3-select w3-margin-right w3-padding"></select>
-			<button id="estudioBloqAniaBtn" class="w3-button w3-green w3-margin-right">Añadir</button>
+			<!-- Añadidor de bloques -->
+			<div class="contenidoFlex">
+				<select id="estudioBloqSelect" class="w3-select w3-margin-right w3-padding"></select>
+				<button id="estudioBloqAniaBtn" class="w3-button w3-green w3-margin-right">Añadir</button>
+			</div>
+
 		</div>
 
+		<!-- Memoria -->
+		<div class="w3-container w3-display-container seccion w3-hide" id="memoria"></div>
+				
+		<!-- Listado -->
+		<div class="w3-container w3-display-container seccion w3-hide" id="listado"></div>
+
+
 		<!-- Separador pie -->
-		<div id="estudioSepPie"></div>
+		<div id="proyectoSepPie"></div>
 
 		<!-- Pie -->
-		<div id="estudioSumarioCont" class="w3-bottom w3-white"></div>
+		<div id="proyectoPie" class="w3-bottom w3-white"></div>
 
 	</div>
 
-	<div id="overlay">
-		
-		<!-- Ventana emergente para añadir lineas con señales custom -->
-		<div class="w3-container" id="customPop" class="w3-card">
+	<div id="overlay" class="w3-hide">
+
+		<div class="w3-container" id="overlayPopCustom" class="w3-card w3-hide">
 
 			<div class="w3-padding w3-center">
 				<h2 class="w3-margin-bottom">Señales del nuevo elemento</h2>
@@ -157,63 +166,20 @@
 
 		</div>
 
-		<div class="w3-container" id="exportPop" class="w3-card">
+		<div class="w3-container" id="overlayPopExport" class="w3-card w3-hide">
 			<button id="expPDFBtn" class="w3-button w3-purple botonCuadrado w3-margin-right"><img src="./images/pdf.svg" alt="EstudioPDF" width="40" height="40"></button>
 			<button id="expCSVBtn" class="w3-button w3-purple botonCuadrado w3-margin-right"><img src="./images/csv.svg" alt="EstudioCSC" width="40" height="40"></button>
- 			<button id="expCerrarBtn"class="w3-button w3-red corner" aria-label="Cerrar">✕</button>
+			<button id="expCerrarBtn" class="w3-button w3-red corner" aria-label="Cerrar">✕</button>
 		</div>
 
-		<div class="w3-container" id="creaDocusPop" class="w3-card">
-			<button id="crearMemoBtn" class="w3-button w3-blue botonCuadrado w3-margin-right"><img src="./images/book.svg" alt="Memoria" width="40" height="40"></button>
-			<button id="crearListBtn" class="w3-button w3-blue botonCuadrado w3-margin-right"><img src="./images/listanum.svg" alt="Listado" width="40" height="40"></button>
- 			<button id="crearCerrarBtn"class="w3-button w3-red corner" aria-label="Cerrar">✕</button>
+		<div class="w3-container" id="OverlayPopSeccion" class="w3-card w3-hide">
+			<button id="estudioMostrarBtn" class="w3-button w3-blue botonCuadrado w3-margin-right w3-hide"><img src="./images/book.svg" alt="Estudio" width="40" height="40"></button>
+			<button id="memoriaMostrarBtn" class="w3-button w3-blue botonCuadrado w3-margin-right"><img src="./images/book.svg" alt="Memoria" width="40" height="40"></button>
+			<button id="listadoMostrarBtn" class="w3-button w3-blue botonCuadrado w3-margin-right"><img src="./images/listanum.svg" alt="Listado" width="40" height="40"></button>
+			<button id="crearCerrarBtn" class="w3-button w3-red corner" aria-label="Cerrar">✕</button>
 		</div>
 
 
-	</div>
-
-	<!-- LISTADO DE SEÑALES Y ESTADO DE ASIGNACION -->
-	<div class="w3-container w3-display-container seccion w3-hide" id="listado">
-
-		<!-- Cabecera -->
-		<div id="listadoCabeceraCont" class="w3-top w3-white">
-			<!-- Nombre de proyecto y botones de control -->
-			<div id="listadoBotonera" class="w3-margin-top contenidoFlex">
-				<label id="listadoNombProyecLabel" class="w3-input w3-margin-right" placeholder="Nombre del proyecto"></label>
-				<button id="listadoGenerarBtn" class="w3-button w3-green w3-margin-right">Generar</button>
-				<button id="listadoExportarBtn" class="w3-button w3-purple w3-margin-right">Exportar</button>
-				<button id="listadoVolverBtn" class="w3-button w3-red w3-margin-right">Volver</button>
-				<button id="listadoAsignarBtn" class="w3-button w3-blue">Asignación</button>
-			</div>
-			<!-- Cabecera EA ED SA SD -->
-			<div id="listadoCabeceraSeniales" class="w3-center">
-				<table class="w3-table w3-bordered">
-					<thead>
-						<tr>
-							<th class="w3-center"> LISTADO DE SEÑALES DE CONTROL </th>
-						</tr>
-					</thead>
-				</table>
-			</div>
-		</div>
-
-		<!-- Separador cabecera -->
-		<div id="listadoSepTop"></div>
-
-		<!-- Tablas Señales -->
-		<div class="w3-margin-bottom" id="listadoSenialesCont"></div>
-
-		<!-- Separador pie -->
-		<div id="listadoSepPie"></div>
-
-		<!-- Pie -->
-		<div id="listadoSumarioCont" class="w3-bottom w3-white"></div>
-
-
-	</div>
-
-	<!-- MEMORIA DE CONTROL -->
-	<div class="w3-container w3-display-container seccion w3-hide" id="memoria">
 	</div>
 
 </body>
