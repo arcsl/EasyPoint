@@ -104,11 +104,11 @@ function populateCabeceraYPie() {
     estudioSumarioSenialesTable.appendChild(totalBody());
 
     // poblar pie con sumatorio de señales en listado
-    const listadoSumarioSenialesTable = document.createElement("table");
-    listadoSumarioSenialesTable.classList = "w3-table w3-bordered w3-pale-green w3-margin-top w3-margin-bottom";
-    UI.proyectoPie.appendChild(listadoSumarioSenialesTable);
-    listadoSumarioSenialesTable.appendChild(totalHeader());
-    listadoSumarioSenialesTable.appendChild(totalBody());
+    // const listadoSumarioSenialesTable = document.createElement("table");
+    // listadoSumarioSenialesTable.classList = "w3-table w3-bordered w3-pale-green w3-margin-top w3-margin-bottom";
+    // UI.proyectoPie.appendChild(listadoSumarioSenialesTable);
+    // listadoSumarioSenialesTable.appendChild(totalHeader());
+    // listadoSumarioSenialesTable.appendChild(totalBody());
 
 }
 
@@ -696,14 +696,14 @@ function procesaNombres(bName, bCant, eName, eCant) {
 
 function writeSignals() {
 
-    listadoSenialesCont.innerHTML = "";
+    UI.listadoCont.innerHTML = "";
 
     signalTypes.forEach((signalType, signalIndex) => {
 
         const listaSeniales = proyectoActual?.Listado?.[signalType];
 
         const table = document.createElement('table');
-        listadoSenialesCont.appendChild(table);
+        UI.listadoCont.appendChild(table);
         table.classList.add("w3-table", "w3-bordered", "w3-margin-bottom");
 
         const thead = document.createElement('thead');
@@ -853,7 +853,7 @@ function updateSummaryListado() {
 
     const totalGlobal = Array(signalTypes.length).fill(0);
 
-    const tables = listadoSenialesCont.querySelectorAll("table");
+    const tables = proyectoPie.querySelectorAll("table");
     tables.forEach((table, indexTable) => {
         const rows = table.querySelectorAll("tbody tr");
         rows.forEach(row => {
@@ -1485,18 +1485,18 @@ function escuchadores() {
         }
     });
     // (azul seccion) cambiar de seccion en el estudio
-    UI.proyectoSeccionBtn.addEventListener("click", () => {
+    // UI.proyectoSeccionBtn.addEventListener("click", () => {
 
-        // Asignar seccion desde el que se dispara
-        seccionPop.seccion = "estudio";
+    //     // Asignar seccion desde el que se dispara
+    //     seccionPop.seccion = "estudio";
 
-        // mostrar seccionPop centrado bajo el boton Docum.
-        UI.proyecto.setAttribute('inert', ''); // bloquea todos los inputs del fondo en estudio
-        UI.overlay.style.display = "block";
-        seccionPop.style.display = "block";
+    //     // mostrar seccionPop centrado bajo el boton Docum.
+    //     UI.proyecto.setAttribute('inert', ''); // bloquea todos los inputs del fondo en estudio
+    //     UI.overlay.style.display = "block";
+    //     seccionPop.style.display = "block";
 
 
-    });
+    // });
     // (verde añadir) añadir el bloque seleccionado
     UI.estudioBloqAniaBtn.addEventListener("click", () => {
         const bloque = structuredClone(blocksData[UI.estudioBloqSelect.value]);
@@ -1533,183 +1533,183 @@ function escuchadores() {
     /* ---------- BOTONES VENTANA POPUP SEÑALES---------- */
 
     // (verde aceptar) ocultar la interfaz y añadir elementos
-    UI.popCustomAceptarBtn.addEventListener("click", () => {
+    // UI.popCustomAceptarBtn.addEventListener("click", () => {
 
-        const bloque = UI.overlayPopCustom.bloqueOrigen;
-        const table = UI.overlayPopCustom.tablaOrigen;
-        const tBody = table.querySelector('tbody');
+    //     const bloque = UI.overlayPopCustom.bloqueOrigen;
+    //     const table = UI.overlayPopCustom.tablaOrigen;
+    //     const tBody = table.querySelector('tbody');
 
-        // verificar si se ha introducido al menos una señal
-        let algunoMayorQue1 = [...UI.overlayPopCustom.querySelectorAll('input')].some(input => Number(input.value) > 0);
-        if (!algunoMayorQue1) {
-            alert("Debe introducir al menos un tipo de señal.");
-            return;
-        }
+    //     // verificar si se ha introducido al menos una señal
+    //     let algunoMayorQue1 = [...UI.overlayPopCustom.querySelectorAll('input')].some(input => Number(input.value) > 0);
+    //     if (!algunoMayorQue1) {
+    //         alert("Debe introducir al menos un tipo de señal.");
+    //         return;
+    //     }
 
-        // Buscar el primer nombre tipo customXX disponible
-        let rowName;
-        for (let i = 0; i < 100; i++) {
-            rowName = "custom" + String(i).padStart(2, "0");
-            const existe = bloque.Elementos.some(el => el.Nombre === rowName);
-            if (!existe) break;
-            if (i === 99) {
-                alert("No se pueden añadir más elementos");
-                return;
-            }
-        }
+    //     // Buscar el primer nombre tipo customXX disponible
+    //     let rowName;
+    //     for (let i = 0; i < 100; i++) {
+    //         rowName = "custom" + String(i).padStart(2, "0");
+    //         const existe = bloque.Elementos.some(el => el.Nombre === rowName);
+    //         if (!existe) break;
+    //         if (i === 99) {
+    //             alert("No se pueden añadir más elementos");
+    //             return;
+    //         }
+    //     }
 
-        // componemos el elemento custom a insertar en "Elementos" del bloque
-        const customElem = elem.Vacio(rowName, 1);
-        customElem.NombreUsuario = "Elemento personalizado";
-        // {
-        //     "Nombre": "custom00",
-        //     "Cantidad": 1,
-        //     "Opciones": [
-        //          {
-        //              "Nombre": "Vacio",
-        //              "Seniales": {},
-        //              "Esquema": []
-        //          }
-        //     ]
-        // }
+    //     // componemos el elemento custom a insertar en "Elementos" del bloque
+    //     const customElem = elem.Vacio(rowName, 1);
+    //     customElem.NombreUsuario = "Elemento personalizado";
+    //     // {
+    //     //     "Nombre": "custom00",
+    //     //     "Cantidad": 1,
+    //     //     "Opciones": [
+    //     //          {
+    //     //              "Nombre": "Vacio",
+    //     //              "Seniales": {},
+    //     //              "Esquema": []
+    //     //          }
+    //     //     ]
+    //     // }
 
 
-        const senialesObj = customElem.Opciones[0].Seniales;
-        const esquemaArray = customElem.Opciones[0].Esquema;
-        signalTypes.forEach(sig => {
-            const inputSignal = UI.overlayPopCustom.querySelector(`input[name="${sig}"]`);
-            if (inputSignal.value * 1 > 0) {
-                senialesObj[sig] = inputSignal.value * 1;
-                const esqName = `Simple${sig}_1`; // "SimpleEA_1", "SimpleED_1", etc.
-                for (let i = 0; i < inputSignal.value * 1; i++) {
-                    esquemaArray.push(esq[esqName]());
-                }
-            }
-        });
+    //     const senialesObj = customElem.Opciones[0].Seniales;
+    //     const esquemaArray = customElem.Opciones[0].Esquema;
+    //     signalTypes.forEach(sig => {
+    //         const inputSignal = UI.overlayPopCustom.querySelector(`input[name="${sig}"]`);
+    //         if (inputSignal.value * 1 > 0) {
+    //             senialesObj[sig] = inputSignal.value * 1;
+    //             const esqName = `Simple${sig}_1`; // "SimpleEA_1", "SimpleED_1", etc.
+    //             for (let i = 0; i < inputSignal.value * 1; i++) {
+    //                 esquemaArray.push(esq[esqName]());
+    //             }
+    //         }
+    //     });
 
-        // añadirmos elemento custom al bloque
-        bloque.Elementos.push(structuredClone(customElem));
+    //     // añadirmos elemento custom al bloque
+    //     bloque.Elementos.push(structuredClone(customElem));
 
-        // insertamos la fila correspondiente el elemento en la tabla
-        const ultimoElemento = bloque.Elementos[bloque.Elementos.length - 1];
-        addFilaBody(ultimoElemento, tBody, bloque);
+    //     // insertamos la fila correspondiente el elemento en la tabla
+    //     const ultimoElemento = bloque.Elementos[bloque.Elementos.length - 1];
+    //     addFilaBody(ultimoElemento, tBody, bloque);
 
-        const filas = tBody.querySelectorAll("tr");
-        const ultima = filas[filas.length - 1];
-        const penultima = filas[filas.length - 2];
+    //     const filas = tBody.querySelectorAll("tr");
+    //     const ultima = filas[filas.length - 1];
+    //     const penultima = filas[filas.length - 2];
 
-        // movemos la fila creada por encima de la que tiene el boton añadir
-        tBody.insertBefore(ultima, penultima);
+    //     // movemos la fila creada por encima de la que tiene el boton añadir
+    //     tBody.insertBefore(ultima, penultima);
 
-        // volvemos a hacer seleccionables los elementos de "proyecto"
-        UI.proyecto.removeAttribute('inert');
+    //     // volvemos a hacer seleccionables los elementos de "proyecto"
+    //     UI.proyecto.removeAttribute('inert');
 
-        //hacemos focus en el input del nombre para que el usuario pueda escribir el nombre del nuevo elemento
-        ultima.querySelector('input[name="nombreSenial"]').value = "";
-        ultima.querySelector('input[name="nombreSenial"]').focus();
+    //     //hacemos focus en el input del nombre para que el usuario pueda escribir el nombre del nuevo elemento
+    //     ultima.querySelector('input[name="nombreSenial"]').value = "";
+    //     ultima.querySelector('input[name="nombreSenial"]').focus();
 
-        // quitamos el overlay
-        UI.overlayPopCustom.style.display = "none";
-        UI.overlay.style.display = "none";
+    //     // quitamos el overlay
+    //     UI.overlayPopCustom.style.display = "none";
+    //     UI.overlay.style.display = "none";
 
-    });
+    // });
     // (rojo cancelar) ocultar la interfaz y no hacer nada.
-    UI.popCustomCancelBtn.addEventListener("click", () => {
-        UI.proyecto.removeAttribute('inert');
-        UI.overlayPopCustom.style.display = "none";
-        UI.overlay.style.display = "none";
-    });
+    // UI.popCustomCancelBtn.addEventListener("click", () => {
+    //     UI.proyecto.removeAttribute('inert');
+    //     UI.overlayPopCustom.style.display = "none";
+    //     UI.overlay.style.display = "none";
+    // });
 
 
     /* ---------- BOTONES LISTADO DE PUNTOS ---------- */
 
     // ( verde generar ) generar el listado de señales borrando todo lo anterior
-    listadoGenerarBtn.addEventListener("click", () => {
+    // listadoGenerarBtn.addEventListener("click", () => {
 
-        if (Object.values(proyectoActual.Listado).some(arr => arr.length > 0)) {
-            if (!confirm("Se borraran todas las señales actuales.\n¿Desea continuar?")) return;
-        }
+    //     if (Object.values(proyectoActual.Listado).some(arr => arr.length > 0)) {
+    //         if (!confirm("Se borraran todas las señales actuales.\n¿Desea continuar?")) return;
+    //     }
 
-        asignarValoresListado();
-        writeSignals();
+    //     asignarValoresListado();
+    //     writeSignals();
 
-    });
+    // });
     // ( morado exportar ) crear un csv para poder copiar, pegar, ...
-    listadoExportarBtn.addEventListener("click", () => {
+    // listadoExportarBtn.addEventListener("click", () => {
 
-        // Asignar seccion desde el que se dispara
-        UI.overlayPopExport.seccion = "listado";
+    //     // Asignar seccion desde el que se dispara
+    //     UI.overlayPopExport.seccion = "listado";
 
-        // mostrar exportPop centrado bajo el boton export
-        UI.proyecto.setAttribute('inert', ''); // bloquea todos los inputs del fondo en estudio
-        UI.overlay.style.display = "block";
-        UI.overlayPopExport.style.display = "block";
+    //     // mostrar exportPop centrado bajo el boton export
+    //     UI.proyecto.setAttribute('inert', ''); // bloquea todos los inputs del fondo en estudio
+    //     UI.overlay.style.display = "block";
+    //     UI.overlayPopExport.style.display = "block";
 
-    });
+    // });
     // ( rojo volver ) Volver al estudio de puntos
-    listadoVolverBtn.addEventListener("click", () => {
-        UI.proyecto.classList.remove("w3-hide");
-        UI.listado.classList.add("w3-hide");
-    });
+    // listadoVolverBtn.addEventListener("click", () => {
+    //     UI.proyecto.classList.remove("w3-hide");
+    //     UI.listado.classList.add("w3-hide");
+    // });
     // ( azul asignar ) Avanzar a la seleccion de controladores y asignacion de señales
-    listadoAsignarBtn.addEventListener("click", () => {
-    });
+    // listadoAsignarBtn.addEventListener("click", () => {
+    // });
 
 
     /* ---------- BOTONES VENTANA POPUP EXPORTAR ---------- */
 
     // (morado PDF) Generar informe PDF y ocultar la interfaz.
-    UI.popExportPDFBtn.addEventListener("click", () => {
-        crearPDF(UI.overlayPopExport.seccion);
-        UI.popExportCerrarBtn.dispatchEvent(new Event('click', { bubbles: true }));
-    });
+    // UI.popExportPDFBtn.addEventListener("click", () => {
+    //     crearPDF(UI.overlayPopExport.seccion);
+    //     UI.popExportCerrarBtn.dispatchEvent(new Event('click', { bubbles: true }));
+    // });
     // (morado CSV) Generar listado en CSV y ocultar la interfaz.
-    UI.popExportCSVBtn.addEventListener("click", () => {
-        crearCSV(UI.overlayPopExport.seccion);
-        UI.popExportCerrarBtn.dispatchEvent(new Event('click', { bubbles: true }));
-    });
+    // UI.popExportCSVBtn.addEventListener("click", () => {
+    //     crearCSV(UI.overlayPopExport.seccion);
+    //     UI.popExportCerrarBtn.dispatchEvent(new Event('click', { bubbles: true }));
+    // });
     // (rojo aspa) ocultar la interfaz y no hacer nada.
-    UI.popExportCerrarBtn.addEventListener("click", () => {
-        UI.proyecto.removeAttribute('inert');
-        UI.overlayPopExport.style.display = "none";
-        UI.overlay.style.display = "none";
-    });
+    // UI.popExportCerrarBtn.addEventListener("click", () => {
+    //     UI.proyecto.removeAttribute('inert');
+    //     UI.overlayPopExport.style.display = "none";
+    //     UI.overlay.style.display = "none";
+    // });
 
 
     /* ---------- BOTONES VENTANA POPUP DOCUMENTACION ---------- */
 
     // (azul memoria) pasar al creador de memoria de control
-    UI.memoriaMostrarBtn.addEventListener("click", () => {
+    // UI.memoriaMostrarBtn.addEventListener("click", () => {
 
-        UI.proyecto.classList.add("w3-hide");
+    //     UI.proyecto.classList.add("w3-hide");
 
-        UI.proyecto.removeAttribute('inert');
-        UI.overlayPopExport.style.display = "none";
-        UI.overlay.style.display = "none";
+    //     UI.proyecto.removeAttribute('inert');
+    //     UI.overlayPopExport.style.display = "none";
+    //     UI.overlay.style.display = "none";
 
-        UI.memoria.classList.remove("w3-hide");
-        crearMemoria();
+    //     UI.memoria.classList.remove("w3-hide");
+    //     crearMemoria();
 
-    });
+    // });
     // (azul listado) pasar al creador de listado de señales
-    UI.listadoMostrarBtn.addEventListener("click", () => {
+    // UI.listadoMostrarBtn.addEventListener("click", () => {
 
-        UI.proyecto.classList.add("w3-hide");
+    //     UI.proyecto.classList.add("w3-hide");
 
-        UI.proyecto.removeAttribute('inert');
-        UI.overlayPopExport.style.display = "none";
-        UI.overlay.style.display = "none";
+    //     UI.proyecto.removeAttribute('inert');
+    //     UI.overlayPopExport.style.display = "none";
+    //     UI.overlay.style.display = "none";
 
-        UI.listado.classList.remove("w3-hide");
-        listadoNombProyecLabel.innerText = nombreProyectoActual;
+    //     UI.listado.classList.remove("w3-hide");
+    //     listadoNombProyecLabel.innerText = nombreProyectoActual;
 
-    });
+    // });
     // (rojo aspa) ocultar la interfaz y no hacer nada.
-    UI.crearCerrarBtn.addEventListener("click", () => {
-        UI.proyecto.removeAttribute('inert');
-        UI.overlayPopExport.style.display = "none";
-        UI.overlay.style.display = "none";
-    });
+    // UI.crearCerrarBtn.addEventListener("click", () => {
+    //     UI.proyecto.removeAttribute('inert');
+    //     UI.overlayPopExport.style.display = "none";
+    //     UI.overlay.style.display = "none";
+    // });
 
 
 
@@ -1755,7 +1755,7 @@ function crearPDF(seccion) {
 
     } else if (seccion === "listado") {
         tilulosColumnas = ["", "", "Num."];
-        tables = listadoSenialesCont.querySelectorAll("table");
+        tables = listado.querySelectorAll("table");
 
     } else {
         alert("❌ Error: no se pudo generar el PDF");
@@ -2390,7 +2390,7 @@ function crearCSV(seccion) {
 
     if (seccion === "listado") {
 
-        const nodosTablas = listadoSenialesCont.querySelectorAll("table");
+        const nodosTablas = listado.querySelectorAll("table");
 
         nodosTablas.forEach(tabla => {
 
