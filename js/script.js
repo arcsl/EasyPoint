@@ -482,9 +482,9 @@ function updateSummaryEstudio() {
     const sumTableBodyRow = UI.proyectoPie.querySelector("table tbody tr");
     sumTableBodyRow.innerHTML = "";
 
-    const totalGlobal = {};
+    const totalesSeniales = {};
     signalTypes.forEach(sig => {
-        totalGlobal[sig] = 0;
+        totalesSeniales[sig] = 0;
     });
 
     const tables = UI.estudioCont.querySelectorAll("table");
@@ -500,21 +500,20 @@ function updateSummaryEstudio() {
             signalTypes.forEach((sig, idx) => {
                 const cellText = cells[idx + 1]?.textContent;
                 const val = parseInt(cellText) || 0;
-                totalGlobal[sig] += val;
+                totalesSeniales[sig] += val;
             });
         });
     });
 
     const nameCell = document.createElement("th");
-    nameCell.innerText = "TOTAL";
-
     sumTableBodyRow.appendChild(nameCell);
+    nameCell.innerText = "TOTAL";
 
     signalTypes.forEach(sig => {
         const cell = document.createElement("td");
-        cell.classList.add(sig);
-        cell.textContent = totalGlobal[sig];
         sumTableBodyRow.appendChild(cell);
+        cell.classList.add(sig);
+        cell.textContent = totalesSeniales[sig];
     });
 
 }
@@ -552,9 +551,9 @@ function totalBody() {
 
     signalTypes.forEach(sig => {
         const sumCell = document.createElement("td");
+        bodyRow.appendChild(sumCell);
         sumCell.classList.add(sig);
         sumCell.innerText = 0;
-        bodyRow.appendChild(sumCell);
     });
 
     return tableBody;
@@ -1072,6 +1071,7 @@ function escuchadores() {
         populateCustomPop();
         populateCabeceraYPie();
 
+
         // verificar si existe la clave del nombre del proyecto actual en el local storage      
         nombreProyectoActual = localStorage.getItem('nombreProyectoActual');
         if (nombreProyectoActual === null) return;
@@ -1101,9 +1101,6 @@ function escuchadores() {
         // retomar el nombre provisional del proyecto por si el usuario lo estaba cambiando
         UI.proyectoInputNombre.value = localStorage.getItem('nuevoNombreProyecto') || nombreProyectoActual;
         UI.proyectoInputNombre.dispatchEvent(new Event('input', { bubbles: true }));
-
-        // marcar proyecto como "no guardado"
-        proyectoActual.Guardado = false;
 
         // mostrar proyecto en el DOM
         writeBlocks();

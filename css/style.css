@@ -5,10 +5,10 @@
 }
 
 body {
-    /* user-select: none; */
-    /* -webkit-user-select: none; */
-    /* -moz-user-select: none; */
-    /* -ms-user-select: none; */
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 body.no-scroll {
@@ -30,8 +30,9 @@ button {
 }
 
 button.botonCuadrado {
+    height: 50px;
     width: 50px;
-    padding: 0;
+    padding: 5px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -76,13 +77,6 @@ table tbody tr:last-child {
     background-color: transparent;
 }
 
-
-/* ---------- COMUN SECCIONES ---------- */
-
-.seccion {
-    height: 100vh;
-}
-
 .manualBtn {
     position: fixed;
     top: 20px;
@@ -99,7 +93,6 @@ table tbody tr:last-child {
     right: 10px;
     z-index: 10000;
 }
-
 
 /* ---------- PORTADA ---------- */
 
@@ -123,10 +116,33 @@ table tbody tr:last-child {
     text-align: center;
 }
 
+/* ---------- PROYECTO ---------- */
+.seccion {
+    height: 100vh;
+}
+
+#proyectoCabecera,
+#proyectoPie {
+    width: 1000px;
+}
+
+#proyectoInputNombre {
+    width: 736px;
+}
+
+#proyectoLabelSeccion{
+    height: 40px;
+}
+
+/* nombre del bloque */
+#proyectoPie table tr :not(:first-child) {
+    width: 50px;
+    text-align: center;
+}
 
 /* ---------- PROYECTO SEPARADORES SUPERIOR E INFERIOR ---------- */
 #proyectoSepTop {
-    height: 138px;
+    height: 118px;
 }
 
 #proyectoSepPie {

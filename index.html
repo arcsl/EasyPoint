@@ -104,14 +104,14 @@
             <!-- Nombre de proyecto y botones de control -->
             <div class="w3-margin-top contenidoFlex">
                 <input id="proyectoInputNombre" class="w3-input w3-margin-right" placeholder="Nombre del proyecto" />
-                <button id="proyectoSalirBtn" class="w3-button w3-red w3-margin-right botonCuadrado"><img src="./images/salir.svg" alt="Salir" width="35" height="35"></button>
-                <button id="proyectoGuardarBtn" class="w3-button w3-green w3-margin-right botonCuadrado"><img src="./images/guardar.svg" alt="Guardar" width="40" height="40"></button>
-                <button id="proyectoExportarBtn" class="w3-button w3-purple w3-margin-right botonCuadrado"><img src="./images/filedown.svg" alt="Descargar" width="40" height="40"></button>
-                <button id="proyectoSeccionBtn" class="w3-button w3-blue w3-margin-right botonCuadrado"><img src="./images/estudio.svg" alt="Diseño" width="40" height="40"></button>
+                <button id="proyectoSalirBtn" class="w3-button w3-red w3-margin-right botonCuadrado"><img src="./images/salir.svg" alt="Salir"></button>
+                <button id="proyectoGuardarBtn" class="w3-button w3-green w3-margin-right botonCuadrado"><img src="./images/guardar.svg" alt="Guardar"></button>
+                <button id="proyectoExportarBtn" class="w3-button w3-purple w3-margin-right botonCuadrado"><img src="./images/filedown.svg" alt="Descargar"></button>
+                <button id="proyectoSeccionBtn" class="w3-button w3-blue botonCuadrado"><img src="./images/estudio.svg" alt="Diseño"></button>
             </div>
             <!-- Subtitulo Cabecera -->
-            <div>
-                <label id="proyectoLabelSeccion">ESTUDIO DE LA INSTALACIÓN</label>
+            <div class="w3-margin-bottom">
+                <label class="w3-input w3-text-gray" id="proyectoLabelSeccion" >ESTUDIO DE LA INSTALACIÓN</label>
             </div>
         </div>
 
@@ -119,7 +119,9 @@
         <div id="proyectoSepTop"></div>
 
         <!-- Estudio -->
-        <div id="estudioCont" class="w3-margin-bottom" >
+        <div id="estudio">
+
+            <div id="estudioCont" class="w3-margin-bottom"></div>
 
             <!-- Añadidor de bloques -->
             <div class="contenidoFlex">
@@ -130,11 +132,14 @@
         </div>
 
         <!-- Memoria -->
-        <div id="memoriaCont" class="w3-container w3-display-container seccion w3-hide">
+        <div id="memoria" class="w3-hide">
+            <div id="memoriaCont" class="w3-margin-bottom"></div>
         </div>
 
         <!-- Listado -->
-        <div id="listadoCont" class="w3-container w3-display-container seccion w3-hide"></div>
+        <div id="listado" class="w3-hide">
+            <div id="listadoCont" class="w3-margin-bottom"></div>
+        </div>
 
 
         <!-- Separador pie -->

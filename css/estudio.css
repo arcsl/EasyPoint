@@ -1,8 +1,6 @@
 /* ---------- ESTUDIO ---------- */
-#proyectoCabecera,
-#estudioCont,
-#estudioSumarioCont {
-    max-width: 1000px;
+#estudioCont  {
+    width: 1000px;
 }
 
 #estudioCont tr> :first-child {
@@ -12,7 +10,6 @@
 #estudioCont tr> :not(:first-child) {
     text-align: center;
 }
-
 
 
 /* ---------- ESTUDIO CABECERA ---------- */
@@ -56,8 +53,8 @@
 }
 
 /* nombre del bloque */
-#estudioCont thead>tr> :first-child input:first-of-type {
-    width: 395px !important;
+#estudioCont thead>tr>th:first-child>input:first-of-type {
+    width: 395px;
 }
 
 /* botones eliminar linea custom */
