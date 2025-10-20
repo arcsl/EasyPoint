@@ -1,8 +1,20 @@
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    min-width: 1200px;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+}
 
 /* Ventana seleccion de señales custom */
-
 #customPop {
-    display: none;
     position: absolute;
     top: 50px;
     left: 100px;
@@ -30,25 +42,10 @@
     font-size: 1.5em;
 }
 
-#overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    min-width: 1200px;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-    z-index: 9999;
-    align-items: center;
-    justify-content: center;
-}
 
-#seccionPop,
-#exportPop {
-    display: none;
+/* Ventana de exportacion o cambio de seccion */
+#overlayPopSeccion,
+#overlayPopExport {
     position: absolute;
     top: 50px;
     z-index: 10000;
@@ -57,22 +54,23 @@
     padding: 1.5rem;
 }
 
-#exportPop {
+#overlayPopExport {
     left: 555px;
 }
 
-#seccionPop {
+#overlayPopSeccion {
     left: 855px;
 }
 
-#seccionPop button.iconBtn,
-#exportPop button.iconBtn {
-    padding: 0 0 0 5px;
+#overlayPopSeccion button.iconBtn,
+#overlayPopExport button.iconBtn {
+    padding: 5px;
     width: 60px;
+    display: inline-block;
 }
 
-#seccionPop button.corner,
-#exportPop button.corner {
+#overlayPopSeccion button.corner,
+#overlayPopExport button.corner {
     position: absolute;
     top: -10px;
     right: -10px;

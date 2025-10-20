@@ -1315,6 +1315,7 @@ function escuchadores() {
         nombreProyectoActual = abrirProyecto;
         proyectoActual = structuredClone(proyectosEasyPoint[nombreProyectoActual]);
         proyectoActual.Guardado = true;
+        proyectoActual.Viendo = "estudio";
 
         localStorage.setItem("nombreProyectoActual", nombreProyectoActual);
         localStorage.setItem("proyectoActual", JSON.stringify(proyectoActual));
@@ -1398,6 +1399,26 @@ function escuchadores() {
 
     /* ---------- BOTONES PROYECTO ---------- */
 
+    // (rojo salir) volver a la portada
+    UI.proyectoSalirBtn.addEventListener("click", () => {
+        let seguir = proyectoActual.Guardado
+            ? true
+            : confirm("Hay cambios no guardados que se perderán.\n\n¿Desea continuar?\n");
+        if (seguir) {
+
+            // limpiar las claves del proyecto actual
+            localStorage.removeItem('proyectoActual');
+            localStorage.removeItem('nombreProyectoActual');
+            localStorage.removeItem('nuevoNombreProyecto');
+            nombreProyectoActual = null;
+            proyectoActual = null;
+
+            // poner pantalla principal en modo inicial (presionamos boton abrir que deberia estar en modo "cancelar")
+            UI.proyecto.classList.add("w3-hide");
+            UI.portada.classList.remove("w3-hide");
+
+        }
+    });
     // (verde guardar) guardar el estado actual del proyecto en el local storage del navegador
     UI.proyectoGuardarBtn.addEventListener("click", () => {
 
@@ -1451,49 +1472,16 @@ function escuchadores() {
     });
     // (morado Exportar) mostar exportPop para seleccionar el formato de la exportación
     UI.proyectoExportarBtn.addEventListener("click", () => {
-
-        // Asignar seccion desde el que se dispara
-        UI.overlayPopExport.seccion = "estudio";
-
-        // mostrar exportPop centrado bajo el boton export
-        UI.proyecto.setAttribute('inert', ''); // bloquea todos los inputs del fondo en estudio
-        UI.overlay.style.display = "block";
-        UI.overlayPopExport.style.display = "block";
-
-    });
-    // (rojo salir) volver a la portada
-    UI.proyectoSalirBtn.addEventListener("click", () => {
-        let seguir = proyectoActual.Guardado
-            ? true
-            : confirm("Hay cambios no guardados que se perderán.\n\n¿Desea continuar?\n");
-        if (seguir) {
-
-            // limpiar las claves del proyecto actual
-            localStorage.removeItem('proyectoActual');
-            localStorage.removeItem('nombreProyectoActual');
-            localStorage.removeItem('nuevoNombreProyecto');
-            nombreProyectoActual = null;
-            proyectoActual = null;
-
-            // poner pantalla principal en modo inicial (presionamos boton abrir que deberia estar en modo "cancelar")
-            UI.proyecto.classList.add("w3-hide");
-            UI.portada.classList.remove("w3-hide");
-
-        }
+        UI.proyecto.setAttribute('inert', ''); // bloquea el resto de inputs y botones
+        UI.overlay.classList.remove("w3-hide");
+        UI.overlayPopExport.classList.remove("w3-hide");
     });
     // (azul seccion) cambiar de seccion en el estudio
-    // UI.proyectoSeccionBtn.addEventListener("click", () => {
-
-    //     // Asignar seccion desde el que se dispara
-    //     seccionPop.seccion = "estudio";
-
-    //     // mostrar seccionPop centrado bajo el boton Docum.
-    //     UI.proyecto.setAttribute('inert', ''); // bloquea todos los inputs del fondo en estudio
-    //     UI.overlay.style.display = "block";
-    //     seccionPop.style.display = "block";
-
-
-    // });
+    UI.proyectoSeccionBtn.addEventListener("click", () => {
+        UI.proyecto.setAttribute('inert', ''); // bloquea el resto de inputs y botones
+        UI.overlay.classList.remove("w3-hide");
+        UI.overlayPopSeccion.classList.remove("w3-hide");
+    });
     // (verde añadir) añadir el bloque seleccionado
     UI.estudioBloqAniaBtn.addEventListener("click", () => {
         const bloque = structuredClone(blocksData[UI.estudioBloqSelect.value]);
@@ -1656,59 +1644,55 @@ function escuchadores() {
     /* ---------- BOTONES VENTANA POPUP EXPORTAR ---------- */
 
     // (morado PDF) Generar informe PDF y ocultar la interfaz.
-    // UI.popExportPDFBtn.addEventListener("click", () => {
-    //     crearPDF(UI.overlayPopExport.seccion);
-    //     UI.popExportCerrarBtn.dispatchEvent(new Event('click', { bubbles: true }));
-    // });
+    UI.expPDFBtn.addEventListener("click", () => {
+        crearPDF(UI.overlayPopExport.seccion);
+        UI.popExportCerrarBtn.dispatchEvent(new Event('click', { bubbles: true }));
+    });
     // (morado CSV) Generar listado en CSV y ocultar la interfaz.
-    // UI.popExportCSVBtn.addEventListener("click", () => {
-    //     crearCSV(UI.overlayPopExport.seccion);
-    //     UI.popExportCerrarBtn.dispatchEvent(new Event('click', { bubbles: true }));
-    // });
+    UI.expCSVBtn.addEventListener("click", () => {
+        crearCSV(UI.overlayPopExport.seccion);
+        UI.popExportCerrarBtn.dispatchEvent(new Event('click', { bubbles: true }));
+    });
     // (rojo aspa) ocultar la interfaz y no hacer nada.
-    // UI.popExportCerrarBtn.addEventListener("click", () => {
-    //     UI.proyecto.removeAttribute('inert');
-    //     UI.overlayPopExport.style.display = "none";
-    //     UI.overlay.style.display = "none";
-    // });
+    UI.expCerrarBtn.addEventListener("click", () => {
+        UI.proyecto.removeAttribute('inert');
+        UI.overlay.classList.add("w3-hide");
+        UI.overlayPopExport.classList.add("w3-hide");
+    });
 
 
     /* ---------- BOTONES VENTANA POPUP DOCUMENTACION ---------- */
 
+    // (azul estudio) pasar al creador de memoria de control
+    UI.estudioMostrarBtn.addEventListener("click", () => {
+        UI.proyectoSeccionBtn.querySelector("img").src = "./images/estudio.svg";
+        UI.estudioMostrarBtn.classList.add("w3-hide");        
+        UI.memoriaMostrarBtn.classList.remove("w3-hide");            
+        UI.listadoMostrarBtn.classList.remove("w3-hide");        
+        UI.crearCerrarBtn.dispatchEvent(new Event('click', { bubbles: true }));
+    });
     // (azul memoria) pasar al creador de memoria de control
-    // UI.memoriaMostrarBtn.addEventListener("click", () => {
-
-    //     UI.proyecto.classList.add("w3-hide");
-
-    //     UI.proyecto.removeAttribute('inert');
-    //     UI.overlayPopExport.style.display = "none";
-    //     UI.overlay.style.display = "none";
-
-    //     UI.memoria.classList.remove("w3-hide");
-    //     crearMemoria();
-
-    // });
+    UI.memoriaMostrarBtn.addEventListener("click", () => {
+        UI.proyectoSeccionBtn.querySelector("img").src = "./images/book.svg";
+        UI.estudioMostrarBtn.classList.remove("w3-hide");        
+        UI.memoriaMostrarBtn.classList.add("w3-hide");            
+        UI.listadoMostrarBtn.classList.remove("w3-hide");   
+        UI.crearCerrarBtn.dispatchEvent(new Event('click', { bubbles: true }));
+    });
     // (azul listado) pasar al creador de listado de señales
-    // UI.listadoMostrarBtn.addEventListener("click", () => {
-
-    //     UI.proyecto.classList.add("w3-hide");
-
-    //     UI.proyecto.removeAttribute('inert');
-    //     UI.overlayPopExport.style.display = "none";
-    //     UI.overlay.style.display = "none";
-
-    //     UI.listado.classList.remove("w3-hide");
-    //     listadoNombProyecLabel.innerText = nombreProyectoActual;
-
-    // });
+    UI.listadoMostrarBtn.addEventListener("click", () => {
+        UI.proyectoSeccionBtn.querySelector("img").src = "./images/listado.svg";
+        UI.estudioMostrarBtn.classList.remove("w3-hide");        
+        UI.memoriaMostrarBtn.classList.remove("w3-hide");            
+        UI.listadoMostrarBtn.classList.add("w3-hide");   
+        UI.crearCerrarBtn.dispatchEvent(new Event('click', { bubbles: true }));
+    });
     // (rojo aspa) ocultar la interfaz y no hacer nada.
-    // UI.crearCerrarBtn.addEventListener("click", () => {
-    //     UI.proyecto.removeAttribute('inert');
-    //     UI.overlayPopExport.style.display = "none";
-    //     UI.overlay.style.display = "none";
-    // });
-
-
+    UI.crearCerrarBtn.addEventListener("click", () => {
+        UI.proyecto.removeAttribute('inert');
+        UI.overlay.classList.add("w3-hide");
+        UI.overlayPopSeccion.classList.add("w3-hide");
+    });
 
 }
 
@@ -1739,24 +1723,24 @@ const easyPie = {
 
 
 /* ------------------------- FUNCIONES ------------------------- */
-function crearPDF(seccion) {
+function crearPDF() {
 
-    const docPDF = docPDFDef(nombreProyectoActual, seccion); // creamos el objeto principal con la estructura para pasarselo a PDFmake
+    const docPDF = docPDFDef(nombreProyectoActual, proyectoActual.Viendo); // creamos el objeto principal con la estructura para pasarselo a PDFmake
 
     let tables = [];            // coleccion de tablas a iterar en funcion a la seccion elegida
     let tilulosColumnas = [];    // titulos de cabecera de cada columna
 
-    if (seccion === "estudio") {
+    if (proyectoActual.Viendo === "estudio") {
         tilulosColumnas = ["", "", ...signalTypes];
         tables = estudioBloqCont.querySelectorAll("table");
 
-    } else if (seccion === "listado") {
+    } else if (proyectoActual.Viendo === "listado") {
         tilulosColumnas = ["", "", "Num."];
         tables = listado.querySelectorAll("table");
 
     } else {
         alert("❌ Error: no se pudo generar el PDF");
-        console.error("Sección desconocida:", seccion);
+        console.error("Sección desconocida:", proyectoActual.Viendo);
         return;
     }
 
@@ -1764,13 +1748,13 @@ function crearPDF(seccion) {
 
         let tituloTabla = "";
 
-        if (seccion === "estudio") {
+        if (proyectoActual.Viendo === "estudio") {
             const cabeceraInputs = table.querySelectorAll('thead th input');
             const nombreBloque = cabeceraInputs[0]?.value || "Tabla";
             const cantidadBloque = Number(cabeceraInputs[1]?.value) || 1;
             tituloTabla = cantidadBloque > 1 ? `${nombreBloque} (x${cantidadBloque})` : nombreBloque;
 
-        } else if (seccion === "listado") {
+        } else if (proyectoActual.Viendo === "listado") {
             tituloTabla = table.querySelector('thead th label')?.textContent || "Tabla";
         }
 
@@ -1780,7 +1764,7 @@ function crearPDF(seccion) {
 
             const filasPDF = filasPDFdef(tilulosColumnas.length); // creamos el objeto filas 
 
-            if (seccion === "estudio") {
+            if (proyectoActual.Viendo === "estudio") {
 
                 const checkbox = linea.querySelector('input[type="checkbox"]');
                 if (!checkbox || !checkbox.checked) return;
@@ -1801,7 +1785,7 @@ function crearPDF(seccion) {
 
                 filasPDF.table.body.push([...[numeroSenial, celdaNombre, ...numeroSeñales]]); // añadimos la fila al objeto filas
 
-            } else if (seccion === "listado") {
+            } else if (proyectoActual.Viendo === "listado") {
                 const nombreSenial = linea.querySelector('td:nth-child(2) input:nth-of-type(2)').value;                // segundo input dentro del segundo td
                 const cantidadSenial = linea.Numero;
                 filasPDF.table.body.push([...[indexLinea + 1, { text: nombreSenial, alignment: 'left' }, cantidadSenial]]); // añadimos la fila al objeto filas
@@ -1819,7 +1803,7 @@ function crearPDF(seccion) {
     // --- Fila de totales ---
 
     // elejimos la seccion en la que leer los totales
-    const totalRow = seccion === "estudio"
+    const totalRow = proyectoActual.Viendo === "estudio"
         ? UI.proyectoPie.querySelector("table tbody tr")
         : UI.proyectoPie.querySelector("table tbody tr");
 
@@ -1848,7 +1832,7 @@ function crearPDF(seccion) {
     );
 
     docPDF.content.push(tablaTotalesPDF); // añadimos el objeto tablaTotalesPDF al objeto documento
-    pdfMake.createPdf(docPDF).download(`${nombreProyectoActual} - ${seccion}.pdf`);     // Generar el PDF final
+    pdfMake.createPdf(docPDF).download(`${nombreProyectoActual} - ${proyectoActual.Viendo}.pdf`);     // Generar el PDF final
 
 }
 
