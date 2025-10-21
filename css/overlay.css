@@ -14,29 +14,29 @@
 }
 
 /* Ventana seleccion de señales custom */
-#customPop {
+#overlayPopCustom {
     position: absolute;
-    top: 50px;
-    left: 100px;
+    /* top: 50px; */
+    /* left: 100px; */
     z-index: 10000;
     background-color: white;
     border-radius: 8px;
     padding: 1.5rem;
 }
 
-#customPop label,
-#customPop input {
+#overlayPopCustom label,
+#overlayPopCustom input {
     width: 100px;
     height: 20px;
 }
 
-#customPop label {
+#overlayPopCustom label {
     padding: 0;
     padding-right: 20px;
     border: none !important;
 }
 
-#customPop #nombreNuevaSenial {
+#overlayPopCustom #nombreNuevaSenial {
     display: inline-block;
     width: 100%;
     font-size: 1.5em;

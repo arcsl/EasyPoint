@@ -301,7 +301,7 @@ function addBlockBody(bloque, table) {
 
     addCustom.textContent = "✚";
     addCustom.classList = "w3-button w3-green addBtn";
-    addCustom.addEventListener('click', () => {
+    addCustom.addEventListener('click', event => {
 
         // Asignar bloque y tabla desde el que se dispara
         UI.overlayPopCustom.tablaOrigen = table;
@@ -314,10 +314,20 @@ function addBlockBody(bloque, table) {
 
         // mostrar customPop centrado en pantalla
         UI.proyecto.setAttribute('inert', ''); // bloquea todos los inputs del fondo en estudio
-        UI.overlay.style.display = "block";
-        UI.overlayPopCustom.style.display = "block";
-        UI.overlayPopCustom.style.top = (window.innerHeight - UI.overlayPopCustom.offsetWidth) / 2 + "px";
-        UI.overlayPopCustom.style.left = (window.innerWidth - UI.overlayPopCustom.offsetWidth) / 2 + "px";
+        UI.overlay.classList.remove("w3-hide");
+        UI.overlayPopCustom.classList.remove("w3-hide");
+
+        // Obtener tamaño y posición del contenedor
+        const contRect = UI.estudioCont.getBoundingClientRect();
+
+        // Calcular posición centrada dentro del contenedor
+        const left = contRect.left + (contRect.width - UI.overlayPopCustom.offsetWidth) / 2;
+
+        // Posicionar el poup
+        UI.overlayPopCustom.style.top = (window.innerHeight - UI.overlayPopCustom.offsetHeight) / 2 + "px";
+        UI.overlayPopCustom.style.left = contRect.left + (contRect.width - UI.overlayPopCustom.offsetWidth) / 2 + "px";
+
+        // focus al primer input
         UI.overlayPopCustom.querySelector('input').focus();
 
     });
@@ -1009,7 +1019,6 @@ function nomPropio(texto) {
 function escuchadores() {
 
     // ---------- GENERALES ----------
-
     document.addEventListener("DOMContentLoaded", () => {
 
         populateProyectSelect();
@@ -1464,92 +1473,94 @@ function escuchadores() {
     /* ---------- BOTONES VENTANA POPUP SEÑALES---------- */
 
     // (verde aceptar) ocultar la interfaz y añadir elementos
-    // UI.popCustomAceptarBtn.addEventListener("click", () => {
+    UI.popCustomAceptarBtn.addEventListener("click", () => {
 
-    //     const bloque = UI.overlayPopCustom.bloqueOrigen;
-    //     const table = UI.overlayPopCustom.tablaOrigen;
-    //     const tBody = table.querySelector('tbody');
+        const bloque = UI.overlayPopCustom.bloqueOrigen;
+        const table = UI.overlayPopCustom.tablaOrigen;
+        const tBody = table.querySelector('tbody');
 
-    //     // verificar si se ha introducido al menos una señal
-    //     let algunoMayorQue1 = [...UI.overlayPopCustom.querySelectorAll('input')].some(input => Number(input.value) > 0);
-    //     if (!algunoMayorQue1) {
-    //         alert("Debe introducir al menos un tipo de señal.");
-    //         return;
-    //     }
+        // verificar si se ha introducido al menos una señal
+        let algunoMayorQue1 = [...UI.overlayPopCustom.querySelectorAll('input')].some(input => Number(input.value) > 0);
+        if (!algunoMayorQue1) {
+            alert("Debe introducir al menos un tipo de señal.");
+            return;
+        }
 
-    //     // Buscar el primer nombre tipo customXX disponible
-    //     let rowName;
-    //     for (let i = 0; i < 100; i++) {
-    //         rowName = "custom" + String(i).padStart(2, "0");
-    //         const existe = bloque.Elementos.some(el => el.Nombre === rowName);
-    //         if (!existe) break;
-    //         if (i === 99) {
-    //             alert("No se pueden añadir más elementos");
-    //             return;
-    //         }
-    //     }
+        // Buscar el primer nombre tipo customXX disponible
+        let rowName;
+        for (let i = 0; i < 100; i++) {
+            rowName = "custom" + String(i).padStart(2, "0");
+            const existe = bloque.Elementos.some(el => el.Nombre === rowName);
+            if (!existe) break;
+            if (i === 99) {
+                alert("No se pueden añadir más elementos");
+                return;
+            }
+        }
 
-    //     // componemos el elemento custom a insertar en "Elementos" del bloque
-    //     const customElem = elem.Vacio(rowName, 1);
-    //     customElem.NombreUsuario = "Elemento personalizado";
-    //     // {
-    //     //     "Nombre": "custom00",
-    //     //     "Cantidad": 1,
-    //     //     "Opciones": [
-    //     //          {
-    //     //              "Nombre": "Vacio",
-    //     //              "Seniales": {},
-    //     //              "Esquema": []
-    //     //          }
-    //     //     ]
-    //     // }
+        // componemos el elemento custom a insertar en "Elementos" del bloque
+        const customElem = elem.Vacio(rowName, 1);
+        customElem.NombreUsuario = "Elemento personalizado";
+        // {
+        //     "Nombre": "custom00",
+        //     "Cantidad": 1,
+        //     "Opciones": [
+        //          {
+        //              "Nombre": "Vacio",
+        //              "Seniales": {},
+        //              "Esquema": []
+        //          }
+        //     ]
+        // }
 
+        const senialesObj = customElem.Opciones[0].Seniales;
+        const esquemaArray = customElem.Opciones[0].Esquema;
+        signalTypes.forEach(sig => {
+            const inputSignal = UI.overlayPopCustom.querySelector(`input[name="${sig}"]`);
+            if (inputSignal.value * 1 > 0) {
+                senialesObj[sig] = inputSignal.value * 1;
+                const esqName = `Simple${sig}_1`; // "SimpleEA_1", "SimpleED_1", etc.
+                for (let i = 0; i < inputSignal.value * 1; i++) {
+                    esquemaArray.push(esq[esqName]());
+                }
+            }
+        });
 
-    //     const senialesObj = customElem.Opciones[0].Seniales;
-    //     const esquemaArray = customElem.Opciones[0].Esquema;
-    //     signalTypes.forEach(sig => {
-    //         const inputSignal = UI.overlayPopCustom.querySelector(`input[name="${sig}"]`);
-    //         if (inputSignal.value * 1 > 0) {
-    //             senialesObj[sig] = inputSignal.value * 1;
-    //             const esqName = `Simple${sig}_1`; // "SimpleEA_1", "SimpleED_1", etc.
-    //             for (let i = 0; i < inputSignal.value * 1; i++) {
-    //                 esquemaArray.push(esq[esqName]());
-    //             }
-    //         }
-    //     });
+        // añadirmos elemento custom al bloque
+        bloque.Elementos.push(structuredClone(customElem));
 
-    //     // añadirmos elemento custom al bloque
-    //     bloque.Elementos.push(structuredClone(customElem));
+        // insertamos la fila correspondiente el elemento en la tabla
+        const ultimoElemento = bloque.Elementos[bloque.Elementos.length - 1];
+        addFilaBody(ultimoElemento, tBody, bloque);
 
-    //     // insertamos la fila correspondiente el elemento en la tabla
-    //     const ultimoElemento = bloque.Elementos[bloque.Elementos.length - 1];
-    //     addFilaBody(ultimoElemento, tBody, bloque);
+        const filas = tBody.querySelectorAll("tr");
+        const ultima = filas[filas.length - 1];
+        const penultima = filas[filas.length - 2];
 
-    //     const filas = tBody.querySelectorAll("tr");
-    //     const ultima = filas[filas.length - 1];
-    //     const penultima = filas[filas.length - 2];
+        // movemos la fila creada por encima de la que tiene el boton añadir
+        tBody.insertBefore(ultima, penultima);
 
-    //     // movemos la fila creada por encima de la que tiene el boton añadir
-    //     tBody.insertBefore(ultima, penultima);
+        actualizaSumatorio();
+        proyectoNoGuardado();
+        
+        // volvemos a hacer seleccionables los elementos de "proyecto"
+        UI.proyecto.removeAttribute('inert');
 
-    //     // volvemos a hacer seleccionables los elementos de "proyecto"
-    //     UI.proyecto.removeAttribute('inert');
+        //hacemos focus en el input del nombre para que el usuario pueda escribir el nombre del nuevo elemento
+        ultima.querySelector('input[name="nombreSenial"]').value = "";
+        ultima.querySelector('input[name="nombreSenial"]').focus();
 
-    //     //hacemos focus en el input del nombre para que el usuario pueda escribir el nombre del nuevo elemento
-    //     ultima.querySelector('input[name="nombreSenial"]').value = "";
-    //     ultima.querySelector('input[name="nombreSenial"]').focus();
+        // quitamos el overlay
+        UI.popCustomCancelBtn.dispatchEvent(new Event('click', { bubbles: true }));
 
-    //     // quitamos el overlay
-    //     UI.overlayPopCustom.style.display = "none";
-    //     UI.overlay.style.display = "none";
+    });
 
-    // });
     // (rojo cancelar) ocultar la interfaz y no hacer nada.
-    // UI.popCustomCancelBtn.addEventListener("click", () => {
-    //     UI.proyecto.removeAttribute('inert');
-    //     UI.overlayPopCustom.style.display = "none";
-    //     UI.overlay.style.display = "none";
-    // });
+    UI.popCustomCancelBtn.addEventListener("click", () => {
+        UI.proyecto.removeAttribute('inert');
+        UI.overlayPopCustom.classList.add("w3-hide");
+        UI.overlay.classList.add("w3-hide");
+    });
 
 
     /* ---------- BOTONES LISTADO DE PUNTOS ---------- */
