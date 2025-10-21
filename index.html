@@ -111,42 +111,34 @@
             </div>
             <!-- Subtitulo Cabecera -->
             <div class="w3-margin-bottom">
-                <label class="w3-input w3-text-gray" id="proyectoLabelSeccion" >ESTUDIO DE LA INSTALACIÓN</label>
+                <label class="w3-input w3-text-gray" id="proyectoLabelSeccion">ESTUDIO DE LA INSTALACIÓN</label>
             </div>
         </div>
 
         <!-- Separador cabecera -->
         <div id="proyectoSepTop"></div>
 
-        <!-- Estudio -->
-        <div id="estudio">
+        <!-- Secciones -->
+        <div id="estudioCont" class="w3-margin-bottom"></div>
+        <div id="memoriaCont" class="w3-margin-bottom w3-hide"></div>
+        <div id="listadoCont" class="w3-margin-bottom w3-hide"></div>
 
-            <div id="estudioCont" class="w3-margin-bottom"></div>
-
-            <!-- Añadidor de bloques -->
-            <div class="contenidoFlex">
-                <select id="estudioBloqSelect" class="w3-select w3-margin-right w3-padding"></select>
-                <button id="estudioBloqAniaBtn" class="w3-button w3-green w3-margin-right">Añadir</button>
-            </div>
-
+        <!-- Barra herramientas de seccion -->
+        <div class="contenidoFlex">
+            <select id="sectionToolsSelect" class="w3-select w3-margin-right w3-padding"></select>
+            <button id="sectionToolsBtn" class="w3-button w3-green botonCuadrado w3-margin-right"><img src="./images/aniacirc.svg" alt="Añadir"></button>
         </div>
-
-        <!-- Memoria -->
-        <div id="memoria" class="w3-hide">
-            <div id="memoriaCont" class="w3-margin-bottom"></div>
-        </div>
-
-        <!-- Listado -->
-        <div id="listado" class="w3-hide">
-            <div id="listadoCont" class="w3-margin-bottom"></div>
-        </div>
-
 
         <!-- Separador pie -->
         <div id="proyectoSepPie"></div>
 
         <!-- Pie -->
-        <div id="proyectoPie" class="w3-bottom w3-white"></div>
+        <div id="proyectoPie" class="w3-bottom w3-white">
+            <table class="w3-table w3-bordered w3-pale-green w3-margin-top w3-margin-bottom">
+                <thead><tr><th></th></tr></thead>
+                <tbody><tr><th>TOTAL</th></tr></tbody>
+            </table>
+        </div>
 
     </div>
 

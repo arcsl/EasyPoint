@@ -33,7 +33,7 @@ button.botonCuadrado {
     height: 50px;
     width: 50px;
     padding: 5px;
-    display: flex;
+    display: inline-flex;
     justify-content: center;
     align-items: center;
 }
@@ -130,8 +130,12 @@ table tbody tr:last-child {
     width: 736px;
 }
 
-#proyectoLabelSeccion{
+#proyectoLabelSeccion {
     height: 40px;
+}
+
+#sectionToolsSelect {
+    width: 415px;
 }
 
 /* nombre del bloque */
@@ -139,6 +143,8 @@ table tbody tr:last-child {
     width: 50px;
     text-align: center;
 }
+
+
 
 /* ---------- PROYECTO SEPARADORES SUPERIOR E INFERIOR ---------- */
 #proyectoSepTop {
@@ -183,3 +189,7 @@ table tbody tr:last-child {
     animation-fill-mode: forwards;
 }
 
+/* ---------- EXTENSION W3.CSS ---------- */
+.w3-invisible {
+  visibility: hidden;
+}

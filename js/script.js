@@ -59,7 +59,7 @@ function populateBlockSelect() {
         option.value = index;
         option.textContent = block.Nombre;
         if (block.Elementos === null) option.disabled = true;
-        UI.estudioBloqSelect.appendChild(option);
+        UI.sectionToolsSelect.appendChild(option);
     });
 }
 
@@ -94,21 +94,25 @@ function populateCustomPop() {
 
 }
 
-function populateCabeceraYPie() {
+function populateSumatorio() {
 
-    // poblar pie con sumatorio de señales en estudio
-    const estudioSumarioSenialesTable = document.createElement("table");
-    estudioSumarioSenialesTable.classList = "w3-table w3-bordered w3-pale-green w3-margin-top w3-margin-bottom";
-    UI.proyectoPie.appendChild(estudioSumarioSenialesTable);
-    estudioSumarioSenialesTable.appendChild(totalHeader());
-    estudioSumarioSenialesTable.appendChild(totalBody());
+    const sumarioSenialesHead = UI.proyectoPie.querySelector("table thead tr");
+    const sumarioSenialesBody = UI.proyectoPie.querySelector("table tbody tr");
 
-    // poblar pie con sumatorio de señales en listado
-    // const listadoSumarioSenialesTable = document.createElement("table");
-    // listadoSumarioSenialesTable.classList = "w3-table w3-bordered w3-pale-green w3-margin-top w3-margin-bottom";
-    // UI.proyectoPie.appendChild(listadoSumarioSenialesTable);
-    // listadoSumarioSenialesTable.appendChild(totalHeader());
-    // listadoSumarioSenialesTable.appendChild(totalBody());
+    signalTypes.forEach(sig => {
+
+        // celdas cabecera
+        const headTitle = document.createElement("th");
+        sumarioSenialesHead.appendChild(headTitle);
+        headTitle.innerText = sig;
+
+        // celdas con suma total
+        const sumCell = document.createElement("td");
+        sumarioSenialesBody.appendChild(sumCell);
+        sumCell.classList.add(sig);
+        sumCell.innerText = 0;
+
+    });
 
 }
 
@@ -117,7 +121,7 @@ function writeBlocks() {
     UI.proyectoInputNombre.value = nombreProyectoActual;
     UI.estudioCont.innerHTML = "";
     proyectoActual?.Estudio?.forEach?.(addBlock);
-    UI.estudioBloqSelect.selectedIndex = 0;
+    UI.sectionToolsSelect.selectedIndex = 0;
     disableFirstAndLastMoveBlockButtons();
 }
 
@@ -181,9 +185,9 @@ function addBlock(bloque) {
     addBlockHeader(bloque, table);
     addBlockBody(bloque, table);
 
-    updateSummaryEstudio();
+    actualizaSumatorio();
 
-    UI.estudioBloqSelect.focus();
+    UI.sectionToolsSelect.focus();
 
 }
 
@@ -251,7 +255,7 @@ function addBlockHeader(bloque, table) {
 
         // actualizar botones mover y sumatorio
         disableFirstAndLastMoveBlockButtons();
-        updateSummaryEstudio();
+        actualizaSumatorio();
 
     });
 
@@ -364,7 +368,7 @@ function addFilaBody(elemento, tBody, bloque) {
         row.remove();
 
         // actualizar sumatorio
-        updateSummaryEstudio();
+        actualizaSumatorio();
     });
 
     checkbox.type = "checkbox";
@@ -377,7 +381,7 @@ function addFilaBody(elemento, tBody, bloque) {
         }
         mostrarOcultarInputsYSelects(row, checkbox.checked);
         calculaSeniales(row, elemento, bloque, checkbox.checked);
-        updateSummaryEstudio();
+        actualizaSumatorio();
         proyectoNoGuardado();
     });
 
@@ -401,7 +405,7 @@ function addFilaBody(elemento, tBody, bloque) {
     numberInput.addEventListener("change", () => {
         elemento.Cantidad = numberInput.value * 1;
         calculaSeniales(row, elemento, bloque, checkbox.checked);
-        updateSummaryEstudio();
+        actualizaSumatorio();
         proyectoNoGuardado();
     });
 
@@ -423,7 +427,7 @@ function addFilaBody(elemento, tBody, bloque) {
             elemento.Opcion = select.selectedIndex;
             calculaSeniales(row, elemento, bloque, checkbox.checked);
             proyectoNoGuardado();
-            updateSummaryEstudio();
+            actualizaSumatorio();
         });
 
     } else {
@@ -477,86 +481,47 @@ function addFilaBody(elemento, tBody, bloque) {
 
 }
 
-function updateSummaryEstudio() {
-
-    const sumTableBodyRow = UI.proyectoPie.querySelector("table tbody tr");
-    sumTableBodyRow.innerHTML = "";
+function actualizaSumatorio() {
 
     const totalesSeniales = {};
-    signalTypes.forEach(sig => {
-        totalesSeniales[sig] = 0;
-    });
+    signalTypes.forEach(sig => totalesSeniales[sig] = 0);
 
-    const tables = UI.estudioCont.querySelectorAll("table");
-    tables.forEach(table => {
+    if (proyectoActual.Viendo === "estudio") {
 
-        const rows = table.querySelectorAll("tbody tr");
-        rows.forEach(row => {
+        const tables = UI.estudioCont.querySelectorAll("table");
+        tables.forEach(table => {
 
-            const checkbox = row.querySelector("input[type=checkbox]");
-            if (!checkbox || !checkbox.checked) return;
+            const rows = table.querySelectorAll("tbody tr");
+            rows.forEach(row => {
 
-            const cells = row.querySelectorAll("td");
-            signalTypes.forEach((sig, idx) => {
-                const cellText = cells[idx + 1]?.textContent;
-                const val = parseInt(cellText) || 0;
-                totalesSeniales[sig] += val;
+                const checkbox = row.querySelector("input[type=checkbox]");
+                if (!checkbox || !checkbox.checked) return;
+
+                signalTypes.forEach(sig => {
+                    const cellText = row.querySelector(`td.${sig}`)?.textContent;
+                    const val = parseInt(cellText) || 0;
+                    totalesSeniales[sig] += val;
+                });
+
             });
         });
-    });
+    }
 
-    const nameCell = document.createElement("th");
-    sumTableBodyRow.appendChild(nameCell);
-    nameCell.innerText = "TOTAL";
+    if (proyectoActual.Viendo === "listado") {
+
+        const tables = proyectoPie.querySelectorAll("table");
+        tables.forEach((table, indexTable) => {
+            const rows = table.querySelectorAll("tbody tr");
+            rows.forEach(row => {
+                totalesSeniales[signalTypes[indexTable]] += Number(row.Numero);
+            });
+        });
+    }
 
     signalTypes.forEach(sig => {
-        const cell = document.createElement("td");
-        sumTableBodyRow.appendChild(cell);
-        cell.classList.add(sig);
+        const cell = UI.proyectoPie.querySelector(`td.${sig}`);
         cell.textContent = totalesSeniales[sig];
     });
-
-}
-
-function totalHeader() {
-
-    const tableHeader = document.createElement("thead");
-
-    const headerRow = document.createElement("tr");
-    tableHeader.appendChild(headerRow);
-
-    const firstCell = document.createElement("th");
-    headerRow.appendChild(firstCell);
-
-    signalTypes.forEach(sig => {
-        const headTitle = document.createElement("th");
-        headTitle.innerText = sig;
-        headerRow.appendChild(headTitle);
-    });
-
-    return tableHeader;
-
-}
-
-function totalBody() {
-
-    const tableBody = document.createElement("tbody");
-
-    const bodyRow = document.createElement("tr");
-    tableBody.appendChild(bodyRow);
-
-    const firstCell = document.createElement("th");
-    firstCell.innerText = "TOTAL";
-    bodyRow.appendChild(firstCell);
-
-    signalTypes.forEach(sig => {
-        const sumCell = document.createElement("td");
-        bodyRow.appendChild(sumCell);
-        sumCell.classList.add(sig);
-        sumCell.innerText = 0;
-    });
-
-    return tableBody;
 
 }
 
@@ -734,7 +699,7 @@ function writeSignals() {
             proyectoNoGuardado();
             crearFilaSenial(listaSenial);
             renumerarFilas();
-            updateSummaryListado();
+            actualizaSumatorio();
         });
 
         // crear una fila por cada senial del array
@@ -763,7 +728,7 @@ function writeSignals() {
                 proyectoNoGuardado();
                 row.remove();
                 renumerarFilas();
-                updateSummaryListado();
+                actualizaSumatorio();
             });
 
             const labelNumSenial = document.createElement('label');
@@ -842,29 +807,10 @@ function writeSignals() {
 
     });
 
-    updateSummaryListado();
+    actualizaSumatorio();
 
 }
 
-function updateSummaryListado() {
-
-    const sumTableBodyRow = UI.proyectoPie.querySelector("table tbody tr");
-
-    const totalGlobal = Array(signalTypes.length).fill(0);
-
-    const tables = proyectoPie.querySelectorAll("table");
-    tables.forEach((table, indexTable) => {
-        const rows = table.querySelectorAll("tbody tr");
-        rows.forEach(row => {
-            totalGlobal[indexTable] += Number(row.Numero);
-        });
-    });
-
-    const celdasTotales = Array.from(sumTableBodyRow.querySelectorAll('td'));
-
-    celdasTotales.forEach((celda, i) => celda.innerHTML = totalGlobal[i].toString());
-
-}
 
 /* ------------------------- MEMORIA ------------------------- */
 
@@ -1069,7 +1015,7 @@ function escuchadores() {
         populateProyectSelect();
         populateBlockSelect();
         populateCustomPop();
-        populateCabeceraYPie();
+        populateSumatorio();
 
 
         // verificar si existe la clave del nombre del proyecto actual en el local storage      
@@ -1483,8 +1429,8 @@ function escuchadores() {
         UI.overlayPopSeccion.classList.remove("w3-hide");
     });
     // (verde añadir) añadir el bloque seleccionado
-    UI.estudioBloqAniaBtn.addEventListener("click", () => {
-        const bloque = structuredClone(blocksData[UI.estudioBloqSelect.value]);
+    UI.sectionToolsBtn.addEventListener("click", () => {
+        const bloque = structuredClone(blocksData[UI.sectionToolsSelect.value]);
         if (!bloque) return;
         bloque.id = crypto.randomUUID();
         proyectoActual.Estudio.push(bloque);
@@ -1619,26 +1565,6 @@ function escuchadores() {
     //     writeSignals();
 
     // });
-    // ( morado exportar ) crear un csv para poder copiar, pegar, ...
-    // listadoExportarBtn.addEventListener("click", () => {
-
-    //     // Asignar seccion desde el que se dispara
-    //     UI.overlayPopExport.seccion = "listado";
-
-    //     // mostrar exportPop centrado bajo el boton export
-    //     UI.proyecto.setAttribute('inert', ''); // bloquea todos los inputs del fondo en estudio
-    //     UI.overlay.style.display = "block";
-    //     UI.overlayPopExport.style.display = "block";
-
-    // });
-    // ( rojo volver ) Volver al estudio de puntos
-    // listadoVolverBtn.addEventListener("click", () => {
-    //     UI.proyecto.classList.remove("w3-hide");
-    //     UI.listado.classList.add("w3-hide");
-    // });
-    // ( azul asignar ) Avanzar a la seleccion de controladores y asignacion de señales
-    // listadoAsignarBtn.addEventListener("click", () => {
-    // });
 
 
     /* ---------- BOTONES VENTANA POPUP EXPORTAR ---------- */
@@ -1666,25 +1592,25 @@ function escuchadores() {
     // (azul estudio) pasar al creador de memoria de control
     UI.estudioMostrarBtn.addEventListener("click", () => {
         UI.proyectoSeccionBtn.querySelector("img").src = "./images/estudio.svg";
-        UI.estudioMostrarBtn.classList.add("w3-hide");        
-        UI.memoriaMostrarBtn.classList.remove("w3-hide");            
-        UI.listadoMostrarBtn.classList.remove("w3-hide");        
+        UI.estudioMostrarBtn.classList.add("w3-hide");
+        UI.memoriaMostrarBtn.classList.remove("w3-hide");
+        UI.listadoMostrarBtn.classList.remove("w3-hide");
         UI.crearCerrarBtn.dispatchEvent(new Event('click', { bubbles: true }));
     });
     // (azul memoria) pasar al creador de memoria de control
     UI.memoriaMostrarBtn.addEventListener("click", () => {
         UI.proyectoSeccionBtn.querySelector("img").src = "./images/book.svg";
-        UI.estudioMostrarBtn.classList.remove("w3-hide");        
-        UI.memoriaMostrarBtn.classList.add("w3-hide");            
-        UI.listadoMostrarBtn.classList.remove("w3-hide");   
+        UI.estudioMostrarBtn.classList.remove("w3-hide");
+        UI.memoriaMostrarBtn.classList.add("w3-hide");
+        UI.listadoMostrarBtn.classList.remove("w3-hide");
         UI.crearCerrarBtn.dispatchEvent(new Event('click', { bubbles: true }));
     });
     // (azul listado) pasar al creador de listado de señales
     UI.listadoMostrarBtn.addEventListener("click", () => {
         UI.proyectoSeccionBtn.querySelector("img").src = "./images/listado.svg";
-        UI.estudioMostrarBtn.classList.remove("w3-hide");        
-        UI.memoriaMostrarBtn.classList.remove("w3-hide");            
-        UI.listadoMostrarBtn.classList.add("w3-hide");   
+        UI.estudioMostrarBtn.classList.remove("w3-hide");
+        UI.memoriaMostrarBtn.classList.remove("w3-hide");
+        UI.listadoMostrarBtn.classList.add("w3-hide");
         UI.crearCerrarBtn.dispatchEvent(new Event('click', { bubbles: true }));
     });
     // (rojo aspa) ocultar la interfaz y no hacer nada.
