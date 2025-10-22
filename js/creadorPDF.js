@@ -9,24 +9,23 @@ const easyPie = {
 
 
 /* ------------------------- FUNCIONES ------------------------- */
-function crearPDF(seccion) {
+function crearPDF() {
 
-    const docPDF = docPDFDef(nombreProyectoActual, seccion); // creamos el objeto principal con la estructura para pasarselo a PDFmake
+    const docPDF = docPDFDef(nombreProyectoActual, proyectoActual.Viendo); // creamos el objeto principal con la estructura para pasarselo a PDFmake
 
     let tables = [];            // coleccion de tablas a iterar en funcion a la seccion elegida
     let tilulosColumnas = [];    // titulos de cabecera de cada columna
 
-    if (seccion === "estudio") {
+    if (proyectoActual.Viendo === "estudio") {
         tilulosColumnas = ["", "", ...signalTypes];
         tables = estudioBloqCont.querySelectorAll("table");
 
-    } else if (seccion === "listado") {
+    } else if (proyectoActual.Viendo === "listado") {
         tilulosColumnas = ["", "", "Num."];
-        tables = listadoSenialesCont.querySelectorAll("table");
+        tables = listado.querySelectorAll("table");
 
     } else {
-        alert("❌ Error: no se pudo generar el PDF");
-        console.error("Sección desconocida:", seccion);
+        alert("❌ No disponible aún.");
         return;
     }
 
@@ -34,13 +33,13 @@ function crearPDF(seccion) {
 
         let tituloTabla = "";
 
-        if (seccion === "estudio") {
+        if (proyectoActual.Viendo === "estudio") {
             const cabeceraInputs = table.querySelectorAll('thead th input');
             const nombreBloque = cabeceraInputs[0]?.value || "Tabla";
             const cantidadBloque = Number(cabeceraInputs[1]?.value) || 1;
             tituloTabla = cantidadBloque > 1 ? `${nombreBloque} (x${cantidadBloque})` : nombreBloque;
 
-        } else if (seccion === "listado") {
+        } else if (proyectoActual.Viendo === "listado") {
             tituloTabla = table.querySelector('thead th label')?.textContent || "Tabla";
         }
 
@@ -50,7 +49,7 @@ function crearPDF(seccion) {
 
             const filasPDF = filasPDFdef(tilulosColumnas.length); // creamos el objeto filas 
 
-            if (seccion === "estudio") {
+            if (proyectoActual.Viendo === "estudio") {
 
                 const checkbox = linea.querySelector('input[type="checkbox"]');
                 if (!checkbox || !checkbox.checked) return;
@@ -71,7 +70,7 @@ function crearPDF(seccion) {
 
                 filasPDF.table.body.push([...[numeroSenial, celdaNombre, ...numeroSeñales]]); // añadimos la fila al objeto filas
 
-            } else if (seccion === "listado") {
+            } else if (proyectoActual.Viendo === "listado") {
                 const nombreSenial = linea.querySelector('td:nth-child(2) input:nth-of-type(2)').value;                // segundo input dentro del segundo td
                 const cantidadSenial = linea.Numero;
                 filasPDF.table.body.push([...[indexLinea + 1, { text: nombreSenial, alignment: 'left' }, cantidadSenial]]); // añadimos la fila al objeto filas
@@ -89,8 +88,8 @@ function crearPDF(seccion) {
     // --- Fila de totales ---
 
     // elejimos la seccion en la que leer los totales
-    const totalRow = seccion === "estudio"
-        ? estudioSumarioCont.querySelector("table tbody tr")
+    const totalRow = proyectoActual.Viendo === "estudio"
+        ? UI.proyectoPie.querySelector("table tbody tr")
         : UI.proyectoPie.querySelector("table tbody tr");
 
     // montamos el array con el total de cada señal
@@ -118,7 +117,7 @@ function crearPDF(seccion) {
     );
 
     docPDF.content.push(tablaTotalesPDF); // añadimos el objeto tablaTotalesPDF al objeto documento
-    pdfMake.createPdf(docPDF).download(`${nombreProyectoActual} - ${seccion}.pdf`);     // Generar el PDF final
+    pdfMake.createPdf(docPDF).download(`${nombreProyectoActual} - ${proyectoActual.Viendo}.pdf`);     // Generar el PDF final
 
 }
 

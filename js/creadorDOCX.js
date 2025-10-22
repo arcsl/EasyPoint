@@ -128,9 +128,8 @@ async function generarMemoriaDOCX() {
     });
 
     /* ---------------- CONTENIDO DESDE HTML ---------------- */
-    const memoria = document.getElementById("memoria");
-    if (!memoria) return alert("No se encontró el contenedor #memoria");
-    const bloques = memoria.querySelectorAll(".bloque-memoria");
+    if (!UI.memoriaCont) return alert("No se encontró el contenedor #memoria");
+    const bloques = UI.memoriaCont.querySelectorAll(".bloque-memoria");
     const contenidoBloques = [];
     bloques.forEach((bloque, i) => {
         const children = [];
@@ -180,117 +179,3 @@ async function generarMemoriaDOCX() {
     link.click();
     URL.revokeObjectURL(link.href);
 }
-
-
-/* crear HTML directamente abrible con word. 
- * La estetica no se parece a la generada por pdfMake,
- * No admite encabezados o pies de pagina
- * no dependemos de librerias
-function descargarDoc() {
-    // 1 Clonar el contenido de la memoria para no alterar el original
-    const memoria = document.getElementById("memoria");
-    if (!memoria) return alert("No se encontró el contenido de memoria.");
-
-    const clone = memoria.cloneNode(true);
-
-    // 2 Procesar selects → convertirlos en texto plano
-    clone.querySelectorAll("select").forEach(sel => {
-        const selected = sel.options[sel.selectedIndex]?.textContent || "";
-        sel.replaceWith(document.createTextNode(selected));
-    });
-
-    // 3 Procesar checkboxes → dejar solo los seleccionados
-    clone.querySelectorAll(".narrativa-checkbox-group").forEach(group => {
-        const selectedLabels = Array.from(group.querySelectorAll("input[type='checkbox']:checked"))
-            .map(input => input.parentElement.textContent.trim());
-        if (selectedLabels.length) {
-            const txt = selectedLabels.join(", ");
-            group.replaceWith(document.createTextNode(txt));
-        } else {
-            group.remove(); // Si no hay ninguno seleccionado, eliminamos el bloque
-        }
-    });
-
-    // 4 Eliminar etiquetas vacías o residuales
-    clone.querySelectorAll("label, span").forEach(el => {
-        if (!el.textContent.trim()) el.remove();
-    });
-
-    // 5 Armar el HTML final con estilos
-    const contenido = `
-      <html xmlns:o='urn:schemas-microsoft-com:office:office'
-            xmlns:w='urn:schemas-microsoft-com:office:word'
-            xmlns='http://www.w3.org/TR/REC-html40'>
-      <head>
-        <meta charset="utf-8">
-        <title>Memoria Técnica</title>
-        <style>
-          body {
-              font-family: "Segoe UI", Arial, sans-serif;
-              background-color: #fdfdfd;
-              color: #333;
-              margin: 2em;
-              line-height: 1.5;
-          }
-
-          h1, h2, h3 {
-              color: #005fa3;
-          }
-
-          h2 {
-              border-bottom: 2px solid #0078D7;
-              padding-bottom: 4px;
-              margin-top: 30px;
-          }
-
-          ul {
-              list-style: none;
-              padding-left: 0;
-          }
-
-          li::before {
-              content: "• ";
-              color: #0078D7;
-          }
-
-          .bloque-memoria {
-              margin-bottom: 2em;
-              padding: 1em 1.5em;
-              border-radius: 8px;
-              background: #ffffff;
-              box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-          }
-
-          footer {
-              text-align: center;
-              font-size: 0.8em;
-              color: #888;
-              margin-top: 40px;
-          }
-        </style>
-      </head>
-      <body>
-        <h1 style="text-align:center;">Memoria Técnica de Instalación</h1>
-        <main>
-          ${clone.innerHTML}
-        </main>
-        <footer>Documento generado automáticamente</footer>
-      </body>
-      </html>
-    `;
-
-    // 6 Crear y descargar el archivo
-    const blob = new Blob(['\ufeff', contenido], { type: 'application/msword' });
-    const url = URL.createObjectURL(blob);
-
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "Memoria_Tecnica.doc";
-    document.body.appendChild(link);
-    link.click();
-
-    // 7 Limpieza
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-}
-*/

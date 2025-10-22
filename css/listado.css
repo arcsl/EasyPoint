@@ -1,71 +1,42 @@
 /* ---------- LISTADO ---------- */
-#listadoCabeceraCont,
-#listadoSenialesCont,
-#listadoSumarioCont {
+#listadoCont {
     width: 1000px;
 }
 
-/* ---------- LISTADO PIE ---------- */
-#listadoSumarioCont tr> :first-child {
-    width: 800px;
-}
-
-#listadoSumarioCont tr> :not(:first-child) {
-    text-align: center;
-}
-
-#listadoSepPie {
-    height: 110px;
-}
-
-/* ---------- LISTADO CABECERA ---------- */
-#listadoNombProyecLabel {
-    width: 415px;
-    font-weight: bold;
-    line-height: 1.9em;
-}
-
-#listadoBotonera button {
-    width: 130px !important;
-}
-
-#listadoSepTop {
-    height: 117px;
-}
 
 /* ---------- LISTADO TABLAS DE SEÑALES ---------- */
-#listadoSenialesCont table:nth-of-type(even) {
+#listadoCont table:nth-of-type(even) {
     background-color: #EEE;
 }
 
-#listadoSenialesCont table * {
+#listadoCont table * {
     padding: 0;
 }
 
-#listadoSenialesCont thead>tr {
+#listadoCont thead>tr {
     height: 50px;
 }
 
-#listadoSenialesCont tbody>tr {
+#listadoCont tbody>tr {
     height: 40px;
 }
 
-#listadoSenialesCont th,
-#listadoSenialesCont td {
+#listadoCont th,
+#listadoCont td {
     vertical-align: middle;
 }
 
-#listadoSenialesCont tbody * {
+#listadoCont tbody * {
     font-size: 1em;
 }
 
-#listadoSenialesCont tbody tr td:first-child {
+#listadoCont tbody tr td:first-child {
     width: 75px;
     text-align: center;
 }
 
 /* botones de las filas */
-#listadoSenialesCont table button {
+#listadoCont table button {
     margin: 0 10px 2px 0;
     width: 20px;
     height: 20px;
@@ -75,17 +46,17 @@
 }
 
 /* botones de la primera fila */
-#listadoSenialesCont thead button {
+#listadoCont thead button {
     margin-left: 16px;
 }
 
-#listadoSenialesCont tbody button {
+#listadoCont tbody button {
     padding-bottom: 2px;
 }
 
-#listadoSenialesCont tbody>tr>td:nth-child(2)>label,
-#listadoSenialesCont tbody>tr>td:nth-child(2)>select,
-#listadoSenialesCont tbody>tr>td:nth-child(2)>input {
+#listadoCont tbody>tr>td:nth-child(2)>label,
+#listadoCont tbody>tr>td:nth-child(2)>select,
+#listadoCont tbody>tr>td:nth-child(2)>input {
     width: 125px;
     height: 1.7em;
     padding-left: 5px;
@@ -98,15 +69,15 @@
     border: none;
 }
 
-#listadoSenialesCont tbody>tr>td:nth-child(2)>input {
+#listadoCont tbody>tr>td:nth-child(2)>input {
     width: 320px;
 }
 
-#listadoSenialesCont tbody>tr>td:nth-child(2)>label {
+#listadoCont tbody>tr>td:nth-child(2)>label {
     width: 20px;
 }    
 
-#listadoSenialesCont tbody>tr>td:nth-child(2)> :nth-child(2) {
+#listadoCont tbody>tr>td:nth-child(2)> :nth-child(2) {
     padding: 0;
     text-align: center;
     width: 50px;

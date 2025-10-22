@@ -1,27 +1,28 @@
-#memoria select ,
-#memoria input ,
-#memoria label {
+#memoriaCont checkbox ,
+#memoriaCont select ,
+#memoriaCont input ,
+#memoriaCont label {
     margin: 0 4px;
     font-size: 15px;
     height: auto;
     display: inline-block;
 }
 
-#memoria.mem-edit {
+#memoriaCont.mem-edit {
     padding: 1px 4px;
     border-bottom: 1px dashed #aaa;
     display: inline-block;
     min-width: 8ch;
 }
 
-#memoria.bloque-memoria {
+#memoriaCont.bloque-memoria {
     margin: 16px 0 28px;
 }
 
-#memoria.bloque-memoria h2 {
+#memoriaCont.bloque-memoria h2 {
     margin-bottom: 8px;
 }
 
-#memoria.bloque-memoria h3 {
+#memoriaCont.bloque-memoria h3 {
     margin: 12px 0 8px;
 }

@@ -81,7 +81,7 @@ const elem = {
 	SimpleSD: (Nombre, Cantidad, Ref = "") => ({ Nombre, Cantidad, Ref, Opciones: [opt.SimpleSD("Externa"),], }),
 
 	//sensores 
-	SensorAire: (Nombre, Cantidad, Ref = "") => ({ Nombre, Cantidad, Ref, Opciones: [opt.SensorPasi("Temperatura"), opt.SensorAct2("Temp + Hume"), opt.SensorAct2("Temp + CO2"), opt.SensorAct3("Temp Hum CO2"),], }),
+	SensorAire: (Nombre, Cantidad, Ref = "") => ({ Nombre, Cantidad, Ref, Opciones: [opt.SensorPasi("Temperatura"), opt.SensorAct2("Temp y Hum"), opt.SensorAct2("Temp y CO2"), opt.SensorAct3("Temp, Hum y CO2"),], }),
 	SondaTermos: (Nombre, Cantidad, Ref = "") => ({ Nombre, Cantidad, Ref, Opciones: [opt.SensorPasi("Temperatura"), opt.SensorDigi("Termostato"),], }),
 	SensorPres: (Nombre, Cantidad, Ref = "") => ({ Nombre, Cantidad, Ref, Opciones: [opt.SensorDigi("Presostato"), opt.SensorAct1("Sonda"),], }),
 	SoloActiva: (Nombre, Cantidad, Ref = "") => ({ Nombre, Cantidad, Ref, Opciones: [opt.SensorAct1("Sonda"),], }),
@@ -112,9 +112,9 @@ function blocks() {
 	// Separadores identificados con "Seniales: null"
 	return [
 		{
-			"Nombre": "General",
+			"Nombre": "Exterior",
 			"Elementos": [
-				elem.SensorAire("Temperatura Exterior", 1, "CondExte"),
+				elem.SensorAire("Temperatura", 1, "CondExte"),
 			],
 		},
 		{
@@ -241,7 +241,7 @@ function blocks() {
 }
 
 const Narrativa = {
-	"General": {
+	"Exterior": {
 		"Descripcion": [
 			"{{La medicion de condiciones exteriores permite compensar la respuesta térmica de la instalación, mejorando el confort y la eficiencia energética.}}{CondExte}"
 		],

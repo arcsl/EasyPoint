@@ -19,19 +19,19 @@
     <script src="https://unpkg.com/docx@7.1.0/build/index.js"></script>
 
     <script src="./js/blocks.js"></script>
-    <!-- <script src="./js/creadorCSV.js"></script>
-	<script src="./js/creadorDOCX.js"></script>
-	<script src="./js/creadorPDF.js"></script>
-	<script src="./js/escuchadores.js" defer></script> -->
+    <script src="./js/creadorCSV.js"></script>
+    <script src="./js/creadorDOCX.js"></script>
+    <script src="./js/creadorPDF.js"></script>
     <script src="./js/script.js" defer></script>
+    <script src="./js/escuchadores.js" defer></script>
 
     <link rel="icon" type="image/png" href="./images/ARClogo.png">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="./css/style.css" />
     <link rel="stylesheet" href="./css/overlay.css" />
     <link rel="stylesheet" href="./css/estudio.css" />
-    <!-- <link rel="stylesheet" href="./css/listado.css" /> -->
-    <!-- <link rel="stylesheet" href="./css/memoria.css" /> -->
+    <link rel="stylesheet" href="./css/listado.css" />
+    <link rel="stylesheet" href="./css/memoria.css" />
 
 </head>
 
@@ -111,7 +111,7 @@
             </div>
             <!-- Subtitulo Cabecera -->
             <div class="w3-margin-bottom">
-                <label class="w3-input w3-text-gray" id="proyectoLabelSeccion">ESTUDIO DE LA INSTALACIÓN</label>
+                <label id="proyectoLabelSeccion" class="w3-input w3-text-gray">ESTUDIO DE LA INSTALACIÓN</label>
             </div>
         </div>
 
@@ -166,8 +166,9 @@
         </div>
 
         <div id="overlayPopExport" class="w3-card w3-hide">
-            <button id="expPDFBtn" class="w3-button w3-purple botonCuadrado w3-margin-right"><img src="./images/pdf.svg" alt="EstudioPDF"></button>
-            <button id="expCSVBtn" class="w3-button w3-purple botonCuadrado w3-margin-right"><img src="./images/csv.svg" alt="EstudioCSC"></button>
+            <button id="expPDFBtn" class="w3-button w3-purple botonCuadrado w3-margin-right"><img src="./images/pdf.svg" alt="PDF"></button>
+            <button id="expCSVBtn" class="w3-button w3-purple botonCuadrado w3-margin-right"><img src="./images/csv.svg" alt="CSV"></button>
+            <button id="expWordBtn" class="w3-button w3-purple botonCuadrado w3-margin-right"><img src="./images/fileword.svg" alt="Word"></button>
             <button id="expCerrarBtn" class="w3-button w3-red corner" aria-label="Cerrar">✕</button>
         </div>
 

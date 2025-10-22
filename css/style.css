@@ -138,13 +138,11 @@ table tbody tr:last-child {
     width: 415px;
 }
 
-/* nombre del bloque */
+/* columnas señales en el pie */
 #proyectoPie table tr :not(:first-child) {
     width: 50px;
     text-align: center;
 }
-
-
 
 /* ---------- PROYECTO SEPARADORES SUPERIOR E INFERIOR ---------- */
 #proyectoSepTop {
@@ -152,7 +150,7 @@ table tbody tr:last-child {
 }
 
 #proyectoSepPie {
-    height: 112px;
+    height: 110px;
 }
 
 /* ---------- NOTIFICACION GUARDADO ---------- */

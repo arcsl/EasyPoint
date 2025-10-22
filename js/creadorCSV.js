@@ -1,10 +1,10 @@
-function crearCSV(seccion) {
+function crearCSV() {
 
     let lineasCSV = [];
 
-    if (seccion === "listado") {
+    if (proyectoActual.Viendo === "listado") {
 
-        const nodosTablas = listadoSenialesCont.querySelectorAll("table");
+        const nodosTablas = listado.querySelectorAll("table");
 
         nodosTablas.forEach(tabla => {
 
@@ -33,7 +33,7 @@ function crearCSV(seccion) {
         });
     }
 
-    if (seccion === "estudio") {
+    if (proyectoActual.Viendo === "estudio") {
 
         const nodosTablas = UI.estudioCont.querySelectorAll("table");
         nodosTablas.forEach(tabla => {
@@ -92,7 +92,7 @@ function crearCSV(seccion) {
     // Crear enlace temporal
     const enlace = document.createElement("a");
     enlace.href = URL.createObjectURL(blob);
-    enlace.download = nombreProyectoActual + " - " + seccion[0].toUpperCase() + seccion.slice(1) + " señales.csv";
+    enlace.download = nombreProyectoActual + " - " + proyectoActual.Viendo[0].toUpperCase() + proyectoActual.Viendo.slice(1) + " señales.csv";
     enlace.click();
 
     // Liberar la URL
