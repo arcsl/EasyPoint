@@ -818,7 +818,7 @@ function writeSignals() {
 
 /* ------------------------- MEMORIA ------------------------- */
 
-function writeMemo () {
+function writeMemo() {
     UI.memoriaCont.innerHTML = proyectoActual.Memoria;
 }
 
@@ -828,17 +828,48 @@ function crearMemoria() {
 
     UI.memoriaCont.innerHTML = "";
 
+    const introDivBloque = document.createElement("div");
+    UI.memoriaCont.appendChild(introDivBloque);
+    introDivBloque.classList.add("bloque-memoria");
+
+    const introTitulo = document.createElement("h2");
+    introDivBloque.appendChild(introTitulo);
+    introTitulo.textContent = "Introducción";
+
+    const categorias = ["Presentación", "Estrategias", "Comunicaciones", "Programación", "Conclusión"];
+    Intro.forEach((categ, indexCat) => {
+
+        console.log('parrafo', indexCat);
+
+        const introSubtitulo = document.createElement("h3");
+        introDivBloque.appendChild(introSubtitulo);
+        introSubtitulo.textContent = categorias[indexCat];
+
+        const introTexto = document.createElement("p");
+        introDivBloque.appendChild(introTexto);
+        // seleccionar un parrafo al azar
+        const idx = Math.floor(Math.random() * categ.length);
+        introTexto.textContent = categ[idx];
+
+    });
+
+    // 3 lineas de separacion
+    for (let i = 0; i < 3; i++) {
+        UI.memoriaCont.appendChild(document.createElement("br"));
+    }
+
     // Recorremos los bloques del estudio
     proyectoActual.Estudio.forEach(bloque => {
 
         if (!Narrativa[bloque.Nombre]) return; // sin narrativa, no genera nada
 
         const divBloque = document.createElement("div");
+        UI.memoriaCont.appendChild(divBloque);
         divBloque.classList.add("bloque-memoria");
 
         const titulo = document.createElement("h2");
-        titulo.textContent = bloque.NombreUsuario || bloque.Nombre;
         divBloque.appendChild(titulo);
+        titulo.textContent = bloque.NombreUsuario || bloque.Nombre;
 
 
         partesNarrativa.forEach(seccionNombre => {
@@ -864,7 +895,12 @@ function crearMemoria() {
                 }
             });
         });
-        UI.memoriaCont.appendChild(divBloque);
+
+        // 3 lineas de separacion
+        for (let i = 0; i < 3; i++) {
+            UI.memoriaCont.appendChild(document.createElement("br"));
+        }
+
     });
 
     guardaCambiosMemoria();
