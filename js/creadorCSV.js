@@ -4,7 +4,7 @@ function crearCSV() {
 
     if (proyectoActual.Viendo === "listado") {
 
-        const nodosTablas = listado.querySelectorAll("table");
+        const nodosTablas = UI.listadoCont.querySelectorAll("table");
 
         nodosTablas.forEach(tabla => {
 

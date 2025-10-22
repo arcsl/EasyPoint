@@ -8,7 +8,7 @@ async function generarMemoriaDOCX() {
     const mainColor = "#003366"; // color corporativo (igual que en PDF)
     const lineColor = "#AAAAAA";
     const now = new Date().toLocaleDateString();
-    const proyecto = window.nombreProyectoActual || "Proyecto sin título";
+    const proyecto = nombreProyectoActual || "Proyecto sin título";
 
     /* ---------------- PORTADA ---------------- */
     const portada = [
@@ -19,7 +19,7 @@ async function generarMemoriaDOCX() {
             spacing: { after: 200 },
         }),
         new Paragraph({
-            text: "Memoria Técnica",
+            text: "Memoria de Control",
             heading: HeadingLevel.HEADING_1,
             alignment: AlignmentType.CENTER,
             spacing: { after: 200 },
@@ -175,7 +175,7 @@ async function generarMemoriaDOCX() {
     const blob = await Packer.toBlob(doc);
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = `${proyecto} - Memoria.docx`;
+    link.download = `${proyecto} - Memoria de Control.docx`;
     link.click();
     URL.revokeObjectURL(link.href);
 }

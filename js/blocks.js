@@ -101,6 +101,7 @@ const elem = {
 	Recuperdor: (Nombre, Cantidad, Ref = "") => ({ Nombre, Cantidad, Ref, Opciones: [opt.SimpleSD("Bypass"), opt.MotorToNa("M/P y Estado"), opt.Motor010V("0..10Vcc"),], }),
 
 	//productores
+	ModulaAerot: (Nombre, Cantidad, Ref = "") => ({ Nombre, Cantidad, Ref, Opciones: [opt.SimpleSA("0..10Vcc"), opt.SimpleSD("2 consignas"),], }),
 	ModulaCalde: (Nombre, Cantidad, Ref = "") => ({ Nombre, Cantidad, Ref, Opciones: [opt.SimpleSA("0..10Vcc"), opt.Actuador3Pun("3 Puntos"), opt.SimpleSD("2ª llama"),], }),
 	MPyEstado: (Nombre, Cantidad, Ref = "") => ({ Nombre, Cantidad, Ref, Opciones: [opt.MPyEstado("M/P y Estado"),], }),
 	Demanda: (Nombre, Cantidad, Ref = "") => ({ Nombre, Cantidad, Ref, Opciones: [opt.SimpleSA("0..10Vcc"), opt.SimpleSD("Todo/Nada"),], }),
@@ -122,7 +123,7 @@ function blocks() {
 			"Elementos": null,
 		},
 		{
-			"Nombre": "Gestor de Cascada de Producción",
+			"Nombre": "General Producción",
 			"Elementos": [
 				elem.SondaTermos("Temperatura", 1, "GestTemp"),
 				elem.MotorModul("Bomba", 0, "GestBomb"),
@@ -152,7 +153,7 @@ function blocks() {
 				elem.SondaTermos("Temperatura", 1, "AeroTemp"),
 				elem.SimpleSD("Marcha-Paro", 1, "AeroMaPa"),
 				elem.AlamEstTerceros("Estado / Alarma", 1, "AeroAlar"),
-				elem.ModulaCalde("Modulación / Consigna", 0, "AeroModu"),
+				elem.ModulaAerot("Modulación / Consigna", 0, "AeroModu"),
 				elem.MotorModul("Bomba", 0, "AeroBomb"),
 				elem.SimpleSD("Cambio de regimen", 1, "AeroCaFr"),
 				elem.ValvulaToNa("Válvula Calor / Frío / ACS", 0, "AeroVaCF"),
@@ -249,34 +250,35 @@ const Narrativa = {
 			"{{Sensor de [{Opcion}]{CondExte} exterior.}}{CondExte}"
 		],
 		"Funcionamiento": [
-			`{{La señal proporcionada por la sonda se utiliza para:	<+Ajustar la consigna de impulsión de los circuitos de distribucion.|Cambiar el regimen de trabajo entre invierno y verano.|Optimizar estrategias de ventilación por calidad de aire exterior.>}}{CondExte}`
+			`{{La señal proporcionada por el sensor se utilizará para:	<+Ajustar la consigna de impulsión de los circuitos de distribucion.|Cambiar el regimen de trabajo entre invierno y verano.|Optimizar estrategias de ventilación para enfriamiento y calentamiento gratuitos.|Optimizar estrategias de ventilación por calidad de aire exterior.>}}{CondExte}`
 		],
 	},
-	"Gestor de Cascada de Producción": {
+	"General Producción": {
 		"Descripcion": [
-			"El gestor de cascada coordina el funcionamiento conjunto de las distintas caldera[/s]{MainBloc}, regulando su arranque y modulación para optimizar el rendimiento global del sistema.",
-			"Actúa como elemento principal de control de producción térmica, estableciendo las consignas de temperatura y ordenando el encendido o parada de los equipos según la demanda detectada en la instalación."
+			"El gestor de producción coordina el funcionamiento conjunto de los distintos productor[/es]{MainBloc} térmicos, regulando su arranque y modulación para optimizar el rendimiento energético del sistema.",
+			"Actúa como elemento principal de control de generación térmica, estableciendo las consignas de impulsión y ordenando el encendido o parada de los equipos según la demanda detectada en la instalación.",
+			"El sistema está preparado para operar tanto en modo calefacción como en refrigeración, gestionando automáticamente el cambio de régimen cuando procede."
 		],
 
 		"Elementos": [
-			"{{Sonda de [{Opcion}]{GestTemp} que mide la temperatura de impulsión general del colector.}}{GestTemp}",
-			"{{Ventilación forzada del local técnico controlada automáticamente por el sistema en función de la demanda o la presencia de equipos en marcha.}}{GestVent}",
-			"{{Electroválvula de gas que permite el paso de combustible únicamente durante el funcionamiento de los equipos.}}{GestEVGa}",
-			"{{Bomba principal de impulsión de primario, que garantiza la circulación del fluido entre las caldera[/s]{MainBloc} y el colector.}}{GestBomb}",
-			"{{Válvula de cambio calor/frío que conmuta el circuito de producción según el régimen activo.}}{GestVaCF}",
+			"{{Sonda de [{Opcion}]{GestTemp} que mide la temperatura de impulsión general del circuito de producción.}}{GestTemp}",
+			"{{Bomba principal de impulsión que asegura la circulación del fluido entre los productor[/es]{MainBloc} y el colector general.}}{GestBomb}",
+			"{{Ventilación forzada del local técnico, controlada automáticamente por el sistema en función de la demanda térmica o la presencia de equipos en marcha.}}{GestVent}",
+			"{{Electroválvula de gas que habilita el suministro de combustible únicamente durante el funcionamiento de los equipos que lo requieren.}}{GestEVGa}",
+			"{{Válvula de conmutación calor/frío que establece la dirección del flujo térmico en función del modo operativo activo.}}{GestVaCF}",
 			"{{Sensor de presión del circuito de producción, encargado de supervisar el correcto estado hidráulico del sistema.}}{GestPres}",
-			"{{Entrada de cambio de régimen externo (verano/invierno) para integración con sistemas superiores de control o BMS.}}{GestInVe}"
+			"{{Entrada digital de cambio de régimen externo (verano/invierno) para integración con sistemas superiores de control o BMS.}}{GestInVe}"
 		],
 
 		"Funcionamiento": [
-			"El gestor analiza la demanda térmica y determina el número de caldera[/s]{MainBloc} en funcionamiento, activando o deteniendo cada una según sea necesario.",
-			"{{El control de temperatura se realiza en función de la sonda [{Opcion}]{GestTemp}, ajustando la consigna de impulsión del colector general.}}{GestTemp}",
-			"{{La electroválvula de gas permanecerá abierta únicamente cuando al menos una caldera se encuentre en servicio.}}{GestEVGa}",
-			"{{La ventilación forzada se activará durante el funcionamiento de los equipos y se detendrá tras un tiempo de purga al finalizar la demanda.}}{GestVent}",
-			"{{El cambio de régimen externo permite conmutar automáticamente entre calefacción y refrigeración.}}{GestInVe}",
-			"{{La válvula calor/frío modificará su posición en función del modo operativo activo.}}{GestVaCF}",
-			"{{La bomba de primario se pondrá en marcha cuando exista al menos una caldera en demanda, manteniéndose activa un breve tiempo tras su parada para asegurar la evacuación térmica.}}{GestBomb}",
-			"{{Se supervisará la presión mediante el sensor correspondiente, generando una alarma en caso de valores fuera de rango.}}{GestPres}"
+			"El gestor analiza la demanda térmica procedente de los distintos consumidores y determina el número de productor[/es]{MainBloc} necesarios, activando o deteniendo cada uno según las condiciones de carga y eficiencia.",
+			"{{El control de temperatura se realiza a partir de la lectura de la sonda [{Opcion}]{GestTemp}, ajustando la consigna de impulsión en función del modo operativo y las condiciones exteriores.}}{GestTemp}",
+			"{{La bomba principal se pondrá en marcha cuando exista demanda activa y se mantendrá en funcionamiento un tiempo de purga tras la finalización de la misma, para asegurar la evacuación térmica.}}{GestBomb}",
+			"{{La electroválvula de gas permanecerá abierta únicamente cuando se encuentren operativos equipos que requieran combustible fósil.}}{GestEVGa}",
+			"{{La ventilación forzada se activará durante el funcionamiento de los equipos y permanecerá activa un tiempo adicional tras su parada para garantizar la renovación del aire en el local técnico.}}{GestVent}",
+			"{{El cambio de régimen externo permite conmutar automáticamente entre calefacción y refrigeración, ajustando la posición de la válvula calor/frío y las consignas de control correspondientes.}}{GestInVe}",
+			"{{La válvula de cambio calor/frío modificará su posición conforme al modo operativo activo, asegurando la correcta dirección del flujo térmico.}}{GestVaCF}",
+			"{{El sensor de presión supervisará el circuito y generará alarma en caso de valores fuera de los márgenes de funcionamiento establecidos.}}{GestPres}"
 		]
 	}
 	,

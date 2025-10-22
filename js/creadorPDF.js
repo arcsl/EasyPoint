@@ -18,7 +18,7 @@ function crearPDF() {
 
     if (proyectoActual.Viendo === "estudio") {
         tilulosColumnas = ["", "", ...signalTypes];
-        tables = estudioBloqCont.querySelectorAll("table");
+        tables = UI.estudioCont.querySelectorAll("table");
 
     } else if (proyectoActual.Viendo === "listado") {
         tilulosColumnas = ["", "", "Num."];
@@ -117,7 +117,7 @@ function crearPDF() {
     );
 
     docPDF.content.push(tablaTotalesPDF); // añadimos el objeto tablaTotalesPDF al objeto documento
-    pdfMake.createPdf(docPDF).download(`${nombreProyectoActual} - ${proyectoActual.Viendo}.pdf`);     // Generar el PDF final
+    pdfMake.createPdf(docPDF).download(`${nombreProyectoActual} - ${primeraMayusc(proyectoActual.Viendo)} de Puntos de Control.pdf`);     // Generar el PDF final
 
 }
 
@@ -287,4 +287,8 @@ function filasPDFdef(numeroColumnas) {
             // paddingRight: function (i, node) { return 14; },
         },
     };
+}
+
+function primeraMayusc(texto) {
+    return texto[0].toUpperCase() + texto.slice(1).toLowerCase();
 }
