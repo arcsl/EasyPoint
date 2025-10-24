@@ -836,20 +836,23 @@ function crearMemoria() {
     introDivBloque.appendChild(introTitulo);
     introTitulo.textContent = "Introducción";
 
-    const categorias = ["Presentación", "Estrategias", "Comunicaciones", "Programación", "Conclusión"];
+    // const categorias = ["Presentación", "Estrategias", "Comunicaciones", "Programación", "Conclusión"];
     Intro.forEach((categ, indexCat) => {
-
-        console.log('parrafo', indexCat);
 
         const introSubtitulo = document.createElement("h3");
         introDivBloque.appendChild(introSubtitulo);
-        introSubtitulo.textContent = categorias[indexCat];
+        // introSubtitulo.textContent = categorias[indexCat];
+        introSubtitulo.textContent = "";
 
-        const introTexto = document.createElement("p");
+        const introTexto = document.createElement("ul");
         introDivBloque.appendChild(introTexto);
+
+        const introPuntoListado = document.createElement("li");
+        introTexto.appendChild(introPuntoListado);
+
         // seleccionar un parrafo al azar
         const idx = Math.floor(Math.random() * categ.length);
-        introTexto.textContent = categ[idx];
+        introPuntoListado.textContent = categ[idx];
 
     });
 

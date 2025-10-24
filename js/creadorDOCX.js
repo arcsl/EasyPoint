@@ -114,7 +114,7 @@ async function generarMemoriaDOCX() {
                 },
                 children: [
                     new Paragraph({
-                        text: "ÍNDICE",
+                        text: "Índice",
                         heading: HeadingLevel.HEADING_1,
                         alignment: AlignmentType.CENTER,
                         spacing: { after: 300 },
@@ -145,10 +145,13 @@ async function generarMemoriaDOCX() {
 
         // Subtítulos y párrafos
         bloque.querySelectorAll("h3").forEach(h3 => {
-            children.push(new Paragraph({
-                text: h3.textContent,
-                heading: HeadingLevel.HEADING_2,
-            }));
+
+            // if (h3.textContent !== "") {
+                children.push(new Paragraph({
+                    text: h3.textContent,
+                    heading: HeadingLevel.HEADING_2,
+                }));
+            // } 
 
             const siguiente = h3.nextElementSibling;
             if (siguiente && siguiente.tagName === "UL") {
