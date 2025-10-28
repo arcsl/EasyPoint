@@ -521,7 +521,7 @@ ${posY2}`;
  *
  * @returns {string} Cadena en formato DXF que representa la entidad TEXT con sus propiedades.
  */
-function textoDXF(posX, posY, text,  textsize = 2.5, align = 'ML', rotation = 0,estilo = "Standard") {
+function textoDXF(posX, posY, text,  textsize = 2.5, align = 'ML', rotation = 0, estilo = "Standard") {
 	const alineaciones = {
 		TL: [0, 3], TC: [1, 3], TR: [2, 3],
 		ML: [0, 2], MC: [1, 2], MR: [2, 2],

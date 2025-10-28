@@ -1,36 +1,36 @@
 const controladores = {
     "PXC5.E24": {
-        "paginas": [
+        "Paginas": [
             [
                 {
-                    "tamaño": 7,
-                    "cinta":      [   null,   "1A",   null,    null,    null,   "1B",   null,],
-                    "subcinta":   [   null,   null,   null,    null,    null,   null,   null,],
-                    "simbolos":   [   null, "#RED",   null,    null,    null, "#RED",   null,],
-                    "numeracion": [   null,  "#52",   null,   "LAN",    null,  "#25",   null,],
+                    // "tamaño":     7,
+                    "Cinta":      [   null,   "1A",   null,    null,    null,   "1B",   null,],
+                    "Subcinta":   [   null,   null,   null,    null,    null,   null,   null,],
+                    "Simbolos":   [   null, "#RED",   null,    null,    null, "#RED",   null,],
+                    "Numeracion": [   null,  "#25",   null,   "LAN",    null,  "#52",   null,],
                 },
                 {
-                    "tamaño": 3,
-                    "cinta":      [   null,    "2",   null,],
-                    "subcinta":   [   null,   null,   null,],
-                    "simbolos":   [   null, "#RED",   null,],
-                    "numeracion": [   null,  "WAN",   null,],
+                    // "tamaño":     3,
+                    "Cinta":      [   null,    "2",   null,],
+                    "Subcinta":   [   null,   null,   null,],
+                    "Simbolos":   [   null, "#RED",   null,],
+                    "Numeracion": [   null,  "WAN",   null,],
                 },
                 {
-                    "tamaño": 2,
-                    "cinta": "KNX",
-                    "subcinta":   [   null,   null, ],
-                    "simbolos":   [   "#|",   "#|", ],
-                    "numeracion": [    "3",    "4", ],
+                    // "tamaño":     2,
+                    "Cinta": "KNX",
+                    "Subcinta":   [   null,   null, ],
+                    "Simbolos":   [   "#|",   "#|", ],
+                    "Numeracion": [    "3",    "4", ],
                 },
             ],
             [
                 {
-                    "tamaño":         4,
-                    "cinta":      [   "V~",   "#T",   "#T",   "V+", ],
-                    "subcinta":   [   null,   null,   null,   null, ],
-                    "simbolos":   [   "#D",   "#-",   "#-",   "#D", ],
-                    "numeracion": [   "36",   "37",   "38",   "39", ],
+                    // "tamaño":     4,
+                    "Cinta":      [   "V~",   "#T",   "#T",   "V+", ],
+                    "Subcinta":   [   null,   null,   null,   null, ],
+                    "Simbolos":   [   "#D",   "#-",   "#-",   "#D", ],
+                    "Numeracion": [   "36",   "37",   "38",   "39", ],
                 },              
             ],
         ],

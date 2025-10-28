@@ -13,6 +13,7 @@
 
     <script src="basicosDXF.js"></script>
     <script src="bloquesDXF.js"></script>
+    <script src="controladores.js"></script>
     <script src="simbolos.js"></script>
 
     <style>
@@ -135,15 +136,68 @@
             for (let i = 1; i <= numHojas; i++) {
                 let CajetinX = ((i - 1) % cajetinColumnas) * 420;
                 let CajetinY = (cajetinFilas - 1 - (Math.floor((i - 1) / cajetinColumnas))) * 300;
-                console.log({ i, CajetinX, CajetinY })
                 test.Hoja = `${i} - ${numHojas}`;
                 entities.push(...cajetin(CajetinX, CajetinY, test));
             }
+
+            // separacion universal entre lineas
+            const paso = 4;
+
+            controladores["PXC5.E24"].Paginas.forEach((pagina, indexpag) => {
+
+                // calculo de las unidades de largo del controlador
+                const largura = pagina
+                    .map(conector => conector.Numeracion.length + 1)
+                    .reduce((a, b) => a + b, 0) * paso;
+
+                // centrado del controlador en la pagina
+                let inX = (400 - largura) / 2 + indexpag * 400;
+                let inY = 236;
+
+                // envolvente del controlador
+                entities.push(...hashEnv(inX, inY, largura));
+
+                // rellenar la envolvente con simbolos y numeraciones
+                pagina.forEach((conector, index) => {
+
+                    for (let i = 0; i < conector.Numeracion.length; i++) {
+
+                        inX += paso;
+                        if (Array.isArray(conector.Numeracion)) entities.push(...hasheador(inX, inY + 2, conector.Numeracion[i], 2.5));
+                        if (Array.isArray(conector.Simbolos)) entities.push(...hasheador(inX, inY + 9, conector.Simbolos[i], 2.5));
+                        if (Array.isArray(conector.Subcinta)) entities.push(...hasheador(inX, inY + 15, conector.Subcinta[i], 1.5));
+                        console.log(conector.Cinta[i]);
+                        if (Array.isArray(conector.Cinta)) entities.push(...hasheador(inX, inY + 17, conector.Cinta[i], 1.5));
+
+                    }
+
+                    inX += paso;
+
+                    // añadir separador si no es el ultimo conector
+                    if (index + 1 < pagina.length) entities.push(...hasheador(inX, inY, "#Sep", 0));
+
+                });
+
+            });
+
+
+            // return;
 
             // Ejemplo de símbolos (ajusta según tus funciones hashXX)
             // const largo = 360;
             // const inicial = (400 - largo) / 2;
             // entities.push(...hashEnv(inicial, 236, largo));
+
+            // entities.push(...hash52(     40, 150));
+            // entities.push(...hash25(     80, 150));
+            // entities.push(...hashUD(    120, 150));
+            // entities.push(...hashD(     160, 150));
+            // entities.push(...hashU(     200, 150));
+            // entities.push(...hashPalo(  240, 150));
+            // entities.push(...hashGuion( 280, 150));
+            // entities.push(...hashSep(   320, 150));
+            // entities.push(...hashmD(    360, 150));
+            // entities.push(...hashLan(   420, 150));
 
             // Finalizar el archivo
             let dxfContent = wrapDXF(entities);
