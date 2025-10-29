@@ -545,11 +545,8 @@ ${posY2}`;
  *   - BL, BC, BR (Bottom Left, Center, Right)
  *   Valor por defecto: 'ML'.
  * @param {number} [rotation=0] - Ángulo de rotación del texto en grados (0, 90, 180, 270).
- *     Se emite advertencia si se proporciona un valor no soportado.
  * @param {string} [estilo="Standard"] - Estilo de texto DXF (nombre del estilo definido en el archivo DXF).
- *     Se omite si es "Standard".
  * @param {number} [multAncho=1] - Factor de multiplicacion de anchura del texto.
- *     Se omite si es 1.
  *
  * @returns {string} Cadena en formato DXF que representa la entidad TEXT con sus propiedades.
  */
@@ -646,6 +643,72 @@ ${vAlign}`;
 }
 
 /**
+ * Genera una entidad MTEXT en formato DXF con múltiples líneas de texto, posición, tamaño, rotación y alineación.
+ *
+ * Las líneas de texto se unen con el delimitador "^J" y se escapan las barras invertidas. 
+ * La alineación se define mediante un código numérico que corresponde al punto de anclaje del texto.
+ *
+ * @param {number} posX - Coordenada X de la posición del texto.
+ * @param {number} posY - Coordenada Y de la posición del texto.
+ * @param {string[]} [text=[]] - Array de líneas de texto a incluir.
+ * @param {number} [textsize=2.5] - Tamaño del texto.
+ * @param {string} [align='ML'] - Código de alineación. Opciones:
+ *   - TL, TC, TR (Top Left, Center, Right)
+ *   - ML, MC, MR (Middle Left, Center, Right)
+ *   - BL, BC, BR (Bottom Left, Center, Right)
+ *   Valor por defecto: 'ML'.
+ * @param {number} [rotation=0] - Rotación del texto en grados.
+ * @param {string} [estilo="Standard"] - Estilo de texto DXF (nombre del estilo definido en el archivo DXF).
+ * @param {number} [multAncho=1] - Factor de multiplicacion de anchura del texto.
+ * @returns {string} Cadena en formato DXF que representa una entidad MTEXT.
+ *
+ * @example
+ * const dxf = textoMultiDXF(10, 20, ['Primera línea', 'Segunda línea'], 3, 45, 'MC');
+ * console.log(dxf);
+ */
+function textoMultiDXF(posX, posY, text = [], textsize=2.5, align = 'ML', rotation = 0, estilo = "Standard", multAncho = 1) {
+	const contenido = text.map(linea => linea.replace(/\\/g, "\\\\")).join("^J");
+
+	const alineaciones = {
+		TL: 1, TC: 2, TR: 3,
+		ML: 4, MC: 5, MR: 6,
+		BL: 7, BC: 8, BR: 9,
+	};
+
+	const attachPoint = alineaciones[align] || [1, 1];
+
+	let insertEstilo;
+	if (estilo === "Standard") {
+		insertEstilo = "";
+	} else {
+		insertEstilo = `
+7
+${estilo}`;
+	}
+
+	return `0
+MTEXT
+8
+0
+100
+AcDbEntity
+100
+AcDbMText
+10
+${posX}
+20
+${posY}
+40
+${textsize}
+50
+${rotation}
+71
+${attachPoint}
+1
+${contenido}${insertEstilo}`;
+}
+
+/**
  * Genera una entidad SOLID  para DXF a partir de un listado de puntos.
  * Admite un listado de 3 o 4 puntos
  *
@@ -674,57 +737,6 @@ AcDbEntity
 100
 AcDbTrace
 ${cuerpo}`;
-}
-
-/**
- * Genera una entidad MTEXT en formato DXF con múltiples líneas de texto, posición, tamaño, rotación y alineación.
- *
- * Las líneas de texto se unen con el delimitador "^J" y se escapan las barras invertidas. 
- * La alineación se define mediante un código numérico que corresponde al punto de anclaje del texto.
- *
- * @param {number} posX - Coordenada X de la posición del texto.
- * @param {number} posY - Coordenada Y de la posición del texto.
- * @param {string[]} [text=[]] - Array de líneas de texto a incluir.
- * @param {number} [textsize=2.5] - Tamaño del texto.
- * @param {number} [rotation=0] - Rotación del texto en grados.
- * @param {string} [align='ML'] - Alineación del texto (por ejemplo: 'TL', 'MC', 'BR', etc.).
- * @returns {string} Cadena en formato DXF que representa una entidad MTEXT.
- *
- * @example
- * const dxf = textoMultiDXF(10, 20, ['Primera línea', 'Segunda línea'], 3, 45, 'MC');
- * console.log(dxf);
- */
-function textoMultiDXF(posX, posY, text = [], textsize=2.5, rotation = 0, align = 'ML') {
-	const contenido = text.map(linea => linea.replace(/\\/g, "\\\\")).join("^J");
-
-	const alineaciones = {
-		TL: 1, TC: 2, TR: 3,
-		ML: 4, MC: 5, MR: 6,
-		BL: 7, BC: 8, BR: 9,
-	};
-
-	const attachPoint = alineaciones[align] || [1, 1];
-
-	return `0
-MTEXT
-8
-0
-100
-AcDbEntity
-100
-AcDbMText
-10
-${posX}
-20
-${posY}
-40
-${textsize}
-50
-${rotation}
-71
-${attachPoint}
-1
-${contenido}`;
 }
 
 /**
@@ -804,4 +816,43 @@ AcDbArc
 ${angInicio}
 51
 ${angFin}`;
+}
+
+function punto(posXcentro, posYcentro) {
+
+return `0
+HATCH
+100
+AcDbEntity
+100
+AcDbHatch
+  2
+SOLID
+ 70
+     1
+ 71
+     1
+ 91
+        1
+ 92
+        1
+ 93
+        1
+ 72
+     2
+ 10
+${posXcentro}
+ 20
+${posYcentro}
+ 40
+0.5
+ 50
+0.0
+ 51
+360.0
+ 73
+     1
+ 97
+        0`
+
 }

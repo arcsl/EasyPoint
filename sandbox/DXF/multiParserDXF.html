@@ -249,7 +249,7 @@
                     .filter(s => s.length > 0)
             );
 
-            return [(`entidades.push(textoMultiDXF( posX + ${posX},  posY + ${posY}, ${linesArray}, ${height}, ${rotation}, "${data.align}"));  // MTEXT en línea ${startIndex}`).replace(/\+\s*-/g, "- ")];
+            return [(`entidades.push(textoMultiDXF( posX + ${posX},  posY + ${posY}, ${linesArray}, ${height}, "${data.align}, ${rotation}"));  // MTEXT en línea ${startIndex}`).replace(/\+\s*-/g, "- ")];
         }
 
 

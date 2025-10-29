@@ -16,12 +16,15 @@ const controladores = {
                     "Cinta": "KNX",
                     "Simbolos":   [   "#|",   "#|", ],
                     "Numeracion": [    "3",    "4", ],
+                    "Opcional":   [   "#ext",   "#ext", ],
+                    "Etiqueta":   "INTEGRACION KNX%",
                 },
                 {   // alimentacion 24V
                     "Cinta": "AC 24V",
                     "Subcinta":   [    "~",   "#T",   "#uTierra", ],
                     "Simbolos":   [   "#|",   "#|",   "#|", ],
                     "Numeracion": [    "5",    "6",    "7", ],
+                    "Fijo":       [   "#G",  "#G0",   null, ],
                 },
                 {   // entradas Digitales
                     "Cinta":      [   null,   "D1",   null,   "#T",   "D2", ],
@@ -65,23 +68,31 @@ const controladores = {
                     "Subcinta":   [     "+",     "-", ],
                     "Simbolos":   [    "#|",    "#|", ],
                     "Numeracion": [    "66",    "67", ],
+                    "Opcional":   [   "#ext",   "#ext", ],
+                    "Etiqueta":   "INTEGRACION CONTADORES M-BUS%",                    
                 },                
                 {   // COM 1
                     "Cinta": "COM 1",
                     "Subcinta":   [    "+",   "-",    "#d", ],
                     "Simbolos":   [   "#|",   "#|",   "#|", ],
                     "Numeracion": [   "68",   "69",   "70", ],
+                    "Opcional":   [   "#ext",   "#ext", ],
+                    "Etiqueta":   "INTEGRACION BACNET TERCEROS%",                      
                 },
                 {   // COM 2
                     "Cinta": "COM 2",
                     "Subcinta":   [    "+",   "-",    "#d", ],
                     "Simbolos":   [   "#|",   "#|",   "#|", ],
                     "Numeracion": [   "71",   "72",   "73", ],
+                    "Opcional":   [   "#ext",   "#ext", ],
+                    "Etiqueta":   "INTEGRACION MODBUS TERCEROS%",    
                 },
                 {   // DO1
                     "Cinta": "DO1",
                     "Simbolos":   "#Qc",
                     "Numeracion": [   "75",   "76",   "77", ],
+                    "Fijo":       [   "#L",   "#N",   null, ],
+
                 },
                 {   // DO2
                     "Cinta": "DO2",
@@ -110,6 +121,6 @@ const controladores = {
                 },
             ],
         ],
-        "medidas": {},
+        "Medidas": {},
     },
 }

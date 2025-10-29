@@ -4,30 +4,42 @@
 function hasheador(posX, posY, hash, franja) {
 
     let tamText = 2.5;
+    let alineacion = "MC";
+    let rotacion = 0;
     let estiloText = "Standard";
     let multAncho = 1;
     let desY = posY;
-    
+
+
     if (franja === "Cinta") {
         tamText = 1.5;
         desY += 17;
     }
-    
+
     if (franja === "Subcinta") {
         tamText = 1.5;
         desY += 15;
     }
-    
+
     if (franja === "Simbolos") {
         desY += 9;
     }
-    
+
     if (franja === "Numeracion") {
         estiloText = "Estrecho";
         multAncho = 0.8;
         desY += 2;
     }
 
+    if (franja === "Opcional") {
+
+    }
+
+    if (franja === "Etiqueta") {
+        alineacion = "ML";
+        rotacion = 90;
+        desY -= 188;
+    }
 
 
     if (!hash) return [];
@@ -46,11 +58,19 @@ function hasheador(posX, posY, hash, franja) {
         if (hash === "#T") return hashT(posX, desY, tamText);
         if (hash === "#uTierra") return hashuTierra(posX, desY);
         if (hash === "#Qc") return hashQconmutada(posX, desY);
+        if (hash === "#ext") return hashExterna(posX, desY)
+        if (hash === "#L") return hashAlimL(posX, desY)
+        if (hash === "#N") return hashAlimN(posX, desY)
+        if (hash === "#G") return hashAlimG(posX, desY)
+        if (hash === "#G0") return hashAlimG0(posX, desY)
+
+    } else if (hash.includes("%")) {
+        return [textoMultiDXF(posX, desY, hash.split('%'), tamText, alineacion, rotacion, estiloText, multAncho)];
 
     } else {
-        return [textoDXF(posX, desY, hash, tamText, 'MC', 0, estiloText, multAncho)];
-    }
+        return [textoDXF(posX, desY, hash, tamText, alineacion, rotacion, estiloText, multAncho)];
 
+    }
 }
 
 function hash52(posX, posY) {
@@ -238,6 +258,64 @@ function hashQconmutada(posX, posY) {
     entidades.push(solidDXF([[posX - 4, posY - 5], [posX - 4.5, posY - 3], [posX - 3.5, posY - 3], [posX - 3.5, posY - 3]]));
     entidades.push(solidDXF([[posX + 0, posY - 3], [posX - 0.5, posY - 5], [posX + 0.5, posY - 5], [posX + 0.5, posY - 5]]));
     entidades.push(solidDXF([[posX + 4, posY - 5], [posX + 3.5, posY - 3], [posX + 4.5, posY - 3], [posX + 4.5, posY - 3]]));
+
+    return entidades;
+
+}
+
+function hashExterna(posX, posY) {
+
+    const entidades = [];
+
+    entidades.push(lineaDXF(posX + 0, posY + 0, posX + 0, posY - 104));
+    entidades.push(lineaDXF(posX - 2, posY - 104, posX + 2, posY - 104, 40));
+    entidades.push(lineaDXF(posX - 2, posY - 104, posX - 2, posY - 110, 40));
+    entidades.push(lineaDXF(posX + 2, posY - 104, posX + 2, posY - 110, 40));
+    entidades.push(lineaDXF(posX - 2, posY - 110, posX + 2, posY - 110, 40));
+    entidades.push(lineaDXF(posX + 0, posY - 110, posX + 0, posY - 116));
+
+    return entidades;
+
+}
+
+function hashAlimL(posX, posY) {
+
+    const entidades = [];
+
+    entidades.push(lineaDXF(posX + 0, posY + 0, posX + 0, posY - 4));
+    entidades.push(punto(posX + 0, posY - 4));
+
+    return entidades;
+
+}
+
+function hashAlimN(posX, posY) {
+
+    const entidades = [];
+
+    entidades.push(lineaDXF(posX + 0, posY + 0, posX + 0, posY - 100));
+     entidades.push(punto(posX + 0, posY - 100));
+
+    return entidades;
+
+}
+
+function hashAlimG(posX, posY) {
+
+    const entidades = [];
+
+    entidades.push(lineaDXF(posX + 0, posY + 0, posX + 0, posY - 12));
+ entidades.push(punto(posX + 0, posY - 12));
+    return entidades;
+
+}
+
+function hashAlimG0(posX, posY) {
+
+    const entidades = [];
+
+    entidades.push(lineaDXF(posX + 0, posY + 0, posX + 0, posY - 16));
+    entidades.push(punto(posX + 0, posY - 16));
 
     return entidades;
 
