@@ -1,3 +1,13 @@
+/** 
+ * dentro de VPORT 
+ * 60 = 2 -> GRID infinita 
+ * 75 activa el SNAP 
+ * 76 activa GRID
+ * 14 y 24 pasos x e y del grid
+ * 15 y 25 visualizacion x e y del grid
+ * 
+ */
+
 function wrapDXF(entities) {
 	return `  0
 SECTION
@@ -57,10 +67,24 @@ AcDbViewportTableRecord
 200.0
  22
 130.0
+ 14
+1.0
+ 24
+1.0
+ 15
+1.0
+ 25
+1.0
  40
 300.0
  41
 1.538461
+ 60
+     2
+ 75
+     1
+ 76
+     0
   0
 ENDTAB
   0
@@ -290,34 +314,6 @@ AcDbSymbolTableRecord
 100
 AcDbTextStyleTableRecord
   2
-
- 70
-     1
- 40
-0.0
- 41
-1.0
- 50
-0.0
- 71
-     0
- 42
-0.2
-  3
-GOST 2.303-68.shx
-  4
-
-  0
-STYLE
-  5
-365
-330
-3
-100
-AcDbSymbolTableRecord
-100
-AcDbTextStyleTableRecord
-  2
 Negrita
  70
      0
@@ -341,6 +337,40 @@ ACAD
 Arial
 1071
  33567744
+  0
+STYLE
+  5
+535
+330
+3
+100
+AcDbSymbolTableRecord
+100
+AcDbTextStyleTableRecord
+  2
+Estrecho
+ 70
+     0
+ 40
+0.0
+ 41
+0.8
+ 50
+0.0
+ 71
+     0
+ 42
+2.5
+  3
+
+  4
+
+1001
+ACAD
+1000
+Arial
+1071
+    12288
   0
 ENDTAB
   0
@@ -518,10 +548,12 @@ ${posY2}`;
  *     Se emite advertencia si se proporciona un valor no soportado.
  * @param {string} [estilo="Standard"] - Estilo de texto DXF (nombre del estilo definido en el archivo DXF).
  *     Se omite si es "Standard".
+ * @param {number} [multAncho=1] - Factor de multiplicacion de anchura del texto.
+ *     Se omite si es 1.
  *
  * @returns {string} Cadena en formato DXF que representa la entidad TEXT con sus propiedades.
  */
-function textoDXF(posX, posY, text,  textsize = 2.5, align = 'ML', rotation = 0, estilo = "Standard") {
+function textoDXF(posX, posY, text,  textsize = 2.5, align = 'ML', rotation = 0, estilo = "Standard", multAncho = 1) {
 	const alineaciones = {
 		TL: [0, 3], TC: [1, 3], TR: [2, 3],
 		ML: [0, 2], MC: [1, 2], MR: [2, 2],
@@ -602,7 +634,9 @@ ${posX.toFixed(3)}
 21
 ${posY.toFixed(3)}
 40
-${textsize}${insertRotation}
+${textsize}
+41
+${multAncho}${insertRotation}
 1
 ${text}${insertEstilo}
 72
@@ -735,9 +769,9 @@ ${radio}${insertGrosor}`;
  * @param {number} posXcentro - Coordenada X del centro del arco.
  * @param {number} posYcentro - Coordenada Y del centro del arco.
  * @param {number} radio - Radio del arco.
- * @param {number} angInicio - Ángulo de inicio en grados (0 = eje X positivo).
- * @param {number} angFin - Ángulo de fin en grados (en sentido antihorario desde angInicio).
- * @param {number} [grosor=-1] - Grosor de línea DXF. Por defecto: 1-.
+ * @param {number} angInicio - Ángulo de inicio absoluto en grados (0 = eje X positivo, CCW).
+ * @param {number} angFin - Ángulo de fin absoluto en grados (0 = eje X positivo, CCW).
+ * @param {number} [grosor=-1] - Grosor de línea DXF. Por defecto: -1.
  * @returns {string} Cadena en formato DXF que representa la entidad ARC.
  */
 function arcoDXF(posXcentro, posYcentro, radio, angInicio, angFin, grosor = -1) {
@@ -755,7 +789,7 @@ ${grosor}`;
 	return `0
 ARC
 100
-AcDbEntity
+AcDbEntity${insertGrosor}
 100
 AcDbCircle
 10
@@ -769,5 +803,5 @@ AcDbArc
 50
 ${angInicio}
 51
-${angFin}${insertGrosor}`;
+${angFin}`;
 }

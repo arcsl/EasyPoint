@@ -142,39 +142,48 @@
 
             // separacion universal entre lineas
             const paso = 4;
+            const franjas = ["Cinta", "Subcinta", "Simbolos", "Numeracion"];
 
             controladores["PXC5.E24"].Paginas.forEach((pagina, indexpag) => {
 
-                // calculo de las unidades de largo del controlador
+                // calculo del largo del controlador
                 const largura = pagina
                     .map(conector => conector.Numeracion.length + 1)
                     .reduce((a, b) => a + b, 0) * paso;
 
                 // centrado del controlador en la pagina
-                let inX = (400 - largura) / 2 + indexpag * 400;
+                let inX = (400 - largura) / 2 + indexpag * 420;
                 let inY = 236;
 
                 // envolvente del controlador
                 entities.push(...hashEnv(inX, inY, largura));
 
+
                 // rellenar la envolvente con simbolos y numeraciones
                 pagina.forEach((conector, index) => {
 
+                    // si es un solo elemento (string) ponerlo en medio de su franja correspondiente
+                    franjas.forEach(franja => {
+                        if (typeof conector[franja] === "string") {
+                            const largoConector = (conector.Numeracion.length + 1) * paso;
+                            const posXFranjaCentrada = inX + largoConector / 2;
+                            entities.push(...hasheador(posXFranjaCentrada, inY, conector[franja], franja));
+                        }
+                    });
+
                     for (let i = 0; i < conector.Numeracion.length; i++) {
-
                         inX += paso;
-                        if (Array.isArray(conector.Numeracion)) entities.push(...hasheador(inX, inY + 2, conector.Numeracion[i], 2.5));
-                        if (Array.isArray(conector.Simbolos)) entities.push(...hasheador(inX, inY + 9, conector.Simbolos[i], 2.5));
-                        if (Array.isArray(conector.Subcinta)) entities.push(...hasheador(inX, inY + 15, conector.Subcinta[i], 1.5));
-                        console.log(conector.Cinta[i]);
-                        if (Array.isArray(conector.Cinta)) entities.push(...hasheador(inX, inY + 17, conector.Cinta[i], 1.5));
-
+                        franjas.forEach(franja => {
+                            if (Array.isArray(conector[franja])) {
+                                entities.push(...hasheador(inX, inY, conector[franja][i], franja));
+                            }
+                        });
                     }
 
                     inX += paso;
 
                     // añadir separador si no es el ultimo conector
-                    if (index + 1 < pagina.length) entities.push(...hasheador(inX, inY, "#Sep", 0));
+                    if (index + 1 < pagina.length) entities.push(...hasheador(inX, inY, "#Sep"));
 
                 });
 

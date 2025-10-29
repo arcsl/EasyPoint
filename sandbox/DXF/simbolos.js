@@ -1,26 +1,57 @@
-function hasheador(posX, posY, hash, tamText) {
+/// <reference path="basicosDXF.js" />
+/// <reference path="controladores.js" />
+
+function hasheador(posX, posY, hash, franja) {
+
+    let tamText = 2.5;
+    let estiloText = "Standard";
+    let multAncho = 1;
+    let desY = posY;
+    
+    if (franja === "Cinta") {
+        tamText = 1.5;
+        desY += 17;
+    }
+    
+    if (franja === "Subcinta") {
+        tamText = 1.5;
+        desY += 15;
+    }
+    
+    if (franja === "Simbolos") {
+        desY += 9;
+    }
+    
+    if (franja === "Numeracion") {
+        estiloText = "Estrecho";
+        multAncho = 0.8;
+        desY += 2;
+    }
+
+
 
     if (!hash) return [];
 
     if (hash.startsWith("#")) {
-        if (hash === "#52") return hash52(posX, posY);
-        if (hash === "#25") return hash25(posX, posY);
-        if (hash === "#UD") return hashUD(posX, posY);
-        if (hash === "#D") return hashD(posX, posY);
-        if (hash === "#U") return hashU(posX, posY);
-        if (hash === "#|") return hashPalo(posX, posY);
-        if (hash === "#-") return hashGuion(posX, posY);
-        if (hash === "#Sep") return hashSep(posX, posY);
-        if (hash === "#d") return hashd(posX, posY);
-        if (hash === "#RED") return hashLan(posX, posY);
-        if (hash === "#T") return hashT(posX, posY,tamText);
+        if (hash === "#52") return hash52(posX, desY);
+        if (hash === "#25") return hash25(posX, desY);
+        if (hash === "#UD") return hashUD(posX, desY);
+        if (hash === "#D") return hashD(posX, desY);
+        if (hash === "#U") return hashU(posX, desY);
+        if (hash === "#|") return hashPalo(posX, desY);
+        if (hash === "#-") return hashGuion(posX, desY);
+        if (hash === "#Sep") return hashSep(posX, desY);
+        if (hash === "#d") return hashd(posX, desY);
+        if (hash === "#RED") return hashLan(posX, desY);
+        if (hash === "#T") return hashT(posX, desY, tamText);
+        if (hash === "#uTierra") return hashuTierra(posX, desY);
+        if (hash === "#Qc") return hashQconmutada(posX, desY);
 
     } else {
-         return [textoDXF(posX, posY, hash, tamText, 'MC')];
+        return [textoDXF(posX, desY, hash, tamText, 'MC', 0, estiloText, multAncho)];
     }
 
 }
-
 
 function hash52(posX, posY) {
 
@@ -85,7 +116,7 @@ function hashPalo(posX, posY) {
 
     const entidades = [];
 
-    entidades.push(lineaDXF(posX +  0, posY + 5, posX +  0, posY - 5,  0));
+    entidades.push(lineaDXF(posX + 0, posY + 5, posX + 0, posY - 5, 0));
 
     return entidades;
 
@@ -173,7 +204,40 @@ function hashT(posX, posY, textsize) {
 
     const entidades = [];
 
-    entidades.push(textoDXF(posX, posY, "T",  textsize, align = 'MC', rotation = 180));
+    entidades.push(textoDXF(posX, posY, "T", textsize, align = 'MC', rotation = 180));
+
+    return entidades;
+
+}
+
+function hashuTierra(posX, posY) {
+
+    const entidades = [];
+
+    entidades.push(lineaDXF(posX + 0, posY + 0, posX + 0, posY + 1, 0));
+    entidades.push(lineaDXF(posX - 0.75, posY + 0, posX + 0.75, posY + 0, 0));
+    entidades.push(lineaDXF(posX - 0.5, posY - 0.25, posX + 0.5, posY - 0.25, 0));
+    entidades.push(lineaDXF(posX - 0.25, posY - 0.5, posX + 0.25, posY - 0.5, 0));
+    entidades.push(arcoDXF(posX + 0, posY - 0.25, 1, 0, 180, 0));
+
+    return entidades;
+
+}
+
+function hashQconmutada(posX, posY) {
+
+    const entidades = [];
+
+    entidades.push(lineaDXF(posX - 4, posY - 3, posX - 4, posY + 4, 0));
+    entidades.push(lineaDXF(posX - 4, posY + 4, posX - 1, posY + 4, 0));
+    entidades.push(lineaDXF(posX + 4, posY - 3, posX + 4, posY + 4, 0));
+    entidades.push(lineaDXF(posX + 0, posY - 3, posX + 0, posY + 1, 0));
+    entidades.push(lineaDXF(posX + 0, posY + 1, posX - 2, posY + 5, 0));
+    entidades.push(lineaDXF(posX + 1, posY + 4, posX + 4, posY + 4, 0));
+
+    entidades.push(solidDXF([[posX - 4, posY - 5], [posX - 4.5, posY - 3], [posX - 3.5, posY - 3], [posX - 3.5, posY - 3]]));
+    entidades.push(solidDXF([[posX + 0, posY - 3], [posX - 0.5, posY - 5], [posX + 0.5, posY - 5], [posX + 0.5, posY - 5]]));
+    entidades.push(solidDXF([[posX + 4, posY - 5], [posX + 3.5, posY - 3], [posX + 4.5, posY - 3], [posX + 4.5, posY - 3]]));
 
     return entidades;
 

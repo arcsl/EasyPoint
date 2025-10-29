@@ -13,6 +13,7 @@
     <label for="selector">Seleccionar tipo de entidad:</label>
     <select id="selector" onchange="dispara()">
         <option value="LINE">LINE</option>
+        <option value="ARC">ARC</option>
         <option value="TEXT">TEXT</option>
         <option value="MTEXT">MTEXT</option>
         <option value="SOLID">SOLID</option>
@@ -68,6 +69,9 @@
                             case 'LINE':
                                 result.push(...parseLINE(lines, i));
                                 break;
+                            case 'ARC':
+                                result.push(...parseARC(lines, i));
+                                break;
                             case 'TEXT':
                                 result.push(...parseTEXT(lines, i));
                                 break;
@@ -105,6 +109,50 @@
 
             return [(`entidades.push(lineaDXF( posX + ${x1}, posY + ${y1}, posX + ${x2}, posY + ${y2}, ${grosor}));  // LINE en línea ${startIndex}`).replace(/\+\s*-/g, "- ")];
 
+        }
+        
+        function parseARC(lines, startIndex) {
+            // Por defecto
+            let cx = '0', cy = '0', r = '0', aStart = '0', aEnd = '0', grosor = '-1';
+
+            for (let i = startIndex + 2; i < lines.length; i += 2) {
+                const code = lines[i].trim();
+                const value = lines[i + 1]?.trim();
+
+                if (code === '0') break;
+
+                switch (code) {
+                    case '10': cx = value; break;       // Centro X
+                    case '20': cy = value; break;       // Centro Y
+                    case '40': r = value; break;       // Radio
+                    case '50': aStart = value; break;   // Ángulo inicio absoluto (°)
+                    case '51': aEnd = value; break;   // Ángulo fin absoluto (°)
+                    case '370': grosor = value; break;  // Grosor (lineweight)
+                    // 210/220/230 (extrusión) ignorados en 2D
+                }
+            }
+
+            // Normalización a [0, 360)
+            const norm = v => {
+                let n = parseFloat(v);
+                if (isNaN(n)) n = 0;
+                n = ((n % 360) + 360) % 360;
+                return n;
+            };
+            const a0 = norm(aStart);
+            const a1 = norm(aEnd);
+
+            const cxF = fmt(cx);
+            const cyF = fmt(cy);
+            const rF = fmt(r);
+            const a0F = fmt(a0);
+            const a1F = fmt(a1);
+            const gF = parseFloat(grosor); // lo paso como número; si queda -1, arcoDXF lo omitirá
+
+            // arcoDXF(xCentro, yCentro, radio, angInicioAbs, angFinAbs, grosor=-1)
+            return [(
+                `entidades.push(arcoDXF( posX + ${cxF}, posY + ${cyF}, ${rF}, ${a0F}, ${a1F}, ${gF} ));  // ARC en línea ${startIndex}`
+            ).replace(/\+\s*-/g, "- ")];
         }
 
         function parseTEXT(lines, startIndex) {
