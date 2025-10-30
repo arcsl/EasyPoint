@@ -30,6 +30,35 @@
         .w3-input {
             margin-bottom: 10px;
         }
+
+        .pagina-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 6px;
+        }
+
+        .pagina-label {
+            display: inline-block;
+            width: 80px;
+            /* ancho fijo */
+            font-weight: 600;
+        }
+
+        .btn-delete-pagina {
+            width: 32px;
+            height: 32px;
+            text-align: center;
+            padding: 0;
+            line-height: 32px;
+        }
+
+        .btn-move {
+            width: 32px;
+            height: 32px;
+            margin-right: 4px;
+            padding: 0;
+        }
     </style>
 </head>
 
@@ -45,48 +74,63 @@
             <p>Completa los datos para generar el archivo DXF:</p>
 
             <div class="w3-row-padding">
-                <div class="w3-half">
-                    <label>Referencia</label>
-                    <input class="w3-input w3-border" id="Refe" placeholder="1234">
-                </div>
-                <div class="w3-half">
-                    <label>Localización</label>
-                    <input class="w3-input w3-border" id="Loca" placeholder="Bilbao">
+                <div class="w3-padding-small">
+                    <input class="w3-input w3-border" id="Inst" placeholder="Nombre Instalación">
                 </div>
             </div>
 
             <div class="w3-row-padding">
                 <div class="w3-half">
-                    <label>Cliente</label>
+                    <input class="w3-input w3-border" id="Dibu" placeholder="Dibujado">
+                </div>
+                <div class="w3-half">
                     <input class="w3-input w3-border" id="Clie" placeholder="Cliente">
                 </div>
+            </div>
+
+            <div class="w3-row-padding">
                 <div class="w3-half">
-                    <label>Fecha</label>
                     <input type="date" class="w3-input w3-border" id="Fech">
                 </div>
-            </div>
-
-            <div class="w3-row-padding">
                 <div class="w3-half">
-                    <label>Dibujado por:</label>
-                    <input class="w3-input w3-border" id="Dibu" placeholder="Dibujado por">
-                </div>
-                <div class="w3-half">
-                    <label>nº Esquema</label>
-                    <input class="w3-input w3-border" id="Esqu" placeholder="S - 12345678 - 1">
+                    <input class="w3-input w3-border" id="Loca" placeholder="Localidad">
                 </div>
             </div>
 
             <div class="w3-row-padding">
                 <div class="w3-half">
-                    <label>Instalador</label>
-                    <input class="w3-input w3-border" id="Inst" placeholder="Ej: Instalaciones ABC">
+                    <input class="w3-input w3-border" id="Revi" placeholder="Revisado">
                 </div>
                 <div class="w3-half">
-                    <label>Número de hojas</label>
-                    <input class="w3-input w3-border" id="NumHojas" type="number" min="1" value="4">
+                    <input class="w3-input w3-border" id="Stye" placeholder="Sustituye a">
                 </div>
             </div>
+
+
+            <div class="w3-row-padding">
+                <div class="w3-half">
+                    <input class="w3-input w3-border" id="Esqu" placeholder="Nº esquema">
+                </div>
+                <div class="w3-half">
+                    <input class="w3-input w3-border" id="Stdo" placeholder="Sustituido por">
+                </div>
+            </div>
+
+
+            <p>Páginas</p>
+            <div class="w3-row-padding">
+                <div class="w3-col s12">
+
+                    <!-- Contenedor donde irán las páginas -->
+                    <div id="PaginasContenedor" class="w3-margin-bottom"></div>
+
+                    <!-- Botón para añadir páginas -->
+                    <button id="btnAddPagina" class="w3-button w3-green w3-round w3-small w3-hover-dark-green">
+                        <i class="fa fa-plus"></i> Añadir página
+                    </button>
+                </div>
+            </div>
+
 
             <div class="w3-center w3-padding-16">
                 <button class="w3-button w3-theme w3-hover-blue w3-xlarge w3-round-large" onclick="descargarDXF()">
@@ -106,107 +150,184 @@
         const UI = {};
         document.querySelectorAll("[id]").forEach(el => UI[el.id] = el);
 
+        UI.btnAddPagina.onclick = function () {
+
+            const cont = UI.PaginasContenedor;
+
+            // contenedor del bloque
+            const bloque = document.createElement("div");
+            bloque.className = "bloque-paginas";
+
+            // función para crear una fila dentro del bloque
+            const addFila = (isMain, ctrlName = "") => {
+                const fila = document.createElement("div");
+                fila.className = "pagina-row";
+
+                // eliminar bloque entero desde la fila principal
+                const btnDel = document.createElement("button");
+                btnDel.className = "w3-button w3-red w3-round btn-delete-pagina";
+                btnDel.innerHTML = `<i class="fa fa-trash"></i>`;
+                btnDel.onclick = () => { bloque.remove(); renumerarPaginas(); };
+                if (!isMain) btnDel.style.visibility = "hidden";
+
+                // botón mover arriba
+                const btnUp = document.createElement("button");
+                btnUp.className = "w3-button w3-blue w3-round btn-move";
+                btnUp.innerHTML = `<i class="fa fa-arrow-up"></i>`;
+                btnUp.onclick = () => moverBloque(bloque, -1);
+                if (!isMain) btnUp.style.visibility = "hidden";
+
+                // botón mover abajo
+                const btnDown = document.createElement("button");
+                btnDown.className = "w3-button w3-blue w3-round btn-move";
+                btnDown.innerHTML = `<i class="fa fa-arrow-down"></i>`;
+                btnDown.onclick = () => moverBloque(bloque, +1);
+                if (!isMain) btnDown.style.visibility = "hidden";
+
+                // label
+                const lbl = document.createElement("label");
+                lbl.className = "pagina-label";
+                lbl.textContent = "Página";
+
+                // selector o texto
+                let sel;
+                if (isMain) {
+                    sel = document.createElement("select");
+                    sel.className = "w3-select w3-border w3-round w3-small w3-padding";
+                    sel.style.width = "200px";
+                    sel.appendChild(new Option("", ""));
+                    Object.keys(controladores).forEach(k => sel.appendChild(new Option(k, k)));
+
+                    sel.onchange = () => {
+                        const ctrl = sel.value;
+                        const paginas = controladores[ctrl]?.Paginas?.length || 1;
+
+                        // borrar filas anteriores excepto la principal
+                        while (bloque.children.length > 1) bloque.removeChild(bloque.lastChild);
+
+                        // crear filas hijas
+                        for (let i = 1; i < paginas; i++) {
+                            addFila(false, ctrl);
+                        }
+
+                        renumerarPaginas();
+                    }
+                } else {
+                    sel = document.createElement("span");
+                    sel.className = "w3-small w3-border w3-round";
+                    sel.style.display = "inline-block";
+                    sel.style.width = "200px";
+                    sel.style.height = "32px";
+                    sel.style.lineHeight = "32px";
+                    sel.style.paddingLeft = "8px";
+                    sel.textContent = ctrlName;
+                }
+
+                fila.appendChild(btnDel);
+                fila.appendChild(btnUp);
+                fila.appendChild(btnDown);
+                fila.appendChild(lbl);
+                fila.appendChild(sel);
+
+                bloque.appendChild(fila);
+            };
+
+            // crear primera fila del bloque
+            addFila(true);
+
+            cont.appendChild(bloque);
+            renumerarPaginas();
+        };
+
+        function moverBloque(bloque, dir) {
+            const cont = UI.PaginasContenedor;
+            const bloques = [...cont.querySelectorAll(".bloque-paginas")];
+            const index = bloques.indexOf(bloque);
+            const newIndex = index + dir;
+
+            if (newIndex < 0 || newIndex >= bloques.length) return;
+
+            if (dir > 0) {
+                cont.insertBefore(bloque, bloques[newIndex].nextSibling);
+            } else {
+                cont.insertBefore(bloque, bloques[newIndex]);
+            }
+
+            renumerarPaginas();
+        }
+
+        function renumerarPaginas() {
+            const bloques = [...UI.PaginasContenedor.querySelectorAll(".bloque-paginas")];
+            let num = 1;
+            bloques.forEach(b => {
+                [...b.children].forEach(f => {
+                    f.querySelector(".pagina-label").textContent = `Página ${num++}`;
+                });
+            });
+            actualizarBotonesMovimiento();
+        }
+
+        function actualizarBotonesMovimiento() {
+            const bloques = [...UI.PaginasContenedor.querySelectorAll(".bloque-paginas")];
+
+            bloques.forEach((bloque, i) => {
+                // primera fila del bloque (la que sí tiene botones visibles)
+                const filaPrincipal = bloque.firstElementChild;
+
+                const btnUp = filaPrincipal.querySelector(".fa-arrow-up")?.parentNode;
+                const btnDown = filaPrincipal.querySelector(".fa-arrow-down")?.parentNode;
+
+                if (!btnUp || !btnDown) return;
+
+                // reglas
+                btnUp.disabled = (i === 0);  // primer bloque
+                btnDown.disabled = (i === bloques.length - 1); // último bloque
+            });
+        }
+
+
         function descargarDXF() {
+
             const entities = [];
 
             // Tomar datos del formulario
             const test = {
-                Refe: document.getElementById("Refe").value || "Sin referencia",
-                Hoja: '-',
-                Loca: document.getElementById("Loca").value || "Sin localización",
-                Clie: document.getElementById("Clie").value || "Sin cliente",
-                Fech: document.getElementById("Fech").value || "Sin fecha",
-                Dibu: document.getElementById("Dibu").value || "Sin dibujo",
-                Esqu: document.getElementById("Esqu").value || "Sin esquema",
-                Inst: document.getElementById("Inst").value || "Sin instalador",
+                Inst: UI.Inst.value || "-",
+                Dibu: UI.Dibu.value || "-",
+                Fech: UI.Fech.value || "-",
+                Revi: UI.Revi.value || "-",
+                Esqu: UI.Esqu.value || "-",
+                Clie: UI.Clie.value || "-",
+                Loca: UI.Loca.value || "-",
+                Stye: UI.Stye.value || "-",
+                Stdo: UI.Stdo.value || "-",
+                Refe: "-",
+                Hoja: "-",
             };
 
-            const numHojas = parseInt(document.getElementById("NumHojas").value) || 4;
+            const numHojas = UI.PaginasContenedor.querySelectorAll(".pagina-label").length;
 
             // determinar filas y columnas
             let determinado = false;
             let cajetinColumnas = 0;
             while (!determinado) {
                 cajetinColumnas++;
-                if ((cajetinColumnas * (cajetinColumnas - 1)) >= UI.NumHojas.value * 1) determinado = true;
+                if ((cajetinColumnas * (cajetinColumnas - 1)) >= numHojas) determinado = true;
             }
             let cajetinFilas = Math.ceil(numHojas / cajetinColumnas);
 
             // Generar cajetines
-            for (let i = 1; i <= numHojas; i++) {
-                let CajetinX = ((i - 1) % cajetinColumnas) * 420;
-                let CajetinY = (cajetinFilas - 1 - (Math.floor((i - 1) / cajetinColumnas))) * 300;
-                test.Hoja = `${i} - ${numHojas}`;
+
+            const filas = UI.PaginasContenedor.querySelectorAll(".pagina-row");
+
+            for (let numHoja = 0; numHoja < numHojas; numHoja++) {
+                let CajetinX = (numHoja % cajetinColumnas) * 420;
+                let CajetinY = (cajetinFilas - 1 - (Math.floor(numHoja / cajetinColumnas))) * 300;
+                test.Hoja = `${numHoja + 1} - ${numHojas}`;
                 entities.push(...cajetin(CajetinX, CajetinY, test));
+                const contrSelec = filas[numHoja].querySelector("select")?.value;
+                if (contrSelec) entities.push(...dibujarControlador(CajetinX, CajetinY, controladores[contrSelec]));
             }
-
-            // separacion universal entre lineas
-            const paso = 4;
-            const franjas = ["Cinta", "Subcinta", "Simbolos", "Numeracion","Opcional","Etiqueta","Fijo"];
-
-            controladores["PXC5.E24"].Paginas.forEach((pagina, indexpag) => {
-
-                // calculo del largo del controlador
-                const largura = pagina
-                    .map(conector => conector.Numeracion.length + 1)
-                    .reduce((a, b) => a + b, 0) * paso;
-
-                // centrado del controlador en la pagina
-                let inX = (400 - largura) / 2 + indexpag * 420;
-                let inY = 236;
-
-                // envolvente del controlador
-                entities.push(...hashEnv(inX, inY, largura));
-
-
-                // rellenar la envolvente con simbolos y numeraciones
-                pagina.forEach((conector, index) => {
-
-                    // si es un solo elemento (string) ponerlo en medio de su franja correspondiente
-                    franjas.forEach(franja => {
-                        if (typeof conector[franja] === "string") {
-                            const largoConector = (conector.Numeracion.length + 1) * paso;
-                            const posXFranjaCentrada = inX + largoConector / 2;
-                            entities.push(...hasheador(posXFranjaCentrada, inY, conector[franja], franja));
-                        }
-                    });
-
-                    for (let i = 0; i < conector.Numeracion.length; i++) {
-                        inX += paso;
-                        franjas.forEach(franja => {
-                            if (Array.isArray(conector[franja])) {
-                                entities.push(...hasheador(inX, inY, conector[franja][i], franja));
-                            }
-                        });
-                    }
-
-                    inX += paso;
-
-                    // añadir separador si no es el ultimo conector
-                    if (index + 1 < pagina.length) entities.push(...hasheador(inX, inY, "#Sep"));
-
-                });
-
-            });
-
-
-            // return;
-
-            // Ejemplo de símbolos (ajusta según tus funciones hashXX)
-            // const largo = 360;
-            // const inicial = (400 - largo) / 2;
-            // entities.push(...hashEnv(inicial, 236, largo));
-
-            // entities.push(...hash52(     40, 150));
-            // entities.push(...hash25(     80, 150));
-            // entities.push(...hashUD(    120, 150));
-            // entities.push(...hashD(     160, 150));
-            // entities.push(...hashU(     200, 150));
-            // entities.push(...hashPalo(  240, 150));
-            // entities.push(...hashGuion( 280, 150));
-            // entities.push(...hashSep(   320, 150));
-            // entities.push(...hashmD(    360, 150));
-            // entities.push(...hashLan(   420, 150));
 
             // Finalizar el archivo
             let dxfContent = wrapDXF(entities);
@@ -227,6 +348,83 @@
                 .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
                 .replace(/[^\x00-\x7F]/g, '');
         }
+
+        function dibujarControlador(hojaX, hojaY, controlador) {
+
+            const entidades = [];
+
+            // separacion universal entre lineas
+            const paso = 4;
+
+            // franjas en la definicion del controlador
+            const franjas = ["Cinta", "Subcinta", "Simbolos", "Numeracion", "Opcional", "Etiqueta", "Fijo"];
+
+            // desplazamiento en coordenada Y de las lineas transversales
+            const despYtransv = {
+                L: paso * 1,
+                G: paso * 3,
+                G0: paso * 4,
+                N: paso * 25,
+            }
+
+            controlador.Paginas.forEach((pagina, indexpag) => {
+
+                // calculo del largo del controlador
+                const largura = pagina
+                    .map(conector => conector.Numeracion.length + 1)
+                    .reduce((a, b) => a + b, 0) * paso;
+
+                // centrado del controlador en la pagina
+                let inX = hojaX + (400 - largura) / 2 + indexpag * 420;
+                let inY = hojaY + 236;
+
+                // envolvente del controlador
+                entidades.push(...hashEnv(inX, inY, largura));
+
+                // lineas transversales de fase, neutro, G y G0
+                Object.entries(despYtransv).forEach(([key, value]) => {
+                    entidades.push(...[
+                        textoDXF(inX - 2, inY - value, key, textsize = 2.5, align = 'MR', rotation = 0, estilo = "Standard", multAncho = 1),
+                        lineaDXF(inX, inY - value, inX + largura, inY - value),
+                        textoDXF(inX + largura + 2, inY - value, key, textsize = 2.5, align = 'ML', rotation = 0, estilo = "Standard", multAncho = 1),
+                    ]);
+                });
+
+                // rellenar la envolvente con simbolos y numeraciones
+                pagina.forEach((conector, index) => {
+
+                    // si es un solo elemento (string) ponerlo en medio de su franja correspondiente
+                    franjas.forEach(franja => {
+                        if (typeof conector[franja] === "string") {
+                            const largoConector = (conector.Numeracion.length + 1) * paso;
+                            const posXFranjaCentrada = inX + largoConector / 2;
+                            entidades.push(...hasheador(posXFranjaCentrada, inY, conector[franja], franja));
+                        }
+                    });
+
+                    // Si es un array colocar cada elemento en su posicion
+                    for (let i = 0; i < conector.Numeracion.length; i++) {
+                        inX += paso;
+                        franjas.forEach(franja => {
+                            if (Array.isArray(conector[franja])) {
+                                entidades.push(...hasheador(inX, inY, conector[franja][i], franja));
+                            }
+                        });
+                    }
+
+                    inX += paso;
+
+                    // añadir separador si no es el ultimo conector
+                    if (index + 1 < pagina.length) entidades.push(...hasheador(inX, inY, "#Sep"));
+
+                });
+
+            });
+
+            return entidades;
+
+        }
+
     </script>
 
 </body>

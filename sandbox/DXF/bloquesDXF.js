@@ -2,14 +2,17 @@
 function cajetin(posX, posY, infoCajetin = {}) {
 
     const {
+        Inst = '-',
+        Dibu = '-',
+        Fech = '-',
+        Revi = '-',
+        Esqu = '-',
+        Clie = '-',
+        Loca = '-',
+        Stye = '-',
+        Stdo = '-',
         Refe = '-',
         Hoja = '-',
-        Loca = '-',
-        Clie = '-',
-        Fech = '-',
-        Dibu = '-',
-        Esqu = '-',
-        Inst = '-',
     } = infoCajetin;
 
     const entidades = [];
@@ -89,21 +92,25 @@ function cajetin(posX, posY, infoCajetin = {}) {
     entidades.push(textoDXF(posX + 308, posY + 30, "-",                      2, "ML"));
     entidades.push(textoDXF(posX + 308, posY + 34, "-",                      2, "ML"));
     entidades.push(textoDXF(posX + 308, posY + 38, "-",                      2, "ML"));
-    entidades.push(textoDXF(posX + 287, posY +  6, "-",                      2, "MC"));
-    entidades.push(textoDXF(posX + 363, posY +  6, "-",                      2, "MC"));
-    entidades.push(textoDXF(posX + 363, posY +  2, "-",                      2, "MC"));
     entidades.push(textoDXF(posX + 391, posY + 14, "Hoja",                   2, "MC"));
     entidades.push(textoDXF(posX + 391, posY +  6, "Ref.",                   2, "MC"));
 
     // textos rellenables
+    entidades.push(textoDXF(posX + 315, posY + 22, Inst,                     5, "MC"));
+
+    entidades.push(textoDXF(posX + 287, posY + 14, Dibu,                     2, "MC"));
+    entidades.push(textoDXF(posX + 287, posY + 10, Fech,                     2, "MC"));
+    entidades.push(textoDXF(posX + 287, posY + 6,  Revi,                     2, "MC"));
+    entidades.push(textoDXF(posX + 287, posY + 2,  Esqu,                     2, "MC"));
+
+    entidades.push(textoDXF(posX + 363, posY + 14, Clie,                     2, "MC"));
+    entidades.push(textoDXF(posX + 363, posY + 10, Loca,                     2, "MC"));
+    entidades.push(textoDXF(posX + 363, posY + 6,  Stye,                     2, "MC"));
+    entidades.push(textoDXF(posX + 363, posY + 2,  Stdo,                     2, "MC"));
+
+
     entidades.push(textoDXF(posX + 391, posY + 2,  Refe,                     2, "MC"));
     entidades.push(textoDXF(posX + 391, posY + 10, Hoja,                     2, "MC"));
-    entidades.push(textoDXF(posX + 363, posY + 10, Loca,                     2, "MC"));
-    entidades.push(textoDXF(posX + 363, posY + 14, Clie,                     2, "MC"));
-    entidades.push(textoDXF(posX + 287, posY + 10, Fech,                     2, "MC"));
-    entidades.push(textoDXF(posX + 287, posY + 14, Dibu,                     2, "MC"));
-    entidades.push(textoDXF(posX + 287, posY + 2,  Esqu,                     2, "MC"));
-    entidades.push(textoDXF(posX + 315, posY + 22, Inst,                     5, "MC"));
 
     return entidades;
 
