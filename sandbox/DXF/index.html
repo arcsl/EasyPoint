@@ -21,8 +21,12 @@
             background-color: #f2f2f2;
         }
 
+        select.dispSelect {
+            width: 120px;
+        }
+
         .container {
-            max-width: 700px;
+            max-width: 1000px;
             margin: 40px auto;
             padding: 20px;
         }
@@ -194,25 +198,31 @@
                 let sel;
                 if (isMain) {
                     sel = document.createElement("select");
-                    sel.className = "w3-select w3-border w3-round w3-small w3-padding";
-                    sel.style.width = "200px";
+                    sel.className = "w3-select w3-border w3-round w3-small w3-padding dispSelect";
                     sel.appendChild(new Option("", ""));
                     Object.keys(controladores).forEach(k => sel.appendChild(new Option(k, k)));
 
                     sel.onchange = () => {
                         const ctrl = sel.value;
                         const paginas = controladores[ctrl]?.Paginas?.length || 1;
+                        const hojas = controladores[ctrl]?.Disposicion?.Hojas ?? 1;
 
-                        // borrar filas anteriores excepto la principal
+                        // borrar filas hijas previas
                         while (bloque.children.length > 1) bloque.removeChild(bloque.lastChild);
 
-                        // crear filas hijas
-                        for (let i = 1; i < paginas; i++) {
-                            addFila(false, ctrl);
-                        }
+                        // borrar sub-selects previos
+                        [...fila.querySelectorAll(".sub-equipo")].forEach(e => e.remove());
+
+                        // crear filas hijas (multipáginas)
+                        for (let i = 1; i < paginas; i++) addFila(false, ctrl);
+
+                        // si no ocupa toda la hoja, crear primer sub-select
+                        if (hojas < 1) crearSelectSubEquipo(fila, hojas);
 
                         renumerarPaginas();
-                    }
+                    };
+
+
                 } else {
                     sel = document.createElement("span");
                     sel.className = "w3-small w3-border w3-round";
@@ -285,6 +295,61 @@
                 btnDown.disabled = (i === bloques.length - 1); // último bloque
             });
         }
+
+        function crearSelectSubEquipo(fila, ocupacionActual) {
+            const espacioRestante = 1 - ocupacionActual;
+
+            // ver si queda algún equipo que quepa
+            const hayOpciones = Object.values(controladores).some(
+                c => (c.Disposicion?.Hojas ?? 1) <= espacioRestante
+            );
+
+            if (!hayOpciones) return;
+
+            const cont = document.createElement("span");
+            cont.className = "sub-equipo";
+            cont.style.marginLeft = "8px";
+
+            const sel2 = document.createElement("select");
+            sel2.className = "w3-select w3-border w3-round w3-small w3-padding dispSelect";
+
+            sel2.appendChild(new Option("", ""));
+
+            // lista filtrada
+            Object.keys(controladores).forEach(k => {
+                const hojas = controladores[k]?.Disposicion?.Hojas ?? 1;
+                if (hojas <= espacioRestante) sel2.appendChild(new Option(k, k));
+            });
+
+            sel2.onchange = () => {
+                // cuando cambia, eliminar todos los subs a la derecha
+                let next = cont.nextSibling;
+                while (next) {
+                    if (next.classList?.contains("sub-equipo")) {
+                        const temp = next;
+                        next = next.nextSibling;
+                        temp.remove();
+                    } else {
+                        next = next.nextSibling;
+                    }
+                }
+
+                const ctrl = sel2.value;
+                const hojas = controladores[ctrl]?.Disposicion?.Hojas ?? 1;
+                const nuevoOcupado = ocupacionActual + hojas;
+
+                // si aún cabe, crear otro inmediatamente después
+                if (ctrl && nuevoOcupado < 1) {
+                    crearSelectSubEquipo(fila, nuevoOcupado);
+                }
+
+                renumerarPaginas();
+            };
+
+            cont.appendChild(sel2);
+            fila.appendChild(cont);
+        }
+
 
 
         function descargarDXF() {
@@ -384,19 +449,19 @@
 
                 // nombre del dispositivo
                 entidades.push(...[
-                 // textoDXF(posX, posY, text,  textsize = 2.5, align = 'ML', rotation = 0, estilo = "Standard", multAncho = 1)
+                    // textoDXF(posX, posY, text,  textsize = 2.5, align = 'ML', rotation = 0, estilo = "Standard", multAncho = 1)
                     textoDXF(inX + 2, inY + 21, dispositivo.Nombre, 3, 'ML', 0, "Negrita"),
                 ]);
 
                 // numero de modulo
                 const { Familia, Tipo } = dispositivo.Disposicion;
-                if ( Familia === "PX" && Tipo === "modulo") {
+                if (Familia === "PX" && Tipo === "modulo") {
                     entidades.push(...[
                         textoDXF(inX + largura - 5, inY + 21, "#", 3, 'MC', 0, "Negrita"),
                         lineaDXF(inX + largura - 10, inY + 18, inX + largura - 10, inY + 24),
                     ]);
                 }
-                    
+
                 // lineas transversales de fase, neutro, G y G0
                 Object.entries(despYtransv).forEach(([key, value]) => {
                     entidades.push(...[
