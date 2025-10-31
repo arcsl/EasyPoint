@@ -22,7 +22,25 @@
         }
 
         select.dispSelect {
-            width: 120px;
+            width: 115px;
+            margin-right: 5px;
+            margin-bottom: 10px;
+        }
+
+        .labelCarril {
+            width: 80px;
+        }
+
+        .carril-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 5px;
+        }
+
+        .divSelectores {
+            display: flex;
+            flex-wrap: wrap;
+            width: 625px;
         }
 
         .container {
@@ -110,7 +128,6 @@
                 </div>
             </div>
 
-
             <div class="w3-row-padding">
                 <div class="w3-half">
                     <input class="w3-input w3-border" id="Esqu" placeholder="Nº esquema">
@@ -120,21 +137,20 @@
                 </div>
             </div>
 
+            <p class="w3-margin-top"><b>Carriles</b></p>
 
-            <p>Páginas</p>
             <div class="w3-row-padding">
                 <div class="w3-col s12">
 
-                    <!-- Contenedor donde irán las páginas -->
-                    <div id="PaginasContenedor" class="w3-margin-bottom"></div>
+                    <!-- Contenedor carriles -->
+                    <div id="CarrilesContenedor" class="w3-margin-bottom"></div>
 
-                    <!-- Botón para añadir páginas -->
-                    <button id="btnAddPagina" class="w3-button w3-green w3-round w3-small w3-hover-dark-green">
-                        <i class="fa fa-plus"></i> Añadir página
+                    <!-- Botón para añadir carril -->
+                    <button id="btnAddCarril" class="w3-button w3-green w3-round w3-small w3-hover-dark-green">
+                        <i class="fa fa-plus"></i> Añadir carril
                     </button>
                 </div>
             </div>
-
 
             <div class="w3-center w3-padding-16">
                 <button class="w3-button w3-theme w3-hover-blue w3-xlarge w3-round-large" onclick="descargarDXF()">
@@ -150,213 +166,324 @@
 
     <script>
 
+        const HOJA_TOTAL = 400;       // ancho útil original del cajetín
+        const HOJA_UTIL = 380;       // tu regla 1.1 (usamos 380 para dejar margen)
+        const MARGEN_X = (HOJA_TOTAL - HOJA_UTIL) / 2; // 10 a cada lado con 380
+        const SEP_CONTROLADOR = 20;   // tu regla 1.2 (entre controladores, salvo 1º de hoja)
 
         /* ------------------------- REFERENCIAS AL DOM EN OBJETO UI ------------------------- */
         const UI = {};
         document.querySelectorAll("[id]").forEach(el => UI[el.id] = el);
 
-        UI.btnAddPagina.onclick = function () {
+        (function calcularAnchosPorPagina() {
 
-            const cont = UI.PaginasContenedor;
+            const paso = 4; // mm por punto / lo mismo que usas en dibujarDispositivo
 
-            // contenedor del bloque
-            const bloque = document.createElement("div");
-            bloque.className = "bloque-paginas";
+            Object.keys(controladores).forEach(ctrlName => {
+                const ctrl = controladores[ctrlName];
 
-            // función para crear una fila dentro del bloque
-            const addFila = (isMain, ctrlName = "") => {
-                const fila = document.createElement("div");
-                fila.className = "pagina-row";
+                if (!ctrl.Paginas) return;
 
-                // eliminar bloque entero desde la fila principal
-                const btnDel = document.createElement("button");
-                btnDel.className = "w3-button w3-red w3-round btn-delete-pagina";
-                btnDel.innerHTML = `<i class="fa fa-trash"></i>`;
-                btnDel.onclick = () => { bloque.remove(); renumerarPaginas(); };
-                if (!isMain) btnDel.style.visibility = "hidden";
+                ctrl.Disposicion.AnchoEnHoja = ctrl.Paginas.map(pagina => {
+                    const largo = pagina
+                        .map(conector => conector.Numeracion.length + 1)
+                        .reduce((a, b) => a + b, 0);
 
-                // botón mover arriba
-                const btnUp = document.createElement("button");
-                btnUp.className = "w3-button w3-blue w3-round btn-move";
-                btnUp.innerHTML = `<i class="fa fa-arrow-up"></i>`;
-                btnUp.onclick = () => moverBloque(bloque, -1);
-                if (!isMain) btnUp.style.visibility = "hidden";
-
-                // botón mover abajo
-                const btnDown = document.createElement("button");
-                btnDown.className = "w3-button w3-blue w3-round btn-move";
-                btnDown.innerHTML = `<i class="fa fa-arrow-down"></i>`;
-                btnDown.onclick = () => moverBloque(bloque, +1);
-                if (!isMain) btnDown.style.visibility = "hidden";
-
-                // label
-                const lbl = document.createElement("label");
-                lbl.className = "pagina-label";
-                lbl.textContent = "Página";
-
-                // selector o texto
-                let sel;
-                if (isMain) {
-                    sel = document.createElement("select");
-                    sel.className = "w3-select w3-border w3-round w3-small w3-padding dispSelect";
-                    sel.appendChild(new Option("", ""));
-                    Object.keys(controladores).forEach(k => sel.appendChild(new Option(k, k)));
-
-                    sel.onchange = () => {
-                        const ctrl = sel.value;
-                        const paginas = controladores[ctrl]?.Paginas?.length || 1;
-                        const hojas = controladores[ctrl]?.Disposicion?.Hojas ?? 1;
-
-                        // borrar filas hijas previas
-                        while (bloque.children.length > 1) bloque.removeChild(bloque.lastChild);
-
-                        // borrar sub-selects previos
-                        [...fila.querySelectorAll(".sub-equipo")].forEach(e => e.remove());
-
-                        // crear filas hijas (multipáginas)
-                        for (let i = 1; i < paginas; i++) addFila(false, ctrl);
-
-                        // si no ocupa toda la hoja, crear primer sub-select
-                        if (hojas < 1) crearSelectSubEquipo(fila, hojas);
-
-                        renumerarPaginas();
-                    };
-
-
-                } else {
-                    sel = document.createElement("span");
-                    sel.className = "w3-small w3-border w3-round";
-                    sel.style.display = "inline-block";
-                    sel.style.width = "200px";
-                    sel.style.height = "32px";
-                    sel.style.lineHeight = "32px";
-                    sel.style.paddingLeft = "8px";
-                    sel.textContent = ctrlName;
-                }
-
-                fila.appendChild(btnDel);
-                fila.appendChild(btnUp);
-                fila.appendChild(btnDown);
-                fila.appendChild(lbl);
-                fila.appendChild(sel);
-
-                bloque.appendChild(fila);
-            };
-
-            // crear primera fila del bloque
-            addFila(true);
-
-            cont.appendChild(bloque);
-            renumerarPaginas();
-        };
-
-        function moverBloque(bloque, dir) {
-            const cont = UI.PaginasContenedor;
-            const bloques = [...cont.querySelectorAll(".bloque-paginas")];
-            const index = bloques.indexOf(bloque);
-            const newIndex = index + dir;
-
-            if (newIndex < 0 || newIndex >= bloques.length) return;
-
-            if (dir > 0) {
-                cont.insertBefore(bloque, bloques[newIndex].nextSibling);
-            } else {
-                cont.insertBefore(bloque, bloques[newIndex]);
-            }
-
-            renumerarPaginas();
-        }
-
-        function renumerarPaginas() {
-            const bloques = [...UI.PaginasContenedor.querySelectorAll(".bloque-paginas")];
-            let num = 1;
-            bloques.forEach(b => {
-                [...b.children].forEach(f => {
-                    f.querySelector(".pagina-label").textContent = `Página ${num++}`;
+                    return largo * paso;  // ancho real en mm
                 });
             });
-            actualizarBotonesMovimiento();
-        }
 
-        function actualizarBotonesMovimiento() {
-            const bloques = [...UI.PaginasContenedor.querySelectorAll(".bloque-paginas")];
+        })();
 
-            bloques.forEach((bloque, i) => {
-                // primera fila del bloque (la que sí tiene botones visibles)
-                const filaPrincipal = bloque.firstElementChild;
+        UI.btnAddCarril.onclick = function () {
 
-                const btnUp = filaPrincipal.querySelector(".fa-arrow-up")?.parentNode;
-                const btnDown = filaPrincipal.querySelector(".fa-arrow-down")?.parentNode;
+            const cont = UI.CarrilesContenedor;
 
-                if (!btnUp || !btnDown) return;
+            // contenedor carril
+            const carril = document.createElement("div");
+            carril.className = "carril-row w3-margin-bottom";
 
-                // reglas
-                btnUp.disabled = (i === 0);  // primer bloque
-                btnDown.disabled = (i === bloques.length - 1); // último bloque
-            });
-        }
+            // botón eliminar carril
+            const btnDel = document.createElement("button");
+            btnDel.className = "w3-button w3-red w3-round w3-small";
+            btnDel.innerHTML = `<i class="fa fa-trash"></i>`;
+            btnDel.onclick = () => { carril.remove(); renumerarCarriles(); };
 
-        function crearSelectSubEquipo(fila, ocupacionActual) {
-            const espacioRestante = 1 - ocupacionActual;
+            // botón subir
+            const btnUp = document.createElement("button");
+            btnUp.className = "w3-button w3-blue w3-round w3-small carril-move-up";
+            btnUp.innerHTML = `<i class="fa fa-arrow-up"></i>`;
+            btnUp.onclick = () => moverCarril(carril, -1);
 
-            // ver si queda algún equipo que quepa
-            const hayOpciones = Object.values(controladores).some(
-                c => (c.Disposicion?.Hojas ?? 1) <= espacioRestante
+            // botón bajar
+            const btnDown = document.createElement("button");
+            btnDown.className = "w3-button w3-blue w3-round w3-small carril-move-down";
+            btnDown.innerHTML = `<i class="fa fa-arrow-down"></i>`;
+            btnDown.onclick = () => moverCarril(carril, +1);
+
+            // label "Carril X"
+            const lbl = document.createElement("label");
+            lbl.className = "carril-label w3-margin-left w3-margin-right labelCarril";
+            lbl.textContent = "Carril";
+
+            // Div para Selectores 
+            const selDiv = document.createElement("div");
+            selDiv.className = "divSelectores";
+
+            // primer select
+            const sel = crearSelectorEquipo(() => agregarSelector(selDiv));
+
+            carril.appendChild(btnDel);
+            carril.appendChild(btnUp);
+            carril.appendChild(btnDown);
+            carril.appendChild(lbl);
+            carril.appendChild(selDiv);
+            selDiv.appendChild(sel);
+
+            cont.appendChild(carril);
+            renumerarCarriles();
+        };
+
+        function crearSelectorEquipo(onSelect) {
+            const sel = document.createElement("select");
+            sel.className = "w3-select w3-border w3-round w3-small w3-padding carril-select dispSelect";
+
+            sel.appendChild(new Option("", "")); // vacío
+
+            Object.keys(controladores).forEach(k =>
+                sel.appendChild(new Option(k, k))
             );
 
-            if (!hayOpciones) return;
-
-            const cont = document.createElement("span");
-            cont.className = "sub-equipo";
-            cont.style.marginLeft = "8px";
-
-            const sel2 = document.createElement("select");
-            sel2.className = "w3-select w3-border w3-round w3-small w3-padding dispSelect";
-
-            sel2.appendChild(new Option("", ""));
-
-            // lista filtrada
-            Object.keys(controladores).forEach(k => {
-                const hojas = controladores[k]?.Disposicion?.Hojas ?? 1;
-                if (hojas <= espacioRestante) sel2.appendChild(new Option(k, k));
-            });
-
-            sel2.onchange = () => {
-                // cuando cambia, eliminar todos los subs a la derecha
-                let next = cont.nextSibling;
-                while (next) {
-                    if (next.classList?.contains("sub-equipo")) {
-                        const temp = next;
-                        next = next.nextSibling;
-                        temp.remove();
-                    } else {
-                        next = next.nextSibling;
-                    }
-                }
-
-                const ctrl = sel2.value;
-                const hojas = controladores[ctrl]?.Disposicion?.Hojas ?? 1;
-                const nuevoOcupado = ocupacionActual + hojas;
-
-                // si aún cabe, crear otro inmediatamente después
-                if (ctrl && nuevoOcupado < 1) {
-                    crearSelectSubEquipo(fila, nuevoOcupado);
-                }
-
-                renumerarPaginas();
+            sel.onchange = () => {
+                if (sel.value === "") return; // si lo deja vacío, no hacemos nada
+                if (sel.nextElementSibling) return; // comprobar si este select es el último del carril
+                onSelect();
             };
 
-            cont.appendChild(sel2);
-            fila.appendChild(cont);
+            return sel;
+        }
+
+        function agregarSelector(selDiv) {
+            const nuevoSel = crearSelectorEquipo(() => agregarSelector(selDiv));
+            selDiv.appendChild(nuevoSel);
+        }
+
+        function moverCarril(carril, dir) {
+            const cont = UI.CarrilesContenedor;
+            const carriles = [...cont.querySelectorAll(".carril-row")];
+            const i = carriles.indexOf(carril);
+            const newIndex = i + dir;
+
+            if (newIndex < 0 || newIndex >= carriles.length) return;
+
+            if (dir > 0) cont.insertBefore(carril, carriles[newIndex].nextSibling);
+            else cont.insertBefore(carril, carriles[newIndex]);
+
+            renumerarCarriles();
+        }
+
+        function renumerarCarriles() {
+            const carriles = [...UI.CarrilesContenedor.querySelectorAll(".carril-row")];
+            carriles.forEach((c, i) => {
+                c.querySelector(".carril-label").textContent = `Carril ${i + 1}`;
+
+                const btnUp = c.querySelector(".carril-move-up");
+                const btnDown = c.querySelector(".carril-move-down");
+
+                btnUp.disabled = (i === 0);
+                btnDown.disabled = (i === carriles.length - 1);
+            });
         }
 
 
+        function leerCarrilesDesdeUI() {
+            const carriles = [];
+            const rows = UI.CarrilesContenedor.querySelectorAll(".carril-row");
+            rows.forEach(row => {
+                const sels = [...row.querySelectorAll("select.carril-select")];
+                const equipos = sels.map(s => s.value).filter(Boolean);
+                if (equipos.length > 0) carriles.push(equipos);
+            });
+            return carriles;  // Array<Array<string>>
+        }
+
+        function expandirCarrilAItems(listaEquipos) {
+            // devuelve un array de items: {key, tipo, pageIndex, width}
+            const items = [];
+            for (const key of listaEquipos) {
+                const disp = controladores[key];
+                if (!disp) continue;
+                const tipo = disp?.Disposicion?.Tipo || "controlador";
+                const anchos = disp?.Disposicion?.AnchoEnHoja || [disp?.Disposicion?.Ancho || HOJA_UTIL];
+
+                // cada página del dispositivo será un item independiente
+                for (let i = 0; i < anchos.length; i++) {
+                    items.push({
+                        key,
+                        tipo,           // "controlador" | "modulo" | ...
+                        pageIndex: i,   // índice de página dentro del dispositivo
+                        width: anchos[i]
+                    });
+                }
+            }
+            return items;
+        }
+
+        function generarLayoutHojasDesdeCarriles(carriles) {
+            // devuelve: Array< { items: Array<{key, pageIndex, tipo, x, width}> } >
+            const hojas = [];
+
+            function nuevaHoja() {
+                hojas.push({ items: [] });
+            }
+
+            // aseguramos al menos 1
+            if (hojas.length === 0) nuevaHoja();
+
+            let x = MARGEN_X;
+
+            for (const carril of carriles) {
+                const items = expandirCarrilAItems(carril);
+
+                // detectar si algún dispositivo del carril es multipágina:
+                // (necesitamos saberlo por grupo/dispositivo, no por item suelto)
+                // Creamos un mapa key -> numPaginas
+                const numPagPorKey = {};
+                carril.forEach(k => {
+                    numPagPorKey[k] = controladores[k]?.Disposicion?.AnchoEnHoja?.length || 1;
+                });
+
+                for (let i = 0; i < items.length; i++) {
+                    const it = items[i];
+                    const esMultipagina = (numPagPorKey[it.key] || 1) > 1;
+
+                    // ¿estamos al inicio de hoja?
+                    const hojaActual = hojas[hojas.length - 1];
+                    const esPrimeroDeHoja = hojaActual.items.length === 0;
+
+                    // regla 1.3: si es multipágina, cada página debe ir en hoja distinta
+                    // - si NO es primero de hoja, forzamos salto antes de colocarlo
+                    // - y para la siguiente página también forzaremos salto
+                    if (esMultipagina) {
+                        if (!esPrimeroDeHoja) {
+                            // salto de hoja
+                            nuevaHoja();
+                        }
+                        // ahora estamos al inicio de hoja sí o sí
+                        x = MARGEN_X;
+                        hojas[hojas.length - 1].items.push({ ...it, x });
+                        // tras colocar esta página, forzamos salto para la próxima página
+                        if (i < items.length - 1 && items[i + 1].key === it.key) {
+                            nuevaHoja();
+                            x = MARGEN_X;
+                        }
+                        continue;
+                    }
+
+                    // para items NO multipágina:
+                    // separación según tipo (si no es primero de hoja)
+                    let sep = 0;
+                    if (!esPrimeroDeHoja) {
+                        sep = (it.tipo === "controlador") ? SEP_CONTROLADOR : 0;
+                    }
+
+                    // ¿cabe?
+                    if ((x - MARGEN_X) + sep + it.width > HOJA_UTIL) {
+                        // saltar de hoja
+                        nuevaHoja();
+                        x = MARGEN_X;
+                        // primer item de hoja: sin separación
+                        sep = 0;
+                    } else {
+                        x += sep;
+                    }
+
+                    hojas[hojas.length - 1].items.push({ ...it, x });
+                    x += it.width;
+                }
+
+                // al terminar un carril, dejamos como está;
+                // el siguiente carril continúa llenando la hoja actual
+                // (si prefieres que cada carril empiece SIEMPRE en hoja nueva,
+                //  descomenta estas 3 líneas:)
+                nuevaHoja();
+                x = MARGEN_X;
+            }
+
+            return hojas;
+        }
+
+        function calcularMatrizCajetines(numHojas) {
+            let determinado = false;
+            let columnas = 0;
+            while (!determinado) {
+                columnas++;
+                if ((columnas * (columnas - 1)) >= numHojas) determinado = true;
+            }
+            const filas = Math.ceil(numHojas / columnas);
+            return { filas, columnas };
+        }
+
+        function dibujarPaginaDeDispositivo(hojaX, hojaY, dispositivo, pageIndex, startX) {
+            const entidades = [];
+
+            const paso = 4;
+            const franjas = ["Cinta", "Subcinta", "Simbolos", "Numeracion", "Opcional", "Etiqueta", "Fijo"];
+            const despYtransv = { L: paso * 1, G: paso * 3, G0: paso * 4, N: paso * 25 };
+
+            const pagina = dispositivo.Paginas[pageIndex];
+            const largura = dispositivo?.Disposicion?.AnchoEnHoja?.[pageIndex] ??
+                (pagina.map(c => (c.Numeracion.length + 1)).reduce((a, b) => a + b, 0) * paso);
+
+            let inX = hojaX + startX; // 👈 empezamos donde nos diga el layout
+            let inY = hojaY + 236;
+
+            // envolvente
+            entidades.push(...hashEnv(inX, inY, largura));
+
+            // nombre del dispositivo
+            entidades.push(textoDXF(inX + 2, inY + 21, dispositivo.Nombre, 3, 'ML', 0, "Negrita"));
+
+            // número de módulo si aplica
+            const { Familia, Tipo } = dispositivo.Disposicion;
+            if (Familia === "PX" && Tipo === "modulo") {
+                entidades.push(
+                    textoDXF(inX + largura - 5, inY + 21, "#", 3, 'MC', 0, "Negrita"),
+                    lineaDXF(inX + largura - 10, inY + 18, inX + largura - 10, inY + 24),
+                );
+            }
+
+            // rellenar envolvente
+            pagina.forEach((conector, idx) => {
+                // strings centradas en su bloque
+                franjas.forEach(franja => {
+                    if (typeof conector[franja] === "string") {
+                        const largoConector = ((conector.Numeracion?.length || 0) + 1) * paso;
+                        const posXFranjaCentrada = inX + largoConector / 2;
+                        entidades.push(...hasheador(posXFranjaCentrada, inY, conector[franja], franja));
+                    }
+                });
+
+                for (let i = 0; i < (conector.Numeracion?.length || 0); i++) {
+                    inX += paso;
+                    franjas.forEach(franja => {
+                        if (Array.isArray(conector[franja])) {
+                            entidades.push(...hasheador(inX, inY, conector[franja][i], franja));
+                        }
+                    });
+                }
+                inX += paso;
+
+                if (idx + 1 < pagina.length) entidades.push(...hasheador(inX, inY, "#Sep"));
+            });
+
+            return entidades;
+        }
 
         function descargarDXF() {
-
             const entities = [];
 
-            // Tomar datos del formulario
+            // cajetin data
             const test = {
                 Inst: UI.Inst.value || "-",
                 Dibu: UI.Dibu.value || "-",
@@ -371,35 +498,43 @@
                 Hoja: "-",
             };
 
-            const numHojas = UI.PaginasContenedor.querySelectorAll(".pagina-label").length;
+            // 1) Carriles desde UI
+            const carriles = leerCarrilesDesdeUI();
 
-            // determinar filas y columnas
-            let determinado = false;
-            let cajetinColumnas = 0;
-            while (!determinado) {
-                cajetinColumnas++;
-                if ((cajetinColumnas * (cajetinColumnas - 1)) >= numHojas) determinado = true;
-            }
-            let cajetinFilas = Math.ceil(numHojas / cajetinColumnas);
+            // 2) Layout de hojas (raw)
+            let layout = generarLayoutHojasDesdeCarriles(carriles);
 
-            // Generar cajetines
+            // 3) Eliminar última hoja si está vacía
+            limpiarHojasVacias(layout);
 
-            const filas = UI.PaginasContenedor.querySelectorAll(".pagina-row");
+            // 4) Centrar los elementos horizontalmente
+            centrarItemsEnHojas(layout);
 
-            for (let numHoja = 0; numHoja < numHojas; numHoja++) {
-                let CajetinX = (numHoja % cajetinColumnas) * 420;
-                let CajetinY = (cajetinFilas - 1 - (Math.floor(numHoja / cajetinColumnas))) * 300;
-                test.Hoja = `${numHoja + 1} - ${numHojas}`;
+            const numHojas = layout.length;
+            const { filas, columnas } = calcularMatrizCajetines(numHojas);
+
+            // 5) Dibujo DXF
+            for (let idx = 0; idx < numHojas; idx++) {
+                const hoja = layout[idx];
+                const CajetinX = (idx % columnas) * 420;
+                const CajetinY = (filas - 1 - Math.floor(idx / columnas)) * 300;
+
+                test.Hoja = `${idx + 1} - ${numHojas}`;
                 entities.push(...cajetin(CajetinX, CajetinY, test));
-                const contrSelec = filas[numHoja].querySelector("select")?.value;
-                if (contrSelec) entities.push(...dibujarDispositivo(CajetinX, CajetinY, controladores[contrSelec]));
+
+                hoja.items.forEach(it => {
+                    const disp = controladores[it.key];
+                    entities.push(
+                        ...dibujarPaginaDeDispositivo(CajetinX, CajetinY, disp, it.pageIndex, it.x)
+                    );
+                });
+
+                entities.push(...dibujarBarrasComunes(CajetinX, CajetinY, hoja.items));
+
             }
 
-            // Finalizar el archivo
             let dxfContent = wrapDXF(entities);
             dxfContent = quitarCaracteresNoASCII(dxfContent);
-
-            // Descargar
             const blob = new Blob([dxfContent], { type: 'application/dxf' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -409,101 +544,73 @@
             URL.revokeObjectURL(url);
         }
 
+        function centrarItemsEnHojas(layout) {
+            layout.forEach(hoja => {
+                if (!hoja.items.length) return;
+
+                // calcular ancho total en la hoja incluyendo separaciones
+                let total = 0;
+                hoja.items.forEach((it, idx) => {
+                    const sep = (idx === 0) ? 0 :
+                        (it.tipo === "controlador" ? SEP_CONTROLADOR : 0);
+                    total += sep + it.width;
+                });
+
+                const offset = (HOJA_UTIL - total) / 2;
+                let cursor = MARGEN_X + offset;
+
+                hoja.items.forEach((it, idx) => {
+                    const sep = (idx === 0) ? 0 :
+                        (it.tipo === "controlador" ? SEP_CONTROLADOR : 0);
+
+                    cursor += sep;
+                    it.x = cursor;
+                    cursor += it.width;
+                });
+            });
+        }
+
+        function dibujarBarrasComunes(CajetinX, CajetinY, hojaItems) {
+            const entidades = [];
+            const paso = 4;
+
+            // coordenadas de Y relativas a la lógica existente
+            const despYtransv = { L: paso * 1, G: paso * 3, G0: paso * 4, N: paso * 25 };
+
+            if (!hojaItems.length) return entidades;
+
+            // calcular extremo izquierdo y derecho de la hoja (según tu layout)
+            const xInicio = Math.min(...hojaItems.map(it => it.x)) + CajetinX;
+            const xFin = Math.max(...hojaItems.map(it => it.x + it.width)) + CajetinX;
+
+            Object.entries(despYtransv).forEach(([key, value]) => {
+                const y = CajetinY + 236 - value;
+
+                entidades.push(
+                    // Texto izquierda
+                    textoDXF(xInicio - 2, y, key, 2.5, 'MR'),
+                    // Línea horizontal
+                    lineaDXF(xInicio, y, xFin, y),
+                    // Texto derecha
+                    textoDXF(xFin + 2, y, key, 2.5, 'ML'),
+                );
+            });
+
+            return entidades;
+        }
+
+
+        function limpiarHojasVacias(layout) {
+            while (layout.length && layout[layout.length - 1].items.length === 0) {
+                layout.pop();
+            }
+        }
+
+
         function quitarCaracteresNoASCII(texto) {
             return texto
                 .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
                 .replace(/[^\x00-\x7F]/g, '');
-        }
-
-        function dibujarDispositivo(hojaX, hojaY, dispositivo) {
-
-            const entidades = [];
-
-            // separacion universal entre lineas
-            const paso = 4;
-
-            // franjas en la definicion del dispositivo
-            const franjas = ["Cinta", "Subcinta", "Simbolos", "Numeracion", "Opcional", "Etiqueta", "Fijo"];
-
-            // desplazamiento en coordenada Y de las lineas transversales
-            const despYtransv = {
-                L: paso * 1,
-                G: paso * 3,
-                G0: paso * 4,
-                N: paso * 25,
-            }
-
-            dispositivo.Paginas.forEach((pagina, indexpag) => {
-
-                // calculo del largo del dispositivo
-                const largura = pagina
-                    .map(conector => conector.Numeracion.length + 1)
-                    .reduce((a, b) => a + b, 0) * paso;
-
-                // centrado del dispositivo en la pagina
-                let inX = hojaX + (400 - largura) / 2 + indexpag * 420;
-                let inY = hojaY + 236;
-
-                // envolvente del dispositivo
-                entidades.push(...hashEnv(inX, inY, largura));
-
-                // nombre del dispositivo
-                entidades.push(...[
-                    // textoDXF(posX, posY, text,  textsize = 2.5, align = 'ML', rotation = 0, estilo = "Standard", multAncho = 1)
-                    textoDXF(inX + 2, inY + 21, dispositivo.Nombre, 3, 'ML', 0, "Negrita"),
-                ]);
-
-                // numero de modulo
-                const { Familia, Tipo } = dispositivo.Disposicion;
-                if (Familia === "PX" && Tipo === "modulo") {
-                    entidades.push(...[
-                        textoDXF(inX + largura - 5, inY + 21, "#", 3, 'MC', 0, "Negrita"),
-                        lineaDXF(inX + largura - 10, inY + 18, inX + largura - 10, inY + 24),
-                    ]);
-                }
-
-                // lineas transversales de fase, neutro, G y G0
-                Object.entries(despYtransv).forEach(([key, value]) => {
-                    entidades.push(...[
-                        textoDXF(inX - 2, inY - value, key, 2.5, 'MR'),
-                        lineaDXF(inX, inY - value, inX + largura, inY - value),
-                        textoDXF(inX + largura + 2, inY - value, key, 2.5, 'ML'),
-                    ]);
-                });
-
-                // rellenar la envolvente con simbolos y numeraciones
-                pagina.forEach((conector, index) => {
-
-                    // si es un solo elemento (string) ponerlo en medio de su franja correspondiente
-                    franjas.forEach(franja => {
-                        if (typeof conector[franja] === "string") {
-                            const largoConector = (conector.Numeracion.length + 1) * paso;
-                            const posXFranjaCentrada = inX + largoConector / 2;
-                            entidades.push(...hasheador(posXFranjaCentrada, inY, conector[franja], franja));
-                        }
-                    });
-
-                    // Si es un array colocar cada elemento en su posicion
-                    for (let i = 0; i < conector.Numeracion.length; i++) {
-                        inX += paso;
-                        franjas.forEach(franja => {
-                            if (Array.isArray(conector[franja])) {
-                                entidades.push(...hasheador(inX, inY, conector[franja][i], franja));
-                            }
-                        });
-                    }
-
-                    inX += paso;
-
-                    // añadir separador si no es el ultimo conector
-                    if (index + 1 < pagina.length) entidades.push(...hasheador(inX, inY, "#Sep"));
-
-                });
-
-            });
-
-            return entidades;
-
         }
 
     </script>
