@@ -146,6 +146,7 @@
 
     <script>
 
+
         /* ------------------------- REFERENCIAS AL DOM EN OBJETO UI ------------------------- */
         const UI = {};
         document.querySelectorAll("[id]").forEach(el => UI[el.id] = el);
@@ -326,7 +327,7 @@
                 test.Hoja = `${numHoja + 1} - ${numHojas}`;
                 entities.push(...cajetin(CajetinX, CajetinY, test));
                 const contrSelec = filas[numHoja].querySelector("select")?.value;
-                if (contrSelec) entities.push(...dibujarControlador(CajetinX, CajetinY, controladores[contrSelec]));
+                if (contrSelec) entities.push(...dibujarDispositivo(CajetinX, CajetinY, controladores[contrSelec]));
             }
 
             // Finalizar el archivo
@@ -349,14 +350,14 @@
                 .replace(/[^\x00-\x7F]/g, '');
         }
 
-        function dibujarControlador(hojaX, hojaY, controlador) {
+        function dibujarDispositivo(hojaX, hojaY, dispositivo) {
 
             const entidades = [];
 
             // separacion universal entre lineas
             const paso = 4;
 
-            // franjas en la definicion del controlador
+            // franjas en la definicion del dispositivo
             const franjas = ["Cinta", "Subcinta", "Simbolos", "Numeracion", "Opcional", "Etiqueta", "Fijo"];
 
             // desplazamiento en coordenada Y de las lineas transversales
@@ -367,26 +368,41 @@
                 N: paso * 25,
             }
 
-            controlador.Paginas.forEach((pagina, indexpag) => {
+            dispositivo.Paginas.forEach((pagina, indexpag) => {
 
-                // calculo del largo del controlador
+                // calculo del largo del dispositivo
                 const largura = pagina
                     .map(conector => conector.Numeracion.length + 1)
                     .reduce((a, b) => a + b, 0) * paso;
 
-                // centrado del controlador en la pagina
+                // centrado del dispositivo en la pagina
                 let inX = hojaX + (400 - largura) / 2 + indexpag * 420;
                 let inY = hojaY + 236;
 
-                // envolvente del controlador
+                // envolvente del dispositivo
                 entidades.push(...hashEnv(inX, inY, largura));
 
+                // nombre del dispositivo
+                entidades.push(...[
+                 // textoDXF(posX, posY, text,  textsize = 2.5, align = 'ML', rotation = 0, estilo = "Standard", multAncho = 1)
+                    textoDXF(inX + 2, inY + 21, dispositivo.Nombre, 3, 'ML', 0, "Negrita"),
+                ]);
+
+                // numero de modulo
+                const { Familia, Tipo } = dispositivo.Disposicion;
+                if ( Familia === "PX" && Tipo === "modulo") {
+                    entidades.push(...[
+                        textoDXF(inX + largura - 5, inY + 21, "#", 3, 'MC', 0, "Negrita"),
+                        lineaDXF(inX + largura - 10, inY + 18, inX + largura - 10, inY + 24),
+                    ]);
+                }
+                    
                 // lineas transversales de fase, neutro, G y G0
                 Object.entries(despYtransv).forEach(([key, value]) => {
                     entidades.push(...[
-                        textoDXF(inX - 2, inY - value, key, textsize = 2.5, align = 'MR', rotation = 0, estilo = "Standard", multAncho = 1),
+                        textoDXF(inX - 2, inY - value, key, 2.5, 'MR'),
                         lineaDXF(inX, inY - value, inX + largura, inY - value),
-                        textoDXF(inX + largura + 2, inY - value, key, textsize = 2.5, align = 'ML', rotation = 0, estilo = "Standard", multAncho = 1),
+                        textoDXF(inX + largura + 2, inY - value, key, 2.5, 'ML'),
                     ]);
                 });
 
