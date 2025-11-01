@@ -554,12 +554,12 @@ const controladores = {
                 {   // Canal 1
                     "Cinta": "(1)",
                     "Simbolos": "#Qc",
-                    "Numeracion": ["4", "3", "2",],
+                    "Numeracion": ["4", "3", { num: "2", señales: ["SD"], nombre:"Canal 1"},],
                 },
                 {   // Canal 2
                     "Cinta": "(2)",
                     "Simbolos": "#Qc",
-                    "Numeracion": ["10", "9", "8",],
+                    "Numeracion": ["10", "9",  { num: "8", señales: ["SD"], nombre:"Canal 2"},],
                 },
                 {   // Canal 3
                     "Cinta": "(3)",

@@ -1,0 +1,64 @@
+body {
+    background-color: #f2f2f2;
+}
+
+select.dispSelect {
+    width: 115px;
+    margin-right: 5px;
+    margin-bottom: 10px;
+}
+
+.labelCarril {
+    width: 80px;
+}
+
+.carril-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 5px;
+}
+
+.divSelectores {
+    display: flex;
+    flex-wrap: wrap;
+    width: 625px;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.w3-input {
+    margin-bottom: 10px;
+}
+
+.pagina-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+}
+
+.pagina-label {
+    display: inline-block;
+    width: 80px;
+    /* ancho fijo */
+    font-weight: 600;
+}
+
+.btn-delete-pagina {
+    width: 32px;
+    height: 32px;
+    text-align: center;
+    padding: 0;
+    line-height: 32px;
+}
+
+.btn-move {
+    width: 32px;
+    height: 32px;
+    margin-right: 4px;
+    padding: 0;
+}
