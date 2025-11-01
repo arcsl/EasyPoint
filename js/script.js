@@ -575,6 +575,10 @@ function asignarValoresListado() {
                             senialParaListado.Linea2 = "(Contacto libre de potencial)";
                         }
 
+                        // Añadir id unico para usar en la asignacion de señales en el DXF
+                        senialParaListado.ID = crypto.randomUUID();
+
+                        // Comiar señal al listado de señales
                         proyectoActual.Listado[Tipo].push(senialParaListado);
 
                     });
@@ -775,6 +779,7 @@ function writeSignals() {
             inputIndex.style.visibility = (val === "RELÉ" || val === "CONTACTOR" || val === "TÉRMICO") ? "visible" : "hidden";
             inputIndex.placeholder = "##";
             inputIndex.addEventListener('change', (event) => {
+                // el tag number es el numero de contactor o de rele
                 listaSenial.tagNumber = event.target.value;
                 proyectoNoGuardado();
             });

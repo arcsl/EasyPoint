@@ -1,278 +1,270 @@
+/* ================== CONST & UI ================== */
+const HOJA_TOTAL = 400;
+const HOJA_UTIL = 380;
+const MARGEN_X = (HOJA_TOTAL - HOJA_UTIL) / 2;
+const SEP_CONTROLADOR = 20;
 
-const HOJA_TOTAL = 400;       // ancho útil original del cajetín
-const HOJA_UTIL = 380;       // tu regla 1.1 (usamos 380 para dejar margen)
-const MARGEN_X = (HOJA_TOTAL - HOJA_UTIL) / 2; // 10 a cada lado con 380
-const SEP_CONTROLADOR = 20;   // tu regla 1.2 (entre controladores, salvo 1º de hoja)
-
-/* ------------------------- REFERENCIAS AL DOM EN OBJETO UI ------------------------- */
 const UI = {};
 document.querySelectorAll("[id]").forEach(el => UI[el.id] = el);
 
+/* === Cálculo AnchoEnHoja (soporta Numeracion mixta string/objeto) === */
+
 (function calcularAnchosPorPagina() {
-
     const paso = 4;
-
     Object.keys(controladores).forEach(ctrlName => {
         const ctrl = controladores[ctrlName];
-        if (!ctrl.Paginas) return;
-
+        if (!ctrl?.Paginas) return;
+        ctrl.Disposicion = ctrl.Disposicion || {};
         ctrl.Disposicion.AnchoEnHoja = ctrl.Paginas.map(pagina => {
-
-            // cuenta bornes, sean strings u objetos
             const largo = pagina
-                .map(conector =>
-                    conector.Numeracion
-                        .map(n => typeof n === "object" ? 1 : 1) // 1 borne
-                        .reduce((a, b) => a + b, 0) + 1 // +1 separador
-                )
+                .map(con => (con.Numeracion?.length || 0) + 1) // +1 separador por conector
                 .reduce((a, b) => a + b, 0);
-
             return largo * paso;
         });
     });
-
 })();
 
+/* ================== CARRILES ================== */
+
 UI.btnAddCarril.onclick = function () {
+    const carrilesCont = UI.CarrilesContenedor;
 
-    const cont = UI.CarrilesContenedor;
-
-    // contenedor carril
+    // Carril wrapper
     const carril = document.createElement("div");
     carril.className = "carril-row w3-margin-bottom";
 
-    // botón eliminar carril
-    const btnDel = document.createElement("button");
-    btnDel.className = "w3-button w3-red w3-round w3-small";
-    btnDel.innerHTML = `<i class="fa fa-trash"></i>`;
-    btnDel.onclick = () => {
-        const index = [...UI.CarrilesContenedor.querySelectorAll(".carril-row")].indexOf(carril);
+    // Col izquierda: botones + label
+    const colLeft = document.createElement("div");
+    colLeft.style.display = "flex";
+    colLeft.style.flexDirection = "column";
+    colLeft.style.gap = "6px";
+
+    const rowTop = document.createElement("div");
+    rowTop.className = "carril-header";
+
+    const btnDel = boton("w3-red", "trash", "Eliminar carril", () => {
         carril.remove();
-
-        // eliminar también el bloque de señales correspondiente
-        const signalBlocks = UI.CarrilesSenialesCont.querySelectorAll(".carril-seniales-row");
-        if (signalBlocks[index]) signalBlocks[index].remove();
-
         renumerarCarriles();
-    };
+    });
 
-    // botón subir
-    const btnUp = document.createElement("button");
-    btnUp.className = "w3-button w3-blue w3-round w3-small carril-move-up";
-    btnUp.innerHTML = `<i class="fa fa-arrow-up"></i>`;
-    btnUp.onclick = () => moverCarril(carril, -1);
+    const btnUp = boton("w3-blue", "arrow-up", "Subir carril", () => moverCarril(carril, -1));
+    btnUp.classList.add("carril-move-up", "w-fixed-btn");
 
-    // botón bajar
-    const btnDown = document.createElement("button");
-    btnDown.className = "w3-button w3-blue w3-round w3-small carril-move-down";
-    btnDown.innerHTML = `<i class="fa fa-arrow-down"></i>`;
-    btnDown.onclick = () => moverCarril(carril, +1);
+    const btnDown = boton("w3-blue", "arrow-down", "Bajar carril", () => moverCarril(carril, +1));
+    btnDown.classList.add("carril-move-down", "w-fixed-btn");
 
-    // label "Carril X"
     const lbl = document.createElement("label");
-    lbl.className = "carril-label w3-margin-left w3-margin-right labelCarril";
+    lbl.className = "carril-label w3-margin-left w3-margin-right";
     lbl.textContent = "Carril";
 
-    // Div para Selectores 
-    const selDiv = document.createElement("div");
-    selDiv.className = "divSelectores";
+    rowTop.append(btnDel, btnUp, btnDown, lbl);
+    colLeft.appendChild(rowTop);
 
-    // primer select
-    const sel = crearSelectorEquipo(() => agregarSelector(selDiv), carril);
+    // Col derecha: contenido del carril
+    const colRight = document.createElement("div");
+    colRight.className = "carril-col";
 
-    carril.appendChild(btnDel);
-    carril.appendChild(btnUp);
-    carril.appendChild(btnDown);
-    carril.appendChild(lbl);
-    carril.appendChild(selDiv);
-    selDiv.appendChild(sel);
+    // Botón añadir dispositivo
+    const btnAddDev = document.createElement("button");
+    btnAddDev.className = "w3-button w3-green w3-round w3-small w3-hover-dark-green";
+    btnAddDev.innerHTML = `<i class="fa fa-plus"></i> Añadir dispositivo`;
+    btnAddDev.onclick = () => crearBloqueDispositivo(devicesContainer);
 
-    cont.appendChild(carril);
+    // Contenedor de dispositivos (bloques)
+    const devicesContainer = document.createElement("div");
+    devicesContainer.className = "devices-container";
 
-    // Crear contenedor para señales correspondiente
-    const signalsBlock = document.createElement("div");
-    signalsBlock.className = "carril-seniales-row w3-card w3-padding w3-white w3-margin-bottom";
+    colRight.append(btnAddDev, devicesContainer);
+    carril.append(colLeft, colRight);
 
-    // Título del carril de señales
-    const title = document.createElement("h5");
-    title.className = "w3-text-indigo";
-    title.textContent = `Carril - Señales`;
-
-    signalsBlock.appendChild(title);
-
-    UI.CarrilesSenialesCont.appendChild(signalsBlock);
-
+    carrilesCont.appendChild(carril);
     renumerarCarriles();
 };
 
-function crearSelectorEquipo(onSelect, carril) {
-
-    const sel = document.createElement("select");
-    sel.className = "w3-select w3-border w3-round w3-small w3-padding carril-select dispSelect";
-
-    sel.appendChild(new Option("", "")); // vacío
-
-    Object.keys(controladores).forEach(k =>
-        sel.appendChild(new Option(k, k))
-    );
-
-    sel.onchange = () => {
-        if (sel.value === "") return; // si lo deja vacío, no hacemos nada
-        // if (sel.nextElementSibling) return; // comprobar si este select es el último del carril
-        // onSelect();
-
-        if (!sel.nextElementSibling) onSelect();
-
-        // 👉 Crear bloque de señales para este dispositivo
-        const dispositivoKey = sel.value;
-        const carrilIndex = [...UI.CarrilesContenedor.querySelectorAll(".carril-row")].indexOf(carril);
-
-        if (carrilIndex >= 0) {
-            agregarBloqueSeniales(carrilIndex, dispositivoKey);
-        }
-
-    };
-
-    return sel;
-}
-
-function agregarSelector(selDiv) {
-    const carril = selDiv.parentNode; // obtenemos el div carril
-    const nuevoSel = crearSelectorEquipo(() => agregarSelector(selDiv), carril);
-    selDiv.appendChild(nuevoSel);
+function boton(color, icon, title, onClick) {
+    const b = document.createElement("button");
+    b.className = `w3-button ${color} w3-round w3-small`;
+    b.title = title;
+    b.innerHTML = `<i class="fa fa-${icon}"></i>`;
+    b.onclick = onClick;
+    return b;
 }
 
 function moverCarril(carril, dir) {
     const cont = UI.CarrilesContenedor;
-    const senCont = UI.CarrilesSenialesCont;
-
     const carriles = [...cont.querySelectorAll(".carril-row")];
-    const senRows = [...senCont.querySelectorAll(".carril-seniales-row")];
-
     const i = carriles.indexOf(carril);
-    const newIndex = i + dir;
-
-    if (newIndex < 0 || newIndex >= carriles.length) return;
-
-    // Mover carril visual
-    if (dir > 0) cont.insertBefore(carril, carriles[newIndex].nextSibling);
-    else cont.insertBefore(carril, carriles[newIndex]);
-
-    // Mover bloque de señales asociado
-    const senRow = senRows[i];
-    if (dir > 0) senCont.insertBefore(senRow, senRows[newIndex].nextSibling);
-    else senCont.insertBefore(senRow, senRows[newIndex]);
-
+    const j = i + dir;
+    if (j < 0 || j >= carriles.length) return;
+    if (dir > 0) cont.insertBefore(carril, carriles[j].nextSibling);
+    else cont.insertBefore(carril, carriles[j]);
     renumerarCarriles();
 }
 
-
 function renumerarCarriles() {
-
     const carriles = [...UI.CarrilesContenedor.querySelectorAll(".carril-row")];
-
     carriles.forEach((c, i) => {
         c.querySelector(".carril-label").textContent = `Carril ${i + 1}`;
-
-        const btnUp = c.querySelector(".carril-move-up");
-        const btnDown = c.querySelector(".carril-move-down");
-
-        btnUp.disabled = (i === 0);
-        btnDown.disabled = (i === carriles.length - 1);
+        const up = c.querySelector(".carril-move-up");
+        const dn = c.querySelector(".carril-move-down");
+        if (up) up.disabled = (i === 0);
+        if (dn) dn.disabled = (i === carriles.length - 1);
+        actualizarBotonesDispositivos(c); // deshabilita ↑/↓ en bloques internos
     });
-
-    const signalBlocks = [...UI.CarrilesSenialesCont.querySelectorAll(".carril-seniales-row")];
-
-    signalBlocks.forEach((b, i) => {
-        const title = b.querySelector("h5");
-        if (title) title.textContent = `Carril ${i + 1} – Señales`;
-    });
-
 }
 
-function agregarBloqueSeniales(carrilIndex, dispositivoKey) {
+/* ================== DISPOSITIVOS (bloques dentro del carril) ================== */
+function crearBloqueDispositivo(devicesContainer) {
+    const block = document.createElement("div");
+    block.className = "device-block w3-white";
 
-    const container = UI.CarrilesSenialesCont.querySelectorAll(".carril-seniales-row")[carrilIndex];
-    const dispositivo = controladores[dispositivoKey];
-    if (!dispositivo) return;
+    // Cabecera del bloque
+    const head = document.createElement("div");
+    head.className = "device-head";
 
-    // Crear bloque del dispositivo
-    const dispBlock = document.createElement("div");
-    dispBlock.className = "w3-margin-left w3-padding-small w3-border-left w3-border-blue";
+    // Select de equipo
+    const sel = document.createElement("select");
+    sel.className = "w3-select w3-border w3-round w3-small w3-padding";
+    sel.style.width = "220px";
+    sel.appendChild(new Option("", ""));
+    Object.keys(controladores).forEach(k => sel.appendChild(new Option(k, k)));
 
-    const title = document.createElement("div");
-    title.className = "w3-text-blue w3-small w3-margin-bottom";
-    title.textContent = dispositivoKey;
-    dispBlock.appendChild(title);
+    // Botones del bloque
+    const btnDel = boton("w3-red", "trash", "Eliminar dispositivo", () => {
+        block.remove();
+        actualizarBotonesDispositivos(devicesContainer.closest(".carril-row"));
+    });
+    const btnUp = boton("w3-blue", "arrow-up", "Subir dispositivo", () => moverDispositivo(block, -1));
+    btnUp.classList.add("dev-move-up", "w-fixed-btn");
+    const btnDown = boton("w3-blue", "arrow-down", "Bajar dispositivo", () => moverDispositivo(block, +1));
+    btnDown.classList.add("dev-move-down", "w-fixed-btn");
 
-    // recolectar bornes con señales
+    head.append(sel, btnDel, btnUp, btnDown);
+    block.appendChild(head);
+
+    // Contenedor de canales (aparece al seleccionar)
+    const channels = document.createElement("div");
+    channels.className = "channels";
+    block.appendChild(channels);
+
+    // onChange: rellenar canales del equipo
+    sel.onchange = () => {
+        channels.innerHTML = "";
+        const key = sel.value;
+        if (!key) return;
+        pintarCanales(channels, key);
+    };
+
+    devicesContainer.appendChild(block);
+    actualizarBotonesDispositivos(devicesContainer.closest(".carril-row"));
+}
+
+function moverDispositivo(block, dir) {
+    const cont = block.parentElement; // devicesContainer
+    const blocks = [...cont.querySelectorAll(".device-block")];
+    const i = blocks.indexOf(block);
+    const j = i + dir;
+    if (j < 0 || j >= blocks.length) return;
+    if (dir > 0) cont.insertBefore(block, blocks[j].nextSibling);
+    else cont.insertBefore(block, blocks[j]);
+    actualizarBotonesDispositivos(cont.closest(".carril-row"));
+}
+
+function actualizarBotonesDispositivos(carrilRow) {
+    const blocks = [...carrilRow.querySelectorAll(".device-block")];
+    blocks.forEach((b, i) => {
+        const up = b.querySelector(".dev-move-up");
+        const dn = b.querySelector(".dev-move-down");
+        if (up) up.disabled = (i === 0);
+        if (dn) dn.disabled = (i === blocks.length - 1);
+    });
+}
+
+/* ================== CANALES (bornes con señales) ================== */
+
+function pintarCanales(channelsContainer, deviceKey) {
+    const disp = controladores[deviceKey];
+    if (!disp?.Paginas) return;
+
+    // título del dispositivo (opcional)
+    const h = document.createElement("div");
+    h.className = "w3-text-indigo w3-small w3-margin-bottom";
+    h.textContent = deviceKey;
+    channelsContainer.appendChild(h);
+
     const bornes = [];
-
-    dispositivo.Paginas.forEach(pagina => {
+    disp.Paginas.forEach(pagina => {
         pagina.forEach(conector => {
-            if (Array.isArray(conector.Numeracion)) {
-                conector.Numeracion.forEach(n => {
-                    if (typeof n === "object" && n.señales) {
-                        bornes.push(n);
-                    }
-                });
-            }
+            (conector.Numeracion || []).forEach(n => {
+                if (typeof n === "object" && n?.señales?.length) bornes.push(n);
+            });
         });
     });
 
-    // crear fila por cada borne
-    bornes.forEach(borne => {
+    bornes.forEach(b => {
         const row = document.createElement("div");
-        row.className = "w3-row w3-margin-bottom";
+        row.className = "channel-row";
 
-        const lbl = document.createElement("span");
-        lbl.className = "w3-col s6 w3-small";
-        lbl.textContent = borne.nombre || borne.num;
+        const name = document.createElement("span");
+        name.className = "w3-small";
+        name.textContent = b.nombre || b.num;
 
         const sel = document.createElement("select");
-        sel.className = "w3-select w3-border w3-round w3-small w3-col s6";
+        sel.className = "w3-select w3-border w3-round w3-small";
+        sel.style.width = "220px";
+        sel.appendChild(new Option("", ""));
+        // 👇 aún NO poblamos opciones; solo guardamos qué admite
+        sel.dataset.seniales = JSON.stringify(b.señales);
 
-        sel.appendChild(new Option("", "")); // vacío todavía
-
-        // Guardamos señales para posteriormente rellenar opciones
-        sel.dataset.seniales = JSON.stringify(borne.señales);
-
-        row.appendChild(lbl);
-        row.appendChild(sel);
-        dispBlock.appendChild(row);
+        row.append(name, sel);
+        channelsContainer.appendChild(row);
     });
-
-    container.appendChild(dispBlock);
 }
 
 
 
+
+
+/* ================== CREAR DXF ================== */
+
 function leerCarrilesDesdeUI() {
     const carriles = [];
-    const rows = UI.CarrilesContenedor.querySelectorAll(".carril-row");
-    rows.forEach(row => {
-        const sels = [...row.querySelectorAll("select.carril-select")];
-        const equipos = sels.map(s => s.value).filter(Boolean);
+    const carrilRows = UI.CarrilesContenedor.querySelectorAll(".carril-row");
+
+    carrilRows.forEach(row => {
+        const devicesContainer = row.querySelector(".devices-container");
+        if (!devicesContainer) return;
+
+        const deviceBlocks = devicesContainer.querySelectorAll(".device-block");
+        const equipos = [];
+        deviceBlocks.forEach(block => {
+            const sel = block.querySelector("select");
+            if (sel && sel.value) equipos.push(sel.value);
+        });
+
         if (equipos.length > 0) carriles.push(equipos);
     });
+
     return carriles;  // Array<Array<string>>
 }
 
 function expandirCarrilAItems(listaEquipos) {
-    // devuelve un array de items: {key, tipo, pageIndex, width}
+    // -> [{ key, tipo, pageIndex, pages, width }]
     const items = [];
     for (const key of listaEquipos) {
         const disp = controladores[key];
         if (!disp) continue;
+
         const tipo = disp?.Disposicion?.Tipo || "controlador";
         const anchos = disp?.Disposicion?.AnchoEnHoja || [disp?.Disposicion?.Ancho || HOJA_UTIL];
+        const pages = anchos.length;
 
-        // cada página del dispositivo será un item independiente
-        for (let i = 0; i < anchos.length; i++) {
+        for (let i = 0; i < pages; i++) {
             items.push({
                 key,
-                tipo,           // "controlador" | "modulo" | ...
-                pageIndex: i,   // índice de página dentro del dispositivo
+                tipo,         // "controlador" | "modulo" | ...
+                pageIndex: i, // índice de página dentro del dispositivo
+                pages,        // total de páginas de ese dispositivo
                 width: anchos[i]
             });
         }
@@ -280,91 +272,132 @@ function expandirCarrilAItems(listaEquipos) {
     return items;
 }
 
-
-
 function generarLayoutHojasDesdeCarriles(carriles) {
-    // devuelve: Array< { items: Array<{key, pageIndex, tipo, x, width}> } >
+    // -> Array<{ items: Array<{key, pageIndex, tipo, width}> }>
     const hojas = [];
 
-    function nuevaHoja() {
-        hojas.push({ items: [] });
-    }
-
-    // aseguramos al menos 1
+    const nuevaHoja = () => hojas.push({ items: [] });
     if (hojas.length === 0) nuevaHoja();
-
-    let x = MARGEN_X;
 
     for (const carril of carriles) {
         const items = expandirCarrilAItems(carril);
 
-        // detectar si algún dispositivo del carril es multipágina:
-        // (necesitamos saberlo por grupo/dispositivo, no por item suelto)
-        // Creamos un mapa key -> numPaginas
-        const numPagPorKey = {};
-        carril.forEach(k => {
-            numPagPorKey[k] = controladores[k]?.Disposicion?.AnchoEnHoja?.length || 1;
-        });
+        // cada carril empieza SIEMPRE en hoja nueva
+        if (hojas[hojas.length - 1].items.length > 0) nuevaHoja();
 
-        for (let i = 0; i < items.length; i++) {
-            const it = items[i];
-            const esMultipagina = (numPagPorKey[it.key] || 1) > 1;
+        let hojaActual = hojas[hojas.length - 1];
 
-            // ¿estamos al inicio de hoja?
-            const hojaActual = hojas[hojas.length - 1];
-            const esPrimeroDeHoja = hojaActual.items.length === 0;
+        for (let idx = 0; idx < items.length; idx++) {
+            const it = items[idx];
 
-            // regla 1.3: si es multipágina, cada página debe ir en hoja distinta
-            // - si NO es primero de hoja, forzamos salto antes de colocarlo
-            // - y para la siguiente página también forzaremos salto
-            if (esMultipagina) {
-                if (!esPrimeroDeHoja) {
-                    // salto de hoja
+            // Caso multipágina: cada página en hoja distinta (consecutivas)
+            if (it.pages > 1) {
+                // si la hoja actual no está vacía, salto a hoja nueva
+                if (hojaActual.items.length > 0) {
                     nuevaHoja();
+                    hojaActual = hojas[hojas.length - 1];
                 }
-                // ahora estamos al inicio de hoja sí o sí
-                x = MARGEN_X;
-                hojas[hojas.length - 1].items.push({ ...it, x });
-                // tras colocar esta página, forzamos salto para la próxima página
-                if (i < items.length - 1 && items[i + 1].key === it.key) {
+                hojaActual.items.push({ key: it.key, pageIndex: it.pageIndex, tipo: it.tipo, width: it.width });
+
+                // para la siguiente página, saltamos de hoja
+                if (idx < items.length - 1 && items[idx + 1].key === it.key) {
                     nuevaHoja();
-                    x = MARGEN_X;
+                    hojaActual = hojas[hojas.length - 1];
                 }
                 continue;
             }
 
-            // para items NO multipágina:
-            // separación según tipo (si no es primero de hoja)
-            let sep = 0;
-            if (!esPrimeroDeHoja) {
-                sep = (it.tipo === "controlador") ? SEP_CONTROLADOR : 0;
-            }
+            // No multipágina: empaquetar en la hoja con separaciones
+            const itemsHoja = hojaActual.items;
+            const isFirst = itemsHoja.length === 0;
+            const sep = (!isFirst && it.tipo === "controlador") ? SEP_CONTROLADOR : 0;
 
-            // ¿cabe?
-            if ((x - MARGEN_X) + sep + it.width > HOJA_UTIL) {
-                // saltar de hoja
+            // calcular anchura ocupada actual
+            let ocupado = 0;
+            itemsHoja.forEach((hitem, i) => {
+                const sepThis = (i === 0) ? 0 : (hitem.tipo === "controlador" ? SEP_CONTROLADOR : 0);
+                ocupado += sepThis + hitem.width;
+            });
+
+            // ¿cabe el nuevo?
+            if (ocupado + sep + it.width > HOJA_UTIL) {
+                // nueva hoja
                 nuevaHoja();
-                x = MARGEN_X;
-                // primer item de hoja: sin separación
-                sep = 0;
-            } else {
-                x += sep;
+                hojaActual = hojas[hojas.length - 1];
             }
 
-            hojas[hojas.length - 1].items.push({ ...it, x });
-            x += it.width;
+            hojaActual.items.push({ key: it.key, pageIndex: it.pageIndex, tipo: it.tipo, width: it.width });
         }
 
-        // al terminar un carril, dejamos como está;
-        // el siguiente carril continúa llenando la hoja actual
-        // (si prefieres que cada carril empiece SIEMPRE en hoja nueva,
-        //  descomenta estas 3 líneas:)
+        // al terminar el carril, preparamos hoja nueva para el siguiente carril
         nuevaHoja();
-        x = MARGEN_X;
+    }
+
+    // eliminar posibles hojas vacías al final
+    while (hojas.length && hojas[hojas.length - 1].items.length === 0) {
+        hojas.pop();
     }
 
     return hojas;
 }
+
+function centrarItemsEnHojas(layout) {
+    layout.forEach(hoja => {
+        if (!hoja.items.length) return;
+
+        // suma total (anchos + separaciones)
+        let total = 0;
+        hoja.items.forEach((it, i) => {
+            const sep = (i === 0) ? 0 : (it.tipo === "controlador" ? SEP_CONTROLADOR : 0);
+            total += sep + it.width;
+        });
+
+        const offset = (HOJA_UTIL - total) / 2;
+        let cursor = MARGEN_X + offset;
+
+        hoja.items.forEach((it, i) => {
+            const sep = (i === 0) ? 0 : (it.tipo === "controlador" ? SEP_CONTROLADOR : 0);
+            cursor += sep;
+            it.x = cursor;         // 👈 ya con x
+            cursor += it.width;
+        });
+    });
+}
+
+function dibujarBarrasComunes(CajetinX, CajetinY, hojaItems) {
+    const entidades = [];
+    const paso = 4;
+
+    // coordenadas de Y relativas a la lógica existente
+    const despYtransv = { L: paso * 1, G: paso * 3, G0: paso * 4, N: paso * 25 };
+
+    if (!hojaItems.length) return entidades;
+
+    // calcular extremo izquierdo y derecho de la hoja (según tu layout)
+    const xInicio = Math.min(...hojaItems.map(it => it.x)) + CajetinX;
+    const xFin = Math.max(...hojaItems.map(it => it.x + it.width)) + CajetinX;
+
+    Object.entries(despYtransv).forEach(([key, value]) => {
+        const y = CajetinY + 236 - value;
+
+        entidades.push(
+            // Texto izquierda
+            textoDXF(xInicio - 2, y, key, 2.5, 'MR'),
+            // Línea horizontal
+            lineaDXF(xInicio, y, xFin, y),
+            // Texto derecha
+            textoDXF(xFin + 2, y, key, 2.5, 'ML'),
+        );
+    });
+
+    return entidades;
+}
+
+// function limpiarHojasVacias(layout) {
+//     while (layout.length && layout[layout.length - 1].items.length === 0) {
+//         layout.pop();
+//     }
+// }
 
 function calcularMatrizCajetines(numHojas) {
     let determinado = false;
@@ -375,6 +408,76 @@ function calcularMatrizCajetines(numHojas) {
     }
     const filas = Math.ceil(numHojas / columnas);
     return { filas, columnas };
+}
+
+function descargarDXF() {
+    const entities = [];
+
+    // cajetin data
+    const test = {
+        Inst: UI.Inst.value || "-",
+        Dibu: UI.Dibu.value || "-",
+        Fech: UI.Fech.value || "-",
+        Revi: UI.Revi.value || "-",
+        Esqu: UI.Esqu.value || "-",
+        Clie: UI.Clie.value || "-",
+        Loca: UI.Loca.value || "-",
+        Stye: UI.Stye.value || "-",
+        Stdo: UI.Stdo.value || "-",
+        Refe: "-",
+        Hoja: "-",
+    };
+
+    // 1) Carriles desde UI
+    const carriles = leerCarrilesDesdeUI();
+
+    // 2) Layout de hojas (raw)
+    let layout = generarLayoutHojasDesdeCarriles(carriles);
+
+    // 3) Eliminar última hoja si está vacía
+    // limpiarHojasVacias(layout);
+
+    // 4) Centrar los elementos horizontalmente
+    centrarItemsEnHojas(layout);
+
+    const numHojas = layout.length;
+    const { filas, columnas } = calcularMatrizCajetines(numHojas);
+
+    // 5) Dibujo DXF
+    for (let idx = 0; idx < numHojas; idx++) {
+        const hoja = layout[idx];
+        const CajetinX = (idx % columnas) * 420;
+        const CajetinY = (filas - 1 - Math.floor(idx / columnas)) * 300;
+
+        test.Hoja = `${idx + 1} - ${numHojas}`;
+        entities.push(...cajetin(CajetinX, CajetinY, test));
+
+        hoja.items.forEach(it => {
+            const disp = controladores[it.key];
+            entities.push(
+                ...dibujarPaginaDeDispositivo(CajetinX, CajetinY, disp, it.pageIndex, it.x)
+            );
+        });
+
+        entities.push(...dibujarBarrasComunes(CajetinX, CajetinY, hoja.items));
+
+    }
+
+    let dxfContent = wrapDXF(entities);
+    dxfContent = quitarCaracteresNoASCII(dxfContent);
+    const blob = new Blob([dxfContent], { type: 'application/dxf' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'generado.dxf';
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+function quitarCaracteresNoASCII(texto) {
+    return texto
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^\x00-\x7F]/g, '');
 }
 
 function dibujarPaginaDeDispositivo(hojaX, hojaY, dispositivo, pageIndex, startX) {
@@ -421,9 +524,7 @@ function dibujarPaginaDeDispositivo(hojaX, hojaY, dispositivo, pageIndex, startX
             inX += paso;
 
             // Obtener valor numérico del borne y señales
-            let borne = conector.Numeracion[i];
-            let num = (typeof borne === "object") ? borne.num : borne;
-            let señales = (typeof borne === "object") ? (borne.señales || []) : [];
+            const { num, seniales } = normalizarBorne(conector.Numeracion[i]);
 
             // Dibujar símbolos de cada franja
             franjas.forEach(franja => {
@@ -452,135 +553,12 @@ function dibujarPaginaDeDispositivo(hojaX, hojaY, dispositivo, pageIndex, startX
     return entidades;
 }
 
-function descargarDXF() {
-    const entities = [];
-
-    // cajetin data
-    const test = {
-        Inst: UI.Inst.value || "-",
-        Dibu: UI.Dibu.value || "-",
-        Fech: UI.Fech.value || "-",
-        Revi: UI.Revi.value || "-",
-        Esqu: UI.Esqu.value || "-",
-        Clie: UI.Clie.value || "-",
-        Loca: UI.Loca.value || "-",
-        Stye: UI.Stye.value || "-",
-        Stdo: UI.Stdo.value || "-",
-        Refe: "-",
-        Hoja: "-",
-    };
-
-    // 1) Carriles desde UI
-    const carriles = leerCarrilesDesdeUI();
-
-    // 2) Layout de hojas (raw)
-    let layout = generarLayoutHojasDesdeCarriles(carriles);
-
-    // 3) Eliminar última hoja si está vacía
-    limpiarHojasVacias(layout);
-
-    // 4) Centrar los elementos horizontalmente
-    centrarItemsEnHojas(layout);
-
-    const numHojas = layout.length;
-    const { filas, columnas } = calcularMatrizCajetines(numHojas);
-
-    // 5) Dibujo DXF
-    for (let idx = 0; idx < numHojas; idx++) {
-        const hoja = layout[idx];
-        const CajetinX = (idx % columnas) * 420;
-        const CajetinY = (filas - 1 - Math.floor(idx / columnas)) * 300;
-
-        test.Hoja = `${idx + 1} - ${numHojas}`;
-        entities.push(...cajetin(CajetinX, CajetinY, test));
-
-        hoja.items.forEach(it => {
-            const disp = controladores[it.key];
-            entities.push(
-                ...dibujarPaginaDeDispositivo(CajetinX, CajetinY, disp, it.pageIndex, it.x)
-            );
-        });
-
-        entities.push(...dibujarBarrasComunes(CajetinX, CajetinY, hoja.items));
-
+function normalizarBorne(borne) {
+    if (borne && typeof borne === "object") {
+        return {
+            num: borne.num ?? null,
+            seniales: borne.señales ?? [],
+        };
     }
-
-    let dxfContent = wrapDXF(entities);
-    dxfContent = quitarCaracteresNoASCII(dxfContent);
-    const blob = new Blob([dxfContent], { type: 'application/dxf' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'generado.dxf';
-    a.click();
-    URL.revokeObjectURL(url);
-}
-
-function centrarItemsEnHojas(layout) {
-    layout.forEach(hoja => {
-        if (!hoja.items.length) return;
-
-        // calcular ancho total en la hoja incluyendo separaciones
-        let total = 0;
-        hoja.items.forEach((it, idx) => {
-            const sep = (idx === 0) ? 0 :
-                (it.tipo === "controlador" ? SEP_CONTROLADOR : 0);
-            total += sep + it.width;
-        });
-
-        const offset = (HOJA_UTIL - total) / 2;
-        let cursor = MARGEN_X + offset;
-
-        hoja.items.forEach((it, idx) => {
-            const sep = (idx === 0) ? 0 :
-                (it.tipo === "controlador" ? SEP_CONTROLADOR : 0);
-
-            cursor += sep;
-            it.x = cursor;
-            cursor += it.width;
-        });
-    });
-}
-
-function dibujarBarrasComunes(CajetinX, CajetinY, hojaItems) {
-    const entidades = [];
-    const paso = 4;
-
-    // coordenadas de Y relativas a la lógica existente
-    const despYtransv = { L: paso * 1, G: paso * 3, G0: paso * 4, N: paso * 25 };
-
-    if (!hojaItems.length) return entidades;
-
-    // calcular extremo izquierdo y derecho de la hoja (según tu layout)
-    const xInicio = Math.min(...hojaItems.map(it => it.x)) + CajetinX;
-    const xFin = Math.max(...hojaItems.map(it => it.x + it.width)) + CajetinX;
-
-    Object.entries(despYtransv).forEach(([key, value]) => {
-        const y = CajetinY + 236 - value;
-
-        entidades.push(
-            // Texto izquierda
-            textoDXF(xInicio - 2, y, key, 2.5, 'MR'),
-            // Línea horizontal
-            lineaDXF(xInicio, y, xFin, y),
-            // Texto derecha
-            textoDXF(xFin + 2, y, key, 2.5, 'ML'),
-        );
-    });
-
-    return entidades;
-}
-
-
-function limpiarHojasVacias(layout) {
-    while (layout.length && layout[layout.length - 1].items.length === 0) {
-        layout.pop();
-    }
-}
-
-
-function quitarCaracteresNoASCII(texto) {
-    return texto
-        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-        .replace(/[^\x00-\x7F]/g, '');
+    return { num: borne ?? null, seniales: [] };
 }

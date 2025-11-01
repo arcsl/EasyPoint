@@ -20,12 +20,13 @@
 
 <body>
 
-    <div class="w3-card-4 container w3-white w3-animate-opacity">
+    <div class="w3-margin w3-card-4 container w3-white w3-animate-opacity">
+
         <header class="w3-container w3-theme">
             <h2><i class="w3-margin-right fa fa-cube"></i>Generador DXF</h2>
         </header>
 
-        <div class="w3-container w3-padding">
+        <div class="w3-container w3-padding" style="width:700px;">
 
             <p>Completa los datos para generar el archivo DXF:</p>
 
@@ -71,9 +72,17 @@
                 </div>
             </div>
 
-            <p class="w3-margin-top"><b>Carriles</b></p>
+            <div class="w3-row-padding w3-margin-top">
+                <div class="w3-col s12">
+                    <button id="btnImportSeniales" class="w3-button w3-orange w3-round w3-small">
+                        <i class="fa fa-upload"></i> Importar señales
+                    </button>
+                    <input type="file" id="fileSeniales" accept=".json" style="display:none">
+                </div>
+            </div>
 
-            <div class="w3-row-padding">
+            <div class="w3-row-padding w3-margin-top">
+
                 <div class="w3-col s12">
 
                     <!-- Contenedor carriles -->
@@ -81,7 +90,7 @@
 
                     <!-- Botón para añadir carril -->
                     <button id="btnAddCarril" class="w3-button w3-green w3-round w3-small w3-hover-dark-green">
-                        <i class="fa fa-plus"></i> Añadir carril
+                        <i class="fa fa-plus"></i>
                     </button>
                 </div>
             </div>
