@@ -482,7 +482,7 @@ EOF`;
  * @param {string} [tipoLinea="Continuous"] - Tipo de línea (por ejemplo, "Dashed"). Se omite si es "Continuous".
  * @returns {string} Cadena en formato DXF que representa la entidad LINE.
  */
-function lineaDXF(posX1, posY1, posX2, posY2, grosor = -1, tipoLinea = "Continuous") {
+function lineaDXF(posX1, posY1, posX2, posY2, grosor = -1, tipoLinea = "Continuous", escala=1) {
 
 	// grosor
 	// -3 by default
@@ -529,7 +529,9 @@ ${posY1}
 11
 ${posX2}
 21
-${posY2}`;
+${posY2}
+48
+${escala}`;
 }
 
 /**

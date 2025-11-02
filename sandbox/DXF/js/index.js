@@ -115,7 +115,8 @@ function guardarFormulario() {
         Clie: UI.Clie.value,
         Loca: UI.Loca.value,
         Stye: UI.Stye.value,
-        Stdo: UI.Stdo.value
+        Stdo: UI.Stdo.value,
+        Hoja: "-"
     };
 
     // evitar escribir en LS si no cambia nada
@@ -493,100 +494,148 @@ function boton(color, icon, title, onClick) {
     });
 })();
 
-function leerCarrilesDesdeEstado() {
-    return estado.carriles.map(carril =>
-        carril
-            .filter(d => d.tipo)   // solo dispositivos válidos
-            .map(d => d.tipo)      // quedarnos solo con el modelo
-    ).filter(c => c.length > 0);
-}
+function descargarDXF() {
+    const entities = [];
 
-function expandirCarrilAItems(listaEquipos) {
-    // -> [{ key, tipo, pageIndex, pages, width }]
-    const items = [];
-    for (const key of listaEquipos) {
-        const disp = controladores[key];
-        if (!disp) continue;
+    // 1) Construir layout de hojas desde el ESTADO (no desde el DOM)
+    const layout = generarLayoutHojasDesdeEstado(estado);
 
-        const tipo = disp?.Disposicion?.Tipo || "controlador";
-        const anchos = disp?.Disposicion?.AnchoEnHoja || [disp?.Disposicion?.Ancho || HOJA_UTIL];
-        const pages = anchos.length;
+    // 2) Centrar horizontalmente los items en cada hoja
+    centrarItemsEnHojas(layout);
 
-        for (let i = 0; i < pages; i++) {
-            items.push({
-                key,
-                tipo,         // "controlador" | "modulo" | ...
-                pageIndex: i, // índice de página dentro del dispositivo
-                pages,        // total de páginas de ese dispositivo
-                width: anchos[i]
-            });
-        }
+    // 3) Matriz de cajetines (disposición visual de las hojas)
+    const numHojas = layout.length;
+    const { filas, columnas } = calcularMatrizCajetines(numHojas);
+
+    // 4) Dibujo
+    for (let idx = 0; idx < numHojas; idx++) {
+        const hoja = layout[idx];
+
+        const CajetinX = (idx % columnas) * 420;
+        const CajetinY = (filas - 1 - Math.floor(idx / columnas)) * 300;
+
+        // datos del formulario con instalacion en mayuscula y numero de hoja
+        const campos = structuredClone(estado.form);
+        campos.Inst = UI.Inst.value.toUpperCase();
+        campos.Hoja = `${idx+1} - ${numHojas}`;  
+
+        // Cajetín con datos del formulario (estado.form)
+        entities.push(...cajetin(CajetinX, CajetinY, campos));
+
+        // Dispositivos / páginas en esta hoja
+        hoja.items.forEach(it => {
+            const disp = controladores[it.key];
+            entities.push(
+                ...dibujarPaginaDeDispositivo(
+                    CajetinX, CajetinY,
+                    disp,
+                    it.pageIndex,
+                    it.x,
+                    it.carrilIndex,
+                    it.dispIndex
+                )
+            );
+        });
+
+        // Barras comunes L/G/G0/N a lo ancho de los módulos dibujados
+        entities.push(...dibujarBarrasComunes(CajetinX, CajetinY, hoja.items));
     }
-    return items;
+
+    // 5) Cerrar y descargar
+    let dxfContent = wrapDXF(entities);
+    dxfContent = quitarCaracteresNoASCII(dxfContent);
+
+    const blob = new Blob([dxfContent], { type: 'application/dxf' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'generado.dxf';
+    a.click();
+    URL.revokeObjectURL(url);
 }
 
-function generarLayoutHojasDesdeCarriles(carriles) {
-    // -> Array<{ items: Array<{key, pageIndex, tipo, width}> }>
+function generarLayoutHojasDesdeEstado(estado) {
     const hojas = [];
-
     const nuevaHoja = () => hojas.push({ items: [] });
+
+    // Garantiza al menos 1
     if (hojas.length === 0) nuevaHoja();
 
-    for (const carril of carriles) {
-        const items = expandirCarrilAItems(carril);
-
-        // cada carril empieza SIEMPRE en hoja nueva
+    (estado.carriles || []).forEach((carril, carrilIndex) => {
+        // Carril nuevo → hoja nueva si la actual no está vacía
         if (hojas[hojas.length - 1].items.length > 0) nuevaHoja();
-
         let hojaActual = hojas[hojas.length - 1];
 
-        for (let idx = 0; idx < items.length; idx++) {
-            const it = items[idx];
+        // Expandir dispositivos a items de impresión (una entrada por página)
+        const items = [];
+        carril.forEach((dispObj, dispIndex) => {
+            const key = dispObj?.tipo;
+            if (!key) return;
 
-            // Caso multipágina: cada página en hoja distinta (consecutivas)
+            const disp = controladores[key];
+            if (!disp) return;
+
+            const tipo   = disp?.Disposicion?.Tipo || "controlador";
+            const anchos = disp?.Disposicion?.AnchoEnHoja || [disp?.Disposicion?.Ancho || HOJA_UTIL];
+            const pages  = anchos.length;
+
+            for (let p = 0; p < pages; p++) {
+                items.push({
+                    key,
+                    tipo,               // "controlador" | "modulo" | ...
+                    pageIndex: p,       // índice de página
+                    pages,              // total de páginas
+                    width: anchos[p],
+                    carrilIndex,        // indices para volver al estado
+                    dispIndex
+                });
+            }
+        });
+
+        // Empaquetado por hojas
+        for (let i = 0; i < items.length; i++) {
+            const it = items[i];
+
+            // Multipágina → cada página en hoja nueva, consecutiva
             if (it.pages > 1) {
-                // si la hoja actual no está vacía, salto a hoja nueva
                 if (hojaActual.items.length > 0) {
                     nuevaHoja();
                     hojaActual = hojas[hojas.length - 1];
                 }
-                hojaActual.items.push({ key: it.key, pageIndex: it.pageIndex, tipo: it.tipo, width: it.width });
+                hojaActual.items.push(it);
 
-                // para la siguiente página, saltamos de hoja
-                if (idx < items.length - 1 && items[idx + 1].key === it.key) {
+                // Fuerza salto para la siguiente página del mismo dispositivo
+                if (i < items.length - 1 && items[i + 1].key === it.key) {
                     nuevaHoja();
                     hojaActual = hojas[hojas.length - 1];
                 }
                 continue;
             }
 
-            // No multipágina: empaquetar en la hoja con separaciones
+            // No multipágina → compactar con separaciones
             const itemsHoja = hojaActual.items;
-            const isFirst = itemsHoja.length === 0;
-            const sep = (!isFirst && it.tipo === "controlador") ? SEP_CONTROLADOR : 0;
+            const isFirst   = itemsHoja.length === 0;
+            const sep       = (!isFirst && it.tipo === "controlador") ? SEP_CONTROLADOR : 0;
 
-            // calcular anchura ocupada actual
             let ocupado = 0;
-            itemsHoja.forEach((hitem, i) => {
-                const sepThis = (i === 0) ? 0 : (hitem.tipo === "controlador" ? SEP_CONTROLADOR : 0);
-                ocupado += sepThis + hitem.width;
+            itemsHoja.forEach((hItem, idx) => {
+                const s = (idx === 0) ? 0 : (hItem.tipo === "controlador" ? SEP_CONTROLADOR : 0);
+                ocupado += s + hItem.width;
             });
 
-            // ¿cabe el nuevo?
             if (ocupado + sep + it.width > HOJA_UTIL) {
-                // nueva hoja
                 nuevaHoja();
                 hojaActual = hojas[hojas.length - 1];
             }
 
-            hojaActual.items.push({ key: it.key, pageIndex: it.pageIndex, tipo: it.tipo, width: it.width });
+            hojaActual.items.push(it);
         }
 
-        // al terminar el carril, preparamos hoja nueva para el siguiente carril
+        // preparar hoja nueva para el siguiente carril
         nuevaHoja();
-    }
+    });
 
-    // eliminar posibles hojas vacías al final
+    // Quitar hojas vacías del final (si las hubiera)
     while (hojas.length && hojas[hojas.length - 1].items.length === 0) {
         hojas.pop();
     }
@@ -598,59 +647,23 @@ function centrarItemsEnHojas(layout) {
     layout.forEach(hoja => {
         if (!hoja.items.length) return;
 
-        // suma total (anchos + separaciones)
         let total = 0;
-        hoja.items.forEach((it, i) => {
-            const sep = (i === 0) ? 0 : (it.tipo === "controlador" ? SEP_CONTROLADOR : 0);
+        hoja.items.forEach((it, idx) => {
+            const sep = (idx === 0) ? 0 : (it.tipo === "controlador" ? SEP_CONTROLADOR : 0);
             total += sep + it.width;
         });
 
         const offset = (HOJA_UTIL - total) / 2;
         let cursor = MARGEN_X + offset;
 
-        hoja.items.forEach((it, i) => {
-            const sep = (i === 0) ? 0 : (it.tipo === "controlador" ? SEP_CONTROLADOR : 0);
+        hoja.items.forEach((it, idx) => {
+            const sep = (idx === 0) ? 0 : (it.tipo === "controlador" ? SEP_CONTROLADOR : 0);
             cursor += sep;
-            it.x = cursor;         // 👈 ya con x
+            it.x = cursor;        // posición X absoluta dentro de la hoja (relativa al cajetín)
             cursor += it.width;
         });
     });
 }
-
-function dibujarBarrasComunes(CajetinX, CajetinY, hojaItems) {
-    const entidades = [];
-    const paso = 4;
-
-    // coordenadas de Y relativas a la lógica existente
-    const despYtransv = { L: paso * 1, G: paso * 3, G0: paso * 4, N: paso * 25 };
-
-    if (!hojaItems.length) return entidades;
-
-    // calcular extremo izquierdo y derecho de la hoja (según tu layout)
-    const xInicio = Math.min(...hojaItems.map(it => it.x)) + CajetinX;
-    const xFin = Math.max(...hojaItems.map(it => it.x + it.width)) + CajetinX;
-
-    Object.entries(despYtransv).forEach(([key, value]) => {
-        const y = CajetinY + 236 - value;
-
-        entidades.push(
-            // Texto izquierda
-            textoDXF(xInicio - 2, y, key, 2.5, 'MR'),
-            // Línea horizontal
-            lineaDXF(xInicio, y, xFin, y),
-            // Texto derecha
-            textoDXF(xFin + 2, y, key, 2.5, 'ML'),
-        );
-    });
-
-    return entidades;
-}
-
-// function limpiarHojasVacias(layout) {
-//     while (layout.length && layout[layout.length - 1].items.length === 0) {
-//         layout.pop();
-//     }
-// }
 
 function calcularMatrizCajetines(numHojas) {
     let determinado = false;
@@ -663,98 +676,25 @@ function calcularMatrizCajetines(numHojas) {
     return { filas, columnas };
 }
 
-function descargarDXF() {
-    const entities = [];
-
-    // cajetin data
-    const test = {
-        Inst: UI.Inst.value || "-",
-        Dibu: UI.Dibu.value || "-",
-        Fech: UI.Fech.value || "-",
-        Revi: UI.Revi.value || "-",
-        Esqu: UI.Esqu.value || "-",
-        Clie: UI.Clie.value || "-",
-        Loca: UI.Loca.value || "-",
-        Stye: UI.Stye.value || "-",
-        Stdo: UI.Stdo.value || "-",
-        Refe: "-",
-        Hoja: "-",
-    };
-
-    // 1) Carriles desde UI
-    const carriles = leerCarrilesDesdeEstado();
-
-    // 2) Layout de hojas (raw)
-    let layout = generarLayoutHojasDesdeCarriles(carriles);
-
-    // 3) Eliminar última hoja si está vacía
-    // limpiarHojasVacias(layout);
-
-    // 4) Centrar los elementos horizontalmente
-    centrarItemsEnHojas(layout);
-
-    const numHojas = layout.length;
-    const { filas, columnas } = calcularMatrizCajetines(numHojas);
-
-    // 5) Dibujo DXF
-    for (let idx = 0; idx < numHojas; idx++) {
-        const hoja = layout[idx];
-        const CajetinX = (idx % columnas) * 420;
-        const CajetinY = (filas - 1 - Math.floor(idx / columnas)) * 300;
-
-        test.Hoja = `${idx + 1} - ${numHojas}`;
-        entities.push(...cajetin(CajetinX, CajetinY, test));
-
-        hoja.items.forEach(it => {
-            const disp = controladores[it.key];
-            entities.push(
-                ...dibujarPaginaDeDispositivo(CajetinX, CajetinY, disp, it.pageIndex, it.x)
-            );
-        });
-
-        entities.push(...dibujarBarrasComunes(CajetinX, CajetinY, hoja.items));
-
-    }
-
-    let dxfContent = wrapDXF(entities);
-    dxfContent = quitarCaracteresNoASCII(dxfContent);
-    const blob = new Blob([dxfContent], { type: 'application/dxf' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'generado.dxf';
-    a.click();
-    URL.revokeObjectURL(url);
-}
-
-function quitarCaracteresNoASCII(texto) {
-    return texto
-        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-        .replace(/[^\x00-\x7F]/g, '');
-}
-
-function dibujarPaginaDeDispositivo(hojaX, hojaY, dispositivo, pageIndex, startX) {
+function dibujarPaginaDeDispositivo(hojaX, hojaY, dispositivo, pageIndex, startX, carrilIndex, dispIndex) {
     const entidades = [];
 
     const paso = 4;
     const franjas = ["Cinta", "Subcinta", "Simbolos", "Numeracion", "Opcional", "Etiqueta", "Fijo"];
-    const despYtransv = { L: paso * 1, G: paso * 3, G0: paso * 4, N: paso * 25 };
 
     const pagina = dispositivo.Paginas[pageIndex];
     const largura = dispositivo?.Disposicion?.AnchoEnHoja?.[pageIndex] ??
-        (pagina.map(c => (c.Numeracion.length + 1)).reduce((a, b) => a + b, 0) * paso);
+        (pagina.map(c => ((c.Numeracion?.length || 0) + 1)).reduce((a, b) => a + b, 0) * paso);
 
-    let inX = hojaX + startX; // 👈 empezamos donde nos diga el layout
+    let inX = hojaX + startX;
     let inY = hojaY + 236;
 
-    // envolvente
+    // Envolvente + título
     entidades.push(...hashEnv(inX, inY, largura));
-
-    // nombre del dispositivo
     entidades.push(textoDXF(inX + 2, inY + 21, dispositivo.Nombre, 3, 'ML', 0, "Negrita"));
 
-    // número de módulo si aplica
-    const { Familia, Tipo } = dispositivo.Disposicion;
+    // Marca de módulo PX (si aplica)
+    const { Familia, Tipo } = dispositivo.Disposicion || {};
     if (Familia === "PX" && Tipo === "modulo") {
         entidades.push(
             textoDXF(inX + largura - 5, inY + 21, "#", 3, 'MC', 0, "Negrita"),
@@ -762,45 +702,74 @@ function dibujarPaginaDeDispositivo(hojaX, hojaY, dispositivo, pageIndex, startX
         );
     }
 
-    // rellenar envolvente
-    pagina.forEach((conector, idx) => {
-        // strings centradas en su bloque
+    // Relleno por conectores
+    pagina.forEach((conector, idxCon) => {
+
+        // Strings centradas en su bloque
         franjas.forEach(franja => {
             if (typeof conector[franja] === "string") {
-                const largoConector = ((conector.Numeracion?.length || 0) + 1) * paso;
-                const posXFranjaCentrada = inX + largoConector / 2;
-                entidades.push(...hasheador(posXFranjaCentrada, inY, conector[franja], franja));
+                const largoConector = (((conector.Numeracion?.length) || 0) + 1) * paso;
+                const posXCent = inX + largoConector / 2;
+                entidades.push(...hasheador(posXCent, inY, conector[franja], franja));
             }
         });
 
-        for (let i = 0; i < (conector.Numeracion?.length || 0); i++) {
+        // Columnas del conector
+        const nCols = conector.Numeracion?.length || 0;
+        for (let i = 0; i < nCols; i++) {
             inX += paso;
 
-            // Obtener valor numérico del borne y señales
-            const { num, seniales } = normalizarBorne(conector.Numeracion[i]);
+            // 1) Si el borne tiene SEÑAL asignada en EL ESTADO → dibujar símbolo correspondiente
+            const borneObj = conector.Numeracion[i];
+            const { num, seniales, nombre } = normalizarBorne(borneObj);
 
-            // Dibujar símbolos de cada franja
+            // nombre del borne (para mapear en estado)
+            const nombreBorne = nombre || num || null;
+            if (nombreBorne) {
+                const dispEstado = estado.carriles?.[carrilIndex]?.[dispIndex];
+                const uuid = dispEstado?.[nombreBorne] || null;
+
+                if (uuid) {
+                    const info = obtenerSenialPorUUID(uuid);
+                    if (info) {
+                        const { tipo, sig } = info; // tipo = EA | ED | SA | SD
+                        const numero       = sig.Numero;
+                        const opcionTexto  = (sig.Opciones?.[sig.Opcion]) || "";
+
+                        // Construcción del nombre de función JS
+                        const funcionNombre = `${tipo}_${numero}_${opcionTexto}`; // Debes tenerla definida en window
+                        const fn = window[funcionNombre];
+
+                        console.log ({fn});
+
+                        if (typeof fn === "function") {
+                            const L1Mayus = sig.Linea1.toUpperCase();
+                            const L2Mayus = sig.Linea2.toUpperCase();
+
+                            entidades.push(
+                                ...fn(inX, inY, L1Mayus, L2Mayus, sig.tagNumber)
+                            );
+                        } else {
+                            console.warn(`⚠️ Falta función símbolo DXF: ${funcionNombre}(x,y,Linea1,Linea2,tag)`);
+                        }
+                    }
+                }
+            }
+
+            // 2) Dibujar resto de franjas (normalizando objetos {num,...} a su .num)
             franjas.forEach(franja => {
                 if (Array.isArray(conector[franja])) {
-
-                    // Valor original (puede ser string u objeto)
                     let valor = conector[franja][i];
-
-                    // 🔧 Normalizar: si es objeto {num,señales} → usar valor.num
-                    if (typeof valor === "object" && valor !== null) {
-                        valor = valor.num;
-                    }
-
+                    if (valor && typeof valor === "object") valor = valor.num; // normaliza si hace falta
                     entidades.push(...hasheador(inX, inY, valor, franja));
                 }
             });
-
-
         }
 
         inX += paso;
-
-        if (idx + 1 < pagina.length) entidades.push(...hasheador(inX, inY, "#Sep"));
+        if (idxCon + 1 < (pagina.length || 0)) {
+            entidades.push(...hasheador(inX, inY, "#Sep"));
+        }
     });
 
     return entidades;
@@ -811,7 +780,47 @@ function normalizarBorne(borne) {
         return {
             num: borne.num ?? null,
             seniales: borne.señales ?? [],
+            nombre: borne.nombre ?? null,
         };
     }
-    return { num: borne ?? null, seniales: [] };
+    return { num: borne ?? null, seniales: [], nombre: null };
+}
+
+function obtenerSenialPorUUID(uuid) {
+    const lst = estado.listado || {};
+    for (const tipo in lst) {
+        const arr = lst[tipo];
+        if (!Array.isArray(arr)) continue;
+        const sig = arr.find(s => s.ID === uuid);
+        if (sig) return { tipo, sig };
+    }
+    return null;
+}
+
+function dibujarBarrasComunes(CajetinX, CajetinY, hojaItems) {
+    const entidades = [];
+    const paso = 4;
+    const despY = { L: paso * 1, G: paso * 3, G0: paso * 4, N: paso * 25 };
+
+    if (!hojaItems.length) return entidades;
+
+    const xInicio = Math.min(...hojaItems.map(it => it.x)) + CajetinX;
+    const xFin    = Math.max(...hojaItems.map(it => it.x + it.width)) + CajetinX;
+
+    Object.entries(despY).forEach(([key, value]) => {
+        const y = CajetinY + 236 - value;
+        entidades.push(
+            textoDXF(xInicio - 2, y, key, 2.5, 'MR'),
+            lineaDXF(xInicio, y, xFin, y),
+            textoDXF(xFin + 2, y, key, 2.5, 'ML'),
+        );
+    });
+
+    return entidades;
+}
+
+function quitarCaracteresNoASCII(texto) {
+    return texto
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^\x00-\x7F]/g, '');
 }

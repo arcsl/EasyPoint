@@ -46,15 +46,49 @@
         function dispara(dxfTextGlobal = null) {
             const tipo = document.getElementById('selector').value;
             const text = dxfTextGlobal || window.dxfTextGlobal;
-            if (text) {
-                const result = parseDXF(text, tipo);
-                document.getElementById('salida').value = result.join('\n');
-            }
+
+            if (!text) return;
+
+            // ✅ extraemos solo ENTITIES
+            const soloEntidades = extraerEntities(text);
+
+            // ✅ ahora parseamos eso
+            const result = parseDXF(soloEntidades, tipo);
+            document.getElementById('salida').value = result.join('\n');
         }
+
 
         function fmt(n) {
             return parseFloat(n).toFixed(3).replace(/\.?0+$/, '').padStart(5);
         }
+
+        function extraerEntities(dxfText) {
+            const lines = dxfText.split(/\r?\n/);
+
+            let startIndex = -1;
+            let endIndex = -1;
+
+            for (let i = 0; i < lines.length; i++) {
+                if (lines[i].trim() === "0" && lines[i + 1]?.trim() === "SECTION" &&
+                    lines[i + 2]?.trim() === "2" && lines[i + 3]?.trim() === "ENTITIES") {
+                    startIndex = i + 4; // justo después de ENTITIES
+                }
+
+                if (startIndex !== -1 &&
+                    lines[i].trim() === "0" && lines[i + 1]?.trim() === "ENDSEC") {
+                    endIndex = i;
+                    break;
+                }
+            }
+
+            if (startIndex === -1 || endIndex === -1) {
+                console.warn("⚠️ No se encontró sección ENTITIES completa en el DXF.");
+                return dxfText; // fallback
+            }
+
+            return lines.slice(startIndex, endIndex).join("\n");
+        }
+
 
         function parseDXF(dxfText, tipo) {
             const lines = dxfText.split(/\r?\n/);
@@ -197,7 +231,7 @@
             const vert = { 1: 'B', 2: 'M', 3: 'T' }[data.vAlign ?? 2] || 'M';
             data.align = vert + horiz;
 
-            return [(`entidades.push(textoDXF( posX + ${posX},  posY + ${posY}, "${data.text}", ${height}, ${rotation}, "${data.align}"));  // TEXT en línea ${startIndex}`).replace(/\+\s*-/g, "- ")];
+            return [(`entidades.push(textoDXF( posX + ${posX},  posY + ${posY}, "${data.text}", ${rotation}, ${height}, "${data.align}"));  // TEXT en línea ${startIndex}`).replace(/\+\s*-/g, "- ")];
 
         }
 
@@ -252,7 +286,7 @@
                     .filter(s => s.length > 0)
             );
 
-            return [(`entidades.push(textoMultiDXF( posX + ${posX},  posY + ${posY}, ${linesArray}, ${height}, "${data.align}, ${rotation}"));  // MTEXT en línea ${startIndex}`).replace(/\+\s*-/g, "- ")];
+            return [(`entidades.push(textoMultiDXF( posX + ${posX},  posY + ${posY}, ${linesArray}, ${height}, "${data.align}", ${rotation}));  // MTEXT en línea ${startIndex}`).replace(/\+\s*-/g, "- ")];
         }
 
         function parseSOLID(lines, startIndex) {
@@ -289,31 +323,44 @@
         }
 
         function parseHATCH(lines, startIndex) {
+
             let x = null, y = null, r = null;
+            let inLoop = false; // cuando DXF entra en bucle 98 dejamos de leer centro
 
             for (let i = startIndex + 2; i < lines.length; i += 2) {
                 const code = lines[i].trim();
                 const val = lines[i + 1]?.trim();
 
+                // fin de entidad
                 if (code === '0') break;
 
-                switch (code) {
-                    case '10': x = val; break;
-                    case '20': y = val; break;
-                    case '40': r = val; break;
+                // cuando aparece 98 empieza el loop — IGNORAR 10/20 posteriores
+                if (code === '98') {
+                    inLoop = true;
+                    continue;
+                }
+
+                if (!inLoop) {
+                    // Solo tomar estos valores ANTES del loop 98
+                    switch (code) {
+                        case '10': x = val; break;  // centro X
+                        case '20': y = val; break;  // centro Y
+                        case '40': r = val; break;  // radio
+                    }
                 }
             }
 
-            if (x === null || y === null || r === null) return [];
+            // Si faltan coords, no devolver nada
+            if (x === null || y === null) return [];
 
             const xf = fmt(x);
             const yf = fmt(y);
-            const rf = fmt(r);
 
-            // 💡 tu función punto() recibe centro y dibuja sólidamente
-            return [(`entidades.push(punto(posX + ${xf}, posY + ${yf}));  // HATCH punto r=${rf} línea ${startIndex}`).replace(/\+\s*-/g, "- ")];
+            return [
+                (`entidades.push(punto(posX + ${xf}, posY + ${yf}));  // HATCH punto línea ${startIndex}`)
+                .replace(/\+\s*-/g, "- ")
+            ];
         }
-
     </script>
 </body>
 

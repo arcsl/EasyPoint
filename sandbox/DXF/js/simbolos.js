@@ -101,8 +101,8 @@ function hashUD(posX, posY) {
 
     entidades.push(lineaDXF(posX + 0, posY + 5, posX + 0, posY - 5, 0));
 
-    entidades.push(solidDXF([[posX + 0, posY + 5], [posX - 0.5, posY + 3], [posX + 0.5, posY + 3], [posX + 0.5, posY + 3]]));
-    entidades.push(solidDXF([[posX + 0, posY - 5], [posX - 0.5, posY - 3], [posX + 0.5, posY - 3], [posX + 0.5, posY - 3]]));
+    entidades.push(solidDXF([[posX + 0, posY + 5], [posX - 0.5, posY + 3.5], [posX + 0.5, posY + 3.5], [posX + 0.5, posY + 3.5]]));
+    entidades.push(solidDXF([[posX + 0, posY - 5], [posX - 0.5, posY - 3.5], [posX + 0.5, posY - 3.5], [posX + 0.5, posY - 3.5]]));
 
     return entidades;
 
@@ -114,7 +114,7 @@ function hashD(posX, posY) {
 
     entidades.push(lineaDXF(posX + 0, posY + 5, posX + 0, posY - 5, 0));
 
-    entidades.push(solidDXF([[posX + 0, posY - 5], [posX - 0.5, posY - 3], [posX + 0.5, posY - 3], [posX + 0.5, posY - 3]]));
+    entidades.push(solidDXF([[posX + 0, posY - 5], [posX - 0.5, posY - 3.5], [posX + 0.5, posY - 3.5], [posX + 0.5, posY - 3.5]]));
 
     return entidades;
 
@@ -126,7 +126,7 @@ function hashU(posX, posY) {
 
     entidades.push(lineaDXF(posX + 0, posY + 5, posX + 0, posY - 5, 0));
 
-    entidades.push(solidDXF([[posX + 0, posY + 5], [posX - 0.5, posY + 3], [posX + 0.5, posY + 3], [posX + 0.5, posY + 3]]));
+    entidades.push(solidDXF([[posX + 0, posY + 5], [posX - 0.5, posY + 3.5], [posX + 0.5, posY + 3.5], [posX + 0.5, posY + 3.5]]));
 
     return entidades;
 
@@ -248,16 +248,24 @@ function hashQconmutada(posX, posY) {
 
     const entidades = [];
 
-    entidades.push(lineaDXF(posX - 4, posY - 3, posX - 4, posY + 4, 0));
-    entidades.push(lineaDXF(posX - 4, posY + 4, posX - 1, posY + 4, 0));
-    entidades.push(lineaDXF(posX + 4, posY - 3, posX + 4, posY + 4, 0));
-    entidades.push(lineaDXF(posX + 0, posY - 3, posX + 0, posY + 1, 0));
-    entidades.push(lineaDXF(posX + 0, posY + 1, posX - 2, posY + 5, 0));
-    entidades.push(lineaDXF(posX + 1, posY + 4, posX + 4, posY + 4, 0));
+ // entidades.push(lineaDXF(posX - 4, posY - 3, posX - 4, posY + 4, 0));
+ // entidades.push(lineaDXF(posX - 4, posY + 4, posX - 1, posY + 4, 0));
+ // entidades.push(lineaDXF(posX + 4, posY - 3, posX + 4, posY + 4, 0));
+ // entidades.push(lineaDXF(posX + 0, posY - 3, posX + 0, posY + 1, 0));
+ // entidades.push(lineaDXF(posX + 0, posY + 1, posX - 2, posY + 5, 0));
+ // entidades.push(lineaDXF(posX + 1, posY + 4, posX + 4, posY + 4, 0));
 
-    entidades.push(solidDXF([[posX - 4, posY - 5], [posX - 4.5, posY - 3], [posX - 3.5, posY - 3], [posX - 3.5, posY - 3]]));
-    entidades.push(solidDXF([[posX + 0, posY - 3], [posX - 0.5, posY - 5], [posX + 0.5, posY - 5], [posX + 0.5, posY - 5]]));
-    entidades.push(solidDXF([[posX + 4, posY - 5], [posX + 3.5, posY - 3], [posX + 4.5, posY - 3], [posX + 4.5, posY - 3]]));
+    entidades.push(lineaDXF( posX + 2, posY + 2, posX + 2, posY + 4, 0));
+    entidades.push(lineaDXF( posX + 4, posY - 5, posX + 4, posY - 2, 0));
+    entidades.push(lineaDXF( posX + 0, posY - 2, posX + 2, posY + 2, 0));
+    entidades.push(lineaDXF( posX + 0, posY - 5, posX + 0, posY - 2, 0));
+    entidades.push(lineaDXF( posX - 4, posY - 5, posX - 4, posY + 4, 0));
+    entidades.push(lineaDXF( posX - 4, posY + 4, posX + 2, posY + 4, 0));
+
+
+    entidades.push(solidDXF([[posX - 4  , posY - 3.5], [posX - 4.5, posY - 5  ], [posX - 3.5, posY - 5  ], [posX - 3.5, posY - 5  ]]));
+    entidades.push(solidDXF([[posX + 0  , posY - 5  ], [posX - 0.5, posY - 3.5], [posX + 0.5, posY - 3.5], [posX + 0.5, posY - 3.5]]));
+    entidades.push(solidDXF([[posX + 4  , posY - 5  ], [posX + 3.5, posY - 3.5], [posX + 4.5, posY - 3.5], [posX + 4.5, posY - 3.5]]));
 
     return entidades;
 
