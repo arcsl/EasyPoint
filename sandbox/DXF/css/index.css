@@ -1,9 +1,16 @@
-label.labelDispositivo{
+label.borne-label{
     width: 160px;
     text-align: right;
 }
 
-select.botonAniadir,
+select.selectDispositivo{
+    width: 230px;
+}
+
+select.borne-select{
+    width: 288px;
+}
+
 button.botonAniadir {
     width: 165px;
 }

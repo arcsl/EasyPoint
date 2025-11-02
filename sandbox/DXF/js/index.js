@@ -213,7 +213,7 @@ function pintarCarril(index, totalCarriles, carrilData) {
     colRight.classList.add("carril-col");
 
     const btnAddDev = document.createElement("button");
-    btnAddDev.classList.add("w3-button", "w3-green", "w3-round", "w3-small");
+    btnAddDev.classList.add("w3-button", "w3-green", "w3-round", "w3-small", "botonAniadir");
     btnAddDev.innerHTML = `<i class="fa fa-plus"></i> Añadir Dispositivo`;
     btnAddDev.onclick = () => {
         carrilData.push({ tipo: null, _visible: false }); // nuevo dispositivo sin tipo
@@ -236,7 +236,6 @@ function pintarCarril(index, totalCarriles, carrilData) {
 }
 
 
-
 // ================== DISPOSITIVOS ==================
 
 function añadirDispositivoEstado(carrilIndex) {
@@ -245,7 +244,6 @@ function añadirDispositivoEstado(carrilIndex) {
     guardarEstado();
     escribirCarriles();
 }
-
 
 function eliminarDispositivoEstado(carrilIndex, dispIndex) {
     estado.carriles[carrilIndex].splice(dispIndex, 1);
@@ -273,7 +271,7 @@ function pintarDispositivo(devicesContainer, carrilIndex, dispIndex, dispData) {
 
     // Selector de modelo
     const sel = document.createElement("select");
-    sel.classList.add("w3-select", "w3-border", "w3-round", "w3-small", "w3-padding", "botonAniadir");
+    sel.classList.add("w3-select", "w3-border", "w3-round", "w3-small", "w3-padding", "selectDispositivo");
     sel.appendChild(new Option("", ""));
 
     Object.keys(controladores).forEach(k => sel.appendChild(new Option(k, k)));
@@ -344,6 +342,9 @@ function pintarDispositivo(devicesContainer, carrilIndex, dispIndex, dispData) {
     devicesContainer.appendChild(block);
 }
 
+
+// ================== SEÑALES ==================
+
 function pintarCanalesDesdeEstado(channelsContainer, carrilIndex, dispIndex, deviceObj) {
     const disp = controladores[deviceObj.tipo];
     if (!disp?.Paginas) return;
@@ -359,11 +360,11 @@ function pintarCanalesDesdeEstado(channelsContainer, carrilIndex, dispIndex, dev
                 row.className = "channel-row";
 
                 const label = document.createElement("label");
+                label.classList.add("w3-small", "borne-label");
                 label.textContent = nombreBorne;
 
                 const sel = document.createElement("select");
                 sel.classList.add("w3-select", "w3-border", "w3-round", "w3-small", "borne-select");
-                sel.style.width = "220px";
 
                 // Guardar los tipos permitidos para este borne
                 sel.dataset.seniales = JSON.stringify(n.señales);
@@ -404,10 +405,6 @@ function pintarCanalesDesdeEstado(channelsContainer, carrilIndex, dispIndex, dev
         });
     });
 }
-
-
-
-// ================== SEÑALES ==================
 
 function actualizarSelectsSeniales() {
 
@@ -496,25 +493,12 @@ function boton(color, icon, title, onClick) {
     });
 })();
 
-function leerCarrilesDesdeUI() {
-    const carriles = [];
-    const carrilRows = UI.CarrilesContenedor.querySelectorAll(".carril-row");
-
-    carrilRows.forEach(row => {
-        const devicesContainer = row.querySelector(".devices-container");
-        if (!devicesContainer) return;
-
-        const deviceBlocks = devicesContainer.querySelectorAll(".device-block");
-        const equipos = [];
-        deviceBlocks.forEach(block => {
-            const sel = block.querySelector("select");
-            if (sel && sel.value) equipos.push(sel.value);
-        });
-
-        if (equipos.length > 0) carriles.push(equipos);
-    });
-
-    return carriles;  // Array<Array<string>>
+function leerCarrilesDesdeEstado() {
+    return estado.carriles.map(carril =>
+        carril
+            .filter(d => d.tipo)   // solo dispositivos válidos
+            .map(d => d.tipo)      // quedarnos solo con el modelo
+    ).filter(c => c.length > 0);
 }
 
 function expandirCarrilAItems(listaEquipos) {
@@ -698,7 +682,7 @@ function descargarDXF() {
     };
 
     // 1) Carriles desde UI
-    const carriles = leerCarrilesDesdeUI();
+    const carriles = leerCarrilesDesdeEstado();
 
     // 2) Layout de hojas (raw)
     let layout = generarLayoutHojasDesdeCarriles(carriles);

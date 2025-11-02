@@ -138,3 +138,158 @@ function logoARC(posX, posY) {
     return entidades;
 
 }
+
+// simbolos de señales
+// === EA ===
+function EA_1_Pasiva(posX, posY, Linea1, Linea2, tagNumber) { 
+    const entidades = [];
+
+    return entidades;
+}
+
+function EA_1_Externa(posX, posY, Linea1, Linea2, tagNumber) { 
+    const entidades = [];
+
+    return entidades;
+}
+
+function EA_1_Activa(posX, posY, Linea1, Linea2, tagNumber) { 
+    const entidades = [];
+
+    return entidades;
+}
+
+function EA_2_Activa(posX, posY, Linea1, Linea2, tagNumber) { 
+    const entidades = [];
+
+    return entidades;
+}
+
+function EA_3_Activa(posX, posY, Linea1, Linea2, tagNumber) { 
+    const entidades = [];
+
+    return entidades;
+}
+
+
+// === ED ===
+function ED_1_Externa(posX, posY, Linea1, Linea2, tagNumber) { 
+    const entidades = [];
+
+    return entidades;
+}
+
+function ED_1_Rele(posX, posY, Linea1, Linea2, tagNumber) { 
+    const entidades = [];
+
+    return entidades;
+}
+
+function ED_1_Contactor(posX, posY, Linea1, Linea2, tagNumber) { 
+    const entidades = [];
+
+    return entidades;
+}
+
+function ED_1_Térmico(posX, posY, Linea1, Linea2, tagNumber) { 
+    const entidades = [];
+
+    return entidades;
+}
+
+
+// === SA ===
+function SA_1_Externa(posX, posY, Linea1, Linea2, tagNumber) { 
+    const entidades = [];
+
+    return entidades;
+}
+
+function SA_1_Actuador(posX, posY, Linea1, Linea2, tagNumber) { 
+    const entidades = [];
+
+    return entidades;
+}
+
+
+// === SD ===
+function SD_1_Externa(posX, posY, Linea1, Linea2, tagNumber) { 
+    const entidades = [];
+
+    return entidades;
+}
+
+function SD_1_Rele(posX, posY, Linea1, Linea2, tagNumber) { 
+    const entidades = [];
+
+    entidades.push(lineaDXF( posX - 4, posY - 86, posX - 4, posY - 90,     0));
+    entidades.push(lineaDXF( posX - 4, posY - 90, posX +     4, posY - 90,     0));
+    entidades.push(lineaDXF( posX +     4, posY - 90, posX +     4, posY - 86,     0));
+    entidades.push(lineaDXF( posX +     4, posY - 86, posX - 4, posY - 86,     0));
+    entidades.push(lineaDXF( posX +     0, posY - 56, posX - 2, posY - 52,     0));
+    entidades.push(lineaDXF( posX - 12, posY - 53, posX - 12, posY - 55,     0));
+    entidades.push(lineaDXF( posX - 11, posY - 52, posX - 9, posY - 56,     0));
+    entidades.push(lineaDXF( posX - 9, posY - 56, posX - 9, posY - 52,     0));
+    entidades.push(lineaDXF( posX - 9, posY - 56, posX - 7, posY - 52,     0));
+    entidades.push(lineaDXF( posX - 1, posY - 54, posX - 12, posY - 54,     0));
+    entidades.push(lineaDXF( posX +     0, posY - 52, posX +     0, posY +     0,     0));
+    entidades.push(lineaDXF( posX - 12, posY - 53, posX - 11, posY - 53,     0));
+    entidades.push(lineaDXF( posX - 13, posY - 55, posX - 12, posY - 55,     0));
+    entidades.push(lineaDXF( posX +     0, posY - 56, posX +     0, posY - 86,     0));
+    entidades.push(lineaDXF( posX - 4, posY - 52, posX - 4, posY - 4,     0));
+    entidades.push(lineaDXF( posX +     0, posY - 90, posX +     0, posY - 100,     0));
+    entidades.push(lineaDXF( posX - 4, posY +     0, posX - 4, posY - 4,     0));
+    entidades.push(lineaDXF( posX - 4, posY - 56, posX - 6, posY - 52,     0));
+    entidades.push(lineaDXF( posX - 4, posY - 56, posX - 4, posY - 65,     0));
+    entidades.push(lineaDXF( posX - 4, posY - 65, posX +     0, posY - 65,     0));
+
+    entidades.push(textoDXF( posX - 11,  posY - 51, "1",     1,     0, "MC"));
+    entidades.push(textoDXF( posX - 9,  posY - 51, "0",     1,     0, "MC"));
+    entidades.push(textoDXF( posX - 7,  posY - 51, "2",     1,     0, "MC"));
+    entidades.push(textoDXF( posX - 1,  posY - 84, `KA${tagNumber}`,   2.5,     0, "MR"));
+
+    entidades.push(textoMultiDXF( posX +     0,  posY - 190, [Linea1,Linea2],   2.5, "ML",     0));
+
+    entidades.push(punto(posX - 661, posY - 836));
+    entidades.push(punto(posX - 665, posY - 740));
+    entidades.push(punto(posX - 661, posY - 801));
+
+    return entidades;
+}
+
+function SD_1_Contactor(posX, posY, Linea1, Linea2, tagNumber) { 
+    const entidades = [];
+
+    return entidades;
+}
+
+function SD_3_Motor3V(posX, posY, Linea1, Linea2, tagNumber) { 
+    const entidades = [];
+
+    return entidades;
+}
+
+function SD_1_Simple(posX, posY, Linea1, Linea2, tagNumber) { 
+    const entidades = [];
+
+    return entidades;
+}
+
+function SD_1_Conmutada(posX, posY, Linea1, Linea2, tagNumber) { 
+    const entidades = [];
+
+    return entidades;
+}
+
+function SD_2_Externa(posX, posY, Linea1, Linea2, tagNumber) { 
+    const entidades = [];
+
+    return entidades;
+}
+
+function SD_2_Actuador(posX, posY, Linea1, Linea2, tagNumber) { 
+    const entidades = [];
+
+    return entidades;
+}
+

@@ -17,6 +17,7 @@
         <option value="TEXT">TEXT</option>
         <option value="MTEXT">MTEXT</option>
         <option value="SOLID">SOLID</option>
+        <option value="HATCH">HATCH (puntos)</option>
     </select>
 
     <h3>Resultado:</h3>
@@ -81,6 +82,9 @@
                             case 'SOLID':
                                 result.push(...parseSOLID(lines, i));
                                 break;
+                            case 'HATCH':
+                                result.push(...parseHATCH(lines, i));
+                                break;
                         }
                     }
                 }
@@ -110,7 +114,7 @@
             return [(`entidades.push(lineaDXF( posX + ${x1}, posY + ${y1}, posX + ${x2}, posY + ${y2}, ${grosor}));  // LINE en línea ${startIndex}`).replace(/\+\s*-/g, "- ")];
 
         }
-        
+
         function parseARC(lines, startIndex) {
             // Por defecto
             let cx = '0', cy = '0', r = '0', aStart = '0', aEnd = '0', grosor = '-1';
@@ -197,7 +201,6 @@
 
         }
 
-
         function parseMTEXT(lines, startIndex) {
             const data = {
                 x: '    0', y: '    0', height: '  2.5', rotation: '    0',
@@ -252,7 +255,6 @@
             return [(`entidades.push(textoMultiDXF( posX + ${posX},  posY + ${posY}, ${linesArray}, ${height}, "${data.align}, ${rotation}"));  // MTEXT en línea ${startIndex}`).replace(/\+\s*-/g, "- ")];
         }
 
-
         function parseSOLID(lines, startIndex) {
             const coords = [null, null, null, null]; // [ [x,y], [x,y], [x,y], [x,y] ]
             let current = 0;
@@ -286,6 +288,31 @@
             return [(`entidades.push(generarSolidDXF([${formatted}]));  // SOLID en línea ${startIndex}`).replace(/\+\s*-/g, "- ")];
         }
 
+        function parseHATCH(lines, startIndex) {
+            let x = null, y = null, r = null;
+
+            for (let i = startIndex + 2; i < lines.length; i += 2) {
+                const code = lines[i].trim();
+                const val = lines[i + 1]?.trim();
+
+                if (code === '0') break;
+
+                switch (code) {
+                    case '10': x = val; break;
+                    case '20': y = val; break;
+                    case '40': r = val; break;
+                }
+            }
+
+            if (x === null || y === null || r === null) return [];
+
+            const xf = fmt(x);
+            const yf = fmt(y);
+            const rf = fmt(r);
+
+            // 💡 tu función punto() recibe centro y dibuja sólidamente
+            return [(`entidades.push(punto(posX + ${xf}, posY + ${yf}));  // HATCH punto r=${rf} línea ${startIndex}`).replace(/\+\s*-/g, "- ")];
+        }
 
     </script>
 </body>
