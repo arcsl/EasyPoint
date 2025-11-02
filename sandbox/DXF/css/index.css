@@ -1,3 +1,17 @@
+label.labelDispositivo{
+    width: 160px;
+    text-align: right;
+}
+
+select.botonAniadir,
+button.botonAniadir {
+    width: 165px;
+}
+
+button.botonCuadrado {
+    width: 50px;
+}
+
 .container {
     width: 1000px;
 }
@@ -16,7 +30,6 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-bottom: 6px;
 }
 
 .devices-container {
@@ -25,17 +38,10 @@
     gap: 8px;
 }
 
-.device-block {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 8px;
-}
-
 .device-head {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-bottom: 6px;
 }
 
 .channels {
@@ -46,15 +52,10 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    margin: 4px 0;
 }
 
 .divSelectores {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
-}
-
-.w-fixed-btn {
-    width: 36px;
 }

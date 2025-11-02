@@ -1,6 +1,6 @@
 const controladores = {
     "PXC4.E16-2": {
-        "Nombre":"PXC4.E16-2",
+        "Nombre": "PXC4.E16-2",
         "Paginas": [
             [
                 {   // LAN
@@ -25,12 +25,26 @@ const controladores = {
                 {   // entradas U1 a U6
                     "Cinta": ["V+", null, null, "U1", null, null, "#T", "U2", null, null, null, "U3", null, null, "#T", "U4", null, null, null, "U5", null, null, "#T", "U6", "V~",],
                     "Simbolos": [null, null, null, "#UD", null, null, "#-", "#UD", null, null, null, "#UD", null, null, "#-", "#UD", null, null, null, "#UD", null, null, "#-", "#UD", "#D",],
-                    "Numeracion": ["8", null, null, "9", null, null, "10", "11", null, null, null, "12", null, null, "13", "14", null, null, null, "15", null, null, "16", "17", "18",],
+                    "Numeracion": [
+                        "8", null, null, { num: "9", señales: ["EA", "ED", "SA"], nombre: "U1" },
+                        null, null, "10", { num: "11", señales: ["EA", "ED", "SA"], nombre: "U2" },
+                        null, null, null, { num: "12", señales: ["EA", "ED", "SA"], nombre: "U3" },
+                        null, null, "13", { num: "14", señales: ["EA", "ED", "SA"], nombre: "U4" },
+                        null, null, null, { num: "15", señales: ["EA", "ED", "SA"], nombre: "U5" },
+                        null, null, "16", { num: "17", señales: ["EA", "ED", "SA"], nombre: "U6" },
+                        "18",],
                 },
                 {   // entradas U7 a U12
                     "Cinta": ["V+", null, null, "U7", null, null, "#T", "U8", null, null, null, "U9", null, null, "#T", "U10", null, null, null, "U11", null, null, "#T", "U12", "V~",],
                     "Simbolos": [null, null, null, "#UD", null, null, "#-", "#UD", null, null, null, "#UD", null, null, "#-", "#UD", null, null, null, "#UD", null, null, "#-", "#UD", "#D",],
-                    "Numeracion": ["19", null, null, "20", null, null, "21", "22", null, null, null, "23", null, null, "24", "25", null, null, null, "26", null, null, "27", "28", "29",],
+                    "Numeracion": [
+                        "19", null, null, { num: "20", señales: ["EA", "ED", "SA"], nombre: "U7" },
+                        null, null, "21", { num: "22", señales: ["EA", "ED", "SA"], nombre: "U8" },
+                        null, null, null, { num: "23", señales: ["EA", "ED", "SA"], nombre: "U9" },
+                        null, null, "24", { num: "25", señales: ["EA", "ED", "SA"], nombre: "U10" },
+                        null, null, null, { num: "26", señales: ["EA", "ED", "SA"], nombre: "U11" },
+                        null, null, "27", { num: "28", señales: ["EA", "ED", "SA"], nombre: "U12" },
+                        "29",],
 
                 },
                 {   // M-BUS
@@ -52,22 +66,22 @@ const controladores = {
                 {   // DO1
                     "Cinta": "DO1",
                     "Simbolos": "#Qc",
-                    "Numeracion": ["75", "76", "77",],
+                    "Numeracion": ["75", "76", { num: "77", señales: ["SD"], nombre: "DO1" },],
                 },
                 {   // DO2
                     "Cinta": "DO2",
                     "Simbolos": "#Qc",
-                    "Numeracion": ["78", "79", "80",],
+                    "Numeracion": ["78", "79", { num: "80", señales: ["SD"], nombre: "DO2" },],
                 },
                 {   // DO3
                     "Cinta": "DO3",
                     "Simbolos": "#Qc",
-                    "Numeracion": ["81", "82", "83",],
+                    "Numeracion": ["81", "82", { num: "83", señales: ["SD"], nombre: "DO3" },],
                 },
                 {   // DO4
                     "Cinta": "DO4",
                     "Simbolos": "#Qc",
-                    "Numeracion": ["84", "85", "86",],
+                    "Numeracion": ["84", "85", { num: "86", señales: ["SD"], nombre: "DO4" },],
                 },
             ],
         ],
@@ -80,7 +94,7 @@ const controladores = {
         },
     },
     "PXC5.E24": {
-        "Nombre":"PXC5.E24",
+        "Nombre": "PXC5.E24",
         "Paginas": [
             [
                 {   // LAN
@@ -115,12 +129,22 @@ const controladores = {
                 {   // entradas U1 a U4
                     "Cinta": [null, null, "U1", null, "#T", "U2", null, null, "U3", null, "#T", "U4",],
                     "Simbolos": [null, null, "#UD", null, "#-", "#UD", null, null, "#UD", null, "#-", "#UD",],
-                    "Numeracion": [null, null, "20", null, "21", "22", null, null, "23", null, "24", "25",],
+                    "Numeracion": [
+                        null, null, { num: "20", señales: ["EA","ED","SA"], nombre: "U1" }, 
+                        null, "21", { num: "22", señales: ["EA","ED","SA"], nombre: "U2" }, 
+                        null, null, { num: "23", señales: ["EA","ED","SA"], nombre: "U3" }, 
+                        null, "24", { num: "25", señales: ["EA","ED","SA"], nombre: "U4" },
+                    ],
                 },
                 {   // entradas U5 a U8
                     "Cinta": [null, null, "U5", null, "#T", "U6", null, null, "U7", null, "#T", "U8",],
                     "Simbolos": [null, null, "#UD", null, "#-", "#UD", null, null, "#UD", null, "#-", "#UD",],
-                    "Numeracion": [null, null, "26", null, "27", "28", null, null, "29", null, "30", "31",],
+                    "Numeracion": [
+                        null, null, { num: "26", señales: ["EA","ED","SA"], nombre: "U5" }, 
+                        null, "27", { num: "28", señales: ["EA","ED","SA"], nombre: "U6" }, 
+                        null, null, { num: "29", señales: ["EA","ED","SA"], nombre: "U7" }, 
+                        null, "30", { num: "31", señales: ["EA","ED","SA"], nombre: "U8" },
+                    ],
                 },
                 {   // Salidas tension
                     "Cinta": ["V~", "#T", "#T", "V+",],
@@ -137,12 +161,22 @@ const controladores = {
                 {   // entradas X1 a x4
                     "Cinta": [null, null, "X1", null, "#T", "X2", null, null, "X3", null, "#T", "X4",],
                     "Simbolos": [null, null, "#UD", null, "#-", "#UD", null, null, "#UD", null, "#-", "#UD",],
-                    "Numeracion": [null, null, "40", null, "41", "42", null, null, "43", null, "44", "45",],
+                    "Numeracion": [
+                        null, null, { num: "40", señales: ["EA","ED","SA"], nombre: "X1" }, 
+                        null, "41", { num: "42", señales: ["EA","ED","SA"], nombre: "X2" }, 
+                        null, null, { num: "43", señales: ["EA","ED","SA"], nombre: "X3" }, 
+                        null, "44", { num: "45", señales: ["EA","ED","SA"], nombre: "X4" },
+                    ],
                 },
                 {   // entradas X5 a X8
                     "Cinta": [null, null, "X5", null, "#T", "X6", null, null, "X7", null, "#T", "X8",],
                     "Simbolos": [null, null, "#UD", null, "#-", "#UD", null, null, "#UD", null, "#-", "#UD",],
-                    "Numeracion": [null, null, "46", null, "47", "48", null, null, "49", null, "50", "51",],
+                    "Numeracion": [
+                        null, null, { num: "46", señales: ["EA","ED","SA"], nombre: "X5" }, 
+                        null, "47", { num: "48", señales: ["EA","ED","SA"], nombre: "X6" }, 
+                        null, null, { num: "49", señales: ["EA","ED","SA"], nombre: "X7" }, 
+                        null, "50", { num: "51", señales: ["EA","ED","SA"], nombre: "X8" },
+                    ],
                 },
                 {   // M-BUS
                     "Cinta": "M-BUS",
@@ -171,34 +205,32 @@ const controladores = {
                 {   // DO1
                     "Cinta": "DO1",
                     "Simbolos": "#Qc",
-                    "Numeracion": ["75", "76", "77",],
-                    "Fijo": ["#L", "#N", null,],
-
+                    "Numeracion": ["75", "76", { num: "77", señales: ["SD"], nombre: "DO1" },],
                 },
                 {   // DO2
                     "Cinta": "DO2",
                     "Simbolos": "#Qc",
-                    "Numeracion": ["78", "79", "80",],
+                    "Numeracion": ["78", "79", { num: "80", señales: ["SD"], nombre: "DO2" },],
                 },
                 {   // DO3
                     "Cinta": "DO3",
                     "Simbolos": "#Qc",
-                    "Numeracion": ["81", "82", "83",],
+                    "Numeracion": ["81", "82", { num: "83", señales: ["SD"], nombre: "DO3" },],
                 },
                 {   // DO4
                     "Cinta": "DO4",
                     "Simbolos": "#Qc",
-                    "Numeracion": ["84", "85", "86",],
+                    "Numeracion": ["84", "85", { num: "86", señales: ["SD"], nombre: "DO4" },],
                 },
                 {   // DO5
                     "Cinta": "DO5",
                     "Simbolos": "#Qc",
-                    "Numeracion": ["87", "88", "89",],
+                    "Numeracion": ["87", "88", { num: "89", señales: ["SD"], nombre: "DO5" },],
                 },
                 {   // DO6
                     "Cinta": "DO6",
                     "Simbolos": "#Qc",
-                    "Numeracion": ["90", "91", "92",],
+                    "Numeracion": ["90", "91", { num: "92", señales: ["SD"], nombre: "DO6" },],
                 },
             ],
         ],
@@ -211,7 +243,7 @@ const controladores = {
         },
     },
     "PXC7.E400": {
-        "Nombre":"PXC7.E400",
+        "Nombre": "PXC7.E400",
         "Paginas": [
             [
                 {   // LAN
@@ -239,9 +271,9 @@ const controladores = {
                     "Fijo": ["#G", "#G0", null,],
                 },
                 {   // entrada digital
-                    "Subcinta": [ "D", "#T"],
-                    "Simbolos": ["#U", "#|",],
-                    "Numeracion": ["10", "11",],
+                    "Subcinta": ["#T", "D",],
+                    "Simbolos": ["#|", "#U",],
+                    "Numeracion": ["11", { num: "10", señales: ["ED"], nombre: "DI1" },],
                 },
                 {   // M-BUS
                     "Cinta": "M-BUS",
@@ -292,9 +324,9 @@ const controladores = {
             "Familia": "PX",
             "Tipo": "controlador",
         },
-    },    
+    },
     "TXS1.12F10": {
-        "Nombre":"TXS1.12F10",
+        "Nombre": "TXS1.12F10",
         "Paginas": [
             [
                 {   // Entrada
@@ -320,7 +352,7 @@ const controladores = {
         },
     },
     "TXS1.EF10": {
-        "Nombre":"TXS1.EF10",
+        "Nombre": "TXS1.EF10",
         "Paginas": [
             [
                 {   // Entrada
@@ -346,48 +378,48 @@ const controladores = {
         },
     },
     "TXM1.8U": {
-        "Nombre":"TXM1.8U",
+        "Nombre": "TXM1.8U",
         "Paginas": [
             [
                 {   // Canal 1
                     "Cinta": [null, "#T", "(1)",],
                     "Simbolos": [null, "#-", "#UD",],
-                    "Numeracion": [null, "2", "4",],
+                    "Numeracion": [null, "2", { num: "4", señales: ["EA", "ED", "SA"], nombre: "U1" }],
                 },
                 {   // Canal 2
                     "Cinta": ["~", "#T", "(2)",],
                     "Simbolos": ["#D", "#-", "#UD",],
-                    "Numeracion": ["7", "6", "8",],
+                    "Numeracion": ["7", "6", { num: "8", señales: ["EA", "ED", "SA"], nombre: "U2" }],
                 },
                 {   // Canal 3
                     "Cinta": [null, "#T", "(3)",],
                     "Simbolos": [null, "#-", "#UD",],
-                    "Numeracion": [null, "10", "12",],
+                    "Numeracion": [null, "10", { num: "12", señales: ["EA", "ED", "SA"], nombre: "U3" }],
                 },
                 {   // Canal 4
                     "Cinta": ["~", "#T", "(4)",],
                     "Simbolos": ["#D", "#-", "#UD",],
-                    "Numeracion": ["15", "14", "16",],
+                    "Numeracion": ["15", "14", { num: "16", señales: ["EA", "ED", "SA"], nombre: "U4" }],
                 },
                 {   // Canal 5
                     "Cinta": [null, "#T", "(5)",],
                     "Simbolos": [null, "#-", "#UD",],
-                    "Numeracion": [null, "19", "21",],
+                    "Numeracion": [null, "19", { num: "21", señales: ["EA", "ED", "SA"], nombre: "U5" }],
                 },
                 {   // Canal 6
                     "Cinta": ["~", "#T", "(6)",],
                     "Simbolos": ["#D", "#-", "#UD",],
-                    "Numeracion": ["24", "23", "25",],
+                    "Numeracion": ["24", "23", { num: "25", señales: ["EA", "ED", "SA"], nombre: "U6" }],
                 },
                 {   // Canal 7
                     "Cinta": [null, "#T", "(7)",],
                     "Simbolos": [null, "#-", "#UD",],
-                    "Numeracion": [null, "27", "29",],
+                    "Numeracion": [null, "27", { num: "29", señales: ["EA", "ED", "SA"], nombre: "U7" }],
                 },
                 {   // Canal 8
                     "Cinta": ["~", "#T", "(8)",],
                     "Simbolos": ["#D", "#-", "#UD",],
-                    "Numeracion": ["32", "31", "33",],
+                    "Numeracion": ["32", "31", { num: "33", señales: ["EA", "ED", "SA"], nombre: "U8" }],
                 },
             ],
         ],
@@ -400,48 +432,48 @@ const controladores = {
         },
     },
     "TXM1.8D": {
-        "Nombre":"TXM1.8D",
+        "Nombre": "TXM1.8D",
         "Paginas": [
             [
                 {   // Canal 1
                     "Cinta": [null, "#T", "(1)",],
                     "Simbolos": [null, "#-", "#U",],
-                    "Numeracion": [null, "1", "2",],
+                    "Numeracion": [null, "1", { num: "2", señales: ["ED"], nombre: "DI1" }],
                 },
                 {   // Canal 2
                     "Cinta": [null, "#T", "(2)",],
                     "Simbolos": [null, "#-", "#U",],
-                    "Numeracion": [null, "3", "4",],
+                    "Numeracion": [null, "3", { num: "4", señales: ["ED"], nombre: "DI2" }],
                 },
                 {   // Canal 3
                     "Cinta": [null, "#T", "(3)",],
                     "Simbolos": [null, "#-", "#U",],
-                    "Numeracion": [null, "5", "6",],
+                    "Numeracion": [null, "5", { num: "6", señales: ["ED"], nombre: "DI3" }],
                 },
                 {   // Canal 4
                     "Cinta": [null, "#T", "(4)",],
                     "Simbolos": [null, "#-", "#U",],
-                    "Numeracion": [null, "7", "8",],
+                    "Numeracion": [null, "7", { num: "8", señales: ["ED"], nombre: "DI4" }],
                 },
                 {   // Canal 5
                     "Cinta": [null, "#T", "(5)",],
                     "Simbolos": [null, "#-", "#U",],
-                    "Numeracion": [null, "9", "10",],
+                    "Numeracion": [null, "9", { num: "10", señales: ["ED"], nombre: "DI5" }],
                 },
                 {   // Canal 6
                     "Cinta": [null, "#T", "(6)",],
                     "Simbolos": [null, "#-", "#U",],
-                    "Numeracion": [null, "11", "12",],
+                    "Numeracion": [null, "11", { num: "12", señales: ["ED"], nombre: "DI6" }],
                 },
                 {   // Canal 7
                     "Cinta": [null, "#T", "(7)",],
                     "Simbolos": [null, "#-", "#U",],
-                    "Numeracion": [null, "13", "14",],
+                    "Numeracion": [null, "13", { num: "14", señales: ["ED"], nombre: "DI7" }],
                 },
                 {   // Canal 8
                     "Cinta": [null, "#T", "(8)",],
                     "Simbolos": [null, "#-", "#U",],
-                    "Numeracion": [null, "15", "16",],
+                    "Numeracion": [null, "15", { num: "16", señales: ["ED"], nombre: "DI8" }],
                 },
             ],
         ],
@@ -454,88 +486,88 @@ const controladores = {
         },
     },
     "TXM1.16D": {
-        "Nombre":"TXM1.16D",
+        "Nombre": "TXM1.16D",
         "Paginas": [
             [
                 {   // Canal 1
                     "Cinta": [null, "#T", "(1)",],
                     "Simbolos": [null, "#-", "#U",],
-                    "Numeracion": [null, "1", "2",],
+                    "Numeracion": [null, "1", { num: "2", señales: ["ED"], nombre: "DI1" }],
                 },
                 {   // Canal 2
                     "Cinta": [null, "#T", "(2)",],
                     "Simbolos": [null, "#-", "#U",],
-                    "Numeracion": [null, "3", "4",],
+                    "Numeracion": [null, "3", { num: "4", señales: ["ED"], nombre: "DI2" }],
                 },
                 {   // Canal 3
                     "Cinta": [null, "#T", "(3)",],
                     "Simbolos": [null, "#-", "#U",],
-                    "Numeracion": [null, "5", "6",],
+                    "Numeracion": [null, "5", { num: "6", señales: ["ED"], nombre: "DI3" }],
                 },
                 {   // Canal 4
                     "Cinta": [null, "#T", "(4)",],
                     "Simbolos": [null, "#-", "#U",],
-                    "Numeracion": [null, "7", "8",],
+                    "Numeracion": [null, "7", { num: "8", señales: ["ED"], nombre: "DI4" }],
                 },
                 {   // Canal 5
                     "Cinta": [null, "#T", "(5)",],
                     "Simbolos": [null, "#-", "#U",],
-                    "Numeracion": [null, "9", "10",],
+                    "Numeracion": [null, "9", { num: "10", señales: ["ED"], nombre: "DI5" }],
                 },
                 {   // Canal 6
                     "Cinta": [null, "#T", "(6)",],
                     "Simbolos": [null, "#-", "#U",],
-                    "Numeracion": [null, "11", "12",],
+                    "Numeracion": [null, "11", { num: "12", señales: ["ED"], nombre: "DI6" }],
                 },
                 {   // Canal 7
                     "Cinta": [null, "#T", "(7)",],
                     "Simbolos": [null, "#-", "#U",],
-                    "Numeracion": [null, "13", "14",],
+                    "Numeracion": [null, "13", { num: "14", señales: ["ED"], nombre: "DI7" }],
                 },
                 {   // Canal 8
                     "Cinta": [null, "#T", "(8)",],
                     "Simbolos": [null, "#-", "#U",],
-                    "Numeracion": [null, "15", "16",],
+                    "Numeracion": [null, "15", { num: "16", señales: ["ED"], nombre: "DI8" }],
                 },
                 {   // Canal 9
                     "Cinta": [null, "#T", "(9)",],
                     "Simbolos": [null, "#-", "#U",],
-                    "Numeracion": [null, "17", "18",],
+                    "Numeracion": [null, "17", { num: "18", señales: ["ED"], nombre: "DI9" }],
                 },
                 {   // Canal 10
                     "Cinta": [null, "#T", "(10)",],
                     "Simbolos": [null, "#-", "#U",],
-                    "Numeracion": [null, "19", "20",],
+                    "Numeracion": [null, "19", { num: "20", señales: ["ED"], nombre: "DI10" }],
                 },
                 {   // Canal 11
                     "Cinta": [null, "#T", "(11)",],
                     "Simbolos": [null, "#-", "#U",],
-                    "Numeracion": [null, "21", "22",],
+                    "Numeracion": [null, "21", { num: "22", señales: ["ED"], nombre: "DI11" }],
                 },
                 {   // Canal 12
                     "Cinta": [null, "#T", "(12)",],
                     "Simbolos": [null, "#-", "#U",],
-                    "Numeracion": [null, "23", "24",],
+                    "Numeracion": [null, "23", { num: "24", señales: ["ED"], nombre: "DI12" }],
                 },
                 {   // Canal 13
                     "Cinta": [null, "#T", "(13)",],
                     "Simbolos": [null, "#-", "#U",],
-                    "Numeracion": [null, "25", "26",],
+                    "Numeracion": [null, "25", { num: "26", señales: ["ED"], nombre: "DI13" }],
                 },
                 {   // Canal 14
                     "Cinta": [null, "#T", "(14)",],
                     "Simbolos": [null, "#-", "#U",],
-                    "Numeracion": [null, "27", "28",],
+                    "Numeracion": [null, "27", { num: "28", señales: ["ED"], nombre: "DI14" }],
                 },
                 {   // Canal 15
                     "Cinta": [null, "#T", "(15)",],
                     "Simbolos": [null, "#-", "#U",],
-                    "Numeracion": [null, "29", "30",],
+                    "Numeracion": [null, "29", { num: "30", señales: ["ED"], nombre: "DI15" }],
                 },
                 {   // Canal 16
                     "Cinta": [null, "#T", "(16)",],
                     "Simbolos": [null, "#-", "#U",],
-                    "Numeracion": [null, "31", "32",],
+                    "Numeracion": [null, "31", { num: "32", señales: ["ED"], nombre: "DI16" }],
                 },
             ],
         ],
@@ -548,38 +580,38 @@ const controladores = {
         },
     },
     "TXM1.6R": {
-        "Nombre":"TXM1.6R",
+        "Nombre": "TXM1.6R",
         "Paginas": [
             [
                 {   // Canal 1
                     "Cinta": "(1)",
                     "Simbolos": "#Qc",
-                    "Numeracion": ["4", "3", { num: "2", señales: ["SD"], nombre:"Canal 1"},],
+                    "Numeracion": ["4", "3", { num: "2", señales: ["SD"], nombre: "DO1" },],
                 },
                 {   // Canal 2
                     "Cinta": "(2)",
                     "Simbolos": "#Qc",
-                    "Numeracion": ["10", "9",  { num: "8", señales: ["SD"], nombre:"Canal 2"},],
+                    "Numeracion": ["10", "9", { num: "8", señales: ["SD"], nombre: "DO2" },],
                 },
                 {   // Canal 3
                     "Cinta": "(3)",
                     "Simbolos": "#Qc",
-                    "Numeracion": ["16", "15", "14",],
+                    "Numeracion": ["16", "15", { num: "14", señales: ["SD"], nombre: "DO3" },],
                 },
                 {   // Canal 4
                     "Cinta": "(4)",
                     "Simbolos": "#Qc",
-                    "Numeracion": ["19", "20", "21",],
+                    "Numeracion": ["19", "20", { num: "21", señales: ["SD"], nombre: "DO4" },],
                 },
                 {   // Canal 5
                     "Cinta": "(5)",
                     "Simbolos": "#Qc",
-                    "Numeracion": ["25", "26", "27",],
+                    "Numeracion": ["25", "26", { num: "27", señales: ["SD"], nombre: "DO5" },],
                 },
                 {   // Canal 6
                     "Cinta": "(6)",
                     "Simbolos": "#Qc",
-                    "Numeracion": ["31", "32", "33",],
+                    "Numeracion": ["31", "32", { num: "33", señales: ["SD"], nombre: "DO6" },],
                 },
             ],
         ],
@@ -592,43 +624,43 @@ const controladores = {
         },
     },
     "TXM1.4D3R": {
-        "Nombre":"TXM1.4D3R",
+        "Nombre": "TXM1.4D3R",
         "Paginas": [
             [
                 {   // Canal 1
                     "Cinta": "(1)",
                     "Simbolos": "#Qc",
-                    "Numeracion": ["4", "3", "2",],
+                    "Numeracion": ["4", "3", { num: "2", señales: ["ED"], nombre: "DO1" },],
                 },
                 {   // Canal 2
                     "Cinta": "(2)",
                     "Simbolos": "#Qc",
-                    "Numeracion": ["10", "9", "8",],
+                    "Numeracion": ["10", "9", { num: "8", señales: ["ED"], nombre: "DO2" },],
                 },
                 {   // Canal 3
                     "Cinta": "(3)",
                     "Simbolos": "#Qc",
-                    "Numeracion": ["16", "15", "14",],
+                    "Numeracion": ["16", "15", { num: "14", señales: ["ED"], nombre: "DO3" },],
                 },
                 {   // Canal 5
                     "Cinta": [null, "#T", "(5)",],
                     "Simbolos": [null, "#-", "#U",],
-                    "Numeracion": [null, "26", "27",],
+                    "Numeracion": [null, "26", { num: "27", señales: ["ED"], nombre: "DI5" },],
                 },
                 {   // Canal 6
                     "Cinta": [null, "#T", "(6)",],
                     "Simbolos": [null, "#-", "#U",],
-                    "Numeracion": [null, "28", "29",],
+                    "Numeracion": [null, "28", { num: "29", señales: ["SD"], nombre: "DI6" },],
                 },
                 {   // Canal 7
                     "Cinta": [null, "#T", "(7)",],
                     "Simbolos": [null, "#-", "#U",],
-                    "Numeracion": [null, "30", "31",],
+                    "Numeracion": [null, "30", { num: "31", señales: ["SD"], nombre: "DI7" },],
                 },
                 {   // Canal 8
                     "Cinta": [null, "#T", "(8)",],
                     "Simbolos": [null, "#-", "#U",],
-                    "Numeracion": [null, "32", "33",],
+                    "Numeracion": [null, "32", { num: "33", señales: ["SD"], nombre: "DI8" },],
                 },
             ],
         ],

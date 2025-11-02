@@ -72,38 +72,42 @@
                 </div>
             </div>
 
-            <div class="w3-row-padding w3-margin-top">
+            <div class="w3-row-padding">
                 <div class="w3-col s12">
-                    <button id="btnImportSeniales" class="w3-button w3-orange w3-round w3-small">
-                        <i class="fa fa-upload"></i> Importar señales
+                    <button id="btnImportarListado" class="w3-button w3-orange w3-round w3-small botonAniadir">
+                        <i class="fa fa-upload"></i> Importar Señales
                     </button>
-                    <input type="file" id="fileSeniales" accept=".json" style="display:none">
-                </div>
-            </div>
-
-            <div class="w3-row-padding w3-margin-top">
-
-                <div class="w3-col s12">
-
-                    <!-- Contenedor carriles -->
-                    <div id="CarrilesContenedor" class="w3-margin-bottom"></div>
-
-                    <!-- Botón para añadir carril -->
-                    <button id="btnAddCarril" class="w3-button w3-green w3-round w3-small w3-hover-dark-green">
-                        <i class="fa fa-plus"></i>
-                    </button>
+                    <input type="file" id="inputImportarListado" accept=".json" style="display:none">
                 </div>
             </div>
 
             <div class="w3-row-padding">
                 <div class="w3-col s12">
-                    <div id="CarrilesSenialesCont" class="w3-margin-bottom w3-padding"></div>
+                    <button id="btnAddCarril" class="w3-button w3-green w3-round w3-small botonAniadir">
+                        <i class="fa fa-plus"></i> Añadir Carril
+                    </button>
+                </div>
+            </div>
+
+            <div class="w3-row-padding">
+
+                <div class="w3-col s12">
+
+                    <!-- Contenedor carriles -->
+                    <div id="CarrilesContenedor"></div>
+
+                </div>
+            </div>
+
+            <div class="w3-row-padding">
+                <div class="w3-col s12">
+                    <div id="CarrilesSenialesCont"></div>
                 </div>
             </div>
 
             <div class="w3-center w3-padding-16">
                 <button class="w3-button w3-theme w3-hover-blue w3-xlarge w3-round-large" onclick="descargarDXF()">
-                    <i class="fa fa-download w3-margin-right"></i>Generar DXF
+                    <i class="fa fa-download"></i>Generar DXF
                 </button>
             </div>
         </div>
