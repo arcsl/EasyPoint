@@ -9,15 +9,25 @@ document.querySelectorAll("[id]").forEach(el => UI[el.id] = el);
 
 let estado = {
     form: {},
-    carriles: [], // [{ id, dispositivos:[ {id, modelo, seniales:{borne:tipo}} ] }]
+    carriles: [],
     listado: []
 };
 
-let listadoSeniales = {
-    EA: [],
-    ED: [],
-    SA: [],
-    SD: []
+UI.btnResetEstado.onclick = () => {
+    if (!confirm("❗Esto borrará todo el proyecto guardado.\n\n¿Seguro que quieres continuar?"))
+        return;
+
+    localStorage.removeItem("estadoDXF");
+
+    // Reiniciar objeto de estado
+    estado = {
+        form: {},
+        carriles: [],
+        listado: []
+    };
+
+    guardarEstado();
+    location.reload();
 };
 
 UI.btnImportarListado.onclick = () => {
@@ -35,34 +45,32 @@ UI.inputImportarListado.onchange = async function (evt) {
         const json = JSON.parse(text);
 
         if (!json.Listado) {
-            alert("❌ Archivo Invalido");
+            alert("❌ Archivo inválido (falta propiedad Listado)");
             return;
         }
 
-        listadoSeniales = { ...json.Listado };
-        estado.listado = { ...json.Listado };
+        estado.listado = structuredClone(json.Listado);
         guardarEstado();
 
         alert("✅ Listado de señales importado correctamente");
 
-        // TODO después: refrescar selectores para usar este listado como opciones
+        // TODO: actualizar selectores si ya hay carriles dibujados
 
     } catch (e) {
         console.error(e);
         alert("❌ Error leyendo archivo JSON");
     }
-
 };
-
-
-
-// ================== SALVAR/CARGAR PROYECTO EN/DE LOCAL STORAGE ==================
 
 window.onload = () => {
 
     // si hay info almacenada cargarla
-    if (cargarEstado()) escribirCarriles();
-    else guardarEstado();
+    if (cargarEstado()) {
+        escribirFormulario();
+        escribirCarriles();
+    } else {
+        guardarEstado();
+    }
 
     // salvar en caso de cambio de cualquier input o select
     document.querySelectorAll("input,select").forEach(el => {
@@ -71,29 +79,34 @@ window.onload = () => {
 
 };
 
+// ================== SALVAR/CARGAR PROYECTO EN/DE LOCAL STORAGE ==================
+
 function guardarEstado() {
     localStorage.setItem("estadoDXF", JSON.stringify(estado));
 }
 
 function cargarEstado() {
-
     const data = localStorage.getItem("estadoDXF");
-
     if (!data) return false;
 
     try {
         estado = JSON.parse(data);
+
+        // asegurar estructura completa
+        if (!estado.form) estado.form = {};
+        if (!estado.carriles) estado.carriles = [];
+        if (!estado.listado) estado.listado = [];
+
         return true;
     } catch {
         console.warn("Error leyendo estado, limpiando Storage");
         localStorage.removeItem("estadoDXF");
         return false;
     }
-
 }
 
 function guardarFormulario() {
-    estado.form = {
+    const form = {
         Inst: UI.Inst.value,
         Dibu: UI.Dibu.value,
         Fech: UI.Fech.value,
@@ -104,7 +117,12 @@ function guardarFormulario() {
         Stye: UI.Stye.value,
         Stdo: UI.Stdo.value
     };
-    guardarEstado();
+
+    // evitar escribir en LS si no cambia nada
+    if (JSON.stringify(estado.form) !== JSON.stringify(form)) {
+        estado.form = form;
+        guardarEstado();
+    }
 }
 
 function escribirFormulario() {
@@ -113,84 +131,57 @@ function escribirFormulario() {
     }
 }
 
-function guardarCarriles() {
-    const carriles = [];
+// ================== CARRILES ==================
 
-    const carrilRows = UI.CarrilesContenedor.querySelectorAll(".carril-row");
-    carrilRows.forEach(row => {
+UI.btnAddCarril.onclick = () => {
 
-        const carril = []; // <-- el carril debe declararse aquí
+    // 1) Añadir un carril vacío al estado
+    estado.carriles.push([]); // carril sin dispositivos
 
-        const devicesContainer = row.querySelectorAll(".carril-col .devices-container");
-        devicesContainer?.forEach(devBlock => {
-
-            const selTipo = devBlock.querySelector(".device-head select");
-            const tipo = selTipo?.value || null;
-            const deviceObj = { tipo };
-
-            const deviceChannels = devBlock.querySelectorAll(".channels .channel-row");
-            deviceChannels.forEach(channel => {
-
-                const nombre = channel.querySelector("label")?.textContent?.trim();
-                const opt = channel.querySelector("select");
-
-                let uuid = null;
-
-                if (opt?.value) {
-                    try {
-                        const data = JSON.parse(opt.value);
-                        uuid = data?.ID ?? null;
-                    } catch {
-                        uuid = null;
-                    }
-                }
-
-                deviceObj[nombre] = uuid;
-            });
-
-            // Solo guardarlo si tiene al menos 1 canal o un tipo seleccionado
-            if (Object.keys(deviceObj).length > 1 || tipo) {
-                carril.push(deviceObj);
-            }
-        });
-
-        // Agregar el carril si tiene contenido
-        if (carril.length > 0) {
-            carriles.push(carril);
-        }
-    });
-
-    estado.carriles = structuredClone(carriles);
+    // 2) Guardamos
     guardarEstado();
-}
 
+    // 3) Re-pintamos todo
+    escribirCarriles();
+
+    // 4) Botones y selects
+    //actualizarSelectsSeniales();
+};
 
 function escribirCarriles() {
 
     UI.CarrilesContenedor.innerHTML = "";
 
-    console.log("estado.carriles", estado.carriles);
-
-    estado.carriles.forEach(carril => {
-        UI.btnAddCarril.dispatchEvent(new Event('click', { bubbles: true }));
+    estado.carriles.forEach((carril, idx) => {
+        pintarCarril(idx, estado.carriles.length, carril);
     });
 
-
-    // actualizarBotonesCarril();
+    actualizarSelectsSeniales();
 
 }
 
-// ================== CARRILES ==================
+function moverCarrilEstado(index, dir) {
 
-UI.btnAddCarril.onclick = function () {
+    const j = index + dir;
+    if (j < 0 || j >= estado.carriles.length) return;
 
-    const carrilesCont = UI.CarrilesContenedor;
+    // swap
+    const tmp = estado.carriles[index];
+    estado.carriles[index] = estado.carriles[j];
+    estado.carriles[j] = tmp;
 
-    // Carril wrapper
+    guardarEstado();
+    escribirCarriles();
+    // actualizarSelectsSeniales();
+}
+
+function pintarCarril(index, totalCarriles, carrilData) {
+
     const carril = document.createElement("div");
     carril.className = "carril-row w3-margin-bottom";
+    carril.dataset.index = index;
 
-    // Col izquierda: botones + label
+    // left buttons
     const colLeft = document.createElement("div");
     colLeft.style.display = "flex";
     colLeft.style.flexDirection = "column";
@@ -200,40 +191,283 @@ UI.btnAddCarril.onclick = function () {
     rowTop.className = "carril-header";
 
     const btnDel = boton("w3-red", "trash", "Eliminar carril", () => {
-        carril.remove();
+        estado.carriles.splice(index, 1);
+        guardarEstado();
+        escribirCarriles();
         actualizarSelectsSeniales();
-        actualizarBotonesCarril();
     });
 
-    const btnUp = boton("w3-blue", "arrow-up", "Subir carril", () => moverCarril(carril, -1));
-    btnUp.classList.add("carril-move-up", "botonCuadrado");
+    const btnUp = boton("w3-blue", "arrow-up", "Subir", () => moverCarrilEstado(index, -1));
+    btnUp.classList.add("carril-move-up");
+    if (index === 0) btnUp.disabled = true;
 
-    const btnDown = boton("w3-blue", "arrow-down", "Bajar carril", () => moverCarril(carril, +1));
-    btnDown.classList.add("carril-move-down", "botonCuadrado");
+    const btnDown = boton("w3-blue", "arrow-down", "Bajar", () => moverCarrilEstado(index, +1));
+    btnDown.classList.add("carril-move-down");
+    if (index + 1 === totalCarriles) btnDown.disabled = true;
 
     rowTop.append(btnDel, btnUp, btnDown);
     colLeft.appendChild(rowTop);
 
-    // Col derecha: contenido del carril
+    // right content
     const colRight = document.createElement("div");
     colRight.classList.add("carril-col");
 
-    // Botón añadir dispositivo
     const btnAddDev = document.createElement("button");
-    btnAddDev.classList.add("w3-button", "w3-green", "w3-round", "w3-small", "botonAniadir");
+    btnAddDev.classList.add("w3-button", "w3-green", "w3-round", "w3-small");
     btnAddDev.innerHTML = `<i class="fa fa-plus"></i> Añadir Dispositivo`;
-    btnAddDev.onclick = () => crearBloqueDispositivo(devicesContainer);
+    btnAddDev.onclick = () => {
+        carrilData.push({ tipo: null, _visible: false }); // nuevo dispositivo sin tipo
+        guardarEstado();
+        escribirCarriles();
+    };
 
-    // Contenedor de dispositivos (bloques)
     const devicesContainer = document.createElement("div");
     devicesContainer.classList.add("devices-container");
 
     colRight.append(btnAddDev, devicesContainer);
-    carril.append(colLeft, colRight);
 
-    carrilesCont.appendChild(carril);
-    actualizarBotonesCarril();
-};
+    // pintar dispositivos del carril
+    carrilData.forEach((deviceObj, devIndex) => {
+        pintarDispositivo(devicesContainer, index, devIndex, deviceObj);
+    });
+
+    carril.append(colLeft, colRight);
+    UI.CarrilesContenedor.appendChild(carril);
+}
+
+
+
+// ================== DISPOSITIVOS ==================
+
+function añadirDispositivoEstado(carrilIndex) {
+    estado.carriles[carrilIndex].push({ tipo: null, _visible: false });
+    console.log(estado.carriles);
+    guardarEstado();
+    escribirCarriles();
+}
+
+
+function eliminarDispositivoEstado(carrilIndex, dispIndex) {
+    estado.carriles[carrilIndex].splice(dispIndex, 1);
+    guardarEstado();
+    escribirCarriles();
+}
+
+function moverDispositivoEstado(carrilIndex, dispIndex, dir) {
+    const arr = estado.carriles[carrilIndex];
+    const j = dispIndex + dir;
+    if (j < 0 || j >= arr.length) return;
+    [arr[dispIndex], arr[j]] = [arr[j], arr[dispIndex]];
+    guardarEstado();
+    escribirCarriles();
+}
+
+function pintarDispositivo(devicesContainer, carrilIndex, dispIndex, dispData) {
+
+    const block = document.createElement("div");
+    block.classList.add("device-block");
+
+    // Cabecera
+    const head = document.createElement("div");
+    head.classList.add("device-head");
+
+    // Selector de modelo
+    const sel = document.createElement("select");
+    sel.classList.add("w3-select", "w3-border", "w3-round", "w3-small", "w3-padding", "botonAniadir");
+    sel.appendChild(new Option("", ""));
+
+    Object.keys(controladores).forEach(k => sel.appendChild(new Option(k, k)));
+    if (dispData?.tipo) sel.value = dispData.tipo;
+
+    // Botones dispositivo
+    const btnDel = boton("w3-red", "trash", "Eliminar dispositivo", () =>
+        eliminarDispositivoEstado(carrilIndex, dispIndex)
+    );
+
+    const btnUp = boton("w3-blue", "arrow-up", "Subir dispositivo", () =>
+        moverDispositivoEstado(carrilIndex, dispIndex, -1)
+    );
+    btnUp.classList.add("dev-move-up");
+    if (dispIndex === 0) btnUp.disabled = true;
+
+    const btnDown = boton("w3-blue", "arrow-down", "Bajar dispositivo", () =>
+        moverDispositivoEstado(carrilIndex, dispIndex, +1)
+    );
+    btnDown.classList.add("dev-move-down");
+    if (dispIndex === estado.carriles[carrilIndex].length - 1) btnDown.disabled = true;
+
+    // Botón mostrar/ocultar canales
+    const btnToggle = boton("w3-gray", "eye-slash", "Mostrar/Ocultar canales", () => {
+        const oculto = channels.classList.toggle("w3-hide");
+        estado.carriles[carrilIndex][dispIndex]._visible = !oculto;
+        guardarEstado();
+        btnToggle.innerHTML = oculto
+            ? `<i class="fa fa-eye"></i>`
+            : `<i class="fa fa-eye-slash"></i>`;
+
+    });
+    btnToggle.classList.add("botonCuadrado");
+
+
+    head.append(btnDel, btnUp, btnDown, sel, btnToggle);
+    block.appendChild(head);
+
+    // Canales
+    const channels = document.createElement("div");
+    channels.classList.add("channels");
+
+    // Aplicar visibilidad guardada
+    if (dispData?._visible === false) {
+        channels.classList.add("w3-hide");
+        btnToggle.innerHTML = `<i class="fa fa-eye"></i>`;
+    } else {
+        channels.classList.remove("w3-hide");
+        btnToggle.innerHTML = `<i class="fa fa-eye-slash"></i>`;
+    }
+
+    block.appendChild(channels);
+
+    if (dispData?.tipo) {
+        pintarCanalesDesdeEstado(channels, carrilIndex, dispIndex, dispData);
+    }
+
+    // Cambio de modelo → actualiza estado y repinta
+    sel.onchange = () => {
+        const prev = estado.carriles[carrilIndex][dispIndex]?._visible ?? false;
+        estado.carriles[carrilIndex][dispIndex] = { tipo: sel.value, _visible: prev };
+        guardarEstado();
+        escribirCarriles();
+        actualizarSelectsSeniales?.();
+    };
+
+
+    devicesContainer.appendChild(block);
+}
+
+function pintarCanalesDesdeEstado(channelsContainer, carrilIndex, dispIndex, deviceObj) {
+    const disp = controladores[deviceObj.tipo];
+    if (!disp?.Paginas) return;
+
+    disp.Paginas.forEach(pagina => {
+        pagina.forEach(conector => {
+            (conector.Numeracion || []).forEach(n => {
+                if (!(typeof n === "object" && n?.señales?.length)) return;
+
+                const nombreBorne = n.nombre || n.num;
+
+                const row = document.createElement("div");
+                row.className = "channel-row";
+
+                const label = document.createElement("label");
+                label.textContent = nombreBorne;
+
+                const sel = document.createElement("select");
+                sel.classList.add("w3-select", "w3-border", "w3-round", "w3-small", "borne-select");
+                sel.style.width = "220px";
+
+                // Guardar los tipos permitidos para este borne
+                sel.dataset.seniales = JSON.stringify(n.señales);
+
+                // insertar opcion vacía
+                sel.appendChild(new Option("", ""));
+
+                // poblar opciones desde estado.listado según señales permitidas
+                for (const tipo of n.señales) {
+                    (estado.listado[tipo] || []).forEach(sig => {
+                        const opt = new Option(sig.Linea1, JSON.stringify(sig));
+                        if (deviceObj[nombreBorne] === sig.ID) opt.selected = true;
+                        sel.appendChild(opt);
+                    });
+                }
+
+                // manejador de cambio
+                sel.addEventListener("change", () => {
+                    let uuid = null;
+
+                    if (sel.value) {
+                        try {
+                            uuid = JSON.parse(sel.value).ID;
+                        } catch { }
+                    }
+
+                    // ✅ guardamos en estado
+                    estado.carriles[carrilIndex][dispIndex][nombreBorne] = uuid;
+                    guardarEstado();
+
+                    // ✅ refrescamos selects para bloquear señal en otros
+                    actualizarSelectsSeniales();
+                });
+
+                row.append(label, sel);
+                channelsContainer.appendChild(row);
+            });
+        });
+    });
+}
+
+
+
+// ================== SEÑALES ==================
+
+function actualizarSelectsSeniales() {
+
+    // 1) Copia del listado original
+    const pool = structuredClone(estado.listado);
+
+    // 2) Quitar señales usadas según estado (no DOM)
+    estado.carriles.forEach(carril => {
+        carril.forEach(disp => {
+            if (!disp || !disp.tipo) return;
+
+            Object.keys(disp).forEach(k => {
+                if (k === "tipo") return;
+
+                const uuid = disp[k];
+                if (!uuid) return;
+
+                const tipo = encontrarTipoSenial(uuid);
+                if (!tipo) return;
+
+                pool[tipo] = pool[tipo].filter(s => s.ID !== uuid);
+            });
+        });
+    });
+
+    // 3) Reconstruir selects DOM
+    document.querySelectorAll("select.borne-select").forEach(sel => {
+        const permitidas = JSON.parse(sel.dataset.seniales || "[]");
+
+        // Guardar selección para reinsertarla
+        let sigActual = null;
+        if (sel.value) {
+            try { sigActual = JSON.parse(sel.value); } catch { }
+        }
+
+        sel.innerHTML = "";
+        sel.appendChild(new Option("", ""));
+
+        permitidas.forEach(tipo => {
+            (pool[tipo] || []).forEach(sig => {
+                sel.appendChild(new Option(sig.Linea1, JSON.stringify(sig)));
+            });
+        });
+
+        if (sigActual) {
+            const opt = new Option(sigActual.Linea1, JSON.stringify(sigActual));
+            opt.selected = true;
+            sel.appendChild(opt);
+        }
+    });
+}
+
+function encontrarTipoSenial(id) {
+    for (const tipo in estado.listado) {
+        if (estado.listado[tipo].some(s => s.ID === id)) return tipo;
+    }
+    return null;
+}
+
+// ================== AUXILIARES ==================
 
 function boton(color, icon, title, onClick) {
     const b = document.createElement("button");
@@ -242,206 +476,6 @@ function boton(color, icon, title, onClick) {
     b.innerHTML = `<i class="fa fa-${icon}"></i>`;
     b.onclick = onClick;
     return b;
-}
-
-function moverCarril(carril, dir) {
-    const cont = UI.CarrilesContenedor;
-    const carriles = [...cont.querySelectorAll(".carril-row")];
-    const i = carriles.indexOf(carril);
-    const j = i + dir;
-    if (j < 0 || j >= carriles.length) return;
-    if (dir > 0) cont.insertBefore(carril, carriles[j].nextSibling);
-    else cont.insertBefore(carril, carriles[j]);
-    actualizarBotonesCarril();
-}
-
-function actualizarBotonesCarril() {
-    const carriles = [...UI.CarrilesContenedor.querySelectorAll(".carril-row")];
-    carriles.forEach((c, i) => {
-        const up = c.querySelector(".carril-move-up");
-        const dn = c.querySelector(".carril-move-down");
-        if (up) up.disabled = (i === 0);
-        if (dn) dn.disabled = (i === carriles.length - 1);
-        actualizarBotonesDispositivos(c); // deshabilita ↑/↓ en bloques internos
-    });
-    guardarCarriles();
-}
-
-// ================== DISPOSITIVOS ==================
-
-function crearBloqueDispositivo(devicesContainer) {
-    const block = document.createElement("div");
-    block.classList.add("device-block");
-
-    // Cabecera del bloque
-    const head = document.createElement("div");
-    head.classList.add("device-head");
-
-    // Select de equipo
-    const sel = document.createElement("select");
-    sel.classList.add("w3-select", "w3-border", "w3-round", "w3-small", "w3-padding", "botonAniadir");
-    sel.appendChild(new Option("", ""));
-    Object.keys(controladores).forEach(k => sel.appendChild(new Option(k, k)));
-
-    // Botones del bloque
-    const btnDel = boton("w3-red", "trash", "Eliminar dispositivo", () => {
-        block.remove();
-        actualizarBotonesDispositivos(devicesContainer.closest(".carril-row"));
-        actualizarSelectsSeniales();
-    });
-    const btnUp = boton("w3-blue", "arrow-up", "Subir dispositivo", () => moverDispositivo(block, -1));
-    btnUp.classList.add("dev-move-up");
-    const btnDown = boton("w3-blue", "arrow-down", "Bajar dispositivo", () => moverDispositivo(block, +1));
-    btnDown.classList.add("dev-move-down");
-
-    head.append(btnDel, btnUp, btnDown, sel);
-    block.appendChild(head);
-
-    // Contenedor de canales (aparece al seleccionar)
-    const channels = document.createElement("div");
-    channels.classList.add("channels");
-    block.appendChild(channels);
-
-    // onChange: rellenar canales del equipo
-    sel.onchange = () => {
-        channels.innerHTML = "";
-        const key = sel.value;
-        if (!key) return;
-        pintarCanales(channels, key);
-    };
-
-    devicesContainer.appendChild(block);
-    actualizarBotonesDispositivos(devicesContainer.closest(".carril-row"));
-}
-
-function moverDispositivo(block, dir) {
-    const cont = block.parentElement; // devicesContainer
-    const blocks = [...cont.querySelectorAll(".device-block")];
-    const i = blocks.indexOf(block);
-    const j = i + dir;
-    if (j < 0 || j >= blocks.length) return;
-    if (dir > 0) cont.insertBefore(block, blocks[j].nextSibling);
-    else cont.insertBefore(block, blocks[j]);
-    actualizarBotonesDispositivos(cont.closest(".carril-row"));
-}
-
-function actualizarBotonesDispositivos(carrilRow) {
-    const blocks = [...carrilRow.querySelectorAll(".device-block")];
-    blocks.forEach((b, i) => {
-        const up = b.querySelector(".dev-move-up");
-        const dn = b.querySelector(".dev-move-down");
-        if (up) up.disabled = (i === 0);
-        if (dn) dn.disabled = (i === blocks.length - 1);
-    });
-    guardarCarriles();
-}
-
-function pintarCanales(channelsContainer, deviceKey) {
-
-    const disp = controladores[deviceKey];
-    if (!disp?.Paginas) return;
-
-    const bornes = [];
-    disp.Paginas.forEach(pagina => {
-        pagina.forEach(conector => {
-            (conector.Numeracion || []).forEach(n => {
-                if (typeof n === "object" && n?.señales?.length) bornes.push(n);
-            });
-        });
-    });
-
-    bornes.forEach(borne => {
-        const row = document.createElement("div");
-        row.classList.add("channel-row");
-
-        const name = document.createElement("label");
-        name.classList.add("w3-small", "labelDispositivo");
-        name.textContent = borne.nombre || borne.num;
-
-        const sel = document.createElement("select");
-        sel.classList.add("w3-select", "w3-border", "w3-round", "w3-small", "botonAniadir");
-        sel.appendChild(new Option("", ""));
-
-        // Guardamos los tipos de señal admitidos
-        sel.dataset.seniales = JSON.stringify(borne.señales);
-        sel.classList.add("borne-select", "w3-padding");
-        sel.onchange = () => actualizarSelectsSeniales(sel);
-
-        row.append(name, sel);
-        channelsContainer.appendChild(row);
-    });
-
-    actualizarSelectsSeniales();
-
-}
-
-
-// ================== SEÑALES ==================
-
-function actualizarSelectsSeniales(disparador = null) {
-
-    // TODO : almacenar solo el ID de la señal
-
-    // Copia profunda del listado original (evitamos mutar el estado real)
-    const pool = structuredClone(estado.listado);
-
-    // Recorrer selects y quitar del pool las señales ya usadas
-    const selects = [...document.querySelectorAll("select.borne-select")];
-
-    selects.forEach(sel => {
-        const val = sel.value;
-        if (!val) return;
-
-        const sig = JSON.parse(val);
-        if (!sig?.ID) return;
-
-        const tipo = encontrarTipoSenial(sig.ID);
-        if (!tipo) return;
-
-        // ❌ eliminar del pool la señal seleccionada
-        pool[tipo] = pool[tipo].filter(s => s.ID !== sig.ID);
-    });
-
-    // Reconstruir opciones de cada select en base al pool y a sus señales permitidas
-    selects.forEach(sel => {
-        const permitidas = JSON.parse(sel.dataset.seniales || "[]"); // ej ["EA","ED"]
-
-        const valorActual = sel.value;
-        let sigActual = null;
-        if (valorActual) {
-            try { sigActual = JSON.parse(valorActual); } catch { }
-        }
-
-        // borrar opciones actuales
-        sel.innerHTML = "";
-        sel.appendChild(new Option("", "")); // opción vacía
-
-        // por cada tipo permitido, añadir sus señales disponibles
-        permitidas.forEach(tipo => {
-            (pool[tipo] || []).forEach(sig => {
-                sel.appendChild(
-                    new Option(sig.Linea1, JSON.stringify(sig))
-                );
-            });
-        });
-
-        // 👍 si el select ya tenía una señal elegida, volver a ponerla (aunque ya no esté en pool)
-        if (sigActual) {
-            const opt = new Option(sigActual.Linea1, valorActual);
-            opt.selected = true;
-            sel.appendChild(opt);
-        }
-    });
-
-    guardarCarriles();
-
-}
-
-function encontrarTipoSenial(id) {
-    for (const tipo in estado.listado) {
-        if (estado.listado[tipo].some(s => s.ID === id)) return tipo;
-    }
-    return null;
 }
 
 
