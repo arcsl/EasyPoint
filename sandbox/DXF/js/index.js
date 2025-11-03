@@ -4,6 +4,8 @@ const HOJA_UTIL = 380;
 const MARGEN_X = (HOJA_TOTAL - HOJA_UTIL) / 2;
 const SEP_CONTROLADOR = 20;
 
+let nModulo = 0;
+
 const UI = {};
 document.querySelectorAll("[id]").forEach(el => UI[el.id] = el);
 
@@ -241,7 +243,6 @@ function pintarCarril(index, totalCarriles, carrilData) {
 
 function añadirDispositivoEstado(carrilIndex) {
     estado.carriles[carrilIndex].push({ tipo: null, _visible: false });
-    console.log(estado.carriles);
     guardarEstado();
     escribirCarriles();
 }
@@ -495,6 +496,8 @@ function boton(color, icon, title, onClick) {
 })();
 
 function descargarDXF() {
+    
+    nModulo = 0;
     const entities = [];
 
     // 1) Construir layout de hojas desde el ESTADO (no desde el DOM)
@@ -509,6 +512,7 @@ function descargarDXF() {
 
     // 4) Dibujo
     for (let idx = 0; idx < numHojas; idx++) {
+        
         const hoja = layout[idx];
 
         const CajetinX = (idx % columnas) * 420;
@@ -677,6 +681,7 @@ function calcularMatrizCajetines(numHojas) {
 }
 
 function dibujarPaginaDeDispositivo(hojaX, hojaY, dispositivo, pageIndex, startX, carrilIndex, dispIndex) {
+
     const entidades = [];
 
     const paso = 4;
@@ -696,8 +701,9 @@ function dibujarPaginaDeDispositivo(hojaX, hojaY, dispositivo, pageIndex, startX
     // Marca de módulo PX (si aplica)
     const { Familia, Tipo } = dispositivo.Disposicion || {};
     if (Familia === "PX" && Tipo === "modulo") {
+        nModulo++;
         entidades.push(
-            textoDXF(inX + largura - 5, inY + 21, "#", 3, 'MC', 0, "Negrita"),
+            textoDXF(inX + largura - 5, inY + 21, `${nModulo}`, 3, 'MC', 0, "Negrita"),
             lineaDXF(inX + largura - 10, inY + 18, inX + largura - 10, inY + 24),
         );
     }
@@ -740,7 +746,7 @@ function dibujarPaginaDeDispositivo(hojaX, hojaY, dispositivo, pageIndex, startX
                         const funcionNombre = `${tipo}_${numero}_${opcionTexto}`; // Debes tenerla definida en window
                         const fn = window[funcionNombre];
 
-                        console.log ({fn});
+                        // console.log ({fn});
 
                         if (typeof fn === "function") {
                             const L1Mayus = sig.Linea1.toUpperCase();

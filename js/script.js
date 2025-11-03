@@ -763,7 +763,7 @@ function writeSignals() {
                 });
                 selectDibujoSenial.addEventListener('change', (event) => {
                     const val = selectDibujoSenial.value;
-                    inputIndex.style.visibility = (val === "RELÉ" || val === "CONTACTOR" || val === "TÉRMICO") ? "visible" : "hidden";
+                    inputIndex.style.visibility = (val === "RELE" || val === "CONTACTOR" || val === "TERMICO") ? "visible" : "hidden";
                     listaSenial.Opcion = event.target.selectedIndex;
                     proyectoNoGuardado();
                 });
@@ -776,7 +776,7 @@ function writeSignals() {
 
             const inputIndex = inputNombre("");
             celdaTextos.appendChild(inputIndex);
-            inputIndex.style.visibility = (val === "RELÉ" || val === "CONTACTOR" || val === "TÉRMICO") ? "visible" : "hidden";
+            inputIndex.style.visibility = (val === "RELE" || val === "CONTACTOR" || val === "TERMICO") ? "visible" : "hidden";
             inputIndex.placeholder = "##";
             inputIndex.addEventListener('change', (event) => {
                 // el tag number es el numero de contactor o de rele

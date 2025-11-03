@@ -348,7 +348,7 @@ const controladores = {
             "Alto": 78,
             "Hojas": 0.2,
             "Familia": "PX",
-            "Tipo": "controlador",
+            "Tipo": "alimentacion",
         },
     },
     "TXS1.EF10": {
@@ -374,7 +374,7 @@ const controladores = {
             "Alto": 78,
             "Hojas": 0.2,
             "Familia": "PX",
-            "Tipo": "modulo",
+            "Tipo": "alimentacion",
         },
     },
     "TXM1.8U": {
