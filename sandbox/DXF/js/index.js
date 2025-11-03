@@ -572,137 +572,215 @@ function descargarDXF() {
 }
 
 function dibujarPlanoGeneralDispositivos(CajetinX, CajetinY, estado, dispositivos) {
-    const entidades = [];
+	const entidades = [];
 
-    // === Config fuentes ===
-    const FONT_NAME = 5;
-    const FONT_DIM = 2.5;
+	// === Flags cota ===
+	const FLECHAS = true;  // flechas en extremos de cotas
+	const LINEAS  = true;  // lineas cortas en extremos de cotas
 
-    // === Área util en la HOJA 0 ===
-    const Y_MIN = CajetinY + 40;
-    const Y_MAX = CajetinY + 300;
-    const usableHeight = Y_MAX - Y_MIN;
+	// === Config fuentes ===
+	const FONT_NAME = 5;
+	const FONT_DIM = 2.5;
+	const FONT_DIM_COTA = 3;
 
-    const HOJA_ANCHO = 420;
-    const MARGEN = 10;
+	// === Config separaciones / cotas ===
+	const SEP_CONTROLADOR = 20;
+	const SEP_VERTICAL = 30;
 
-    const areaX = CajetinX + MARGEN;
-    const areaY = Y_MAX - MARGEN;
-    const usableWidth = HOJA_ANCHO - MARGEN * 2;
+	const COTA_VERT_OFFSET_X = 10;
+	const COTA_VERT_TEXT_OFFSET_X = 5;
 
-    // === Separaciones ===
-    const SEP_CONTROLADOR = 20;
-    const SEP_VERTICAL = 20;
+	const COTA_HORZ_OFFSET_Y = 10;
+	const COTA_HORZ_TEXT_OFFSET_Y = 5;
 
-    // === Escala fija solicitada ===
-    const scale = 0.5;
+	// === Área util en la HOJA 0 ===
+	const Y_MIN = CajetinY + 40;
+	const Y_MAX = CajetinY + 300;
+	const usableHeight = Y_MAX - Y_MIN;
 
-    // === Carriles ===
-    const carriles = (estado.carriles || []).map(carril =>
-        carril.map(d => dispositivos[d.tipo]).filter(Boolean)
-    );
+	const HOJA_ANCHO = 420;
+	const MARGEN = 10;
 
-    const dims = carriles.map(carril => carril.map(d => ({
-        ancho: d.Disposicion?.Ancho || 40,
-        alto: d.Disposicion?.Alto || 60,
-        nombre: d.Nombre,
-        tipo: d.Disposicion?.Tipo || "modulo"
-    })));
+	const areaX = CajetinX + MARGEN;
+	const areaY = Y_MAX - MARGEN;
+	const usableWidth = HOJA_ANCHO - MARGEN * 2;
 
-    // === Altura máxima por carril ===
-    const carrilAlturas = dims.map(carril =>
-        Math.max(...carril.map(d => d.alto))
-    );
+	// === Escala fija ===
+	const scale = 0.5;
 
-    // === Ancho total de carril con separación controladores ===
-    const carrilAnchos = dims.map(carril =>
-        carril.reduce((acc, d, idx) => {
-            const sep = (idx > 0 && d.tipo === "controlador") ? SEP_CONTROLADOR : 0;
-            return acc + sep + d.ancho;
-        }, 0)
-    );
+	// === Carriles ===
+	const carriles = (estado.carriles || []).map(carril =>
+		carril.map(d => dispositivos[d.tipo]).filter(Boolean)
+	);
 
-    // === Tamaños totales ===
-    const totalAltura = carrilAlturas.reduce(
-        (acc, h, i) => acc + h + (i > 0 ? SEP_VERTICAL : 0),
-        0
-    );
+	const dims = carriles.map(carril => carril.map(d => ({
+		ancho: d.Disposicion?.Ancho || 40,
+		alto: d.Disposicion?.Alto || 60,
+		nombre: d.Nombre,
+		tipo: d.Disposicion?.Tipo || "modulo"
+	})));
 
-    const maxAncho = Math.max(...carrilAnchos);
+	const carrilAlturas = dims.map(carril =>
+		Math.max(...carril.map(d => d.alto))
+	);
 
-    // === Calcular centrado con escala fija ===
-    const offsetX = (usableWidth - maxAncho * scale) / 2;
-    const offsetY = (usableHeight - totalAltura * scale) / 2;
+	const carrilAnchos = dims.map(carril =>
+		carril.reduce((acc, d, idx) => {
+			const sep = (idx > 0 && d.tipo === "controlador") ? SEP_CONTROLADOR : 0;
+			return acc + sep + d.ancho;
+		}, 0)
+	);
 
-    let cursorY = (Y_MAX - MARGEN) - offsetY;
+	const totalAltura = carrilAlturas.reduce(
+		(acc, h, i) => acc + h + (i > 0 ? SEP_VERTICAL : 0),
+		0
+	);
 
-    // === Dibujo ===
-    dims.forEach((carril, carrilIndex) => {
-        const carrilAltoReal = carrilAlturas[carrilIndex];
-        let cursorX = areaX + offsetX;
+	const maxAncho = Math.max(...carrilAnchos);
 
-        carril.forEach((d, i) => {
+	const offsetX = (usableWidth - maxAncho * scale) / 2;
+	const offsetY = (usableHeight - totalAltura * scale) / 2;
 
-            if (i > 0 && d.tipo === "controlador") {
-                cursorX += SEP_CONTROLADOR * scale;
-            }
+	let cursorY = (Y_MAX - MARGEN) - offsetY;
 
-            const w = d.ancho * scale;
-            const h = d.alto * scale;
-            const tallest = carrilAltoReal * scale;
+	// === Tick helpers ===
+	function tickVert(x, y, len = 2) {
+		// vertical tick → para cotas horizontales
+		return lineaDXF(x, y - 2*len, x, y + len, 5);
+	}
+	function tickHoriz(x, y, len = 2) {
+		// horizontal tick → para cotas verticales
+		return lineaDXF(x - len, y, x + 2*len, y, 5);
+	}
 
-            // Centrado vertical en el carril
-            const y1 = cursorY - (tallest - h) / 2;
-            const x1 = cursorX;
-            const x2 = cursorX + w;
-            const y2 = y1 - h;
+	// === Flechas (reutilizando SOLID) ===
+	function flecha(x, y, dir) {
+		const arrowLen = 3;
+		const arrowWidth = arrowLen / 4;
 
-            // Rectángulo
-            entidades.push(
-                lineaDXF(x1, y1, x2, y1),
-                lineaDXF(x2, y1, x2, y2),
-                lineaDXF(x2, y2, x1, y2),
-                lineaDXF(x1, y2, x1, y1)
-            );
+		if (dir === "up")    return solidDXF([[x, y],[x - arrowWidth, y - arrowLen],[x + arrowWidth, y - arrowLen]]);
+		if (dir === "down")  return solidDXF([[x, y],[x - arrowWidth, y + arrowLen],[x + arrowWidth, y + arrowLen]]);
+		if (dir === "left")  return solidDXF([[x, y],[x + arrowLen, y - arrowWidth],[x + arrowLen, y + arrowWidth]]);
+		if (dir === "right") return solidDXF([[x, y],[x - arrowLen, y - arrowWidth],[x - arrowLen, y + arrowWidth]]);
+		return "";
+	}
 
-            // === Determinar rotación SOLO por proporciones ===
-            let rot = 0;
-            let des_cx = 0;
-            let des_cy = 0;
+	// === Dibujo ===
+	dims.forEach((carril, carrilIndex) => {
+		const carrilAltoReal = carrilAlturas[carrilIndex];
+		let cursorX = areaX + offsetX;
 
-            if (d.alto > d.ancho * 2) {
-                rot = 90;
-                des_cx = 2.5;
-                des_cy = 2.5;
-            } else if (d.alto > d.ancho) {
-                rot = 45;
-                des_cx = 1.75;
-                des_cy = 0.75;
+		const tallest = carrilAltoReal * scale;
+		const carrilTop = cursorY;
+		const carrilBottom = cursorY - tallest;
 
-            }
+		const tramos = [];
+		let tramoInicioX = cursorX;
+		let tramoAnchoAcum = 0;
 
-            // Posición de texto
-            const cx = (x1 + x2) / 2;
-            const cy = (y1 + y2) / 2;
+		carril.forEach((d, i) => {
 
-            // Nombre
-            entidades.push(
-                textoDXF(cx - des_cx, cy + 2.5 - des_cy, d.nombre, FONT_NAME, 'MC', rot, "Negrita")
-            );
+			// ruptura de tramo por controlador
+			if (i > 0 && d.tipo === "controlador") {
+				tramos.push([tramoInicioX, cursorX, tramoAnchoAcum]);
+				tramoInicioX = cursorX + SEP_CONTROLADOR * scale;
+				tramoAnchoAcum = 0;
 
-            // Dimensiones
-            const dimText = `${d.ancho} x ${d.alto} mm`;
-            entidades.push(
-                textoDXF(cx + des_cx, cy - 2.5 + des_cy, dimText, FONT_DIM, 'MC', rot)
-            );
+				cursorX += SEP_CONTROLADOR * scale;
+			}
 
-            cursorX += w;
-        });
+			const w = d.ancho * scale;
+			const h = d.alto * scale;
 
-        cursorY -= (carrilAltoReal * scale + SEP_VERTICAL * scale);
-    });
+			const y1 = cursorY - (tallest - h) / 2;
+			const x1 = cursorX;
+			const x2 = cursorX + w;
+			const y2 = y1 - h;
 
-    return entidades;
+			// Rectángulo
+			entidades.push(
+				lineaDXF(x1, y1, x2, y1, 20),
+				lineaDXF(x2, y1, x2, y2, 20),
+				lineaDXF(x2, y2, x1, y2, 20),
+				lineaDXF(x1, y2, x1, y1, 20)
+			);
+
+			// Rotación por proporción
+			let rot = 0, des_cx = 0, des_cy = 0;
+			if (d.alto > d.ancho * 2) { rot = 90; des_cx = 2.5; des_cy = 2.5; }
+			else if (d.alto > d.ancho) { rot = 45; des_cx = 1.75; des_cy = 0.75; }
+
+			const cx = (x1 + x2) / 2;
+			const cy = (y1 + y2) / 2;
+
+			entidades.push(
+				textoDXF(cx - des_cx, cy + 2.5 - des_cy, d.nombre, FONT_NAME, 'MC', rot, "Negrita")
+			);
+
+			const dimText = `${d.ancho} x ${d.alto} mm`;
+			entidades.push(
+				textoDXF(cx + des_cx, cy - 2.5 + des_cy, dimText, FONT_DIM, 'MC', rot)
+			);
+
+			tramoAnchoAcum += d.ancho;
+			cursorX += w;
+		});
+
+		tramos.push([tramoInicioX, cursorX, tramoAnchoAcum]);
+
+		// === COTA VERTICAL ===
+		const cotaX = areaX + offsetX - COTA_VERT_OFFSET_X * scale;
+		const cotaTextX = cotaX - COTA_VERT_TEXT_OFFSET_X * scale;
+		const textY = (carrilTop + carrilBottom) / 2;
+
+		entidades.push(
+			lineaDXF(cotaX, carrilTop, cotaX, carrilBottom, 5)
+		);
+
+		if (FLECHAS) {
+			entidades.push(flecha(cotaX, carrilTop, "up"));
+			entidades.push(flecha(cotaX, carrilBottom, "down"));
+		}
+		if (LINEAS) {
+			entidades.push(tickHoriz(cotaX, carrilTop));
+			entidades.push(tickHoriz(cotaX, carrilBottom));
+		}
+
+		const textCota = `${carrilAltoReal} mm`;
+		entidades.push(
+			textoDXF(cotaTextX, textY, textCota, FONT_DIM_COTA, 'MC', 90)
+		);
+
+		// === COTAS HORIZONTALES ===
+		tramos.forEach(([xStart, xEnd, realWidth]) => {
+			const yCota = carrilTop + COTA_HORZ_OFFSET_Y * scale;
+			const yText = yCota + COTA_HORZ_TEXT_OFFSET_Y * scale;
+
+			entidades.push(
+				lineaDXF(xStart, yCota, xEnd, yCota, 5)
+			);
+
+			if (FLECHAS) {
+				entidades.push(flecha(xStart, yCota, "left"));
+				entidades.push(flecha(xEnd, yCota, "right"));
+			}
+			if (LINEAS) {
+				entidades.push(tickVert(xStart, yCota));
+				entidades.push(tickVert(xEnd, yCota));
+			}
+
+			const cx = (xStart + xEnd) / 2;
+			const txt = `${realWidth} mm`;
+
+			entidades.push(
+				textoDXF(cx, yText, txt, FONT_DIM_COTA, 'MC', 0)
+			);
+		});
+
+		cursorY -= (carrilAltoReal * scale + SEP_VERTICAL * scale);
+	});
+
+	return entidades;
 }
 
 function generarLayoutHojasDesdeEstado(estado) {
