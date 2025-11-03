@@ -1,5 +1,6 @@
 /// <reference path="basicosDXF.js" />
-/// <reference path="controladores.js" />
+/// <reference path="bloquesDXF.js" />
+/// <reference path="dispositivos.js" />
 
 function hasheador(posX, posY, hash, franja) {
 

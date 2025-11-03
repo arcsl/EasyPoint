@@ -1,8 +1,8 @@
 /// <reference path="basicosDXF.js" />
-/// <reference path="controladores.js" />
+/// <reference path="dispositivos.js" />
+/// <reference path="simbolos.js" />
 
-
-// hecho por el menda manualmente
+// === CAJETIN ===
 function cajetin(posX, posY, infoCajetin = {}) {
 
     const {
@@ -145,8 +145,9 @@ function logoARC(posX, posY) {
 
 
 // === AUXILIARES ===
-function XX_Externa(posX, posY, Linea1, Linea2, tagNumber) {
+function XX_Externa(posX, posY, Linea1, Linea2, tagNumber, desG0) {
 
+    // console.log({desG0});
     const entidades = [];
     entidades.push(...paloDesplazable (posX    , posY, 0,  0));
     entidades.push(...paloDesplazable (posX - 4, posY, 0, 16));

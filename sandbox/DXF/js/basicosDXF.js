@@ -1,3 +1,7 @@
+/// <reference path="bloquesDXF.js" />
+/// <reference path="dispositivos.js" />
+/// <reference path="simbolos.js" />
+
 /** 
  * dentro de VPORT 
  * 60 = 2 -> GRID infinita 

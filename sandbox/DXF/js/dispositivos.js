@@ -1,4 +1,8 @@
-const controladores = {
+/// <reference path="basicosDXF.js" />
+/// <reference path="bloquesDXF.js" />
+/// <reference path="simbolos.js" />
+
+const dispositivos = {
     "PXC4.E16-2": {
         "Nombre": "PXC4.E16-2",
         "Paginas": [
@@ -88,7 +92,6 @@ const controladores = {
         "Disposicion": {
             "Ancho": 198,
             "Alto": 125,
-            "Hojas": 1,
             "Familia": "PX",
             "Tipo": "controlador",
         },
@@ -130,7 +133,7 @@ const controladores = {
                     "Cinta":    [null, null, null,  "U1", null, null,  "#T", "U2", null, null, null,  "U3", null, null, "#T",  "U4",],
                     "Simbolos": [null, null, null, "#UD", null, null, "#-", "#UD", null, null, null, "#UD", null, null, "#-", "#UD",],
                     "Numeracion": [
-                        null, null, null, { num: "20", señales: ["EA","ED","SA"], nombre: "U1" }, 
+                        null, null, null, { num: "20", señales: ["EA","ED","SA"], nombre: "U1", desG0: 345 }, 
                         null, null, "21", { num: "22", señales: ["EA","ED","SA"], nombre: "U2" }, 
                         null, null, null, { num: "23", señales: ["EA","ED","SA"], nombre: "U3" }, 
                         null, null, "24", { num: "25", señales: ["EA","ED","SA"], nombre: "U4" },
@@ -237,7 +240,6 @@ const controladores = {
         "Disposicion": {
             "Ancho": 270,
             "Alto": 125,
-            "Hojas": 1,
             "Familia": "PX",
             "Tipo": "controlador",
         },
@@ -320,7 +322,6 @@ const controladores = {
         "Disposicion": {
             "Ancho": 198,
             "Alto": 125,
-            "Hojas": 1,
             "Familia": "PX",
             "Tipo": "controlador",
         },
@@ -346,7 +347,6 @@ const controladores = {
         "Disposicion": {
             "Ancho": 96,
             "Alto": 78,
-            "Hojas": 0.2,
             "Familia": "PX",
             "Tipo": "alimentacion",
         },
@@ -372,7 +372,6 @@ const controladores = {
         "Disposicion": {
             "Ancho": 32,
             "Alto": 78,
-            "Hojas": 0.2,
             "Familia": "PX",
             "Tipo": "alimentacion",
         },
@@ -426,7 +425,6 @@ const controladores = {
         "Disposicion": {
             "Ancho": 64,
             "Alto": 78,
-            "Hojas": 0.4,
             "Familia": "PX",
             "Tipo": "modulo",
         },
@@ -480,7 +478,6 @@ const controladores = {
         "Disposicion": {
             "Ancho": 64,
             "Alto": 78,
-            "Hojas": 0.4,
             "Familia": "PX",
             "Tipo": "modulo",
         },
@@ -574,7 +571,6 @@ const controladores = {
         "Disposicion": {
             "Ancho": 64,
             "Alto": 78,
-            "Hojas": 0.4,
             "Familia": "PX",
             "Tipo": "modulo",
         },
@@ -618,7 +614,6 @@ const controladores = {
         "Disposicion": {
             "Ancho": 64,
             "Alto": 78,
-            "Hojas": 0.25,
             "Familia": "PX",
             "Tipo": "modulo",
         },
@@ -667,7 +662,6 @@ const controladores = {
         "Disposicion": {
             "Ancho": 64,
             "Alto": 78,
-            "Hojas": 0.3,
             "Familia": "PX",
             "Tipo": "modulo",
         },

@@ -276,7 +276,7 @@ function pintarDispositivo(devicesContainer, carrilIndex, dispIndex, dispData) {
     sel.classList.add("w3-select", "w3-border", "w3-round", "w3-small", "w3-padding", "selectDispositivo");
     sel.appendChild(new Option("", ""));
 
-    Object.keys(controladores).forEach(k => sel.appendChild(new Option(k, k)));
+    Object.keys(dispositivos).forEach(k => sel.appendChild(new Option(k, k)));
     if (dispData?.tipo) sel.value = dispData.tipo;
 
     // Botones dispositivo
@@ -348,7 +348,7 @@ function pintarDispositivo(devicesContainer, carrilIndex, dispIndex, dispData) {
 // ================== SEÑALES ==================
 
 function pintarCanalesDesdeEstado(channelsContainer, carrilIndex, dispIndex, deviceObj) {
-    const disp = controladores[deviceObj.tipo];
+    const disp = dispositivos[deviceObj.tipo];
     if (!disp?.Paginas) return;
 
     disp.Paginas.forEach(pagina => {
@@ -482,8 +482,8 @@ function boton(color, icon, title, onClick) {
 
 (function calcularAnchosPorPagina() {
     const paso = 4;
-    Object.keys(controladores).forEach(ctrlName => {
-        const ctrl = controladores[ctrlName];
+    Object.keys(dispositivos).forEach(ctrlName => {
+        const ctrl = dispositivos[ctrlName];
         if (!ctrl?.Paginas) return;
         ctrl.Disposicion = ctrl.Disposicion || {};
         ctrl.Disposicion.AnchoEnHoja = ctrl.Paginas.map(pagina => {
@@ -496,23 +496,28 @@ function boton(color, icon, title, onClick) {
 })();
 
 function descargarDXF() {
-    
+
     nModulo = 0;
     const entities = [];
 
-    // 1) Construir layout de hojas desde el ESTADO (no desde el DOM)
+    // Construir layout de hojas desde el ESTADO (no desde el DOM)
     const layout = generarLayoutHojasDesdeEstado(estado);
 
-    // 2) Centrar horizontalmente los items en cada hoja
+    // Insertar hoja de vista general al principio
+    const primeraHojaItems = []; // hoja sin items de detalle, solo plano
+    layout.unshift({ items: primeraHojaItems });
+
+
+    // Centrar horizontalmente los items en cada hoja
     centrarItemsEnHojas(layout);
 
-    // 3) Matriz de cajetines (disposición visual de las hojas)
+    // Matriz de cajetines (disposición visual de las hojas)
     const numHojas = layout.length;
     const { filas, columnas } = calcularMatrizCajetines(numHojas);
 
-    // 4) Dibujo
+    // Dibujar dispositivos y señales
     for (let idx = 0; idx < numHojas; idx++) {
-        
+
         const hoja = layout[idx];
 
         const CajetinX = (idx % columnas) * 420;
@@ -521,14 +526,22 @@ function descargarDXF() {
         // datos del formulario con instalacion en mayuscula y numero de hoja
         const campos = structuredClone(estado.form);
         campos.Inst = UI.Inst.value.toUpperCase();
-        campos.Hoja = `${idx+1} - ${numHojas}`;  
+        campos.Hoja = `${idx + 1} - ${numHojas}`;
 
         // Cajetín con datos del formulario (estado.form)
         entities.push(...cajetin(CajetinX, CajetinY, campos));
 
-        // Dispositivos / páginas en esta hoja
+        // Hoja 0 = plano general
+        if (idx === 0) {
+            entities.push(
+                ...dibujarPlanoGeneralDispositivos(CajetinX, CajetinY, estado, dispositivos)
+            );
+            continue; // saltar a la siguiente hoja
+        }
+
+        // Resto de hojas = tu lógica actual
         hoja.items.forEach(it => {
-            const disp = controladores[it.key];
+            const disp = dispositivos[it.key];
             entities.push(
                 ...dibujarPaginaDeDispositivo(
                     CajetinX, CajetinY,
@@ -558,6 +571,140 @@ function descargarDXF() {
     URL.revokeObjectURL(url);
 }
 
+function dibujarPlanoGeneralDispositivos(CajetinX, CajetinY, estado, dispositivos) {
+    const entidades = [];
+
+    // === Config fuentes ===
+    const FONT_NAME = 5;
+    const FONT_DIM = 2.5;
+
+    // === Área util en la HOJA 0 ===
+    const Y_MIN = CajetinY + 40;
+    const Y_MAX = CajetinY + 300;
+    const usableHeight = Y_MAX - Y_MIN;
+
+    const HOJA_ANCHO = 420;
+    const MARGEN = 10;
+
+    const areaX = CajetinX + MARGEN;
+    const areaY = Y_MAX - MARGEN;
+    const usableWidth = HOJA_ANCHO - MARGEN * 2;
+
+    // === Separaciones ===
+    const SEP_CONTROLADOR = 20;
+    const SEP_VERTICAL = 20;
+
+    // === Escala fija solicitada ===
+    const scale = 0.5;
+
+    // === Carriles ===
+    const carriles = (estado.carriles || []).map(carril =>
+        carril.map(d => dispositivos[d.tipo]).filter(Boolean)
+    );
+
+    const dims = carriles.map(carril => carril.map(d => ({
+        ancho: d.Disposicion?.Ancho || 40,
+        alto: d.Disposicion?.Alto || 60,
+        nombre: d.Nombre,
+        tipo: d.Disposicion?.Tipo || "modulo"
+    })));
+
+    // === Altura máxima por carril ===
+    const carrilAlturas = dims.map(carril =>
+        Math.max(...carril.map(d => d.alto))
+    );
+
+    // === Ancho total de carril con separación controladores ===
+    const carrilAnchos = dims.map(carril =>
+        carril.reduce((acc, d, idx) => {
+            const sep = (idx > 0 && d.tipo === "controlador") ? SEP_CONTROLADOR : 0;
+            return acc + sep + d.ancho;
+        }, 0)
+    );
+
+    // === Tamaños totales ===
+    const totalAltura = carrilAlturas.reduce(
+        (acc, h, i) => acc + h + (i > 0 ? SEP_VERTICAL : 0),
+        0
+    );
+
+    const maxAncho = Math.max(...carrilAnchos);
+
+    // === Calcular centrado con escala fija ===
+    const offsetX = (usableWidth - maxAncho * scale) / 2;
+    const offsetY = (usableHeight - totalAltura * scale) / 2;
+
+    let cursorY = (Y_MAX - MARGEN) - offsetY;
+
+    // === Dibujo ===
+    dims.forEach((carril, carrilIndex) => {
+        const carrilAltoReal = carrilAlturas[carrilIndex];
+        let cursorX = areaX + offsetX;
+
+        carril.forEach((d, i) => {
+
+            if (i > 0 && d.tipo === "controlador") {
+                cursorX += SEP_CONTROLADOR * scale;
+            }
+
+            const w = d.ancho * scale;
+            const h = d.alto * scale;
+            const tallest = carrilAltoReal * scale;
+
+            // Centrado vertical en el carril
+            const y1 = cursorY - (tallest - h) / 2;
+            const x1 = cursorX;
+            const x2 = cursorX + w;
+            const y2 = y1 - h;
+
+            // Rectángulo
+            entidades.push(
+                lineaDXF(x1, y1, x2, y1),
+                lineaDXF(x2, y1, x2, y2),
+                lineaDXF(x2, y2, x1, y2),
+                lineaDXF(x1, y2, x1, y1)
+            );
+
+            // === Determinar rotación SOLO por proporciones ===
+            let rot = 0;
+            let des_cx = 0;
+            let des_cy = 0;
+
+            if (d.alto > d.ancho * 2) {
+                rot = 90;
+                des_cx = 2.5;
+                des_cy = 2.5;
+            } else if (d.alto > d.ancho) {
+                rot = 45;
+                des_cx = 1.75;
+                des_cy = 0.75;
+
+            }
+
+            // Posición de texto
+            const cx = (x1 + x2) / 2;
+            const cy = (y1 + y2) / 2;
+
+            // Nombre
+            entidades.push(
+                textoDXF(cx - des_cx, cy + 2.5 - des_cy, d.nombre, FONT_NAME, 'MC', rot, "Negrita")
+            );
+
+            // Dimensiones
+            const dimText = `${d.ancho} x ${d.alto} mm`;
+            entidades.push(
+                textoDXF(cx + des_cx, cy - 2.5 + des_cy, dimText, FONT_DIM, 'MC', rot)
+            );
+
+            cursorX += w;
+        });
+
+        cursorY -= (carrilAltoReal * scale + SEP_VERTICAL * scale);
+    });
+
+    return entidades;
+}
+
 function generarLayoutHojasDesdeEstado(estado) {
     const hojas = [];
     const nuevaHoja = () => hojas.push({ items: [] });
@@ -576,12 +723,12 @@ function generarLayoutHojasDesdeEstado(estado) {
             const key = dispObj?.tipo;
             if (!key) return;
 
-            const disp = controladores[key];
+            const disp = dispositivos[key];
             if (!disp) return;
 
-            const tipo   = disp?.Disposicion?.Tipo || "controlador";
+            const tipo = disp?.Disposicion?.Tipo || "controlador";
             const anchos = disp?.Disposicion?.AnchoEnHoja || [disp?.Disposicion?.Ancho || HOJA_UTIL];
-            const pages  = anchos.length;
+            const pages = anchos.length;
 
             for (let p = 0; p < pages; p++) {
                 items.push({
@@ -618,8 +765,8 @@ function generarLayoutHojasDesdeEstado(estado) {
 
             // No multipágina → compactar con separaciones
             const itemsHoja = hojaActual.items;
-            const isFirst   = itemsHoja.length === 0;
-            const sep       = (!isFirst && it.tipo === "controlador") ? SEP_CONTROLADOR : 0;
+            const isFirst = itemsHoja.length === 0;
+            const sep = (!isFirst && it.tipo === "controlador") ? SEP_CONTROLADOR : 0;
 
             let ocupado = 0;
             itemsHoja.forEach((hItem, idx) => {
@@ -727,8 +874,8 @@ function dibujarPaginaDeDispositivo(hojaX, hojaY, dispositivo, pageIndex, startX
 
             // 1) Si el borne tiene SEÑAL asignada en EL ESTADO → dibujar símbolo correspondiente
             const borneObj = conector.Numeracion[i];
-            const { num, seniales, nombre } = normalizarBorne(borneObj);
-
+            const { num, seniales, nombre, desG0 } = normalizarBorne(borneObj);
+            console.log({ num, seniales, nombre, desG0 });
             // nombre del borne (para mapear en estado)
             const nombreBorne = nombre || num || null;
             if (nombreBorne) {
@@ -739,8 +886,8 @@ function dibujarPaginaDeDispositivo(hojaX, hojaY, dispositivo, pageIndex, startX
                     const info = obtenerSenialPorUUID(uuid);
                     if (info) {
                         const { tipo, sig } = info; // tipo = EA | ED | SA | SD
-                        const numero       = sig.Numero;
-                        const opcionTexto  = (sig.Opciones?.[sig.Opcion]) || "";
+                        const numero = sig.Numero;
+                        const opcionTexto = (sig.Opciones?.[sig.Opcion]) || "";
 
                         // Construcción del nombre de función JS
                         const funcionNombre = `${tipo}_${numero}_${opcionTexto}`; // Debes tenerla definida en window
@@ -753,7 +900,7 @@ function dibujarPaginaDeDispositivo(hojaX, hojaY, dispositivo, pageIndex, startX
                             const L2Mayus = sig.Linea2.toUpperCase();
 
                             entidades.push(
-                                ...fn(inX, inY, L1Mayus, L2Mayus, sig.tagNumber)
+                                ...fn(inX, inY, L1Mayus, L2Mayus, sig.tagNumber, desG0)
                             );
                         } else {
                             console.warn(`⚠️ Falta función símbolo DXF: ${funcionNombre}(x,y,Linea1,Linea2,tag)`);
@@ -787,9 +934,10 @@ function normalizarBorne(borne) {
             num: borne.num ?? null,
             seniales: borne.señales ?? [],
             nombre: borne.nombre ?? null,
+            desG0: borne.desG0 ?? null,
         };
     }
-    return { num: borne ?? null, seniales: [], nombre: null };
+    return { num: borne ?? null, seniales: [], nombre: null, desG0: null };
 }
 
 function obtenerSenialPorUUID(uuid) {
@@ -811,7 +959,7 @@ function dibujarBarrasComunes(CajetinX, CajetinY, hojaItems) {
     if (!hojaItems.length) return entidades;
 
     const xInicio = Math.min(...hojaItems.map(it => it.x)) + CajetinX;
-    const xFin    = Math.max(...hojaItems.map(it => it.x + it.width)) + CajetinX;
+    const xFin = Math.max(...hojaItems.map(it => it.x + it.width)) + CajetinX;
 
     Object.entries(despY).forEach(([key, value]) => {
         const y = CajetinY + 236 - value;
