@@ -131,47 +131,24 @@
         <div id="listadoCont" class="w3-margin-bottom w3-hide"></div>
         <div id="dibujarCont" class="w3-margin-bottom w3-hide">
 
-            <p>Datos del cajetín</p>
+            <h4 class="w3-padding w3-light-gray h4-dibujar">Datos del cajetín</h4>
 
             <div class="w3-row-padding">
-                <div class="w3-half">
-                    <input class="w3-input w3-border" id="Dibu" placeholder="Dibujado">
-                </div>
-                <div class="w3-half">
-                    <input class="w3-input w3-border" id="Clie" placeholder="Cliente">
-                </div>
+                <input id="Dibu" class="w3-margin-right w3-input w3-border-bottom info-cajetin" placeholder="Dibujado">
+                <input id="Clie" class="w3-margin-right w3-input w3-border-bottom info-cajetin" placeholder="Cliente">
+                <input id="Fech" class="w3-margin-right w3-input w3-border-bottom info-cajetin" type="date" >
+                <input id="Loca" class="w3-margin-right w3-input w3-border-bottom info-cajetin" placeholder="Localidad">
+                <input id="Revi" class="w3-margin-right w3-input w3-border-bottom info-cajetin" placeholder="Revisado">
+                <input id="Stye" class="w3-margin-right w3-input w3-border-bottom info-cajetin" placeholder="Sustituye a">
+                <input id="Esqu" class="w3-margin-right w3-input w3-border-bottom info-cajetin" placeholder="Nº esquema">
+                <input id="Stdo" class="w3-margin-right w3-input w3-border-bottom info-cajetin" placeholder="Sustituido por">
             </div>
 
-            <div class="w3-row-padding">
-                <div class="w3-half">
-                    <input type="date" class="w3-input w3-border" id="Fech">
-                </div>
-                <div class="w3-half">
-                    <input class="w3-input w3-border" id="Loca" placeholder="Localidad">
-                </div>
-            </div>
+            <h4 class="w3-padding w3-light-gray titulo-dibujar">Topología de equipos</h4>
 
             <div class="w3-row-padding">
-                <div class="w3-half">
-                    <input class="w3-input w3-border" id="Revi" placeholder="Revisado">
-                </div>
-                <div class="w3-half">
-                    <input class="w3-input w3-border" id="Stye" placeholder="Sustituye a">
-                </div>
-            </div>
-
-            <div class="w3-row-padding">
-                <div class="w3-half">
-                    <input class="w3-input w3-border" id="Esqu" placeholder="Nº esquema">
-                </div>
-                <div class="w3-half">
-                    <input class="w3-input w3-border" id="Stdo" placeholder="Sustituido por">
-                </div>
-            </div>
-
-            <div class="w3-row-padding">
-                <div class="w3-col s12">
-                    <button id="btnAddCarril" class="w3-button w3-green w3-round w3-small botonAniadir">Añadir Carril</button>
+                <div class="w3-col s12 w3-margin-top">
+                    <button id="btnAddCarril" class="w3-button w3-green w3-round botonAniadir">+ Carril</button>
                 </div>
             </div>
 

@@ -5,6 +5,7 @@
 #dibujarCont label.borne-label {
     width: 160px;
     text-align: right;
+    padding: 12px 10px 0 0;
 }
 
 #dibujarCont select.selectDispositivo {
@@ -13,6 +14,18 @@
 
 #dibujarCont select.borne-select {
     width: 288px;
+    margin-top: 8px;
+    padding-left: 10px;
+}
+
+#dibujarCont input.info-cajetin {
+    display: inline-block;
+    width: 35%;
+    margin: 8px 32px 0 0;
+}
+
+#dibujarCont h4.titulo-dibujar {
+    margin-top: 40px;
 }
 
 #dibujarCont button.botonAniadir {
@@ -22,12 +35,15 @@
 #dibujarCont button.botonCuadDib {
     padding: 0;
     width: 50px;
+    padding: 12px;
+    padding-top: 10px;
 }
 
 #dibujarCont .carril-row {
     display: flex;
     align-items: flex-start;
     gap: 8px;
+    margin-top: 8px;
 }
 
 #dibujarCont .carril-col {
@@ -44,6 +60,7 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
+    margin-top: 8px;
 }
 
 #dibujarCont .device-head {

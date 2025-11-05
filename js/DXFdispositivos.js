@@ -1,8 +1,34 @@
-// /// <reference path="DXFbasicos.js" />
-// /// <reference path="DXFbloques.js" />
-// /// <reference path="DXFsimbolos.js" />
+/// <reference path="DXFbasicos.js" />
+/// <reference path="DXFbloques.js" />
+/// <reference path="DXFsimbolos.js" />
 
 const dispositivos = {
+
+    "PXM40": {
+        "Nombre": "PXM40",
+        "Paginas": [
+            [
+                {   // alimentacion 24V
+                    "Cinta": "AC 24V",
+                    "Subcinta": ["~", "#T", "#uTierra",],
+                    "Simbolos": ["#|", "#|", "#|",],
+                    "Numeracion": ["1", "2", "3",],
+                    "Fijo": ["#G", "#G0", null,],
+                },
+                {   // LAN
+                    "Simbolos": [null, "#RED", null,],
+                    "Numeracion": [null, "LAN", null,],
+                },
+            ],
+        ],
+        "Disposicion": {
+            "Mensaje": "Recorte en puerta de cuadro.",
+            "Ancho": 258,
+            "Alto": 168,
+            "Familia": "PX",
+            "Tipo": "controlador",
+        },
+    },
     "PXC4.E16-2": {
         "Nombre": "PXC4.E16-2",
         "Paginas": [
@@ -130,23 +156,23 @@ const dispositivos = {
                     "Numeracion": [null, { num: "8", señales: ["ED"], nombre: "DI1" }, null, "9", { num: "10", señales: ["ED"], nombre: "DI2" },],
                 },
                 {   // entradas U1 a U4
-                    "Cinta":    [null, null, null,  "U1", null, null,  "#T", "U2", null, null, null,  "U3", null, null, "#T",  "U4",],
+                    "Cinta": [null, null, null, "U1", null, null, "#T", "U2", null, null, null, "U3", null, null, "#T", "U4",],
                     "Simbolos": [null, null, null, "#UD", null, null, "#-", "#UD", null, null, null, "#UD", null, null, "#-", "#UD",],
                     "Numeracion": [
-                        null, null, null, { num: "20", señales: ["EA","ED","SA"], nombre: "U1", desG0: 345 }, 
-                        null, null, "21", { num: "22", señales: ["EA","ED","SA"], nombre: "U2" }, 
-                        null, null, null, { num: "23", señales: ["EA","ED","SA"], nombre: "U3" }, 
-                        null, null, "24", { num: "25", señales: ["EA","ED","SA"], nombre: "U4" },
+                        null, null, null, { num: "20", señales: ["EA", "ED", "SA"], nombre: "U1", desG0: 345 },
+                        null, null, "21", { num: "22", señales: ["EA", "ED", "SA"], nombre: "U2" },
+                        null, null, null, { num: "23", señales: ["EA", "ED", "SA"], nombre: "U3" },
+                        null, null, "24", { num: "25", señales: ["EA", "ED", "SA"], nombre: "U4" },
                     ],
                 },
                 {   // entradas U5 a U8
-                    "Cinta":    [null, null, null,  "U5", null, null, "#T",  "U6", null, null, null,  "U7", null, null, "#T",  "U8",],
+                    "Cinta": [null, null, null, "U5", null, null, "#T", "U6", null, null, null, "U7", null, null, "#T", "U8",],
                     "Simbolos": [null, null, null, "#UD", null, null, "#-", "#UD", null, null, null, "#UD", null, null, "#-", "#UD",],
                     "Numeracion": [
-                        null, null, null, { num: "26", señales: ["EA","ED","SA"], nombre: "U5" }, 
-                        null, null, "27", { num: "28", señales: ["EA","ED","SA"], nombre: "U6" }, 
-                        null, null, null, { num: "29", señales: ["EA","ED","SA"], nombre: "U7" }, 
-                        null, null, "30", { num: "31", señales: ["EA","ED","SA"], nombre: "U8" },
+                        null, null, null, { num: "26", señales: ["EA", "ED", "SA"], nombre: "U5" },
+                        null, null, "27", { num: "28", señales: ["EA", "ED", "SA"], nombre: "U6" },
+                        null, null, null, { num: "29", señales: ["EA", "ED", "SA"], nombre: "U7" },
+                        null, null, "30", { num: "31", señales: ["EA", "ED", "SA"], nombre: "U8" },
                     ],
                 },
                 {   // Salidas tension
@@ -162,23 +188,23 @@ const dispositivos = {
                     "Numeracion": ["36", "37", "38", "39",],
                 },
                 {   // entradas X1 a x4
-                    "Cinta":    [null, null, null,  "X1", null, null, "#T",  "X2", null, null, null,  "X3", null, null, "#T",  "X4",],
+                    "Cinta": [null, null, null, "X1", null, null, "#T", "X2", null, null, null, "X3", null, null, "#T", "X4",],
                     "Simbolos": [null, null, null, "#UD", null, null, "#-", "#UD", null, null, null, "#UD", null, null, "#-", "#UD",],
                     "Numeracion": [
-                        null, null, null, { num: "40", señales: ["EA","ED","SA"], nombre: "X1" }, 
-                        null, null, "41", { num: "42", señales: ["EA","ED","SA"], nombre: "X2" }, 
-                        null, null, null, { num: "43", señales: ["EA","ED","SA"], nombre: "X3" }, 
-                        null, null, "44", { num: "45", señales: ["EA","ED","SA"], nombre: "X4" },
+                        null, null, null, { num: "40", señales: ["EA", "ED", "SA"], nombre: "X1" },
+                        null, null, "41", { num: "42", señales: ["EA", "ED", "SA"], nombre: "X2" },
+                        null, null, null, { num: "43", señales: ["EA", "ED", "SA"], nombre: "X3" },
+                        null, null, "44", { num: "45", señales: ["EA", "ED", "SA"], nombre: "X4" },
                     ],
                 },
                 {   // entradas X5 a X8
-                    "Cinta":    [null, null, null,  "X5", null, null, "#T",  "X6", null, null, null,  "X7", null, null, "#T",  "X8",],
+                    "Cinta": [null, null, null, "X5", null, null, "#T", "X6", null, null, null, "X7", null, null, "#T", "X8",],
                     "Simbolos": [null, null, null, "#UD", null, null, "#-", "#UD", null, null, null, "#UD", null, null, "#-", "#UD",],
                     "Numeracion": [
-                        null, null, null, { num: "46", señales: ["EA","ED","SA"], nombre: "X5" }, 
-                        null, null, "47", { num: "48", señales: ["EA","ED","SA"], nombre: "X6" }, 
-                        null, null, null, { num: "49", señales: ["EA","ED","SA"], nombre: "X7" }, 
-                        null, null, "50", { num: "51", señales: ["EA","ED","SA"], nombre: "X8" },
+                        null, null, null, { num: "46", señales: ["EA", "ED", "SA"], nombre: "X5" },
+                        null, null, "47", { num: "48", señales: ["EA", "ED", "SA"], nombre: "X6" },
+                        null, null, null, { num: "49", señales: ["EA", "ED", "SA"], nombre: "X7" },
+                        null, null, "50", { num: "51", señales: ["EA", "ED", "SA"], nombre: "X8" },
                     ],
                 },
                 {   // M-BUS
@@ -666,4 +692,924 @@ const dispositivos = {
             "Tipo": "modulo",
         },
     },
+    /* - base synco
+        "RMT880": {
+            "Nombre": "RMT880",
+            "Paginas": [
+                [
+                    {   // alimentacion 24V
+                        "Simbolos": ["#U", "#U",],
+                        "Numeracion": ["G", "G0",],
+                        "Fijo": ["#G", "#G0",],
+                    },
+                    {   // Entradas universales
+                        "Simbolos": [
+                            null, "#|", "#U", "#/",
+                            "#D", "#|", "#U", "#/",
+                            null, "#|", "#U", "#/",
+                            "#D", "#|", "#U", "#/",
+                            null, "#|", "#U", "#/",
+                            "#D", "#|", "#U", "#/",
+                            null, "#|", "#U", "#/",
+                            "#D", "#|", "#U",
+                        ],
+                        "Numeracion": [
+                            null, "M", { num: "X1", señales: ["EA", "ED"], nombre: "X1" }, null,
+                            "G1", "M", { num: "X2", señales: ["EA", "ED"], nombre: "X2" }, null,
+                            null, "M", { num: "X3", señales: ["EA", "ED"], nombre: "X3" }, null,
+                            "G1", "M", { num: "X4", señales: ["EA", "ED"], nombre: "X4" }, null,
+                            null, "M", { num: "X5", señales: ["EA", "ED"], nombre: "X5" }, null,
+                            "G1", "M", { num: "X6", señales: ["EA", "ED"], nombre: "X6" }, null,
+                            null, "M", { num: "X7", señales: ["EA", "ED"], nombre: "X7" }, null,
+                            "G1", "M", { num: "X8", señales: ["EA", "ED"], nombre: "X8" },
+                        ],
+                    },
+                    {   // Entradas digitales
+                        "Simbolos": [
+                            "#|", "#U", "#/",
+                            "#|", "#U",
+                        ],
+                        "Numeracion": [
+                            "M", { num: "D1", señales: ["ED"], nombre: "D1" }, null,
+                            "M", { num: "D2", señales: ["ED"], nombre: "D2" },
+                        ],
+                    },
+                    {   // Salidas analógicas
+                        "Simbolos": [
+                            "#D", "#|", "#U", "#/",
+                            "#D", "#|", "#U", "#/",
+                            "#D", "#|", "#U", "#/",
+                            "#D", "#|", "#U",
+                        ],
+                        "Numeracion": [
+                            "G1", "M", { num: "Y1", señales: ["EA", "ED"], nombre: "Y1" }, null,
+                            "G1", "M", { num: "Y2", señales: ["EA", "ED"], nombre: "Y2" }, null,
+                            "G1", "M", { num: "Y3", señales: ["EA", "ED"], nombre: "Y3" }, null,
+                            "G1", "M", { num: "Y4", señales: ["EA", "ED"], nombre: "Y4" },
+                        ],
+                    },
+    
+                    {   // Salidas digitales
+                        "Simbolos": [
+                            null, "#Qc", null, "#/",
+                            null, "#Qs", null, "#/",
+                            null, "#Qs", null, "#/",
+                            null, "#Qc", null, "#/",
+                            null, "#Qs", null, "#/",
+                            null, "#Qs", null, "#/",
+                            null, "#Qs", null,
+                        ],
+                        "Numeracion": [
+                            { num: "Q11", extraEstrecho: true, desX: -1 },
+                            { num: "Q12", extraEstrecho: true, desX: 0 },
+                            { num: "Q14", extraEstrecho: true, desX: 1, señales: ["SD"], nombre: "Q1" }, null,
+    
+                            "Q23", null, { num: "Q24", señales: ["SD"], nombre: "Q2" }, null,
+                            "Q33", null, { num: "Q34", señales: ["SD"], nombre: "Q3" }, null,
+    
+                            { num: "Q41", desX: -1, extraEstrecho: true },
+                            { num: "Q42", desX: 0, extraEstrecho: true },
+                            { num: "Q44", desX: 1, extraEstrecho: true, señales: ["SD"], nombre: "Q4" }, null,
+    
+                            "Q53", null, { num: "Q54", señales: ["SD"], nombre: "Q5" }, null,
+                            "Q63", null, { num: "Q64", señales: ["SD"], nombre: "Q6" }, null,
+                            "Q73", null, { num: "Q74", señales: ["SD"], nombre: "Q7" },
+                        ],
+    
+                    },
+                    {   // Bus KNX
+                        "Simbolos": ["#UD", "#UD",],
+                        "Numeracion": [
+                            { num: "CE+", extraEstrecho: true, desX: -1 },
+                            { num: "CE-", extraEstrecho: true, desX: 1 },
+                        ],
+                        "Fijo": ["#b+", "#b-",],
+                    },
+                ],
+            ],
+            "Disposicion": {
+                "Ancho": 173,
+                "Alto": 90,
+                "Familia": "Synco",
+                "Tipo": "controlador",
+            },
+        },
+    */
+    "RMK770": {
+        "Nombre": "RMK770",
+        "Paginas": [
+            [
+                {   // alimentacion 24V
+                    "Simbolos": ["#U", "#U",],
+                    "Numeracion": ["G", "G0",],
+                    "Fijo": ["#G", "#G0",],
+                },
+                {   // Entradas universales
+                    "Simbolos": [
+                        null, "#|", "#U", "#/",
+                        "#D", "#|", "#U", "#/",
+                        null, "#|", "#U", "#/",
+                        "#D", "#|", "#U", "#/",
+                        null, "#|", "#U", "#/",
+                        "#D", "#|", "#U", "#/",
+                        null, "#|", "#U", "#/",
+                        "#D", "#|", "#U",
+                    ],
+                    "Numeracion": [
+                        null, "M", { num: "X1", señales: ["EA", "ED"], nombre: "X1" }, null,
+                        "G1", "M", { num: "X2", señales: ["EA", "ED"], nombre: "X2" }, null,
+                        null, "M", { num: "X3", señales: ["EA", "ED"], nombre: "X3" }, null,
+                        "G1", "M", { num: "X4", señales: ["EA", "ED"], nombre: "X4" }, null,
+                        null, "M", { num: "X5", señales: ["EA", "ED"], nombre: "X5" }, null,
+                        "G1", "M", { num: "X6", señales: ["EA", "ED"], nombre: "X6" }, null,
+                        null, "M", { num: "X7", señales: ["EA", "ED"], nombre: "X7" }, null,
+                        "G1", "M", { num: "X8", señales: ["EA", "ED"], nombre: "X8" },
+                    ],
+                },
+                {   // Entradas digitales
+                    "Simbolos": [
+                        "#|", "#U", "#/",
+                        "#|", "#U",
+                    ],
+                    "Numeracion": [
+                        "M", { num: "D1", señales: ["ED"], nombre: "D1" }, null,
+                        "M", { num: "D2", señales: ["ED"], nombre: "D2" },
+                    ],
+                },
+                {   // Salidas analógicas
+                    "Simbolos": [
+                        "#D", "#|", "#U", "#/",
+                        "#D", "#|", "#U",
+                    ],
+                    "Numeracion": [
+                        "G1", "M", { num: "Y1", señales: ["EA", "ED"], nombre: "Y1" }, null,
+                        "G1", "M", { num: "Y2", señales: ["EA", "ED"], nombre: "Y2" },
+                    ],
+                },
+
+                {   // Salidas digitales
+                    "Simbolos": [
+                        null, "#Qc", null, "#/",
+                        null, "#Qs", null, "#/",
+                        null, "#Qs", null, "#/",
+                        null, "#Qc", null, "#/",
+                        null, "#Qs", null, "#/",
+                        null, "#Qs", null, "#/",
+                        null, "#Qs", null,
+                    ],
+                    "Numeracion": [
+                        { num: "Q11", extraEstrecho: true, desX: -1 },
+                        { num: "Q12", extraEstrecho: true, desX: 0 },
+                        { num: "Q14", extraEstrecho: true, desX: 1, señales: ["SD"], nombre: "Q1" }, null,
+
+                        "Q23", null, { num: "Q24", señales: ["SD"], nombre: "Q2" }, null,
+                        "Q33", null, { num: "Q34", señales: ["SD"], nombre: "Q3" }, null,
+
+                        { num: "Q41", desX: -1, extraEstrecho: true },
+                        { num: "Q42", desX: 0, extraEstrecho: true },
+                        { num: "Q44", desX: 1, extraEstrecho: true, señales: ["SD"], nombre: "Q4" }, null,
+
+                        "Q53", null, { num: "Q54", señales: ["SD"], nombre: "Q5" }, null,
+                        "Q63", null, { num: "Q64", señales: ["SD"], nombre: "Q6" }, null,
+                        "Q73", null, { num: "Q74", señales: ["SD"], nombre: "Q7" },
+                    ],
+
+                },
+                {   // Bus KNX
+                    "Simbolos": ["#|", "#|",],
+                    "Numeracion": [
+                        { num: "CE+", extraEstrecho: true, desX: -1 },
+                        { num: "CE-", extraEstrecho: true, desX: 1 },
+                    ],
+                    "Fijo": ["#b+", "#b-",],
+                },
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 173,
+            "Alto": 90,
+            "Familia": "Synco",
+            "Tipo": "controlador",
+        },
+    },
+    "RMH760B": {
+        "Nombre": "RMH760B",
+        "Paginas": [
+            [
+                {   // alimentacion 24V
+                    "Simbolos": ["#U", "#U",],
+                    "Numeracion": ["G", "G0",],
+                    "Fijo": ["#G", "#G0",],
+                },
+                {   // Entradas universales
+                    "Simbolos": [
+                        null, "#|", "#U", "#/",
+                        "#D", "#|", "#U", "#/",
+                        null, "#|", "#U", "#/",
+                        "#D", "#|", "#U", "#/",
+                        null, "#|", "#U", "#/",
+                        "#D", "#|", "#U",
+                    ],
+                    "Numeracion": [
+                        null, "M", { num: "X1", señales: ["EA", "ED"], nombre: "X1" }, null,
+                        "G1", "M", { num: "X2", señales: ["EA", "ED"], nombre: "X2" }, null,
+                        null, "M", { num: "X3", señales: ["EA", "ED"], nombre: "X3" }, null,
+                        "G1", "M", { num: "X4", señales: ["EA", "ED"], nombre: "X4" }, null,
+                        null, "M", { num: "X5", señales: ["EA", "ED"], nombre: "X5" }, null,
+                        "G1", "M", { num: "X6", señales: ["EA", "ED"], nombre: "X6" },
+                    ],
+                },
+                {   // Salidas analógicas
+                    "Simbolos": [
+                        "#D", "#|", "#U", "#/",
+                        "#D", "#|", "#U",
+                    ],
+                    "Numeracion": [
+                        "G1", "M", { num: "Y1", señales: ["EA", "ED"], nombre: "Y1" }, null,
+                        "G1", "M", { num: "Y2", señales: ["EA", "ED"], nombre: "Y2" },
+                    ],
+                },
+
+                {   // Salidas digitales
+                    "Simbolos": [
+                        null, "#Qc", null, "#/",
+                        null, "#Qs", null, "#/",
+                        null, "#Qs", null, "#/",
+                        null, "#Qc", null, "#/",
+                        null, "#Qs", null,
+                    ],
+                    "Numeracion": [
+                        { num: "Q11", extraEstrecho: true, desX: -1 },
+                        { num: "Q12", extraEstrecho: true, desX: 0 },
+                        { num: "Q14", extraEstrecho: true, desX: 1, señales: ["SD"], nombre: "Q1" }, null,
+
+                        "Q23", null, { num: "Q24", señales: ["SD"], nombre: "Q2" }, null,
+                        "Q33", null, { num: "Q34", señales: ["SD"], nombre: "Q3" }, null,
+
+                        { num: "Q41", desX: -1, extraEstrecho: true },
+                        { num: "Q42", desX: 0, extraEstrecho: true },
+                        { num: "Q44", desX: 1, extraEstrecho: true, señales: ["SD"], nombre: "Q4" }, null,
+
+                        "Q53", null, { num: "Q54", señales: ["SD"], nombre: "Q5" },
+                    ],
+
+                },
+                {   // Bus KNX
+                    "Simbolos": ["#|", "#|",],
+                    "Numeracion": [
+                        { num: "CE+", extraEstrecho: true, desX: -1 },
+                        { num: "CE-", extraEstrecho: true, desX: 1 },
+                    ],
+                    "Fijo": ["#b+", "#b-",],
+                },
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 173,
+            "Alto": 90,
+            "Familia": "Synco",
+            "Tipo": "controlador",
+        },
+    },
+    "RMS705B": {
+        "Nombre": "RMS705B",
+        "Paginas": [
+            [
+                {   // alimentacion 24V
+                    "Simbolos": ["#|", "#|",],
+                    "Numeracion": ["G", "G0",],
+                    "Fijo": ["#G", "#G0",],
+                },
+                {   // Entradas universales
+                    "Simbolos": [
+                        null, "#|", "#U", "#/",
+                        "#D", "#|", "#U", "#/",
+                        null, "#|", "#U", "#/",
+                        "#D", "#|", "#U", "#/",
+                        null, "#|", "#U", "#/",
+                        "#D", "#|", "#U", "#/",
+                        null, "#|", "#U", "#/",
+                        "#D", "#|", "#U",
+                    ],
+                    "Numeracion": [
+                        null, "M", { num: "X1", señales: ["EA", "ED"], nombre: "X1" }, null,
+                        "G1", "M", { num: "X2", señales: ["EA", "ED"], nombre: "X2" }, null,
+                        null, "M", { num: "X3", señales: ["EA", "ED"], nombre: "X3" }, null,
+                        "G1", "M", { num: "X4", señales: ["EA", "ED"], nombre: "X4" }, null,
+                        null, "M", { num: "X5", señales: ["EA", "ED"], nombre: "X5" }, null,
+                        "G1", "M", { num: "X6", señales: ["EA", "ED"], nombre: "X6" }, null,
+                        null, "M", { num: "X7", señales: ["EA", "ED"], nombre: "X7" }, null,
+                        "G1", "M", { num: "X8", señales: ["EA", "ED"], nombre: "X8" },
+                    ],
+                },
+                {   // Salidas analógicas
+                    "Simbolos": [
+                        "#D", "#|", "#U", "#/",
+                        "#D", "#|", "#U", "#/",
+                        "#D", "#|", "#U", "#/",
+                        "#D", "#|", "#U",
+                    ],
+                    "Numeracion": [
+                        "G1", "M", { num: "Y1", señales: ["EA", "ED"], nombre: "Y1" }, null,
+                        "G1", "M", { num: "Y2", señales: ["EA", "ED"], nombre: "Y2" }, null,
+                        "G1", "M", { num: "Y3", señales: ["EA", "ED"], nombre: "Y3" }, null,
+                        "G1", "M", { num: "Y4", señales: ["EA", "ED"], nombre: "Y4" },
+                    ],
+                },
+
+                {   // Salidas digitales
+                    "Simbolos": [
+                        null, "#Qc", null, "#/",
+                        null, "#Qs", null, "#/",
+                        null, "#Qs", null, "#/",
+                        null, "#Qc", null, "#/",
+                        null, "#Qs", null, "#/",
+                        null, "#Qs", null,
+                    ],
+                    "Numeracion": [
+                        { num: "Q11", extraEstrecho: true, desX: -1 },
+                        { num: "Q12", extraEstrecho: true, desX: 0 },
+                        { num: "Q14", extraEstrecho: true, desX: 1, señales: ["SD"], nombre: "Q1" }, null,
+
+                        "Q23", null, { num: "Q24", señales: ["SD"], nombre: "Q2" }, null,
+                        "Q33", null, { num: "Q34", señales: ["SD"], nombre: "Q3" }, null,
+
+                        { num: "Q41", desX: -1, extraEstrecho: true },
+                        { num: "Q42", desX: 0, extraEstrecho: true },
+                        { num: "Q44", desX: 1, extraEstrecho: true, señales: ["SD"], nombre: "Q4" }, null,
+
+                        "Q63", null, { num: "Q64", señales: ["SD"], nombre: "Q6" }, null,
+                        "Q73", null, { num: "Q74", señales: ["SD"], nombre: "Q7" },
+                    ],
+
+                },
+                {   // Bus KNX
+                    "Simbolos": ["#|", "#|",],
+                    "Numeracion": [
+                        { num: "CE+", extraEstrecho: true, desX: -1 },
+                        { num: "CE-", extraEstrecho: true, desX: 1 },
+                    ],
+                    "Fijo": ["#b+", "#b-",],
+                },
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 173,
+            "Alto": 90,
+            "Familia": "Synco",
+            "Tipo": "controlador",
+        },
+    },
+    "RMU710B": {
+        "Nombre": "RMU710B",
+        "Paginas": [
+            [
+                {   // alimentacion 24V
+                    "Simbolos": ["#U", "#U",],
+                    "Numeracion": ["G", "G0",],
+                    "Fijo": ["#G", "#G0",],
+                },
+                {   // Entradas universales
+                    "Simbolos": [
+                        null, "#|", "#U", "#/",
+                        "#D", "#|", "#U", "#/",
+                        null, "#|", "#U", "#/",
+                        "#D", "#|", "#U", "#/",
+                        null, "#|", "#U", "#/",
+                        "#D", "#|", "#U",
+                    ],
+                    "Numeracion": [
+                        null, "M", { num: "X1", señales: ["EA", "ED"], nombre: "X1" }, null,
+                        "G1", "M", { num: "X2", señales: ["EA", "ED"], nombre: "X2" }, null,
+                        null, "M", { num: "X3", señales: ["EA", "ED"], nombre: "X3" }, null,
+                        "G1", "M", { num: "X4", señales: ["EA", "ED"], nombre: "X4" }, null,
+                        null, "M", { num: "X5", señales: ["EA", "ED"], nombre: "X5" }, null,
+                        "G1", "M", { num: "X6", señales: ["EA", "ED"], nombre: "X6" },
+                    ],
+                },
+                {   // Salidas analógicas
+                    "Simbolos": [
+                        "#D", "#|", "#U", "#/",
+
+                        "#D", "#|", "#U",
+                    ],
+                    "Numeracion": [
+                        "G1", "M", { num: "Y1", señales: ["EA", "ED"], nombre: "Y1" }, null,
+                        "G1", "M", { num: "Y2", señales: ["EA", "ED"], nombre: "Y2" },
+                    ],
+                },
+
+                {   // Salidas digitales
+                    "Simbolos": [
+                        null, "#Qc", null, "#/",
+                        null, "#Qs", null,
+                    ],
+                    "Numeracion": [
+                        { num: "Q11", extraEstrecho: true, desX: -1 },
+                        { num: "Q12", extraEstrecho: true, desX: 0 },
+                        { num: "Q14", extraEstrecho: true, desX: 1, señales: ["SD"], nombre: "Q1" }, null,
+
+                        "Q33", null, { num: "Q34", señales: ["SD"], nombre: "Q3" },
+                    ],
+
+                },
+                {   // Bus KNX
+                    "Simbolos": ["#UD", "#UD",],
+                    "Numeracion": [
+                        { num: "CE+", extraEstrecho: true, desX: -1 },
+                        { num: "CE-", extraEstrecho: true, desX: 1 },
+                    ],
+                    "Fijo": ["#b+", "#b-",],
+                },
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 173,
+            "Alto": 90,
+            "Familia": "Synco",
+            "Tipo": "controlador",
+        },
+    },
+    "RMU720B": {
+        "Nombre": "RMU720B",
+        "Paginas": [
+            [
+                {   // alimentacion 24V
+                    "Simbolos": ["#U", "#U",],
+                    "Numeracion": ["G", "G0",],
+                    "Fijo": ["#G", "#G0",],
+                },
+                {   // Entradas universales
+                    "Simbolos": [
+                        null, "#|", "#U", "#/",
+                        "#D", "#|", "#U", "#/",
+                        null, "#|", "#U", "#/",
+                        "#D", "#|", "#U", "#/",
+                        null, "#|", "#U", "#/",
+                        "#D", "#|", "#U", "#/",
+                        null, "#|", "#U", "#/",
+                        "#D", "#|", "#U",
+                    ],
+                    "Numeracion": [
+                        null, "M", { num: "X1", señales: ["EA", "ED"], nombre: "X1" }, null,
+                        "G1", "M", { num: "X2", señales: ["EA", "ED"], nombre: "X2" }, null,
+                        null, "M", { num: "X3", señales: ["EA", "ED"], nombre: "X3" }, null,
+                        "G1", "M", { num: "X4", señales: ["EA", "ED"], nombre: "X4" }, null,
+                        null, "M", { num: "X5", señales: ["EA", "ED"], nombre: "X5" }, null,
+                        "G1", "M", { num: "X6", señales: ["EA", "ED"], nombre: "X6" }, null,
+                        null, "M", { num: "X7", señales: ["EA", "ED"], nombre: "X7" }, null,
+                        "G1", "M", { num: "X8", señales: ["EA", "ED"], nombre: "X8" },
+                    ],
+                },
+                {   // Salidas analógicas
+                    "Simbolos": [
+                        "#D", "#|", "#U", "#/",
+                        "#D", "#|", "#U", "#/",
+                        "#D", "#|", "#U", "#/",
+                        "#D", "#|", "#U",
+                    ],
+                    "Numeracion": [
+                        "G1", "M", { num: "Y1", señales: ["EA", "ED"], nombre: "Y1" }, null,
+                        "G1", "M", { num: "Y2", señales: ["EA", "ED"], nombre: "Y2" }, null,
+                        "G1", "M", { num: "Y3", señales: ["EA", "ED"], nombre: "Y3" },
+                    ],
+                },
+
+                {   // Salidas digitales
+                    "Simbolos": [
+                        null, "#Qc", null, "#/",
+                        null, "#Qs", null, "#/",
+                        null, "#Qs", null, "#/",
+                        null, "#Qs", null,
+                    ],
+                    "Numeracion": [
+                        { num: "Q11", extraEstrecho: true, desX: -1 },
+                        { num: "Q12", extraEstrecho: true, desX: 0 },
+                        { num: "Q14", extraEstrecho: true, desX: 1, señales: ["SD"], nombre: "Q1" }, null,
+
+                        "Q23", null, { num: "Q24", señales: ["SD"], nombre: "Q2" }, null,
+                        "Q33", null, { num: "Q34", señales: ["SD"], nombre: "Q3" }, null,
+                        "Q53", null, { num: "Q54", señales: ["SD"], nombre: "Q5" },
+                    ],
+
+                },
+                {   // Bus KNX
+                    "Simbolos": ["#UD", "#UD",],
+                    "Numeracion": [
+                        { num: "CE+", extraEstrecho: true, desX: -1 },
+                        { num: "CE-", extraEstrecho: true, desX: 1 },
+                    ],
+                    "Fijo": ["#b+", "#b-",],
+                },
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 173,
+            "Alto": 90,
+            "Familia": "Synco",
+            "Tipo": "controlador",
+        },
+    },
+    "RMU730B": {
+        "Nombre": "RMU730B",
+        "Paginas": [
+            [
+                {   // alimentacion 24V
+                    "Simbolos": ["#U", "#U",],
+                    "Numeracion": ["G", "G0",],
+                    "Fijo": ["#G", "#G0",],
+                },
+                {   // Entradas universales
+                    "Simbolos": [
+                        null, "#|", "#U", "#/",
+                        "#D", "#|", "#U", "#/",
+                        null, "#|", "#U", "#/",
+                        "#D", "#|", "#U", "#/",
+                        null, "#|", "#U", "#/",
+                        "#D", "#|", "#U", "#/",
+                        null, "#|", "#U", "#/",
+                        "#D", "#|", "#U",
+                    ],
+                    "Numeracion": [
+                        null, "M", { num: "X1", señales: ["EA", "ED"], nombre: "X1" }, null,
+                        "G1", "M", { num: "X2", señales: ["EA", "ED"], nombre: "X2" }, null,
+                        null, "M", { num: "X3", señales: ["EA", "ED"], nombre: "X3" }, null,
+                        "G1", "M", { num: "X4", señales: ["EA", "ED"], nombre: "X4" }, null,
+                        null, "M", { num: "X5", señales: ["EA", "ED"], nombre: "X5" }, null,
+                        "G1", "M", { num: "X6", señales: ["EA", "ED"], nombre: "X6" }, null,
+                        null, "M", { num: "X7", señales: ["EA", "ED"], nombre: "X7" }, null,
+                        "G1", "M", { num: "X8", señales: ["EA", "ED"], nombre: "X8" },
+                    ],
+                },
+                {   // Salidas analógicas
+                    "Simbolos": [
+                        "#D", "#|", "#U", "#/",
+                        "#D", "#|", "#U", "#/",
+                        "#D", "#|", "#U", "#/",
+                        "#D", "#|", "#U",
+                    ],
+                    "Numeracion": [
+                        "G1", "M", { num: "Y1", señales: ["EA", "ED"], nombre: "Y1" }, null,
+                        "G1", "M", { num: "Y2", señales: ["EA", "ED"], nombre: "Y2" }, null,
+                        "G1", "M", { num: "Y3", señales: ["EA", "ED"], nombre: "Y3" }, null,
+                        "G1", "M", { num: "Y4", señales: ["EA", "ED"], nombre: "Y4" },
+                    ],
+                },
+
+                {   // Salidas digitales
+                    "Simbolos": [
+                        null, "#Qc", null, "#/",
+                        null, "#Qs", null, "#/",
+                        null, "#Qs", null, "#/",
+                        null, "#Qc", null, "#/",
+                        null, "#Qs", null, "#/",
+                        null, "#Qs", null,
+                    ],
+                    "Numeracion": [
+                        { num: "Q11", extraEstrecho: true, desX: -1 },
+                        { num: "Q12", extraEstrecho: true, desX: 0 },
+                        { num: "Q14", extraEstrecho: true, desX: 1, señales: ["SD"], nombre: "Q1" }, null,
+
+                        "Q23", null, { num: "Q24", señales: ["SD"], nombre: "Q2" }, null,
+                        "Q33", null, { num: "Q34", señales: ["SD"], nombre: "Q3" }, null,
+
+                        { num: "Q41", desX: -1, extraEstrecho: true },
+                        { num: "Q42", desX: 0, extraEstrecho: true },
+                        { num: "Q44", desX: 1, extraEstrecho: true, señales: ["SD"], nombre: "Q4" }, null,
+
+                        "Q63", null, { num: "Q64", señales: ["SD"], nombre: "Q6" }, null,
+                        "Q73", null, { num: "Q74", señales: ["SD"], nombre: "Q7" },
+                    ],
+
+                },
+                {   // Bus KNX
+                    "Simbolos": ["#UD", "#UD",],
+                    "Numeracion": [
+                        { num: "CE+", extraEstrecho: true, desX: -1 },
+                        { num: "CE-", extraEstrecho: true, desX: 1 },
+                    ],
+                    "Fijo": ["#b+", "#b-",],
+                },
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 173,
+            "Alto": 90,
+            "Familia": "Synco",
+            "Tipo": "controlador",
+        },
+    },
+    "RMZ782B": {
+        "Nombre": "RMZ782B",
+        "Paginas": [
+            [
+                {   // Entradas universales
+                    "Simbolos": [
+                        null, "#|", "#U", "#/",
+                        "#D", "#|", "#U", "#/",
+                        null, "#|", "#U",
+                    ],
+                    "Numeracion": [
+                        null, "M", { num: "X1", señales: ["EA", "ED"], nombre: "X1" }, null,
+                        "G1", "M", { num: "X2", señales: ["EA", "ED"], nombre: "X2" }, null,
+                        null, "M", { num: "X3", señales: ["EA", "ED"], nombre: "X3" },
+                    ],
+                },
+                {   // Salidas analógicas
+                    "Simbolos": [
+                        "#D", "#|", "#U",
+                    ],
+                    "Numeracion": [
+                        "G1", "M", { num: "Y1", señales: ["EA", "ED"], nombre: "Y1" },
+                    ],
+                },
+
+                {   // Salidas digitales
+                    "Simbolos": [
+                        null, "#Qc", null, "#/",
+                        null, "#Qs", null, "#/",
+                        null, "#Qs", null,
+                    ],
+                    "Numeracion": [
+                        { num: "Q11", extraEstrecho: true, desX: -1 },
+                        { num: "Q12", extraEstrecho: true, desX: 0 },
+                        { num: "Q14", extraEstrecho: true, desX: 1, señales: ["SD"], nombre: "Q1" }, null,
+
+                        "Q23", null, { num: "Q24", señales: ["SD"], nombre: "Q2" }, null,
+                        "Q33", null, { num: "Q34", señales: ["SD"], nombre: "Q3" }, 
+                    ],
+
+                },
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 120,
+            "Alto": 90,
+            "Familia": "Synco",
+            "Tipo": "modulo",
+        },
+    },
+    "RMZ783B": {
+        "Nombre": "RMZ783B",
+        "Paginas": [
+            [
+                {   // Entradas universales
+                    "Simbolos": [
+                        null, "#|", "#U", "#/",
+                        "#D", "#|", "#U", "#/",
+                        null, "#|", "#U", "#/",
+                        null, "#|", "#U", // TODO tiene G1 en X4 o no ?
+                    ],
+                    "Numeracion": [
+                        null, "M", { num: "X1", señales: ["EA", "ED"], nombre: "X1" }, null,
+                        "G1", "M", { num: "X2", señales: ["EA", "ED"], nombre: "X2" }, null,
+                        null, "M", { num: "X3", señales: ["EA", "ED"], nombre: "X3" }, null,
+                        null, "M", { num: "X4", señales: ["EA", "ED"], nombre: "X4" }, 
+                    ],
+                },
+                {   // Salidas analógicas
+                    "Simbolos": [
+                        "#D", "#|", "#U",
+                    ],
+                    "Numeracion": [
+                        "G1", "M", { num: "Y1", señales: ["EA", "ED"], nombre: "Y1" },
+                    ],
+                },
+                {   // Salidas digitales
+                    "Simbolos": [
+                        null, "#Qc", null, "#/",
+                        null, "#Qs", null, "#/",
+                        null, "#Qs", null, "#/",
+                        null, "#Qs", null, "#/",
+                        null, "#Qc", null, 
+                    ],
+                    "Numeracion": [
+                        { num: "Q11", extraEstrecho: true, desX: -1 },
+                        { num: "Q12", extraEstrecho: true, desX: 0 },
+                        { num: "Q14", extraEstrecho: true, desX: 1, señales: ["SD"], nombre: "Q1" }, null,
+
+                        "Q23", null, { num: "Q24", señales: ["SD"], nombre: "Q2" }, null,
+                        "Q33", null, { num: "Q34", señales: ["SD"], nombre: "Q3" }, null,
+                        "Q43", null, { num: "Q44", señales: ["SD"], nombre: "Q4" }, null,
+
+                        { num: "Q51", desX: -1, extraEstrecho: true },
+                        { num: "Q52", desX: 0, extraEstrecho: true },
+                        { num: "Q54", desX: 1, extraEstrecho: true, señales: ["SD"], nombre: "Q5" },
+                    ],
+
+                },
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 120,
+            "Alto": 90,
+            "Familia": "Synco",
+            "Tipo": "modulo",
+        },
+    },
+    "RMZ785": {
+        "Nombre": "RMZ785",
+        "Paginas": [
+            [
+                {   // Entradas universales
+                    "Simbolos": [
+                        null, "#|", "#U", "#/",
+                        "#D", "#|", "#U", "#/",
+                        null, "#|", "#U", "#/",
+                        "#D", "#|", "#U", "#/",
+                        null, "#|", "#U", "#/",
+                        "#D", "#|", "#U", "#/",
+                        null, "#|", "#U", "#/",
+                        null, "#|", "#U",  // TODO  X8 tiene G1 o no ?
+                    ],
+                    "Numeracion": [
+                        null, "M", { num: "X1", señales: ["EA", "ED"], nombre: "X1" }, null,
+                        "G1", "M", { num: "X2", señales: ["EA", "ED"], nombre: "X2" }, null,
+                        null, "M", { num: "X3", señales: ["EA", "ED"], nombre: "X3" }, null,
+                        "G1", "M", { num: "X4", señales: ["EA", "ED"], nombre: "X4" }, null,
+                        null, "M", { num: "X5", señales: ["EA", "ED"], nombre: "X5" }, null,
+                        "G1", "M", { num: "X6", señales: ["EA", "ED"], nombre: "X6" }, null,
+                        null, "M", { num: "X7", señales: ["EA", "ED"], nombre: "X7" }, null,
+                        null, "M", { num: "X8", señales: ["EA", "ED"], nombre: "X8" },
+                    ],
+                },
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 120,
+            "Alto": 90,
+            "Familia": "Synco",
+            "Tipo": "modulo",
+        },
+    },
+    "RMZ787": {
+        "Nombre": "RMZ787",
+        "Paginas": [
+            [
+                {   // Entradas universales
+                    "Simbolos": [
+                        null, "#|", "#U", "#/",
+                        "#D", "#|", "#U", "#/",
+                        null, "#|", "#U", "#/",
+                        "#D", "#|", "#U",
+                    ],
+                    "Numeracion": [
+                        null, "M", { num: "X1", señales: ["EA", "ED"], nombre: "X1" }, null,
+                        "G1", "M", { num: "X2", señales: ["EA", "ED"], nombre: "X2" }, null,
+                        null, "M", { num: "X3", señales: ["EA", "ED"], nombre: "X3" }, null,
+                        "G1", "M", { num: "X4", señales: ["EA", "ED"], nombre: "X4" },
+                    ],
+                },
+                {   // Salidas digitales
+                    "Simbolos": [
+                        null, "#Qc", null, "#/",
+                        null, "#Qs", null, "#/",
+                        null, "#Qs", null, "#/",
+                        null, "#Qc", null, 
+                    ],
+                    "Numeracion": [
+                        { num: "Q11", extraEstrecho: true, desX: -1 },
+                        { num: "Q12", extraEstrecho: true, desX: 0 },
+                        { num: "Q14", extraEstrecho: true, desX: 1, señales: ["SD"], nombre: "Q1" }, null,
+
+                        "Q23", null, { num: "Q24", señales: ["SD"], nombre: "Q2" }, null,
+                        "Q33", null, { num: "Q34", señales: ["SD"], nombre: "Q3" }, null,
+
+                        { num: "Q51", desX: -1, extraEstrecho: true },
+                        { num: "Q52", desX: 0, extraEstrecho: true },
+                        { num: "Q54", desX: 1, extraEstrecho: true, señales: ["SD"], nombre: "Q5" },
+                    ],
+                },
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 120,
+            "Alto": 90,
+            "Familia": "Synco",
+            "Tipo": "modulo",
+        },
+    },
+    "RMZ788": {
+        "Nombre": "RMZ788",
+        "Paginas": [
+            [
+                {   // Entradas universales
+                    "Simbolos": [
+                        null, "#|", "#U", "#/",
+                        "#D", "#|", "#U", "#/",
+                        null, "#|", "#U", "#/",
+                        "#D", "#|", "#U",
+                    ],
+                    "Numeracion": [
+                        null, "M", { num: "X1", señales: ["EA", "ED"], nombre: "X1" }, null,
+                        "G1", "M", { num: "X2", señales: ["EA", "ED"], nombre: "X2" }, null,
+                        null, "M", { num: "X3", señales: ["EA", "ED"], nombre: "X3" }, null,
+                        "G1", "M", { num: "X4", señales: ["EA", "ED"], nombre: "X4" }, 
+                    ],
+                },
+                {   // Salidas analógicas
+                    "Simbolos": [
+                        "#D", "#|", "#U", "#/",
+                        "#D", "#|", "#U",
+                    ],
+                    "Numeracion": [
+                        "G1", "M", { num: "Y1", señales: ["EA", "ED"], nombre: "Y1" }, null,
+                        "G1", "M", { num: "Y2", señales: ["EA", "ED"], nombre: "Y2" },
+                    ],
+                },
+
+                {   // Salidas digitales
+                    "Simbolos": [
+                        null, "#Qc", null, "#/",
+                        null, "#Qs", null, "#/",
+                        null, "#Qs", null, "#/",
+                        null, "#Qc", null, "#/",
+                        null, "#Qs", null, "#/",
+                        null, "#Qs", null, "#/",
+                        null, "#Qs", null,
+                    ],
+                    "Numeracion": [
+                        "Q13", null, { num: "Q14", señales: ["SD"], nombre: "Q1" }, null,
+
+                        { num: "Q51", desX: -1, extraEstrecho: true },
+                        { num: "Q52", desX: 0, extraEstrecho: true },
+                        { num: "Q54", desX: 1, extraEstrecho: true, señales: ["SD"], nombre: "Q5" },
+                    ],
+
+                },
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 120,
+            "Alto": 90,
+            "Familia": "Synco",
+            "Tipo": "modulo",
+        },
+    },
+    "RMZ789": {
+        "Nombre": "RMZ789",
+        "Paginas": [
+            [
+                {   // Entradas universales
+                    "Simbolos": [
+                        null, "#|", "#U", "#/",
+                        "#D", "#|", "#U", "#/",
+                        null, "#|", "#U", "#/",
+                        "#D", "#|", "#U", "#/",
+                        null, "#|", "#U", "#/",
+                        null, "#|", "#U", // TODO x6 tiene g1 o no ?
+                    ],
+                    "Numeracion": [
+                        null, "M", { num: "X1", señales: ["EA", "ED"], nombre: "X1" }, null,
+                        "G1", "M", { num: "X2", señales: ["EA", "ED"], nombre: "X2" }, null,
+                        null, "M", { num: "X3", señales: ["EA", "ED"], nombre: "X3" }, null,
+                        "G1", "M", { num: "X4", señales: ["EA", "ED"], nombre: "X4" }, null,
+                        null, "M", { num: "X5", señales: ["EA", "ED"], nombre: "X5" }, null,
+                        null, "M", { num: "X6", señales: ["EA", "ED"], nombre: "X6" }, 
+                    ],
+                },
+                {   // Salidas analógicas
+                    "Simbolos": [
+                        "#D", "#|", "#U", "#/",
+                        "#D", "#|", "#U",
+                    ],
+                    "Numeracion": [
+                        "G1", "M", { num: "Y1", señales: ["EA", "ED"], nombre: "Y1" }, null,
+                        "G1", "M", { num: "Y2", señales: ["EA", "ED"], nombre: "Y2" },
+                    ],
+                },
+
+                {   // Salidas digitales
+                    "Simbolos": [
+                        null, "#Qc", null, "#/",
+                        null, "#Qs", null, "#/",
+                        null, "#Qs", null, "#/",
+                        null, "#Qc", null, "#/",
+                        null, "#Qs", null, "#/",
+                        null, "#Qs", null, "#/",
+                        null, "#Qs", null,
+                    ],
+                    "Numeracion": [
+                        { num: "Q11", extraEstrecho: true, desX: -1 },
+                        { num: "Q12", extraEstrecho: true, desX: 0 },
+                        { num: "Q14", extraEstrecho: true, desX: 1, señales: ["SD"], nombre: "Q1" }, null,
+
+                        "Q23", null, { num: "Q24", señales: ["SD"], nombre: "Q2" }, null,
+                        "Q33", null, { num: "Q34", señales: ["SD"], nombre: "Q3" }, null,
+
+                        { num: "Q41", desX: -1, extraEstrecho: true },
+                        { num: "Q42", desX: 0, extraEstrecho: true },
+                        { num: "Q44", desX: 1, extraEstrecho: true, señales: ["SD"], nombre: "Q4" },
+                    ],
+                },
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 120,
+            "Alto": 90,
+            "Familia": "Synco",
+            "Tipo": "modulo",
+        },
+    },
+
 }

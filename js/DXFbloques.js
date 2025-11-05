@@ -1,6 +1,6 @@
-// /// <reference path="DXFbasicos.js" />
-// /// <reference path="DXFdispositivos.js" />
-// /// <reference path="DXFsimbolos.js" />
+/// <reference path="DXFbasicos.js" />
+/// <reference path="DXFdispositivos.js" />
+/// <reference path="DXFsimbolos.js" />
 
 // === CAJETIN ===
 function cajetin(posX, posY, infoCajetin = {}) {

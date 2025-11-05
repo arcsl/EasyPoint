@@ -1,6 +1,6 @@
-// /// <reference path="DXFbloques.js" />
-// /// <reference path="DXFdispositivos.js" />
-// /// <reference path="DXFsimbolos.js" />
+/// <reference path="DXFbloques.js" />
+/// <reference path="DXFdispositivos.js" />
+/// <reference path="DXFsimbolos.js" />
 
 /** 
  * dentro de VPORT 
@@ -341,40 +341,6 @@ ACAD
 Arial
 1071
  33567744
-  0
-STYLE
-  5
-535
-330
-3
-100
-AcDbSymbolTableRecord
-100
-AcDbTextStyleTableRecord
-  2
-Estrecho
- 70
-     0
- 40
-0.0
- 41
-0.8
- 50
-0.0
- 71
-     0
- 42
-2.5
-  3
-
-  4
-
-1001
-ACAD
-1000
-Arial
-1071
-    12288
   0
 ENDTAB
   0

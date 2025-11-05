@@ -1,8 +1,8 @@
-// /// <reference path="DXFbasicos.js" />
-// /// <reference path="DXFbloques.js" />
-// /// <reference path="DXFdispositivos.js" />
+/// <reference path="DXFbasicos.js" />
+/// <reference path="DXFbloques.js" />
+/// <reference path="DXFdispositivos.js" />
 
-function hasheador(posX, posY, hash, franja) {
+function hasheador(posX, posY, hash, franja, extraEstrecho = false) {
 
     let tamText = 2.5;
     let alineacion = "MC";
@@ -27,8 +27,7 @@ function hasheador(posX, posY, hash, franja) {
     }
 
     if (franja === "Numeracion") {
-        estiloText = "Estrecho";
-        multAncho = 0.8;
+        multAncho = extraEstrecho ? 0.6 : 0.8;
         desY += 2;
     }
 
@@ -39,7 +38,7 @@ function hasheador(posX, posY, hash, franja) {
     if (franja === "Etiqueta") {
         alineacion = "ML";
         rotacion = 90;
-        desY -= 188;
+        desY -= 190;
     }
 
 
@@ -54,16 +53,20 @@ function hasheador(posX, posY, hash, franja) {
         if (hash === "#|") return hashPalo(posX, desY);
         if (hash === "#-") return hashGuion(posX, desY);
         if (hash === "#Sep") return hashSep(posX, desY);
+        if (hash === "#/") return hashSemiSep(posX, desY);
         if (hash === "#d") return hashd(posX, desY);
         if (hash === "#RED") return hashLan(posX, desY);
         if (hash === "#T") return hashT(posX, desY, tamText);
         if (hash === "#uTierra") return hashuTierra(posX, desY);
         if (hash === "#Qc") return hashQconmutada(posX, desY);
+        if (hash === "#Qs") return hashQsimple(posX, desY);
         if (hash === "#ext") return hashExterna(posX, desY)
         if (hash === "#L") return hashAlimL(posX, desY)
         if (hash === "#N") return hashAlimN(posX, desY)
         if (hash === "#G") return hashAlimG(posX, desY)
         if (hash === "#G0") return hashAlimG0(posX, desY)
+        if (hash === "#b+") return hashBusMas(posX, desY)
+        if (hash === "#b-") return hashBusMenos(posX, desY)
 
     } else if (hash.includes("%")) {
         return [textoMultiDXF(posX, desY, hash.split('%'), tamText, alineacion, rotacion, estiloText, multAncho)];
@@ -163,6 +166,16 @@ function hashSep(posX, posY) {
 
 }
 
+function hashSemiSep(posX, posY) {
+
+    const entidades = [];
+
+    entidades.push(lineaDXF(posX + 0, posY - 9, posX + 0, posY + 7, 0));
+
+    return entidades;
+
+}
+
 function hashd(posX, posY) {
 
     const entidades = [];
@@ -249,24 +262,40 @@ function hashQconmutada(posX, posY) {
 
     const entidades = [];
 
- // entidades.push(lineaDXF(posX - 4, posY - 3, posX - 4, posY + 4, 0));
- // entidades.push(lineaDXF(posX - 4, posY + 4, posX - 1, posY + 4, 0));
- // entidades.push(lineaDXF(posX + 4, posY - 3, posX + 4, posY + 4, 0));
- // entidades.push(lineaDXF(posX + 0, posY - 3, posX + 0, posY + 1, 0));
- // entidades.push(lineaDXF(posX + 0, posY + 1, posX - 2, posY + 5, 0));
- // entidades.push(lineaDXF(posX + 1, posY + 4, posX + 4, posY + 4, 0));
+    // entidades.push(lineaDXF(posX - 4, posY - 3, posX - 4, posY + 4, 0));
+    // entidades.push(lineaDXF(posX - 4, posY + 4, posX - 1, posY + 4, 0));
+    // entidades.push(lineaDXF(posX + 4, posY - 3, posX + 4, posY + 4, 0));
+    // entidades.push(lineaDXF(posX + 0, posY - 3, posX + 0, posY + 1, 0));
+    // entidades.push(lineaDXF(posX + 0, posY + 1, posX - 2, posY + 5, 0));
+    // entidades.push(lineaDXF(posX + 1, posY + 4, posX + 4, posY + 4, 0));
 
-    entidades.push(lineaDXF( posX + 2, posY + 2, posX + 2, posY + 4, 0));
-    entidades.push(lineaDXF( posX + 4, posY - 5, posX + 4, posY - 2, 0));
-    entidades.push(lineaDXF( posX + 0, posY - 2, posX + 2, posY + 2, 0));
-    entidades.push(lineaDXF( posX + 0, posY - 5, posX + 0, posY - 2, 0));
-    entidades.push(lineaDXF( posX - 4, posY - 5, posX - 4, posY + 4, 0));
-    entidades.push(lineaDXF( posX - 4, posY + 4, posX + 2, posY + 4, 0));
+    entidades.push(lineaDXF(posX + 2, posY + 2, posX + 2, posY + 4, 0));
+    entidades.push(lineaDXF(posX + 4, posY - 5, posX + 4, posY - 2, 0));
+    entidades.push(lineaDXF(posX + 0, posY - 2, posX + 2, posY + 2, 0));
+    entidades.push(lineaDXF(posX + 0, posY - 5, posX + 0, posY - 2, 0));
+    entidades.push(lineaDXF(posX - 4, posY - 5, posX - 4, posY + 4, 0));
+    entidades.push(lineaDXF(posX - 4, posY + 4, posX + 2, posY + 4, 0));
 
+    entidades.push(solidDXF([[posX - 4, posY - 3.5], [posX - 4.5, posY - 5], [posX - 3.5, posY - 5], [posX - 3.5, posY - 5]]));
+    entidades.push(solidDXF([[posX + 0, posY - 5], [posX - 0.5, posY - 3.5], [posX + 0.5, posY - 3.5], [posX + 0.5, posY - 3.5]]));
+    entidades.push(solidDXF([[posX + 4, posY - 5], [posX + 3.5, posY - 3.5], [posX + 4.5, posY - 3.5], [posX + 4.5, posY - 3.5]]));
 
-    entidades.push(solidDXF([[posX - 4  , posY - 3.5], [posX - 4.5, posY - 5  ], [posX - 3.5, posY - 5  ], [posX - 3.5, posY - 5  ]]));
-    entidades.push(solidDXF([[posX + 0  , posY - 5  ], [posX - 0.5, posY - 3.5], [posX + 0.5, posY - 3.5], [posX + 0.5, posY - 3.5]]));
-    entidades.push(solidDXF([[posX + 4  , posY - 5  ], [posX + 3.5, posY - 3.5], [posX + 4.5, posY - 3.5], [posX + 4.5, posY - 3.5]]));
+    return entidades;
+
+}
+
+function hashQsimple(posX, posY) {
+
+    const entidades = [];
+
+    entidades.push(lineaDXF(posX - 4, posY - 5, posX - 4, posY + 4));
+    entidades.push(lineaDXF(posX + 4, posY - 5, posX + 4, posY - 2));
+    entidades.push(lineaDXF(posX - 4, posY + 4, posX + 4, posY + 4));
+    entidades.push(lineaDXF(posX + 4, posY + 4, posX + 4, posY + 2));
+    entidades.push(lineaDXF(posX + 4, posY - 2, posX + 2, posY + 2));
+
+    entidades.push(solidDXF([[posX - 4, posY - 3.5], [posX - 4.5, posY - 5], [posX - 3.5, posY - 5], [posX - 3.5, posY - 5]]));
+    entidades.push(solidDXF([[posX + 4, posY - 5], [posX + 3.5, posY - 3.5], [posX + 4.5, posY - 3.5], [posX + 4.5, posY - 3.5]]));
 
     return entidades;
 
@@ -303,7 +332,7 @@ function hashAlimN(posX, posY) {
     const entidades = [];
 
     entidades.push(lineaDXF(posX + 0, posY + 0, posX + 0, posY - 100));
-     entidades.push(punto(posX + 0, posY - 100));
+    entidades.push(punto(posX + 0, posY - 100));
 
     return entidades;
 
@@ -314,7 +343,7 @@ function hashAlimG(posX, posY) {
     const entidades = [];
 
     entidades.push(lineaDXF(posX + 0, posY + 0, posX + 0, posY - 12));
- entidades.push(punto(posX + 0, posY - 12));
+    entidades.push(punto(posX + 0, posY - 12));
     return entidades;
 
 }
@@ -325,6 +354,28 @@ function hashAlimG0(posX, posY) {
 
     entidades.push(lineaDXF(posX + 0, posY + 0, posX + 0, posY - 16));
     entidades.push(punto(posX + 0, posY - 16));
+
+    return entidades;
+
+}
+
+function hashBusMas(posX, posY) {
+
+    const entidades = [];
+
+    entidades.push(lineaDXF(posX + 0, posY + 0, posX + 0, posY - 24));
+    entidades.push(punto(posX + 0, posY - 24));
+
+    return entidades;
+
+}
+
+function hashBusMenos(posX, posY) {
+
+    const entidades = [];
+
+    entidades.push(lineaDXF(posX + 0, posY + 0, posX + 0, posY - 28));
+    entidades.push(punto(posX + 0, posY - 28));
 
     return entidades;
 

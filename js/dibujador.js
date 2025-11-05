@@ -21,15 +21,11 @@ function writeForm() {
 // ================== CARRILES ==================
 
 function writeCarriles() {
-
     UI.CarrilesContenedor.innerHTML = "";
-
     proyectoActual.Asignacion.forEach((carril, idx) => {
         renderCarril(idx, proyectoActual.Asignacion.length, carril);
     });
-
     updateSelectsSeniales();
-
 }
 
 function moveCarril(index, dir) {
@@ -50,7 +46,7 @@ function moveCarril(index, dir) {
 function renderCarril(index, totalCarriles, carrilData) {
 
     const carril = document.createElement("div");
-    carril.className = "carril-row w3-margin-bottom";
+    carril.className = "carril-row w3-margin-top";
     carril.dataset.index = index;
 
     // left buttons
@@ -62,7 +58,7 @@ function renderCarril(index, totalCarriles, carrilData) {
     const rowTop = document.createElement("div");
     rowTop.className = "carril-header";
 
-    const btnDel = createBoton("w3-red", "trash", "Eliminar carril", () => {
+    const btnDel = createBoton("w3-red", "papelera", "Eliminar carril", () => {
         proyectoActual.Asignacion.splice(index, 1);
         proyectoNoGuardado();
         writeCarriles();
@@ -85,8 +81,8 @@ function renderCarril(index, totalCarriles, carrilData) {
     colRight.classList.add("carril-col");
 
     const btnAddDev = document.createElement("button");
-    btnAddDev.classList.add("w3-button", "w3-green", "w3-round", "w3-small", "botonAniadir");
-    btnAddDev.innerHTML = "Añadir Dispositivo";
+    btnAddDev.classList.add("w3-button", "w3-green", "w3-round", "botonAniadir");
+    btnAddDev.innerHTML = "+ Dispositivo";
     btnAddDev.onclick = () => {
         carrilData.push({ tipo: null, _visible: false }); // nuevo dispositivo sin tipo
         proyectoNoGuardado();
@@ -142,14 +138,14 @@ function renderDispositivo(devicesContainer, carrilIndex, dispIndex, dispData) {
 
     // Selector de modelo
     const sel = document.createElement("select");
-    sel.classList.add("w3-select", "w3-border", "w3-round", "w3-small", "w3-padding", "selectDispositivo");
+    sel.classList.add("w3-select", "w3-border", "w3-round", "w3-padding", "selectDispositivo");
     sel.appendChild(new Option("", ""));
 
     Object.keys(dispositivos).forEach(k => sel.appendChild(new Option(k, k)));
     if (dispData?.tipo) sel.value = dispData.tipo;
 
     // Botones dispositivo
-    const btnDel = createBoton("w3-red", "trash", "Eliminar dispositivo", () =>
+    const btnDel = createBoton("w3-red", "papelera", "Eliminar dispositivo", () =>
         elimDispositivo(carrilIndex, dispIndex)
     );
 
@@ -159,8 +155,12 @@ function renderDispositivo(devicesContainer, carrilIndex, dispIndex, dispData) {
     btnUp.classList.add("dev-move-up");
     if (dispIndex === 0) btnUp.disabled = true;
 
+
+
+
+
     const btnDown = createBoton("w3-blue", "arrow-down", "Bajar dispositivo", () =>
-        moveDispositivo(carrilIndex, dispIndex, +1)
+        moveDispositivo(carrilIndex, dispIndex, 1)
     );
     btnDown.classList.add("dev-move-down");
     if (dispIndex === proyectoActual.Asignacion[carrilIndex].length - 1) btnDown.disabled = true;
@@ -170,10 +170,13 @@ function renderDispositivo(devicesContainer, carrilIndex, dispIndex, dispData) {
         const oculto = channels.classList.toggle("w3-hide");
         proyectoActual.Asignacion[carrilIndex][dispIndex]._visible = !oculto;
         proyectoNoGuardado();
-        btnToggle.innerHTML = oculto
-            ? '<img src="./images/eye.svg" alt="ver">'
-            : '<img src="./images/eye-slash.svg" alt="ocultar">';
-
+        if (oculto) {
+            btnToggle.innerHTML = '<img src="./images/eye.svg" alt="ver">'
+            btnToggle.title = "Mostrar canales."
+        } else {
+            btnToggle.innerHTML = '<img src="./images/eye-slash.svg" alt="ocultar">';
+            btnToggle.title = "Ocultar canales."
+        }
     });
     btnToggle.classList.add("botonCuadrado");
 
@@ -188,10 +191,12 @@ function renderDispositivo(devicesContainer, carrilIndex, dispIndex, dispData) {
     // Aplicar visibilidad guardada
     if (dispData?._visible === false) {
         channels.classList.add("w3-hide");
-        btnToggle.innerHTML = `<i class="fa fa-eye"></i>`;
+        btnToggle.innerHTML = `<img src="./images/eye.svg" alt="ver">`;
+        btnToggle.title = "Mostrar canales."
     } else {
         channels.classList.remove("w3-hide");
-        btnToggle.innerHTML = `<i class="fa fa-eye-slash"></i>`;
+        btnToggle.innerHTML = `<img src="./images/eye-slash.svg" alt="ocultar">`;
+        btnToggle.title = "Ocultar canales."
     }
 
     block.appendChild(channels);
@@ -231,11 +236,11 @@ function renderCanales(channelsContainer, carrilIndex, dispIndex, deviceObj) {
                 row.className = "channel-row";
 
                 const label = document.createElement("label");
-                label.classList.add("w3-small", "borne-label");
+                label.classList.add("borne-label");
                 label.textContent = nombreBorne;
 
                 const sel = document.createElement("select");
-                sel.classList.add("w3-select", "w3-border", "w3-round", "w3-small", "borne-select");
+                sel.classList.add("w3-select", "w3-border", "w3-round", "borne-select");
 
                 // Guardar los tipos permitidos para este borne
                 sel.dataset.seniales = JSON.stringify(n.señales);
@@ -341,7 +346,7 @@ function createBoton(color, icon, title, onClick) {
     const b = document.createElement("button");
     b.classList.add("w3-button", color, "w3-round", "botonCuadDib");
     b.title = title;
-    b.innerHTML = `<i class="fa fa-${icon}"></i>`;
+    if (icon) b.innerHTML = `<img src="./images/${icon}.svg" alt="${icon}">`;
     b.onclick = onClick;
     return b;
 }
@@ -822,6 +827,7 @@ function dibujarPaginaDeDispositivo(hojaX, hojaY, dispositivo, pageIndex, startX
             // 1) Si el borne tiene SEÑAL asignada en EL ESTADO → dibujar símbolo correspondiente
             const borneObj = conector.Numeracion[i];
             const { num, seniales, nombre, desG0 } = normalizarBorne(borneObj);
+            
             // nombre del borne (para mapear en estado)
             const nombreBorne = nombre || num || null;
             if (nombreBorne) {
@@ -855,12 +861,24 @@ function dibujarPaginaDeDispositivo(hojaX, hojaY, dispositivo, pageIndex, startX
                 }
             }
 
-            // 2) Dibujar resto de franjas (normalizando objetos {num,...} a su .num)
+            // 2) Dibujar resto de franjas
             franjas.forEach(franja => {
+
                 if (Array.isArray(conector[franja])) {
+                    
                     let valor = conector[franja][i];
-                    if (valor && typeof valor === "object") valor = valor.num; // normaliza si hace falta
-                    entidades.push(...hasheador(inX, inY, valor, franja));
+                    
+                    if (valor && typeof valor === "object") {
+                        // extraestrecho y desX aparecen cuando el texto no entra y hay que hacerlo mas estrecho
+                        // vease los textos de los contactos conmutados del synco
+                        const { extraEstrecho = false, desX = 0, num = "-" } = valor;
+                        entidades.push(...hasheador(inX + desX, inY, num, franja, extraEstrecho));
+                    } else {
+
+                        entidades.push(...hasheador(inX, inY, valor, franja));
+                    }
+
+
                 }
             });
         }
