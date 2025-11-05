@@ -22,16 +22,23 @@
     <script src="./js/creadorCSV.js"></script>
     <script src="./js/creadorDOCX.js"></script>
     <script src="./js/creadorPDF.js"></script>
+    <script src="./js/DXFbasicos.js"></script>
+    <script src="./js/DXFbloques.js"></script>
+    <script src="./js/DXFdispositivos.js"></script>
+    <script src="./js/DXFsimbolos.js"></script>
+    <script src="./js/dibujador.js" defer></script>
     <script src="./js/script.js" defer></script>
     <script src="./js/escuchadores.js" defer></script>
 
     <link rel="icon" type="image/png" href="./images/ARClogo.png">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="./css/style.css" />
     <link rel="stylesheet" href="./css/overlay.css" />
     <link rel="stylesheet" href="./css/estudio.css" />
     <link rel="stylesheet" href="./css/listado.css" />
     <link rel="stylesheet" href="./css/memoria.css" />
+    <link rel="stylesheet" href="./css/dibujar.css" />
 
 </head>
 
@@ -122,9 +129,61 @@
         <div id="estudioCont" class="w3-margin-bottom"></div>
         <div id="memoriaCont" class="w3-margin-bottom w3-hide"></div>
         <div id="listadoCont" class="w3-margin-bottom w3-hide"></div>
+        <div id="dibujarCont" class="w3-margin-bottom w3-hide">
+
+            <p>Datos del cajetín</p>
+
+            <div class="w3-row-padding">
+                <div class="w3-half">
+                    <input class="w3-input w3-border" id="Dibu" placeholder="Dibujado">
+                </div>
+                <div class="w3-half">
+                    <input class="w3-input w3-border" id="Clie" placeholder="Cliente">
+                </div>
+            </div>
+
+            <div class="w3-row-padding">
+                <div class="w3-half">
+                    <input type="date" class="w3-input w3-border" id="Fech">
+                </div>
+                <div class="w3-half">
+                    <input class="w3-input w3-border" id="Loca" placeholder="Localidad">
+                </div>
+            </div>
+
+            <div class="w3-row-padding">
+                <div class="w3-half">
+                    <input class="w3-input w3-border" id="Revi" placeholder="Revisado">
+                </div>
+                <div class="w3-half">
+                    <input class="w3-input w3-border" id="Stye" placeholder="Sustituye a">
+                </div>
+            </div>
+
+            <div class="w3-row-padding">
+                <div class="w3-half">
+                    <input class="w3-input w3-border" id="Esqu" placeholder="Nº esquema">
+                </div>
+                <div class="w3-half">
+                    <input class="w3-input w3-border" id="Stdo" placeholder="Sustituido por">
+                </div>
+            </div>
+
+            <div class="w3-row-padding">
+                <div class="w3-col s12">
+                    <button id="btnAddCarril" class="w3-button w3-green w3-round w3-small botonAniadir">Añadir Carril</button>
+                </div>
+            </div>
+
+            <div class="w3-row-padding">
+                <div class="w3-col s12">
+                    <div id="CarrilesContenedor"></div>
+                </div>
+            </div>
+        </div>
 
         <!-- Barra herramientas de seccion -->
-        <div class="contenidoFlex">
+        <div id="sectionToolsCont" class="contenidoFlex">
             <select id="sectionToolsSelect" class="w3-select w3-margin-right w3-padding"></select>
             <button id="sectionToolsBtn" class="w3-button w3-green botonCuadrado w3-margin-right"><img src="./images/aniacirc.svg" alt="Añadir"></button>
         </div>
@@ -135,8 +194,16 @@
         <!-- Pie -->
         <div id="proyectoPie" class="w3-bottom w3-white">
             <table class="w3-table w3-bordered w3-pale-green w3-margin-top w3-margin-bottom">
-                <thead><tr><th></th></tr></thead>
-                <tbody><tr><th>TOTAL</th></tr></tbody>
+                <thead>
+                    <tr>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>TOTAL</th>
+                    </tr>
+                </tbody>
             </table>
         </div>
 
@@ -169,6 +236,7 @@
             <button id="expPDFBtn" class="w3-button w3-purple botonCuadrado w3-margin-right"><img src="./images/pdf.svg" alt="PDF"></button>
             <button id="expCSVBtn" class="w3-button w3-purple botonCuadrado w3-margin-right"><img src="./images/csv.svg" alt="CSV"></button>
             <button id="expWordBtn" class="w3-button w3-purple botonCuadrado w3-margin-right"><img src="./images/fileword.svg" alt="Word"></button>
+            <button id="expDXFBtn" class="w3-button w3-purple botonCuadrado w3-margin-right"><img src="./images/dxf.svg" alt="DXF"></button>
             <button id="expCerrarBtn" class="w3-button w3-red corner" aria-label="Cerrar">✕</button>
         </div>
 
@@ -176,6 +244,7 @@
             <button id="estudioMostrarBtn" class="w3-button w3-blue botonCuadrado w3-margin-right w3-hide"><img src="./images/estudio.svg" alt="Estudio"></button>
             <button id="memoriaMostrarBtn" class="w3-button w3-blue botonCuadrado w3-margin-right"><img src="./images/book.svg" alt="Memoria"></button>
             <button id="listadoMostrarBtn" class="w3-button w3-blue botonCuadrado w3-margin-right"><img src="./images/listado.svg" alt="Listado"></button>
+            <button id="dibujarMostrarBtn" class="w3-button w3-blue botonCuadrado w3-margin-right"><img src="./images/techDraw.svg" alt="Dibujar"></button>
             <button id="crearCerrarBtn" class="w3-button w3-red corner" aria-label="Cerrar">✕</button>
         </div>
 

@@ -1,6 +1,6 @@
-/// <reference path="basicosDXF.js" />
-/// <reference path="bloquesDXF.js" />
-/// <reference path="simbolos.js" />
+// /// <reference path="DXFbasicos.js" />
+// /// <reference path="DXFbloques.js" />
+// /// <reference path="DXFsimbolos.js" />
 
 const dispositivos = {
     "PXC4.E16-2": {

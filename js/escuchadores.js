@@ -399,13 +399,34 @@ UI.proyectoGuardarBtn.addEventListener("click", () => {
 // (morado Exportar) mostar exportPop para seleccionar el formato de la exportación
 UI.proyectoExportarBtn.addEventListener("click", () => {
     UI.proyecto.setAttribute('inert', ''); // bloquea el resto de inputs y botones
-    if (proyectoActual.Viendo === "memoria") {
-        UI.expCSVBtn.classList.add("w3-hide");
-        UI.expWordBtn.classList.remove("w3-hide");
-
-    } else {
+    if (proyectoActual.Viendo === "estudio") {
+        UI.expPDFBtn.classList.remove("w3-hide");
         UI.expCSVBtn.classList.remove("w3-hide");
         UI.expWordBtn.classList.add("w3-hide");
+        UI.expDXFBtn.classList.add("w3-hide");
+        UI.overlayPopExport.style.left = "752px";
+        
+    } else if (proyectoActual.Viendo === "memoria") {
+        UI.expPDFBtn.classList.remove("w3-hide");
+        UI.expCSVBtn.classList.add("w3-hide");
+        UI.expWordBtn.classList.remove("w3-hide");
+        UI.expDXFBtn.classList.add("w3-hide");
+        UI.overlayPopExport.style.left = "752px";
+        
+    } else if (proyectoActual.Viendo === "listado") {
+        UI.expPDFBtn.classList.remove("w3-hide");
+        UI.expCSVBtn.classList.remove("w3-hide");
+        UI.expWordBtn.classList.add("w3-hide");
+        UI.expDXFBtn.classList.add("w3-hide");
+        UI.overlayPopExport.style.left = "752px";
+        
+    } else if (proyectoActual.Viendo === "dibujar") {
+        UI.expPDFBtn.classList.add("w3-hide");
+        UI.expCSVBtn.classList.add("w3-hide");
+        UI.expWordBtn.classList.add("w3-hide");
+        UI.expDXFBtn.classList.remove("w3-hide");
+        UI.overlayPopExport.style.left = "822px";
+
     }
     UI.overlay.classList.remove("w3-hide");
     UI.overlayPopExport.classList.remove("w3-hide");
@@ -465,6 +486,21 @@ UI.proyectoInputNombre.addEventListener("input", () => {
     }
 
 });
+
+
+/* ---------- BOTONES DIBUJADOR ---------- */
+UI.btnAddCarril.onclick = () => {
+
+    // 1) Añadir un carril vacío al estado
+    proyectoActual.Asignacion.push([]); // carril vacio
+
+    // 2) Guardamos
+    proyectoNoGuardado();
+
+    // 3) Re-pintamos todo
+    writeCarriles();
+   
+};
 
 
 /* ---------- BOTONES VENTANA POPUP SEÑALES---------- */
@@ -576,6 +612,11 @@ UI.expWordBtn.addEventListener("click", () => {
     generarMemoriaDOCX();
     UI.expCerrarBtn.dispatchEvent(new Event('click', { bubbles: true }));
 });
+// (morado Word) Generar memoria en word y ocultar la interfaz.
+UI.expDXFBtn.addEventListener("click", () => {
+    descargarDXF();
+    UI.expCerrarBtn.dispatchEvent(new Event('click', { bubbles: true }));
+});
 // (rojo aspa) ocultar la interfaz y no hacer nada.
 UI.expCerrarBtn.addEventListener("click", () => {
     UI.proyecto.removeAttribute('inert');
@@ -598,16 +639,19 @@ UI.estudioMostrarBtn.addEventListener("click", () => {
     UI.estudioMostrarBtn.classList.add("w3-hide");
     UI.memoriaMostrarBtn.classList.remove("w3-hide");
     UI.listadoMostrarBtn.classList.remove("w3-hide");
+    UI.dibujarMostrarBtn.classList.remove("w3-hide");
 
     // cambiar la seccion mostrada
     UI.estudioCont.classList.remove("w3-hide");
     UI.memoriaCont.classList.add("w3-hide");
     UI.listadoCont.classList.add("w3-hide");
+    UI.dibujarCont.classList.add("w3-hide");
     proyectoActual.Viendo = "estudio";
     localStorage.setItem("proyectoActual", JSON.stringify(proyectoActual));
     actualizaSumatorio();
 
     // mostrar el select de la barra de herramients y el sumatorio de señales
+    UI.sectionToolsCont.classList.remove("w3-hide");
     UI.sectionToolsSelect.classList.remove("w3-invisible");
     UI.proyectoPie.classList.remove("w3-hide");
 
@@ -631,22 +675,56 @@ UI.listadoMostrarBtn.addEventListener("click", () => {
     UI.estudioMostrarBtn.classList.remove("w3-hide");
     UI.memoriaMostrarBtn.classList.remove("w3-hide");
     UI.listadoMostrarBtn.classList.add("w3-hide");
+    UI.dibujarMostrarBtn.classList.remove("w3-hide");
 
     // cambiar la seccion mostrada
     UI.estudioCont.classList.add("w3-hide");
     UI.memoriaCont.classList.add("w3-hide");
     UI.listadoCont.classList.remove("w3-hide");
+    UI.dibujarCont.classList.add("w3-hide");
     proyectoActual.Viendo = "listado";
     localStorage.setItem("proyectoActual", JSON.stringify(proyectoActual));
     actualizaSumatorio();
 
     // ocultar el select de la barra de herramients y mostrar el sumatorio de señales
+    UI.sectionToolsCont.classList.remove("w3-hide");
     UI.sectionToolsSelect.classList.add("w3-invisible");
     UI.proyectoPie.classList.remove("w3-hide");
 
     // cambiar el texto e icono del boton de la barra de herramientas
     UI.sectionToolsBtn.title = "Regenerar listado de señales conforme al estado actual del estudio."
     UI.sectionToolsBtn.querySelector("img").src = "./images/regen.svg";
+
+    // cerrar popup
+    UI.crearCerrarBtn.dispatchEvent(new Event('click', { bubbles: true }));
+});
+// (azul dibujar) pasar al creador de listado de señales
+UI.dibujarMostrarBtn.addEventListener("click", () => {
+
+    // cambiar icono en la barra de botones
+    UI.proyectoSeccionBtn.querySelector("img").src = "./images/techDraw.svg";
+
+    // cambiar contenido del label informativo de seccion
+    UI.proyectoLabelSeccion.innerText = "ASIGNACIÓN DE SEÑALES Y CREACIÓN DE PLANOS";
+
+    // cambiar botones mostrados en el popup para no mostrar el boton de la seccion en la que ya estamos
+    UI.estudioMostrarBtn.classList.remove("w3-hide");
+    UI.memoriaMostrarBtn.classList.remove("w3-hide");
+    UI.listadoMostrarBtn.classList.remove("w3-hide");
+    UI.dibujarMostrarBtn.classList.add("w3-hide");
+
+    // cambiar la seccion mostrada
+    UI.estudioCont.classList.add("w3-hide");
+    UI.memoriaCont.classList.add("w3-hide");
+    UI.listadoCont.classList.add("w3-hide");
+    UI.dibujarCont.classList.remove("w3-hide");
+
+    proyectoActual.Viendo = "dibujar";
+    localStorage.setItem("proyectoActual", JSON.stringify(proyectoActual));
+
+    // ocultar barra de herramients y el sumatorio de señales
+    UI.sectionToolsCont.classList.add("w3-hide");
+    UI.proyectoPie.classList.add("w3-hide");
 
     // cerrar popup
     UI.crearCerrarBtn.dispatchEvent(new Event('click', { bubbles: true }));
@@ -665,15 +743,19 @@ UI.memoriaMostrarBtn.addEventListener("click", () => {
     UI.estudioMostrarBtn.classList.remove("w3-hide");
     UI.memoriaMostrarBtn.classList.add("w3-hide");
     UI.listadoMostrarBtn.classList.remove("w3-hide");
+    UI.dibujarMostrarBtn.classList.remove("w3-hide");
 
     // cambiar la seccion mostrada
     UI.estudioCont.classList.add("w3-hide");
     UI.memoriaCont.classList.remove("w3-hide");
     UI.listadoCont.classList.add("w3-hide");
+    UI.dibujarCont.classList.add("w3-hide");
+
     proyectoActual.Viendo = "memoria";
     localStorage.setItem("proyectoActual", JSON.stringify(proyectoActual));
 
-    // ocultar el select de la barra de herramients y sumatorio de señales
+    // mostrar barra de herramientas ocultar el select de la barra de herramients y sumatorio de señales
+    UI.sectionToolsCont.classList.remove("w3-hide");
     UI.sectionToolsSelect.classList.add("w3-invisible");
     UI.proyectoPie.classList.add("w3-hide");
 

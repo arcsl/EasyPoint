@@ -2,6 +2,7 @@
 const UI = {};
 document.querySelectorAll("[id]").forEach(el => UI[el.id] = el);
 
+
 /* ------------------------- VARIABLES GLOBALES ------------------------- */
 let proyectosEasyPoint = JSON.parse(localStorage.getItem('proyectosEasyPoint')) || {};
 let nombreProyectoActual = null;
@@ -12,7 +13,18 @@ const nuevoProyectoVacio = {
     Memoria: "",
     Listado: Object.fromEntries(signalTypes.map(key => [key, []])),
     Asignacion: [],
+    Info: {
+        Dibu: "",
+        Clie: "",
+        Fech: "",
+        Loca: "",
+        Revi: "",
+        Stye: "",
+        Esqu: "",
+        Stdo: "",
+    }
 }
+
 
 /* ------------------------- EJECUCIONES INICIALES ------------------------- */
 if (location.hostname === "arcsl.github.io") {
@@ -32,6 +44,7 @@ function guardadoOK() {
         notificacion.remove();
     }, 2000);
 }
+
 
 /* ------------------------- POBLADORES ------------------------- */
 function populateProyectSelect() {
@@ -115,6 +128,7 @@ function populateSumatorio() {
     });
 
 }
+
 
 /* ------------------------- ESTUDIO ------------------------- */
 function writeBlocks() {
@@ -1050,11 +1064,14 @@ function muestraProyecto() {
     writeBlocks();
     writeSignals();
     writeMemo();
+    writeForm();
+    writeCarriles();
 
     // activar seccion visible en el DOM
     if (proyectoActual.Viendo === "estudio") UI.estudioMostrarBtn.dispatchEvent(new Event('click', { bubbles: true }));
     if (proyectoActual.Viendo === "listado") UI.listadoMostrarBtn.dispatchEvent(new Event('click', { bubbles: true }));
     if (proyectoActual.Viendo === "memoria") UI.memoriaMostrarBtn.dispatchEvent(new Event('click', { bubbles: true }));
+    if (proyectoActual.Viendo === "dibujar") UI.dibujarMostrarBtn.dispatchEvent(new Event('click', { bubbles: true }));
 
     // mostrar proyecto en el DOM
     UI.portada.classList.add("w3-hide");

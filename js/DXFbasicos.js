@@ -1,6 +1,6 @@
-/// <reference path="bloquesDXF.js" />
-/// <reference path="dispositivos.js" />
-/// <reference path="simbolos.js" />
+// /// <reference path="DXFbloques.js" />
+// /// <reference path="DXFdispositivos.js" />
+// /// <reference path="DXFsimbolos.js" />
 
 /** 
  * dentro de VPORT 

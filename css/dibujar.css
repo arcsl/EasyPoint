@@ -1,67 +1,68 @@
-label.borne-label{
+#dibujarCont {
+    width: 1000px;
+}
+
+#dibujarCont label.borne-label {
     width: 160px;
     text-align: right;
 }
 
-select.selectDispositivo{
+#dibujarCont select.selectDispositivo {
     width: 230px;
 }
 
-select.borne-select{
+#dibujarCont select.borne-select {
     width: 288px;
 }
 
-button.botonAniadir {
+#dibujarCont button.botonAniadir {
     width: 165px;
 }
 
-button.botonCuadrado {
+#dibujarCont button.botonCuadDib {
+    padding: 0;
     width: 50px;
 }
 
-.container {
-    width: 1000px;
-}
-
-.carril-row {
+#dibujarCont .carril-row {
     display: flex;
     align-items: flex-start;
     gap: 8px;
 }
 
-.carril-col {
+#dibujarCont .carril-col {
     flex: 1;
 }
 
-.carril-header {
+#dibujarCont .carril-header {
     display: flex;
     align-items: center;
     gap: 8px;
 }
 
-.devices-container {
+#dibujarCont .devices-container {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
-.device-head {
+#dibujarCont .device-head {
     display: flex;
     align-items: center;
     gap: 8px;
 }
 
-.channels {
+#dibujarCont .channels {
     padding-left: 6px;
 }
 
-.channel-row {
+#dibujarCont .channel-row {
     display: flex;
     align-items: center;
     gap: 8px;
 }
 
-.divSelectores {
+#dibujarCont .divSelectores {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;

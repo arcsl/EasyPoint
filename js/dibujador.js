@@ -6,179 +6,48 @@ const SEP_CONTROLADOR = 20;
 
 let nModulo = 0;
 
-const UI = {};
-document.querySelectorAll("[id]").forEach(el => UI[el.id] = el);
-
-let estado = {
-    form: {},
-    carriles: [],
-    listado: []
-};
-
-UI.btnResetEstado.onclick = () => {
-    if (!confirm("❗Esto borrará todo el proyecto guardado.\n\n¿Seguro que quieres continuar?"))
-        return;
-
-    localStorage.removeItem("estadoDXF");
-
-    // Reiniciar objeto de estado
-    estado = {
-        form: {},
-        carriles: [],
-        listado: []
-    };
-
-    guardarEstado();
-    location.reload();
-};
-
-UI.btnImportarListado.onclick = () => {
-    UI.inputImportarListado.click();
-};
-
-UI.inputImportarListado.onchange = async function (evt) {
-
-    const file = evt.target.files[0];
-    if (!file) return;
-
-    try {
-
-        const text = await file.text();
-        const json = JSON.parse(text);
-
-        if (!json.Listado) {
-            alert("❌ Archivo inválido (falta propiedad Listado)");
-            return;
+function writeForm() {
+    for (const id in proyectoActual.Info) {
+        if (UI[id]) {
+            UI[id].value = proyectoActual.Info[id];
+            UI[id].addEventListener("change", () => {
+                proyectoActual.Info[id] = UI[id].value;
+                proyectoNoGuardado();
+            });
         }
-
-        estado.listado = structuredClone(json.Listado);
-        guardarEstado();
-
-        alert("✅ Listado de señales importado correctamente");
-
-        // TODO: actualizar selectores si ya hay carriles dibujados
-
-    } catch (e) {
-        console.error(e);
-        alert("❌ Error leyendo archivo JSON");
-    }
-};
-
-window.onload = () => {
-
-    // si hay info almacenada cargarla
-    if (cargarEstado()) {
-        escribirFormulario();
-        escribirCarriles();
-    } else {
-        guardarEstado();
-    }
-
-    // salvar en caso de cambio de cualquier input o select
-    document.querySelectorAll("input,select").forEach(el => {
-        el.addEventListener("change", guardarFormulario);
-    });
-
-};
-
-// ================== SALVAR/CARGAR PROYECTO EN/DE LOCAL STORAGE ==================
-
-function guardarEstado() {
-    localStorage.setItem("estadoDXF", JSON.stringify(estado));
-}
-
-function cargarEstado() {
-    const data = localStorage.getItem("estadoDXF");
-    if (!data) return false;
-
-    try {
-        estado = JSON.parse(data);
-
-        // asegurar estructura completa
-        if (!estado.form) estado.form = {};
-        if (!estado.carriles) estado.carriles = [];
-        if (!estado.listado) estado.listado = [];
-
-        return true;
-    } catch {
-        console.warn("Error leyendo estado, limpiando Storage");
-        localStorage.removeItem("estadoDXF");
-        return false;
-    }
-}
-
-function guardarFormulario() {
-    const form = {
-        Inst: UI.Inst.value,
-        Dibu: UI.Dibu.value,
-        Fech: UI.Fech.value,
-        Revi: UI.Revi.value,
-        Esqu: UI.Esqu.value,
-        Clie: UI.Clie.value,
-        Loca: UI.Loca.value,
-        Stye: UI.Stye.value,
-        Stdo: UI.Stdo.value,
-        Hoja: "-"
-    };
-
-    // evitar escribir en LS si no cambia nada
-    if (JSON.stringify(estado.form) !== JSON.stringify(form)) {
-        estado.form = form;
-        guardarEstado();
-    }
-}
-
-function escribirFormulario() {
-    for (const id in estado.form) {
-        if (UI[id]) UI[id].value = estado.form[id];
     }
 }
 
 // ================== CARRILES ==================
 
-UI.btnAddCarril.onclick = () => {
-
-    // 1) Añadir un carril vacío al estado
-    estado.carriles.push([]); // carril sin dispositivos
-
-    // 2) Guardamos
-    guardarEstado();
-
-    // 3) Re-pintamos todo
-    escribirCarriles();
-
-    // 4) Botones y selects
-    //actualizarSelectsSeniales();
-};
-
-function escribirCarriles() {
+function writeCarriles() {
 
     UI.CarrilesContenedor.innerHTML = "";
 
-    estado.carriles.forEach((carril, idx) => {
-        pintarCarril(idx, estado.carriles.length, carril);
+    proyectoActual.Asignacion.forEach((carril, idx) => {
+        renderCarril(idx, proyectoActual.Asignacion.length, carril);
     });
 
-    actualizarSelectsSeniales();
+    updateSelectsSeniales();
 
 }
 
-function moverCarrilEstado(index, dir) {
+function moveCarril(index, dir) {
 
     const j = index + dir;
-    if (j < 0 || j >= estado.carriles.length) return;
+    if (j < 0 || j >= proyectoActual.Asignacion.length) return;
 
     // swap
-    const tmp = estado.carriles[index];
-    estado.carriles[index] = estado.carriles[j];
-    estado.carriles[j] = tmp;
+    const tmp = proyectoActual.Asignacion[index];
+    proyectoActual.Asignacion[index] = proyectoActual.Asignacion[j];
+    proyectoActual.Asignacion[j] = tmp;
 
-    guardarEstado();
-    escribirCarriles();
+    proyectoNoGuardado();
+    writeCarriles();
     // actualizarSelectsSeniales();
 }
 
-function pintarCarril(index, totalCarriles, carrilData) {
+function renderCarril(index, totalCarriles, carrilData) {
 
     const carril = document.createElement("div");
     carril.className = "carril-row w3-margin-bottom";
@@ -193,18 +62,18 @@ function pintarCarril(index, totalCarriles, carrilData) {
     const rowTop = document.createElement("div");
     rowTop.className = "carril-header";
 
-    const btnDel = boton("w3-red", "trash", "Eliminar carril", () => {
-        estado.carriles.splice(index, 1);
-        guardarEstado();
-        escribirCarriles();
-        actualizarSelectsSeniales();
+    const btnDel = createBoton("w3-red", "trash", "Eliminar carril", () => {
+        proyectoActual.Asignacion.splice(index, 1);
+        proyectoNoGuardado();
+        writeCarriles();
+        updateSelectsSeniales();
     });
 
-    const btnUp = boton("w3-blue", "arrow-up", "Subir", () => moverCarrilEstado(index, -1));
+    const btnUp = createBoton("w3-blue", "arrow-up", "Subir", () => moveCarril(index, -1));
     btnUp.classList.add("carril-move-up");
     if (index === 0) btnUp.disabled = true;
 
-    const btnDown = boton("w3-blue", "arrow-down", "Bajar", () => moverCarrilEstado(index, +1));
+    const btnDown = createBoton("w3-blue", "arrow-down", "Bajar", () => moveCarril(index, +1));
     btnDown.classList.add("carril-move-down");
     if (index + 1 === totalCarriles) btnDown.disabled = true;
 
@@ -217,11 +86,11 @@ function pintarCarril(index, totalCarriles, carrilData) {
 
     const btnAddDev = document.createElement("button");
     btnAddDev.classList.add("w3-button", "w3-green", "w3-round", "w3-small", "botonAniadir");
-    btnAddDev.innerHTML = `<i class="fa fa-plus"></i> Añadir Dispositivo`;
+    btnAddDev.innerHTML = "Añadir Dispositivo";
     btnAddDev.onclick = () => {
         carrilData.push({ tipo: null, _visible: false }); // nuevo dispositivo sin tipo
-        guardarEstado();
-        escribirCarriles();
+        proyectoNoGuardado();
+        writeCarriles();
     };
 
     const devicesContainer = document.createElement("div");
@@ -231,7 +100,7 @@ function pintarCarril(index, totalCarriles, carrilData) {
 
     // pintar dispositivos del carril
     carrilData.forEach((deviceObj, devIndex) => {
-        pintarDispositivo(devicesContainer, index, devIndex, deviceObj);
+        renderDispositivo(devicesContainer, index, devIndex, deviceObj);
     });
 
     carril.append(colLeft, colRight);
@@ -241,28 +110,28 @@ function pintarCarril(index, totalCarriles, carrilData) {
 
 // ================== DISPOSITIVOS ==================
 
-function añadirDispositivoEstado(carrilIndex) {
-    estado.carriles[carrilIndex].push({ tipo: null, _visible: false });
-    guardarEstado();
-    escribirCarriles();
+function addDispositivo(carrilIndex) {
+    proyectoActual.Asignacion[carrilIndex].push({ tipo: null, _visible: false });
+    proyectoNoGuardado();
+    writeCarriles();
 }
 
-function eliminarDispositivoEstado(carrilIndex, dispIndex) {
-    estado.carriles[carrilIndex].splice(dispIndex, 1);
-    guardarEstado();
-    escribirCarriles();
+function elimDispositivo(carrilIndex, dispIndex) {
+    proyectoActual.Asignacion[carrilIndex].splice(dispIndex, 1);
+    proyectoNoGuardado();
+    writeCarriles();
 }
 
-function moverDispositivoEstado(carrilIndex, dispIndex, dir) {
-    const arr = estado.carriles[carrilIndex];
+function moveDispositivo(carrilIndex, dispIndex, dir) {
+    const arr = proyectoActual.Asignacion[carrilIndex];
     const j = dispIndex + dir;
     if (j < 0 || j >= arr.length) return;
     [arr[dispIndex], arr[j]] = [arr[j], arr[dispIndex]];
-    guardarEstado();
-    escribirCarriles();
+    proyectoNoGuardado();
+    writeCarriles();
 }
 
-function pintarDispositivo(devicesContainer, carrilIndex, dispIndex, dispData) {
+function renderDispositivo(devicesContainer, carrilIndex, dispIndex, dispData) {
 
     const block = document.createElement("div");
     block.classList.add("device-block");
@@ -280,30 +149,30 @@ function pintarDispositivo(devicesContainer, carrilIndex, dispIndex, dispData) {
     if (dispData?.tipo) sel.value = dispData.tipo;
 
     // Botones dispositivo
-    const btnDel = boton("w3-red", "trash", "Eliminar dispositivo", () =>
-        eliminarDispositivoEstado(carrilIndex, dispIndex)
+    const btnDel = createBoton("w3-red", "trash", "Eliminar dispositivo", () =>
+        elimDispositivo(carrilIndex, dispIndex)
     );
 
-    const btnUp = boton("w3-blue", "arrow-up", "Subir dispositivo", () =>
-        moverDispositivoEstado(carrilIndex, dispIndex, -1)
+    const btnUp = createBoton("w3-blue", "arrow-up", "Subir dispositivo", () =>
+        moveDispositivo(carrilIndex, dispIndex, -1)
     );
     btnUp.classList.add("dev-move-up");
     if (dispIndex === 0) btnUp.disabled = true;
 
-    const btnDown = boton("w3-blue", "arrow-down", "Bajar dispositivo", () =>
-        moverDispositivoEstado(carrilIndex, dispIndex, +1)
+    const btnDown = createBoton("w3-blue", "arrow-down", "Bajar dispositivo", () =>
+        moveDispositivo(carrilIndex, dispIndex, +1)
     );
     btnDown.classList.add("dev-move-down");
-    if (dispIndex === estado.carriles[carrilIndex].length - 1) btnDown.disabled = true;
+    if (dispIndex === proyectoActual.Asignacion[carrilIndex].length - 1) btnDown.disabled = true;
 
     // Botón mostrar/ocultar canales
-    const btnToggle = boton("w3-gray", "eye-slash", "Mostrar/Ocultar canales", () => {
+    const btnToggle = createBoton("w3-gray", "eye-slash", "Mostrar/Ocultar canales", () => {
         const oculto = channels.classList.toggle("w3-hide");
-        estado.carriles[carrilIndex][dispIndex]._visible = !oculto;
-        guardarEstado();
+        proyectoActual.Asignacion[carrilIndex][dispIndex]._visible = !oculto;
+        proyectoNoGuardado();
         btnToggle.innerHTML = oculto
-            ? `<i class="fa fa-eye"></i>`
-            : `<i class="fa fa-eye-slash"></i>`;
+            ? '<img src="./images/eye.svg" alt="ver">'
+            : '<img src="./images/eye-slash.svg" alt="ocultar">';
 
     });
     btnToggle.classList.add("botonCuadrado");
@@ -328,16 +197,16 @@ function pintarDispositivo(devicesContainer, carrilIndex, dispIndex, dispData) {
     block.appendChild(channels);
 
     if (dispData?.tipo) {
-        pintarCanalesDesdeEstado(channels, carrilIndex, dispIndex, dispData);
+        renderCanales(channels, carrilIndex, dispIndex, dispData);
     }
 
     // Cambio de modelo → actualiza estado y repinta
     sel.onchange = () => {
-        const prev = estado.carriles[carrilIndex][dispIndex]?._visible ?? false;
-        estado.carriles[carrilIndex][dispIndex] = { tipo: sel.value, _visible: prev };
-        guardarEstado();
-        escribirCarriles();
-        actualizarSelectsSeniales?.();
+        const prev = proyectoActual.Asignacion[carrilIndex][dispIndex]?._visible ?? false;
+        proyectoActual.Asignacion[carrilIndex][dispIndex] = { tipo: sel.value, _visible: prev };
+        proyectoNoGuardado();
+        writeCarriles();
+        updateSelectsSeniales?.();
     };
 
 
@@ -347,7 +216,7 @@ function pintarDispositivo(devicesContainer, carrilIndex, dispIndex, dispData) {
 
 // ================== SEÑALES ==================
 
-function pintarCanalesDesdeEstado(channelsContainer, carrilIndex, dispIndex, deviceObj) {
+function renderCanales(channelsContainer, carrilIndex, dispIndex, deviceObj) {
     const disp = dispositivos[deviceObj.tipo];
     if (!disp?.Paginas) return;
 
@@ -374,9 +243,9 @@ function pintarCanalesDesdeEstado(channelsContainer, carrilIndex, dispIndex, dev
                 // insertar opcion vacía
                 sel.appendChild(new Option("", ""));
 
-                // poblar opciones desde estado.listado según señales permitidas
+                // poblar opciones desde proyectoActual.Listado según señales permitidas
                 for (const tipo of n.señales) {
-                    (estado.listado[tipo] || []).forEach(sig => {
+                    (proyectoActual.Listado[tipo] || []).forEach(sig => {
                         const opt = new Option(sig.Linea1, JSON.stringify(sig));
                         if (deviceObj[nombreBorne] === sig.ID) opt.selected = true;
                         sel.appendChild(opt);
@@ -394,11 +263,11 @@ function pintarCanalesDesdeEstado(channelsContainer, carrilIndex, dispIndex, dev
                     }
 
                     // ✅ guardamos en estado
-                    estado.carriles[carrilIndex][dispIndex][nombreBorne] = uuid;
-                    guardarEstado();
+                    proyectoActual.Asignacion[carrilIndex][dispIndex][nombreBorne] = uuid;
+                    proyectoNoGuardado();
 
                     // ✅ refrescamos selects para bloquear señal en otros
-                    actualizarSelectsSeniales();
+                    updateSelectsSeniales();
                 });
 
                 row.append(label, sel);
@@ -408,13 +277,13 @@ function pintarCanalesDesdeEstado(channelsContainer, carrilIndex, dispIndex, dev
     });
 }
 
-function actualizarSelectsSeniales() {
+function updateSelectsSeniales() {
 
     // 1) Copia del listado original
-    const pool = structuredClone(estado.listado);
+    const pool = structuredClone(proyectoActual.Listado);
 
     // 2) Quitar señales usadas según estado (no DOM)
-    estado.carriles.forEach(carril => {
+    proyectoActual.Asignacion.forEach(carril => {
         carril.forEach(disp => {
             if (!disp || !disp.tipo) return;
 
@@ -424,7 +293,7 @@ function actualizarSelectsSeniales() {
                 const uuid = disp[k];
                 if (!uuid) return;
 
-                const tipo = encontrarTipoSenial(uuid);
+                const tipo = findTipoSenial(uuid);
                 if (!tipo) return;
 
                 pool[tipo] = pool[tipo].filter(s => s.ID !== uuid);
@@ -459,18 +328,18 @@ function actualizarSelectsSeniales() {
     });
 }
 
-function encontrarTipoSenial(id) {
-    for (const tipo in estado.listado) {
-        if (estado.listado[tipo].some(s => s.ID === id)) return tipo;
+function findTipoSenial(id) {
+    for (const tipo in proyectoActual.Listado) {
+        if (proyectoActual.Listado[tipo].some(s => s.ID === id)) return tipo;
     }
     return null;
 }
 
 // ================== AUXILIARES ==================
 
-function boton(color, icon, title, onClick) {
+function createBoton(color, icon, title, onClick) {
     const b = document.createElement("button");
-    b.classList.add("w3-button", color, "w3-round", "w3-small", "botonCuadrado");
+    b.classList.add("w3-button", color, "w3-round", "botonCuadDib");
     b.title = title;
     b.innerHTML = `<i class="fa fa-${icon}"></i>`;
     b.onclick = onClick;
@@ -501,7 +370,7 @@ function descargarDXF() {
     const entities = [];
 
     // Construir layout de hojas desde el ESTADO (no desde el DOM)
-    const layout = generarLayoutHojasDesdeEstado(estado);
+    const layout = generarLayoutHojas();
 
     // Insertar hoja de vista general al principio
     const primeraHojaItems = []; // hoja sin items de detalle, solo plano
@@ -524,17 +393,17 @@ function descargarDXF() {
         const CajetinY = (filas - 1 - Math.floor(idx / columnas)) * 300;
 
         // datos del formulario con instalacion en mayuscula y numero de hoja
-        const campos = structuredClone(estado.form);
-        campos.Inst = UI.Inst.value.toUpperCase();
+        const campos = structuredClone(proyectoActual.Info);
+        campos.Inst = nombreProyectoActual.toUpperCase();
         campos.Hoja = `${idx + 1} - ${numHojas}`;
 
-        // Cajetín con datos del formulario (estado.form)
+        // Cajetín con datos del formulario (proyectoActual.Info)
         entities.push(...cajetin(CajetinX, CajetinY, campos));
 
         // Hoja 0 = plano general
         if (idx === 0) {
             entities.push(
-                ...dibujarPlanoGeneralDispositivos(CajetinX, CajetinY, estado, dispositivos)
+                ...dibujarPlanoGeneralDispositivos(CajetinX, CajetinY, dispositivos)
             );
             continue; // saltar a la siguiente hoja
         }
@@ -571,226 +440,226 @@ function descargarDXF() {
     URL.revokeObjectURL(url);
 }
 
-function dibujarPlanoGeneralDispositivos(CajetinX, CajetinY, estado, dispositivos) {
-	const entidades = [];
+function dibujarPlanoGeneralDispositivos(CajetinX, CajetinY, dispositivos) {
+    const entidades = [];
 
-	// === Flags cota ===
-	const FLECHAS = true;  // flechas en extremos de cotas
-	const LINEAS  = true;  // lineas cortas en extremos de cotas
+    // === Flags cota ===
+    const FLECHAS = true;  // flechas en extremos de cotas
+    const LINEAS = true;  // lineas cortas en extremos de cotas
 
-	// === Config fuentes ===
-	const FONT_NAME = 5;
-	const FONT_DIM = 2.5;
-	const FONT_DIM_COTA = 3;
+    // === Config fuentes ===
+    const FONT_NAME = 5;
+    const FONT_DIM = 2.5;
+    const FONT_DIM_COTA = 3;
 
-	// === Config separaciones / cotas ===
-	const SEP_CONTROLADOR = 20;
-	const SEP_VERTICAL = 30;
+    // === Config separaciones / cotas ===
+    const SEP_CONTROLADOR = 20;
+    const SEP_VERTICAL = 30;
 
-	const COTA_VERT_OFFSET_X = 10;
-	const COTA_VERT_TEXT_OFFSET_X = 5;
+    const COTA_VERT_OFFSET_X = 10;
+    const COTA_VERT_TEXT_OFFSET_X = 5;
 
-	const COTA_HORZ_OFFSET_Y = 10;
-	const COTA_HORZ_TEXT_OFFSET_Y = 5;
+    const COTA_HORZ_OFFSET_Y = 10;
+    const COTA_HORZ_TEXT_OFFSET_Y = 5;
 
-	// === Área util en la HOJA 0 ===
-	const Y_MIN = CajetinY + 40;
-	const Y_MAX = CajetinY + 300;
-	const usableHeight = Y_MAX - Y_MIN;
+    // === Área util en la HOJA 0 ===
+    const Y_MIN = CajetinY + 40;
+    const Y_MAX = CajetinY + 300;
+    const usableHeight = Y_MAX - Y_MIN;
 
-	const HOJA_ANCHO = 420;
-	const MARGEN = 10;
+    const HOJA_ANCHO = 420;
+    const MARGEN = 10;
 
-	const areaX = CajetinX + MARGEN;
-	const areaY = Y_MAX - MARGEN;
-	const usableWidth = HOJA_ANCHO - MARGEN * 2;
+    const areaX = CajetinX + MARGEN;
+    const areaY = Y_MAX - MARGEN;
+    const usableWidth = HOJA_ANCHO - MARGEN * 2;
 
-	// === Escala fija ===
-	const scale = 0.5;
+    // === Escala fija ===
+    const scale = 0.5;
 
-	// === Carriles ===
-	const carriles = (estado.carriles || []).map(carril =>
-		carril.map(d => dispositivos[d.tipo]).filter(Boolean)
-	);
+    // === Carriles ===
+    const carriles = (proyectoActual.Asignacion || []).map(carril =>
+        carril.map(d => dispositivos[d.tipo]).filter(Boolean)
+    );
 
-	const dims = carriles.map(carril => carril.map(d => ({
-		ancho: d.Disposicion?.Ancho || 40,
-		alto: d.Disposicion?.Alto || 60,
-		nombre: d.Nombre,
-		tipo: d.Disposicion?.Tipo || "modulo"
-	})));
+    const dims = carriles.map(carril => carril.map(d => ({
+        ancho: d.Disposicion?.Ancho || 40,
+        alto: d.Disposicion?.Alto || 60,
+        nombre: d.Nombre,
+        tipo: d.Disposicion?.Tipo || "modulo"
+    })));
 
-	const carrilAlturas = dims.map(carril =>
-		Math.max(...carril.map(d => d.alto))
-	);
+    const carrilAlturas = dims.map(carril =>
+        Math.max(...carril.map(d => d.alto))
+    );
 
-	const carrilAnchos = dims.map(carril =>
-		carril.reduce((acc, d, idx) => {
-			const sep = (idx > 0 && d.tipo === "controlador") ? SEP_CONTROLADOR : 0;
-			return acc + sep + d.ancho;
-		}, 0)
-	);
+    const carrilAnchos = dims.map(carril =>
+        carril.reduce((acc, d, idx) => {
+            const sep = (idx > 0 && d.tipo === "controlador") ? SEP_CONTROLADOR : 0;
+            return acc + sep + d.ancho;
+        }, 0)
+    );
 
-	const totalAltura = carrilAlturas.reduce(
-		(acc, h, i) => acc + h + (i > 0 ? SEP_VERTICAL : 0),
-		0
-	);
+    const totalAltura = carrilAlturas.reduce(
+        (acc, h, i) => acc + h + (i > 0 ? SEP_VERTICAL : 0),
+        0
+    );
 
-	const maxAncho = Math.max(...carrilAnchos);
+    const maxAncho = Math.max(...carrilAnchos);
 
-	const offsetX = (usableWidth - maxAncho * scale) / 2;
-	const offsetY = (usableHeight - totalAltura * scale) / 2;
+    const offsetX = (usableWidth - maxAncho * scale) / 2;
+    const offsetY = (usableHeight - totalAltura * scale) / 2;
 
-	let cursorY = (Y_MAX - MARGEN) - offsetY;
+    let cursorY = (Y_MAX - MARGEN) - offsetY;
 
-	// === Tick helpers ===
-	function tickVert(x, y, len = 2) {
-		// vertical tick → para cotas horizontales
-		return lineaDXF(x, y - 2*len, x, y + len, 5);
-	}
-	function tickHoriz(x, y, len = 2) {
-		// horizontal tick → para cotas verticales
-		return lineaDXF(x - len, y, x + 2*len, y, 5);
-	}
+    // === Tick helpers ===
+    function tickVert(x, y, len = 2) {
+        // vertical tick → para cotas horizontales
+        return lineaDXF(x, y - 2 * len, x, y + len, 5);
+    }
+    function tickHoriz(x, y, len = 2) {
+        // horizontal tick → para cotas verticales
+        return lineaDXF(x - len, y, x + 2 * len, y, 5);
+    }
 
-	// === Flechas (reutilizando SOLID) ===
-	function flecha(x, y, dir) {
-		const arrowLen = 3;
-		const arrowWidth = arrowLen / 4;
+    // === Flechas (reutilizando SOLID) ===
+    function flecha(x, y, dir) {
+        const arrowLen = 3;
+        const arrowWidth = arrowLen / 4;
 
-		if (dir === "up")    return solidDXF([[x, y],[x - arrowWidth, y - arrowLen],[x + arrowWidth, y - arrowLen]]);
-		if (dir === "down")  return solidDXF([[x, y],[x - arrowWidth, y + arrowLen],[x + arrowWidth, y + arrowLen]]);
-		if (dir === "left")  return solidDXF([[x, y],[x + arrowLen, y - arrowWidth],[x + arrowLen, y + arrowWidth]]);
-		if (dir === "right") return solidDXF([[x, y],[x - arrowLen, y - arrowWidth],[x - arrowLen, y + arrowWidth]]);
-		return "";
-	}
+        if (dir === "up") return solidDXF([[x, y], [x - arrowWidth, y - arrowLen], [x + arrowWidth, y - arrowLen]]);
+        if (dir === "down") return solidDXF([[x, y], [x - arrowWidth, y + arrowLen], [x + arrowWidth, y + arrowLen]]);
+        if (dir === "left") return solidDXF([[x, y], [x + arrowLen, y - arrowWidth], [x + arrowLen, y + arrowWidth]]);
+        if (dir === "right") return solidDXF([[x, y], [x - arrowLen, y - arrowWidth], [x - arrowLen, y + arrowWidth]]);
+        return "";
+    }
 
-	// === Dibujo ===
-	dims.forEach((carril, carrilIndex) => {
-		const carrilAltoReal = carrilAlturas[carrilIndex];
-		let cursorX = areaX + offsetX;
+    // === Dibujo ===
+    dims.forEach((carril, carrilIndex) => {
+        const carrilAltoReal = carrilAlturas[carrilIndex];
+        let cursorX = areaX + offsetX;
 
-		const tallest = carrilAltoReal * scale;
-		const carrilTop = cursorY;
-		const carrilBottom = cursorY - tallest;
+        const tallest = carrilAltoReal * scale;
+        const carrilTop = cursorY;
+        const carrilBottom = cursorY - tallest;
 
-		const tramos = [];
-		let tramoInicioX = cursorX;
-		let tramoAnchoAcum = 0;
+        const tramos = [];
+        let tramoInicioX = cursorX;
+        let tramoAnchoAcum = 0;
 
-		carril.forEach((d, i) => {
+        carril.forEach((d, i) => {
 
-			// ruptura de tramo por controlador
-			if (i > 0 && d.tipo === "controlador") {
-				tramos.push([tramoInicioX, cursorX, tramoAnchoAcum]);
-				tramoInicioX = cursorX + SEP_CONTROLADOR * scale;
-				tramoAnchoAcum = 0;
+            // ruptura de tramo por controlador
+            if (i > 0 && d.tipo === "controlador") {
+                tramos.push([tramoInicioX, cursorX, tramoAnchoAcum]);
+                tramoInicioX = cursorX + SEP_CONTROLADOR * scale;
+                tramoAnchoAcum = 0;
 
-				cursorX += SEP_CONTROLADOR * scale;
-			}
+                cursorX += SEP_CONTROLADOR * scale;
+            }
 
-			const w = d.ancho * scale;
-			const h = d.alto * scale;
+            const w = d.ancho * scale;
+            const h = d.alto * scale;
 
-			const y1 = cursorY - (tallest - h) / 2;
-			const x1 = cursorX;
-			const x2 = cursorX + w;
-			const y2 = y1 - h;
+            const y1 = cursorY - (tallest - h) / 2;
+            const x1 = cursorX;
+            const x2 = cursorX + w;
+            const y2 = y1 - h;
 
-			// Rectángulo
-			entidades.push(
-				lineaDXF(x1, y1, x2, y1, 20),
-				lineaDXF(x2, y1, x2, y2, 20),
-				lineaDXF(x2, y2, x1, y2, 20),
-				lineaDXF(x1, y2, x1, y1, 20)
-			);
+            // Rectángulo
+            entidades.push(
+                lineaDXF(x1, y1, x2, y1, 20),
+                lineaDXF(x2, y1, x2, y2, 20),
+                lineaDXF(x2, y2, x1, y2, 20),
+                lineaDXF(x1, y2, x1, y1, 20)
+            );
 
-			// Rotación por proporción
-			let rot = 0, des_cx = 0, des_cy = 0;
-			if (d.alto > d.ancho * 2) { rot = 90; des_cx = 2.5; des_cy = 2.5; }
-			else if (d.alto > d.ancho) { rot = 45; des_cx = 1.75; des_cy = 0.75; }
+            // Rotación por proporción
+            let rot = 0, des_cx = 0, des_cy = 0;
+            if (d.alto > d.ancho * 2) { rot = 90; des_cx = 2.5; des_cy = 2.5; }
+            else if (d.alto > d.ancho) { rot = 45; des_cx = 1.75; des_cy = 0.75; }
 
-			const cx = (x1 + x2) / 2;
-			const cy = (y1 + y2) / 2;
+            const cx = (x1 + x2) / 2;
+            const cy = (y1 + y2) / 2;
 
-			entidades.push(
-				textoDXF(cx - des_cx, cy + 2.5 - des_cy, d.nombre, FONT_NAME, 'MC', rot, "Negrita")
-			);
+            entidades.push(
+                textoDXF(cx - des_cx, cy + 2.5 - des_cy, d.nombre, FONT_NAME, 'MC', rot, "Negrita")
+            );
 
-			const dimText = `${d.ancho} x ${d.alto} mm`;
-			entidades.push(
-				textoDXF(cx + des_cx, cy - 2.5 + des_cy, dimText, FONT_DIM, 'MC', rot)
-			);
+            const dimText = `${d.ancho} x ${d.alto} mm`;
+            entidades.push(
+                textoDXF(cx + des_cx, cy - 2.5 + des_cy, dimText, FONT_DIM, 'MC', rot)
+            );
 
-			tramoAnchoAcum += d.ancho;
-			cursorX += w;
-		});
+            tramoAnchoAcum += d.ancho;
+            cursorX += w;
+        });
 
-		tramos.push([tramoInicioX, cursorX, tramoAnchoAcum]);
+        tramos.push([tramoInicioX, cursorX, tramoAnchoAcum]);
 
-		// === COTA VERTICAL ===
-		const cotaX = areaX + offsetX - COTA_VERT_OFFSET_X * scale;
-		const cotaTextX = cotaX - COTA_VERT_TEXT_OFFSET_X * scale;
-		const textY = (carrilTop + carrilBottom) / 2;
+        // === COTA VERTICAL ===
+        const cotaX = areaX + offsetX - COTA_VERT_OFFSET_X * scale;
+        const cotaTextX = cotaX - COTA_VERT_TEXT_OFFSET_X * scale;
+        const textY = (carrilTop + carrilBottom) / 2;
 
-		entidades.push(
-			lineaDXF(cotaX, carrilTop, cotaX, carrilBottom, 5)
-		);
+        entidades.push(
+            lineaDXF(cotaX, carrilTop, cotaX, carrilBottom, 5)
+        );
 
-		if (FLECHAS) {
-			entidades.push(flecha(cotaX, carrilTop, "up"));
-			entidades.push(flecha(cotaX, carrilBottom, "down"));
-		}
-		if (LINEAS) {
-			entidades.push(tickHoriz(cotaX, carrilTop));
-			entidades.push(tickHoriz(cotaX, carrilBottom));
-		}
+        if (FLECHAS) {
+            entidades.push(flecha(cotaX, carrilTop, "up"));
+            entidades.push(flecha(cotaX, carrilBottom, "down"));
+        }
+        if (LINEAS) {
+            entidades.push(tickHoriz(cotaX, carrilTop));
+            entidades.push(tickHoriz(cotaX, carrilBottom));
+        }
 
-		const textCota = `${carrilAltoReal} mm`;
-		entidades.push(
-			textoDXF(cotaTextX, textY, textCota, FONT_DIM_COTA, 'MC', 90)
-		);
+        const textCota = `${carrilAltoReal} mm`;
+        entidades.push(
+            textoDXF(cotaTextX, textY, textCota, FONT_DIM_COTA, 'MC', 90)
+        );
 
-		// === COTAS HORIZONTALES ===
-		tramos.forEach(([xStart, xEnd, realWidth]) => {
-			const yCota = carrilTop + COTA_HORZ_OFFSET_Y * scale;
-			const yText = yCota + COTA_HORZ_TEXT_OFFSET_Y * scale;
+        // === COTAS HORIZONTALES ===
+        tramos.forEach(([xStart, xEnd, realWidth]) => {
+            const yCota = carrilTop + COTA_HORZ_OFFSET_Y * scale;
+            const yText = yCota + COTA_HORZ_TEXT_OFFSET_Y * scale;
 
-			entidades.push(
-				lineaDXF(xStart, yCota, xEnd, yCota, 5)
-			);
+            entidades.push(
+                lineaDXF(xStart, yCota, xEnd, yCota, 5)
+            );
 
-			if (FLECHAS) {
-				entidades.push(flecha(xStart, yCota, "left"));
-				entidades.push(flecha(xEnd, yCota, "right"));
-			}
-			if (LINEAS) {
-				entidades.push(tickVert(xStart, yCota));
-				entidades.push(tickVert(xEnd, yCota));
-			}
+            if (FLECHAS) {
+                entidades.push(flecha(xStart, yCota, "left"));
+                entidades.push(flecha(xEnd, yCota, "right"));
+            }
+            if (LINEAS) {
+                entidades.push(tickVert(xStart, yCota));
+                entidades.push(tickVert(xEnd, yCota));
+            }
 
-			const cx = (xStart + xEnd) / 2;
-			const txt = `${realWidth} mm`;
+            const cx = (xStart + xEnd) / 2;
+            const txt = `${realWidth} mm`;
 
-			entidades.push(
-				textoDXF(cx, yText, txt, FONT_DIM_COTA, 'MC', 0)
-			);
-		});
+            entidades.push(
+                textoDXF(cx, yText, txt, FONT_DIM_COTA, 'MC', 0)
+            );
+        });
 
-		cursorY -= (carrilAltoReal * scale + SEP_VERTICAL * scale);
-	});
+        cursorY -= (carrilAltoReal * scale + SEP_VERTICAL * scale);
+    });
 
-	return entidades;
+    return entidades;
 }
 
-function generarLayoutHojasDesdeEstado(estado) {
+function generarLayoutHojas() {
     const hojas = [];
     const nuevaHoja = () => hojas.push({ items: [] });
 
     // Garantiza al menos 1
     if (hojas.length === 0) nuevaHoja();
 
-    (estado.carriles || []).forEach((carril, carrilIndex) => {
+    (proyectoActual.Asignacion || []).forEach((carril, carrilIndex) => {
         // Carril nuevo → hoja nueva si la actual no está vacía
         if (hojas[hojas.length - 1].items.length > 0) nuevaHoja();
         let hojaActual = hojas[hojas.length - 1];
@@ -953,11 +822,10 @@ function dibujarPaginaDeDispositivo(hojaX, hojaY, dispositivo, pageIndex, startX
             // 1) Si el borne tiene SEÑAL asignada en EL ESTADO → dibujar símbolo correspondiente
             const borneObj = conector.Numeracion[i];
             const { num, seniales, nombre, desG0 } = normalizarBorne(borneObj);
-            console.log({ num, seniales, nombre, desG0 });
             // nombre del borne (para mapear en estado)
             const nombreBorne = nombre || num || null;
             if (nombreBorne) {
-                const dispEstado = estado.carriles?.[carrilIndex]?.[dispIndex];
+                const dispEstado = proyectoActual.Asignacion?.[carrilIndex]?.[dispIndex];
                 const uuid = dispEstado?.[nombreBorne] || null;
 
                 if (uuid) {
@@ -1019,7 +887,7 @@ function normalizarBorne(borne) {
 }
 
 function obtenerSenialPorUUID(uuid) {
-    const lst = estado.listado || {};
+    const lst = proyectoActual.Listado || {};
     for (const tipo in lst) {
         const arr = lst[tipo];
         if (!Array.isArray(arr)) continue;

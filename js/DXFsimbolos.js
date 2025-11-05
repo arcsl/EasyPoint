@@ -1,6 +1,6 @@
-/// <reference path="basicosDXF.js" />
-/// <reference path="bloquesDXF.js" />
-/// <reference path="dispositivos.js" />
+// /// <reference path="DXFbasicos.js" />
+// /// <reference path="DXFbloques.js" />
+// /// <reference path="DXFdispositivos.js" />
 
 function hasheador(posX, posY, hash, franja) {
 
