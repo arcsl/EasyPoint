@@ -342,6 +342,40 @@ Arial
 1071
  33567744
   0
+STYLE
+  5
+654
+330
+3
+100
+AcDbSymbolTableRecord
+100
+AcDbTextStyleTableRecord
+  2
+KNX
+ 70
+     0
+ 40
+0.0
+ 41
+1.0
+ 50
+0.0
+ 71
+     0
+ 42
+2.5
+  3
+tahomabd.ttf
+  4
+
+1001
+ACAD
+1000
+Tahoma
+1071
+ 33571584
+  0
 ENDTAB
   0
 TABLE
@@ -522,7 +556,7 @@ ${escala}`;
  *
  * @returns {string} Cadena en formato DXF que representa la entidad TEXT con sus propiedades.
  */
-function textoDXF(posX, posY, text,  textsize = 2.5, align = 'ML', rotation = 0, estilo = "Standard", multAncho = 1) {
+function textoDXF(posX, posY, text,  textsize = 2.5, align = 'ML', rotation = 0, estilo = "Standard", multAncho = 1, color = 0) {
 	const alineaciones = {
 		TL: [0, 3], TC: [1, 3], TR: [2, 3],
 		ML: [0, 2], MC: [1, 2], MR: [2, 2],
@@ -587,11 +621,21 @@ ${rotation}`;
 7
 ${estilo}`;
 	}
+  
+  let insertColor;
+	if (color === 0) {
+		insertColor = "";
+	} else {
+		insertColor = `
+62
+${color}`;
+	}
+
 
 	return `0
 TEXT
 100
-AcDbEntity
+AcDbEntity${insertColor}
 100
 AcDbText
 10

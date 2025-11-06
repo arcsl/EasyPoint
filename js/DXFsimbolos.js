@@ -60,13 +60,15 @@ function hasheador(posX, posY, hash, franja, extraEstrecho = false) {
         if (hash === "#uTierra") return hashuTierra(posX, desY);
         if (hash === "#Qc") return hashQconmutada(posX, desY);
         if (hash === "#Qs") return hashQsimple(posX, desY);
-        if (hash === "#ext") return hashExterna(posX, desY)
-        if (hash === "#L") return hashAlimL(posX, desY)
-        if (hash === "#N") return hashAlimN(posX, desY)
-        if (hash === "#G") return hashAlimG(posX, desY)
-        if (hash === "#G0") return hashAlimG0(posX, desY)
-        if (hash === "#b+") return hashBusMas(posX, desY)
-        if (hash === "#b-") return hashBusMenos(posX, desY)
+        if (hash === "#ext") return hashExterna(posX, desY);
+        if (hash === "#L") return hashAlimL(posX, desY);
+        if (hash === "#N") return hashAlimN(posX, desY);
+        if (hash === "#G") return hashAlimG(posX, desY);
+        if (hash === "#G0") return hashAlimG0(posX, desY);
+        if (hash === "#b+") return hashBusMas(posX, desY);
+        if (hash === "#b-") return hashBusMenos(posX, desY);
+        if (hash === "#KNX") return hashKNX(posX-2, desY);
+
 
     } else if (hash.includes("%")) {
         return [textoMultiDXF(posX, desY, hash.split('%'), tamText, alineacion, rotacion, estiloText, multAncho)];
@@ -376,6 +378,194 @@ function hashBusMenos(posX, posY) {
 
     entidades.push(lineaDXF(posX + 0, posY + 0, posX + 0, posY - 28));
     entidades.push(punto(posX + 0, posY - 28));
+
+    return entidades;
+
+}
+
+function hashKNX(posX, posY) {
+
+    console.log("KNX");
+
+    const entidades = [];
+    entidades.push(lineaDXF(posX + 0, posY + 0, posX + 0, posY - 28));
+
+    const desLogoY = posY - 40;
+
+    entidades.push(textoDXF(posX - 7.5, desLogoY - 7.4203, "K", 5, 'BL', 0, "KNX", 1, 96));
+    entidades.push(textoDXF(posX      , desLogoY - 7.4203, "N", 5, 'BC', 0, "KNX", 1, 252));
+    entidades.push(textoDXF(posX + 7  , desLogoY - 7.4203, "X", 5, 'BR', 0, "KNX", 1, 152));
+
+    const logoKNX = `  0
+HATCH
+100
+AcDbEntity
+ 62
+    96
+100
+AcDbHatch
+ 10
+${posX}
+ 20
+${desLogoY}
+  2
+SOLID
+ 70
+     1
+ 71
+     0
+ 91
+        1
+ 92
+        1
+ 93
+        4
+ 72
+     1
+ 10
+${posX - 7}
+ 20
+${desLogoY}
+ 11
+${posX - 4.847679857416324}
+ 21
+${desLogoY}
+ 72
+     2
+ 10
+${posX}
+ 20
+${desLogoY - 11.25}
+ 40
+12.25
+ 50
+246.6885543184899
+ 51
+270.0
+ 73
+     0
+ 72
+     1
+ 10
+${posX}
+ 20
+${desLogoY + 1}
+ 11
+${posX}
+ 21
+${desLogoY + 2}
+ 72
+     2
+ 10
+${posX}
+ 20
+${desLogoY - 11.25}
+ 40
+13.25
+ 50
+90.0
+ 51
+121.8907918018457
+ 73
+     1
+ 97
+        0
+ 75
+     0
+ 76
+     1
+ 98
+        1
+ 10
+${posX - 359.0}
+ 20
+${desLogoY - 210.0}
+  0
+HATCH
+100
+AcDbEntity
+ 62
+   152
+100
+AcDbHatch
+ 10
+${posX}
+ 20
+${desLogoY}
+  2
+SOLID
+ 70
+     1
+ 71
+     0
+ 91
+        1
+ 92
+        1
+ 93
+        4
+ 72
+     1
+ 10
+${posX + 7}
+ 20
+${desLogoY}
+ 11
+${posX + 4.847679857416324}
+ 21
+${desLogoY}
+ 72
+     2
+ 10
+${posX}
+ 20
+${desLogoY - 11.25}
+ 40
+12.25
+ 50
+66.68855431848984
+ 51
+90.0
+ 73
+     1
+ 72
+     1
+ 10
+${posX}
+ 20
+${desLogoY + 1}
+ 11
+${posX}
+ 21
+${desLogoY + 2}
+ 72
+     2
+ 10
+${posX}
+ 20
+${desLogoY - 11.25}
+ 40
+13.25
+ 50
+270.0
+ 51
+301.8907918018458
+ 73
+     0
+ 97
+        0
+ 75
+     0
+ 76
+     1
+ 98
+        1
+ 10
+${posX + 365.0}
+ 20
+${desLogoY - 193.0}`
+
+    entidades.push(logoKNX);
 
     return entidades;
 
