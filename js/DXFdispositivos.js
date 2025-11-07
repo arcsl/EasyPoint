@@ -26,7 +26,7 @@ const dispositivos = {
             "Ancho": 258,
             "Alto": 168,
             "Familia": "PX",
-            "Tipo": "controlador",
+            "Tipo": "anexo",
         },
     },
     "PXC4.E16-2": {
@@ -783,7 +783,7 @@ const dispositivos = {
                             { num: "CE+", extraEstrecho: true, desX: -1 },
                             { num: "CE-", extraEstrecho: true, desX: 1 },
                         ],
-                        "Fijo": ["#b+", "#b-",],
+                        "Opcional": "#KNX",
                     },
                 ],
             ],
@@ -795,6 +795,36 @@ const dispositivos = {
             },
         },
     */
+    "OZW772": {
+        "Nombre": "OZW772",
+        "Paginas": [
+            [
+                {   // alimentacion
+                    "Simbolos": [null, "#|", null,],
+                    "Numeracion": [null, "TRAF", null,],
+                    "Fijo": "#Sch",
+                },
+                {   // LAN
+                    "Simbolos": [null, "#RED", null,],
+                    "Numeracion": [null, "LAN", null,],
+                },
+                {   // Bus KNX
+                    "Simbolos": ["#|", "#|",],
+                    "Numeracion": [
+                        { num: "CE+", extraEstrecho: true, desX: -1 },
+                        { num: "CE-", extraEstrecho: true, desX: 1 },
+                    ],
+                    "Opcional": "#KNX",
+                },
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 90,
+            "Alto": 90,
+            "Familia": "Synco",
+            "Tipo": "anexo",
+        },
+    },
     "RMK770": {
         "Nombre": "RMK770",
         "Paginas": [
@@ -881,8 +911,7 @@ const dispositivos = {
                         { num: "CE+", extraEstrecho: true, desX: -1 },
                         { num: "CE-", extraEstrecho: true, desX: 1 },
                     ],
-                    // "Fijo": ["#b+", "#b-",],
-                    "Opcional": [null, "#KNX"],
+                    "Opcional": "#KNX",
                 },
             ],
         ],
@@ -961,7 +990,7 @@ const dispositivos = {
                         { num: "CE+", extraEstrecho: true, desX: -1 },
                         { num: "CE-", extraEstrecho: true, desX: 1 },
                     ],
-                    "Fijo": ["#b+", "#b-",],
+                    "Opcional": "#KNX",
                 },
             ],
         ],
@@ -1050,7 +1079,7 @@ const dispositivos = {
                         { num: "CE+", extraEstrecho: true, desX: -1 },
                         { num: "CE-", extraEstrecho: true, desX: 1 },
                     ],
-                    "Fijo": ["#b+", "#b-",],
+                    "Opcional": "#KNX",
                 },
             ],
         ],
@@ -1120,7 +1149,7 @@ const dispositivos = {
                         { num: "CE+", extraEstrecho: true, desX: -1 },
                         { num: "CE-", extraEstrecho: true, desX: 1 },
                     ],
-                    "Fijo": ["#b+", "#b-",],
+                    "Opcional": "#KNX",
                 },
             ],
         ],
@@ -1200,7 +1229,7 @@ const dispositivos = {
                         { num: "CE+", extraEstrecho: true, desX: -1 },
                         { num: "CE-", extraEstrecho: true, desX: 1 },
                     ],
-                    "Fijo": ["#b+", "#b-",],
+                    "Opcional": "#KNX",
                 },
             ],
         ],
@@ -1289,7 +1318,7 @@ const dispositivos = {
                         { num: "CE+", extraEstrecho: true, desX: -1 },
                         { num: "CE-", extraEstrecho: true, desX: 1 },
                     ],
-                    "Fijo": ["#b+", "#b-",],
+                    "Opcional": "#KNX",
                 },
             ],
         ],
@@ -1612,5 +1641,36 @@ const dispositivos = {
             "Tipo": "modulo",
         },
     },
+    "ARCUS": {
+        "Nombre": "ARCUS",
+        "Paginas": [
+            [
+                {   // Bus Mbus
+                    "Simbolos": ["#|", "#|",],
+                    "Numeracion": [
+                        { num: "MB+", extraEstrecho: true, desX: -1 },
+                        { num: "MB-", extraEstrecho: true, desX: 1 },
+                        null,null,null,
+                    ],
+                    // "Opcional": "#MBUS",
+                },
+                {   // Bus KNX
+                    "Simbolos": ["#|", "#|",],
+                    "Numeracion": [
+                        { num: "CE+", extraEstrecho: true, desX: -1 },
+                        { num: "CE-", extraEstrecho: true, desX: 1 },
+                    ],
+                    "Opcional": "#KNX",
+                },
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 40,
+            "Alto": 72,
+            "Familia": "Synco",
+            "Tipo": "anexo",
+        },
+    },
+
 
 }

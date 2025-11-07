@@ -14,6 +14,7 @@
     <select id="selector" onchange="dispara()">
         <option value="LINE">LINE</option>
         <option value="ARC">ARC</option>
+        <option value="CIRCLE">CIRCLE</option>
         <option value="TEXT">TEXT</option>
         <option value="MTEXT">MTEXT</option>
         <option value="SOLID">SOLID</option>
@@ -107,6 +108,9 @@
                             case 'ARC':
                                 result.push(...parseARC(lines, i));
                                 break;
+                            case 'CIRCLE':
+                                result.push(...parseCIRCLE(lines, i));
+                                break;
                             case 'TEXT':
                                 result.push(...parseTEXT(lines, i));
                                 break;
@@ -190,6 +194,34 @@
             return [(
                 `entidades.push(arcoDXF( posX + ${cxF}, posY + ${cyF}, ${rF}, ${a0F}, ${a1F}, ${gF} ));  // ARC en línea ${startIndex}`
             ).replace(/\+\s*-/g, "- ")];
+        }
+
+        function parseCIRCLE(lines, startIndex) {
+            let cx = '0', cy = '0', r = '0', grosor = '-1';
+
+            for (let i = startIndex + 2; i < lines.length; i += 2) {
+                const code = lines[i].trim();
+                const value = lines[i + 1]?.trim();
+
+                if (code === '0') break;
+
+                switch (code) {
+                    case '10': cx = value; break;  // Centro X
+                    case '20': cy = value; break;  // Centro Y
+                    case '40': r = value; break;   // Radio
+                    case '370': grosor = value; break; // Grosor de línea
+                }
+            }
+
+            const cxF = fmt(cx);
+            const cyF = fmt(cy);
+            const rF = fmt(r);
+            const gF = parseFloat(grosor);
+
+            return [
+                (`entidades.push(circunferenciaDXF( posX + ${cxF}, posY + ${cyF}, ${rF}, ${gF} ));  // CIRCLE en línea ${startIndex}`)
+                    .replace(/\+\s*-/g, "- ")
+            ];
         }
 
         function parseTEXT(lines, startIndex) {
@@ -357,7 +389,7 @@
 
             return [
                 (`entidades.push(punto(posX + ${xf}, posY + ${yf}));  // HATCH punto línea ${startIndex}`)
-                .replace(/\+\s*-/g, "- ")
+                    .replace(/\+\s*-/g, "- ")
             ];
         }
     </script>

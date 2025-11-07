@@ -13,7 +13,7 @@
  */
 
 function wrapDXF(entities) {
-	return `  0
+  return `  0
 SECTION
   2
 HEADER
@@ -486,44 +486,53 @@ EOF`;
  * @param {string} [tipoLinea="Continuous"] - Tipo de línea (por ejemplo, "Dashed"). Se omite si es "Continuous".
  * @returns {string} Cadena en formato DXF que representa la entidad LINE.
  */
-function lineaDXF(posX1, posY1, posX2, posY2, grosor = -1, tipoLinea = "Continuous", escala=1) {
+function lineaDXF(posX1, posY1, posX2, posY2, grosor = -1, tipoLinea = "Continuous", escala = 1, color = 0) {
 
-	// grosor
-	// -3 by default
-	// -2 by block
-	// -1 by layer
+  // grosor
+  // -3 by default
+  // -2 by block
+  // -1 by layer
 
-	//   0 = 0mm
-	//  10 = 0.1mm
-	//  40 = 0.4mm
-	// 100 = 1mm
+  //   0 = 0mm
+  //  10 = 0.1mm
+  //  40 = 0.4mm
+  // 100 = 1mm
 
 
-	// insertar tipo de linea solo si es necesario
-	let insertTipo;
-	if (tipoLinea === "Continuous") {
-		insertTipo = "";
-	} else {
-		insertTipo = `
+  // insertar tipo de linea solo si es necesario
+  let insertTipo;
+  if (tipoLinea === "Continuous") {
+    insertTipo = "";
+  } else {
+    insertTipo = `
 6
 ${tipoLinea}`;
-	}
+  }
 
 
-	// insertar grosor de linea solo si es necesario
-	let insertGrosor;
-	if (grosor === -1) {
-		insertGrosor = "";
-	} else {
-		insertGrosor = `
+  // insertar grosor de linea solo si es necesario
+  let insertGrosor;
+  if (grosor === -1) {
+    insertGrosor = "";
+  } else {
+    insertGrosor = `
 370
 ${grosor}`;
-	}
+  }
 
-	return `0
+  let insertColor;
+  if (color === 0) {
+    insertColor = "";
+  } else {
+    insertColor = `
+62
+${color}`;
+  }
+
+  return `0
 LINE
 100
-AcDbEntity${insertTipo}${insertGrosor}
+AcDbEntity${insertTipo}${insertGrosor}${insertColor}
 100
 AcDbLine
 10
@@ -556,83 +565,83 @@ ${escala}`;
  *
  * @returns {string} Cadena en formato DXF que representa la entidad TEXT con sus propiedades.
  */
-function textoDXF(posX, posY, text,  textsize = 2.5, align = 'ML', rotation = 0, estilo = "Standard", multAncho = 1, color = 0) {
-	const alineaciones = {
-		TL: [0, 3], TC: [1, 3], TR: [2, 3],
-		ML: [0, 2], MC: [1, 2], MR: [2, 2],
-		BL: [0, 1], BC: [1, 1], BR: [2, 1],
-	};
+function textoDXF(posX, posY, text, textsize = 2.5, align = 'ML', rotation = 0, estilo = "Standard", multAncho = 1, color = 0) {
+  const alineaciones = {
+    TL: [0, 3], TC: [1, 3], TR: [2, 3],
+    ML: [0, 2], MC: [1, 2], MR: [2, 2],
+    BL: [0, 1], BC: [1, 1], BR: [2, 1],
+  };
 
-	const [hAlign, vAlign] = alineaciones[align] || [0, 1]; // BL por defecto
+  const [hAlign, vAlign] = alineaciones[align] || [0, 1]; // BL por defecto
 
-	const anchoEstimado = text.length * textsize * 0.6;
-	let desX = 0, desY = 0;
+  const anchoEstimado = text.length * textsize * 0.6;
+  let desX = 0, desY = 0;
 
-	// Horizontal
-	if (hAlign === 1) desX = anchoEstimado / 2;
-	else if (hAlign === 2) desX = anchoEstimado;
+  // Horizontal
+  if (hAlign === 1) desX = anchoEstimado / 2;
+  else if (hAlign === 2) desX = anchoEstimado;
 
-	// Vertical
-	if (vAlign === 1) desY = textsize;
-	else if (vAlign === 2) desY = textsize / 2;
-	else if (vAlign === 3) desY = 0;
+  // Vertical
+  if (vAlign === 1) desY = textsize;
+  else if (vAlign === 2) desY = textsize / 2;
+  else if (vAlign === 3) desY = 0;
 
-	// Aplicar desplazamiento según rotación
-	let x0 = posX;
-	let y0 = posY;
+  // Aplicar desplazamiento según rotación
+  let x0 = posX;
+  let y0 = posY;
 
-	switch (rotation % 360) {
-		case 0:
-			x0 = posX - desX;
-			y0 = posY - desY;
-			break;
-		case 90:
-			x0 = posX + desY;
-			y0 = posY - desX;
-			break;
-		case 180:
-			x0 = posX + desX;
-			y0 = posY + desY;
-			break;
-		case 270:
-			x0 = posX - desY;
-			y0 = posY + desX;
-			break;
-		default:
-			console.warn(`Rotación no soportada: ${rotation}° (usa 0, 90, 180, 270)`);
-			x0 = posX - desX;
-			y0 = posY - desY;
-	}
+  switch (rotation % 360) {
+    case 0:
+      x0 = posX - desX;
+      y0 = posY - desY;
+      break;
+    case 90:
+      x0 = posX + desY;
+      y0 = posY - desX;
+      break;
+    case 180:
+      x0 = posX + desX;
+      y0 = posY + desY;
+      break;
+    case 270:
+      x0 = posX - desY;
+      y0 = posY + desX;
+      break;
+    default:
+      console.warn(`Rotación no soportada: ${rotation}° (usa 0, 90, 180, 270)`);
+      x0 = posX - desX;
+      y0 = posY - desY;
+  }
 
-	let insertRotation;
-	if (rotation === 0) {
-		insertRotation = "";
-	} else {
-		insertRotation = `
+  let insertRotation;
+  if (rotation === 0) {
+    insertRotation = "";
+  } else {
+    insertRotation = `
 50
 ${rotation}`;
-	}
+  }
 
-	let insertEstilo;
-	if (estilo === "Standard") {
-		insertEstilo = "";
-	} else {
-		insertEstilo = `
+  let insertEstilo;
+  if (estilo === "Standard") {
+    insertEstilo = "";
+  } else {
+    insertEstilo = `
 7
 ${estilo}`;
-	}
-  
+  }
+
   let insertColor;
-	if (color === 0) {
-		insertColor = "";
-	} else {
-		insertColor = `
+  if (color === 0) {
+    insertColor = "";
+  } else {
+    insertColor = `
 62
 ${color}`;
-	}
+  }
 
 
-	return `0
+  return `0
 TEXT
 100
 AcDbEntity${insertColor}
@@ -682,27 +691,27 @@ ${vAlign}`;
  * const dxf = textoMultiDXF(10, 20, ['Primera línea', 'Segunda línea'], 3, 45, 'MC');
  * console.log(dxf);
  */
-function textoMultiDXF(posX, posY, text = [], textsize=2.5, align = 'ML', rotation = 0, estilo = "Standard", multAncho = 1) {
-	const contenido = text.map(linea => linea.replace(/\\/g, "\\\\")).join("^J");
+function textoMultiDXF(posX, posY, text = [], textsize = 2.5, align = 'ML', rotation = 0, estilo = "Standard", multAncho = 1) {
+  const contenido = text.map(linea => linea.replace(/\\/g, "\\\\")).join("^J");
 
-	const alineaciones = {
-		TL: 1, TC: 2, TR: 3,
-		ML: 4, MC: 5, MR: 6,
-		BL: 7, BC: 8, BR: 9,
-	};
+  const alineaciones = {
+    TL: 1, TC: 2, TR: 3,
+    ML: 4, MC: 5, MR: 6,
+    BL: 7, BC: 8, BR: 9,
+  };
 
-	const attachPoint = alineaciones[align] || [1, 1];
+  const attachPoint = alineaciones[align] || [1, 1];
 
-	let insertEstilo;
-	if (estilo === "Standard") {
-		insertEstilo = "";
-	} else {
-		insertEstilo = `
+  let insertEstilo;
+  if (estilo === "Standard") {
+    insertEstilo = "";
+  } else {
+    insertEstilo = `
 7
 ${estilo}`;
-	}
+  }
 
-	return `0
+  return `0
 MTEXT
 8
 0
@@ -736,17 +745,17 @@ ${contenido}${insertEstilo}`;
  * console.log(dxf);
  */
 function solidDXF(puntos) {
-	// Si hay 3 puntos, repetir el último para que haya 4
-	if (puntos.length === 3) {
-		puntos.push(puntos[2]);
-	}
+  // Si hay 3 puntos, repetir el último para que haya 4
+  if (puntos.length === 3) {
+    puntos.push(puntos[2]);
+  }
 
-	const etiquetas = ['10', '20', '11', '21', '12', '22', '13', '23'];
-	const coords = puntos.flatMap(p => [p[0], p[1]]);
+  const etiquetas = ['10', '20', '11', '21', '12', '22', '13', '23'];
+  const coords = puntos.flatMap(p => [p[0], p[1]]);
 
-	const cuerpo = coords.map((valor, i) => `${etiquetas[i]}\n${valor}`).join('\n');
+  const cuerpo = coords.map((valor, i) => `${etiquetas[i]}\n${valor}`).join('\n');
 
-	return `0
+  return `0
 SOLID
 100
 AcDbEntity
@@ -766,18 +775,18 @@ ${cuerpo}`;
  */
 function circunferenciaDXF(posXcentro, posYcentro, radio, grosor = -1) {
 
-  	// insertar grosor de linea solo si es necesario
-	let insertGrosor;
-	if (grosor === -1) {
-		insertGrosor = "";
-	} else {
-		insertGrosor = `
+  // insertar grosor de linea solo si es necesario
+  let insertGrosor;
+  if (grosor === -1) {
+    insertGrosor = "";
+  } else {
+    insertGrosor = `
 370
 ${grosor}`;
-	}
+  }
 
 
-	return `0
+  return `0
 CIRCLE
 100
 AcDbEntity
@@ -804,17 +813,17 @@ ${radio}${insertGrosor}`;
  */
 function arcoDXF(posXcentro, posYcentro, radio, angInicio, angFin, grosor = -1) {
 
-  	// insertar grosor de linea solo si es necesario
-	let insertGrosor;
-	if (grosor === -1) {
-		insertGrosor = "";
-	} else {
-		insertGrosor = `
+  // insertar grosor de linea solo si es necesario
+  let insertGrosor;
+  if (grosor === -1) {
+    insertGrosor = "";
+  } else {
+    insertGrosor = `
 370
 ${grosor}`;
-	}
+  }
 
-	return `0
+  return `0
 ARC
 100
 AcDbEntity${insertGrosor}
@@ -834,12 +843,21 @@ ${angInicio}
 ${angFin}`;
 }
 
-function punto(posXcentro, posYcentro) {
+function punto(posXcentro, posYcentro, color = 0) {
 
-return `0
+  let insertColor;
+  if (color === 0) {
+    insertColor = "";
+  } else {
+    insertColor = `
+62
+${color}`;
+  }
+
+  return `0
 HATCH
 100
-AcDbEntity
+AcDbEntity${insertColor}
 100
 AcDbHatch
   2

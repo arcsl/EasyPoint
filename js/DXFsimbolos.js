@@ -67,7 +67,8 @@ function hasheador(posX, posY, hash, franja, extraEstrecho = false) {
         if (hash === "#G0") return hashAlimG0(posX, desY);
         if (hash === "#b+") return hashBusMas(posX, desY);
         if (hash === "#b-") return hashBusMenos(posX, desY);
-        if (hash === "#KNX") return hashKNX(posX-2, desY);
+        if (hash === "#KNX") return hashKNX(posX, desY);
+        if (hash === "#Sch") return hashSchucko(posX, desY);
 
 
     } else if (hash.includes("%")) {
@@ -385,16 +386,27 @@ function hashBusMenos(posX, posY) {
 
 function hashKNX(posX, posY) {
 
-    console.log("KNX");
-
     const entidades = [];
-    entidades.push(lineaDXF(posX + 0, posY + 0, posX + 0, posY - 28));
 
-    const desLogoY = posY - 40;
+    // rojo
+    entidades.push(lineaDXF(posX + 2, posY + 0, posX + 2, posY - 28, -1, "Continuous", 1, 1));
+    entidades.push(lineaDXF(posX - 6, posY - 28, posX + 6, posY - 28, -1, "Continuous", 1, 1));
+    entidades.push(punto(posX + 2, posY - 28));
 
-    entidades.push(textoDXF(posX - 7.5, desLogoY - 7.4203, "K", 5, 'BL', 0, "KNX", 1, 96));
-    entidades.push(textoDXF(posX      , desLogoY - 7.4203, "N", 5, 'BC', 0, "KNX", 1, 252));
-    entidades.push(textoDXF(posX + 7  , desLogoY - 7.4203, "X", 5, 'BR', 0, "KNX", 1, 152));
+    // verde
+    entidades.push(lineaDXF(posX - 2, posY + 0, posX - 2, posY - 24, -1, "Continuous", 1, 96));
+    entidades.push(lineaDXF(posX - 6, posY - 24, posX + 6, posY - 24, -1, "Continuous", 1, 96));
+    entidades.push(punto(posX - 2, posY - 24));
+
+    // tipo cable
+    entidades.push(textoDXF(posX + 6, posY - 32, "2x0.8 Trenzado", 2.5, 'MC'));
+
+    const desLogoX = posX + 1;
+    const desLogoY = posY - 37;
+
+    entidades.push(textoDXF(desLogoX - 7.5, desLogoY - 7.4203, "K", 5, 'BL', 0, "KNX", 1, 96));
+    entidades.push(textoDXF(desLogoX, desLogoY - 7.4203, "N", 5, 'BC', 0, "KNX", 1, 252));
+    entidades.push(textoDXF(desLogoX + 7, desLogoY - 7.4203, "X", 5, 'BR', 0, "KNX", 1, 152));
 
     const logoKNX = `  0
 HATCH
@@ -405,7 +417,7 @@ AcDbEntity
 100
 AcDbHatch
  10
-${posX}
+${desLogoX}
  20
 ${desLogoY}
   2
@@ -423,17 +435,17 @@ SOLID
  72
      1
  10
-${posX - 7}
+${desLogoX - 7}
  20
 ${desLogoY}
  11
-${posX - 4.847679857416324}
+${desLogoX - 4.847679857416324}
  21
 ${desLogoY}
  72
      2
  10
-${posX}
+${desLogoX}
  20
 ${desLogoY - 11.25}
  40
@@ -447,17 +459,17 @@ ${desLogoY - 11.25}
  72
      1
  10
-${posX}
+${desLogoX}
  20
 ${desLogoY + 1}
  11
-${posX}
+${desLogoX}
  21
 ${desLogoY + 2}
  72
      2
  10
-${posX}
+${desLogoX}
  20
 ${desLogoY - 11.25}
  40
@@ -477,7 +489,7 @@ ${desLogoY - 11.25}
  98
         1
  10
-${posX - 359.0}
+${desLogoX - 359.0}
  20
 ${desLogoY - 210.0}
   0
@@ -489,7 +501,7 @@ AcDbEntity
 100
 AcDbHatch
  10
-${posX}
+${desLogoX}
  20
 ${desLogoY}
   2
@@ -507,17 +519,17 @@ SOLID
  72
      1
  10
-${posX + 7}
+${desLogoX + 7}
  20
 ${desLogoY}
  11
-${posX + 4.847679857416324}
+${desLogoX + 4.847679857416324}
  21
 ${desLogoY}
  72
      2
  10
-${posX}
+${desLogoX}
  20
 ${desLogoY - 11.25}
  40
@@ -531,17 +543,17 @@ ${desLogoY - 11.25}
  72
      1
  10
-${posX}
+${desLogoX}
  20
 ${desLogoY + 1}
  11
-${posX}
+${desLogoX}
  21
 ${desLogoY + 2}
  72
      2
  10
-${posX}
+${desLogoX}
  20
 ${desLogoY - 11.25}
  40
@@ -561,11 +573,32 @@ ${desLogoY - 11.25}
  98
         1
  10
-${posX + 365.0}
+${desLogoX + 365.0}
  20
 ${desLogoY - 193.0}`
 
     entidades.push(logoKNX);
+
+    return entidades;
+
+}
+
+function hashSchucko(posX, posY) {
+
+    const entidades = [];
+
+    entidades.push(lineaDXF(posX + 0, posY + 0, posX + 0, posY - 24));  // LINE en línea 0
+    entidades.push(lineaDXF(posX - 3, posY - 27, posX - 3, posY - 30));  // LINE en línea 24
+    entidades.push(lineaDXF(posX - 3, posY - 30, posX + 3, posY - 30));  // LINE en línea 48
+    entidades.push(lineaDXF(posX + 3, posY - 30, posX + 3, posY - 27));  // LINE en línea 72
+    entidades.push(lineaDXF(posX - 2, posY - 30, posX - 2, posY - 33));  // LINE en línea 182
+    entidades.push(lineaDXF(posX + 2, posY - 30, posX + 2, posY - 33));  // LINE en línea 210
+
+    entidades.push(arcoDXF(posX + 0, posY - 27, 3, 0, 180, -1));  // ARC en línea 96
+
+    entidades.push(circunferenciaDXF(posX + 0, posY - 38, 4, -1));  // CIRCLE en línea 122
+    entidades.push(circunferenciaDXF(posX - 2, posY - 38, 1, -1));  // CIRCLE en línea 142
+    entidades.push(circunferenciaDXF(posX + 2, posY - 38, 1, -1));  // CIRCLE en línea 162
 
     return entidades;
 
