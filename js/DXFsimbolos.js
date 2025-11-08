@@ -45,30 +45,38 @@ function hasheador(posX, posY, hash, franja, extraEstrecho = false) {
     if (!hash) return [];
 
     if (hash.startsWith("#")) {
-        if (hash === "#52") return hash52(posX, desY);
-        if (hash === "#25") return hash25(posX, desY);
-        if (hash === "#UD") return hashUD(posX, desY);
-        if (hash === "#D") return hashD(posX, desY);
-        if (hash === "#U") return hashU(posX, desY);
-        if (hash === "#|") return hashPalo(posX, desY);
-        if (hash === "#-") return hashGuion(posX, desY);
-        if (hash === "#Sep") return hashSep(posX, desY);
-        if (hash === "#/") return hashSemiSep(posX, desY);
-        if (hash === "#d") return hashd(posX, desY);
-        if (hash === "#RED") return hashLan(posX, desY);
-        if (hash === "#T") return hashT(posX, desY, tamText);
-        if (hash === "#uTierra") return hashuTierra(posX, desY);
-        if (hash === "#Qc") return hashQconmutada(posX, desY);
-        if (hash === "#Qs") return hashQsimple(posX, desY);
-        if (hash === "#ext") return hashExterna(posX, desY);
-        if (hash === "#L") return hashAlimL(posX, desY);
-        if (hash === "#N") return hashAlimN(posX, desY);
-        if (hash === "#G") return hashAlimG(posX, desY);
-        if (hash === "#G0") return hashAlimG0(posX, desY);
-        if (hash === "#b+") return hashBusMas(posX, desY);
-        if (hash === "#b-") return hashBusMenos(posX, desY);
-        if (hash === "#KNX") return hashKNX(posX, desY);
-        if (hash === "#Sch") return hashSchucko(posX, desY);
+        switch (hash) {
+            case "#52": return hash52(posX, desY);
+            case "#25": return hash25(posX, desY);
+            case "#UD": return hashUD(posX, desY);
+            case "#D": return hashD(posX, desY);
+            case "#U": return hashU(posX, desY);
+            case "#|": return hashPalo(posX, desY);
+            case "#-": return hashGuion(posX, desY);
+            case "#Sep": return hashSep(posX, desY);
+            case "#/": return hashSemiSep(posX, desY);
+            case "#d": return hashd(posX, desY);
+            case "#RED": return hashLan(posX, desY);
+            case "#T": return hashT(posX, desY, tamText);
+            case "#uTierra": return hashuTierra(posX, desY);
+            case "#Qc": return hashQconmutada(posX, desY);
+            case "#Qs": return hashQsimple(posX, desY);
+            case "#ext": return hashExterna(posX, desY);
+            case "#ext2": return hashExterna2(posX, desY);
+            case "#ext3": return hashExterna3(posX, desY);
+            case "#L": return hashAlimL(posX, desY);
+            case "#N": return hashAlimN(posX, desY);
+            case "#G": return hashAlimG(posX, desY);
+            case "#G0": return hashAlimG0(posX, desY);
+            case "#b+": return hashBusMas(posX, desY);
+            case "#b-": return hashBusMenos(posX, desY);
+            case "#KNX": return hashKNX(posX, desY);
+            case "#Sch": return hashSchucko(posX, desY);
+            default: {
+                console.warn(`Hash ${hash} no encontrado`);
+                return [];
+            }
+        }
 
 
     } else if (hash.includes("%")) {
@@ -314,6 +322,29 @@ function hashExterna(posX, posY) {
     entidades.push(lineaDXF(posX + 2, posY - 104, posX + 2, posY - 110, 40));
     entidades.push(lineaDXF(posX - 2, posY - 110, posX + 2, posY - 110, 40));
     entidades.push(lineaDXF(posX + 0, posY - 110, posX + 0, posY - 116));
+
+    return entidades;
+
+}
+
+function hashExterna2(posX, posY) {
+
+    const entidades = [];
+
+    entidades.push(...hashExterna(posX, posY));
+    entidades.push(...hashExterna(posX - 4, posY));
+
+    return entidades;
+
+}
+
+function hashExterna3(posX, posY) {
+
+    const entidades = [];
+
+    entidades.push(...hashExterna(posX, posY));
+    entidades.push(...hashExterna(posX - 4, posY));
+    entidades.push(...hashExterna(posX - 8, posY));
 
     return entidades;
 

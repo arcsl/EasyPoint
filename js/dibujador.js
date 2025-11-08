@@ -131,11 +131,11 @@ function renderDispositivo(devicesContainer, carrilIndex, dispIndex, dispData) {
     const block = document.createElement("div");
     block.classList.add("device-block");
 
-    // Cabecera
+    // === Cabecera ===
     const head = document.createElement("div");
     head.classList.add("device-head");
 
-    // Selector de modelo
+    // === Selector de modelo ===
     const sel = document.createElement("select");
     sel.classList.add("w3-select", "w3-border", "w3-round", "w3-padding", "selectDispositivo");
     sel.appendChild(new Option("", ""));
@@ -161,8 +161,8 @@ function renderDispositivo(devicesContainer, carrilIndex, dispIndex, dispData) {
 
     // Seleccionar el tipo actual si lo hay
     if (tipoActual) sel.value = tipoActual;
-    
-    // Botones dispositivo
+
+    // === Botones dispositivo ===
     const btnDel = createBoton("w3-red", "papelera", "Eliminar dispositivo", () =>
         elimDispositivo(carrilIndex, dispIndex)
     );
@@ -173,36 +173,31 @@ function renderDispositivo(devicesContainer, carrilIndex, dispIndex, dispData) {
     btnUp.classList.add("dev-move-up");
     if (dispIndex === 0) btnUp.disabled = true;
 
-
-
-
-
     const btnDown = createBoton("w3-blue", "arrow-down", "Bajar dispositivo", () =>
         moveDispositivo(carrilIndex, dispIndex, 1)
     );
     btnDown.classList.add("dev-move-down");
     if (dispIndex === proyectoActual.Asignacion[carrilIndex].length - 1) btnDown.disabled = true;
 
-    // Botón mostrar/ocultar canales
+    // === Botón mostrar/ocultar canales ===
     const btnToggle = createBoton("w3-gray", "eye-slash", "Mostrar/Ocultar canales", () => {
         const oculto = channels.classList.toggle("w3-hide");
         proyectoActual.Asignacion[carrilIndex][dispIndex]._visible = !oculto;
         proyectoNoGuardado();
         if (oculto) {
-            btnToggle.innerHTML = '<img src="./images/eye.svg" alt="ver">'
-            btnToggle.title = "Mostrar canales."
+            btnToggle.innerHTML = '<img src="./images/eye.svg" alt="ver">';
+            btnToggle.title = "Mostrar canales.";
         } else {
             btnToggle.innerHTML = '<img src="./images/eye-slash.svg" alt="ocultar">';
-            btnToggle.title = "Ocultar canales."
+            btnToggle.title = "Ocultar canales.";
         }
     });
     btnToggle.classList.add("botonCuadrado");
 
-
     head.append(btnDel, btnUp, btnDown, sel, btnToggle);
     block.appendChild(head);
 
-    // Canales
+    // === Canales ===
     const channels = document.createElement("div");
     channels.classList.add("channels");
 
@@ -210,11 +205,11 @@ function renderDispositivo(devicesContainer, carrilIndex, dispIndex, dispData) {
     if (dispData?._visible === false) {
         channels.classList.add("w3-hide");
         btnToggle.innerHTML = `<img src="./images/eye.svg" alt="ver">`;
-        btnToggle.title = "Mostrar canales."
+        btnToggle.title = "Mostrar canales.";
     } else {
         channels.classList.remove("w3-hide");
         btnToggle.innerHTML = `<img src="./images/eye-slash.svg" alt="ocultar">`;
-        btnToggle.title = "Ocultar canales."
+        btnToggle.title = "Ocultar canales.";
     }
 
     block.appendChild(channels);
@@ -223,7 +218,7 @@ function renderDispositivo(devicesContainer, carrilIndex, dispIndex, dispData) {
         renderCanales(channels, carrilIndex, dispIndex, dispData);
     }
 
-    // Cambio de modelo → actualiza estado y repinta
+    // === Cambio de modelo ===
     sel.onchange = () => {
         const prev = proyectoActual.Asignacion[carrilIndex][dispIndex]?._visible ?? false;
         proyectoActual.Asignacion[carrilIndex][dispIndex] = { tipo: sel.value, _visible: prev };
@@ -231,7 +226,6 @@ function renderDispositivo(devicesContainer, carrilIndex, dispIndex, dispData) {
         writeCarriles();
         updateSelectsSeniales?.();
     };
-
 
     devicesContainer.appendChild(block);
 }
@@ -254,6 +248,8 @@ function renderCanales(channelsContainer, carrilIndex, dispIndex, deviceObj) {
 
     disp.Paginas.forEach(pagina => {
         pagina.forEach(conector => {
+
+            // === FRANJA NUMERACION ===
             (conector.Numeracion || []).forEach(n => {
                 if (!(typeof n === "object" && n?.señales?.length)) return;
 
@@ -294,15 +290,90 @@ function renderCanales(channelsContainer, carrilIndex, dispIndex, deviceObj) {
                         } catch { }
                     }
 
-                    // ✅ guardamos en estado
                     proyectoActual.Asignacion[carrilIndex][dispIndex][nombreBorne] = uuid;
                     proyectoNoGuardado();
-
-                    // ✅ refrescamos selects para bloquear señal en otros
                     updateSelectsSeniales();
                 });
 
                 row.append(label, sel);
+                channelsContainer.appendChild(row);
+            });
+
+            // === FRANJA OPCIONAL ===
+            const opcArr = Array.isArray(conector.Opcional)
+                ? conector.Opcional
+                : (typeof conector.Opcional === "object" && conector.Opcional !== null
+                    ? [conector.Opcional]
+                    : []);
+
+            opcArr.forEach(opt => {
+                if (!opt || typeof opt !== "object") return;
+
+                const nombreOpt = opt.nombre || opt.num || "(sin nombre)";
+
+                const row = document.createElement("div");
+                row.classList.add("channel-row");
+
+                const check = document.createElement("input");
+                check.type = "checkbox";
+                check.classList.add("borne-check");
+
+                const label = document.createElement("label");
+                label.classList.add("borne-checklabel");
+                label.textContent = nombreOpt;
+
+                const input1 = document.createElement("input");
+                input1.type = "text";
+                input1.classList.add("w3-input", "w3-border", "w3-round", "borne-input");
+                input1.placeholder = opt.Linea1 || "Texto linea 1";
+
+                const input2 = document.createElement("input");
+                input2.type = "text";
+                input2.classList.add("w3-input", "w3-border", "w3-round", "borne-input");
+                input2.placeholder = opt.Linea2 || "Texto linea 2";
+
+                // Lectura del estado almacenado si existe
+                const dispEstado = proyectoActual.Asignacion[carrilIndex][dispIndex];
+                dispEstado._opcional = dispEstado._opcional || {};
+                const opcion = dispEstado._opcional[nombreOpt];
+
+                const initLinea1 = (opcion && typeof opcion.Linea1 === "string") ? opcion.Linea1 : (opt.Linea1 || "");
+                const initLinea2 = (opcion && typeof opcion.Linea2 === "string") ? opcion.Linea2 : (opt.Linea2 || "");
+                const initActivo = (opcion && typeof opcion.activo === "boolean") ? opcion.activo : false;
+
+                check.checked = initActivo;
+                input1.value = initLinea1;
+                input2.value = initLinea2;
+                input1.disabled = !initActivo;
+                input2.disabled = !initActivo;
+
+                // Asegurar que el estado queda inicializado con lo que se está mostrando
+                dispEstado._opcional[nombreOpt] = {
+                    activo: initActivo,
+                    Linea1: initLinea1,
+                    Linea2: initLinea2
+                };
+
+                check.addEventListener("change", () => {
+                    const habilitado = check.checked;
+                    input1.disabled = !habilitado;
+                    input2.disabled = !habilitado;
+
+                    dispEstado._opcional[nombreOpt].activo = check.checked;
+                    proyectoNoGuardado();
+                });
+
+                input1.addEventListener("input", () => {
+                    dispEstado._opcional[nombreOpt].Linea1 = input1.value;
+                    proyectoNoGuardado();
+                });
+
+                input2.addEventListener("input", () => {
+                    dispEstado._opcional[nombreOpt].Linea2 = input2.value;
+                    proyectoNoGuardado();
+                });
+
+                row.append(check, label, input1, input2);
                 channelsContainer.appendChild(row);
             });
         });
@@ -377,7 +448,6 @@ function createBoton(color, icon, title, onClick) {
     b.onclick = onClick;
     return b;
 }
-
 
 // ================== CREAR DXF ==================
 
@@ -854,7 +924,7 @@ function dibujarPaginaDeDispositivo(hojaX, hojaY, dispositivo, pageIndex, startX
             // 1) Si el borne tiene SEÑAL asignada en EL ESTADO → dibujar símbolo correspondiente
             const borneObj = conector.Numeracion[i];
             const { num, seniales, nombre, desG0 } = normalizarBorne(borneObj);
-            
+
             // nombre del borne (para mapear en estado)
             const nombreBorne = nombre || num || null;
             if (nombreBorne) {
@@ -892,20 +962,36 @@ function dibujarPaginaDeDispositivo(hojaX, hojaY, dispositivo, pageIndex, startX
             franjas.forEach(franja => {
 
                 if (Array.isArray(conector[franja])) {
-                    
+
                     let valor = conector[franja][i];
-                    
-                    if (valor && typeof valor === "object") {
+
+                    if (franja === "Numeracion" && valor && typeof valor === "object") {
                         // extraestrecho y desX aparecen cuando el texto no entra y hay que hacerlo mas estrecho
                         // vease los textos de los contactos conmutados del synco
                         const { extraEstrecho = false, desX = 0, num = "-" } = valor;
                         entidades.push(...hasheador(inX + desX, inY, num, franja, extraEstrecho));
-                    } else {
+                    } else if (franja === "Opcional" && valor && typeof valor === "object") {
 
+                        const nombreOpt = valor.nombre || valor.num || "(sin nombre)";
+                        const estadoDisp = proyectoActual.Asignacion?.[carrilIndex]?.[dispIndex];
+                        const optEstado = estadoDisp?._opcional?.[nombreOpt];
+                        const activo = optEstado?.activo ?? true;
+                        const dibujo = optEstado?.dibujo || valor.dibujo || "";
+                        const linea1 = (optEstado?.Linea1 ?? valor.Linea1 ?? "").toUpperCase();
+                        const linea2 = (optEstado?.Linea2 ?? valor.Linea2 ?? "").toUpperCase();
+
+                        const Xtexto = inX - (conector[franja].length - 1) * paso / 2;
+
+                        if (activo) {
+                            entidades.push(...hasheador(inX, inY, dibujo, franja));
+                            if (linea1 !== "" || linea2 !== "") {
+                                entidades.push(textoMultiDXF(Xtexto, inY - 190, [linea1, linea2], 2.5, 'ML', 90));
+                            }
+                        }
+
+                    } else {
                         entidades.push(...hasheador(inX, inY, valor, franja));
                     }
-
-
                 }
             });
         }

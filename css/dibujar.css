@@ -2,6 +2,23 @@
     width: 1000px;
 }
 
+#dibujarCont input.borne-check {
+    width: 30px;
+    height: 30px;
+}
+
+#dibujarCont label.borne-checklabel {
+    width: 120px;
+    text-align: right;
+    padding: 12px 10px 0 0;
+}
+
+#dibujarCont input.borne-input {
+    width: 288px;
+    text-align: left;
+    padding-left: 12px;
+}
+
 #dibujarCont label.borne-label {
     width: 160px;
     text-align: right;
@@ -14,7 +31,6 @@
 
 #dibujarCont select.borne-select {
     width: 288px;
-    margin-top: 8px;
     padding-left: 10px;
 }
 
@@ -75,6 +91,7 @@
 }
 
 #dibujarCont .channel-row {
+    margin-top: 8px;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -104,5 +121,4 @@
     height: 30px;
     cursor: pointer;
     transform: translateY(-5px);
-    /* pequeño ajuste vertical */
 }
