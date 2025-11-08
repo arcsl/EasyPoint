@@ -772,4 +772,8 @@ UI.crearCerrarBtn.addEventListener("click", () => {
     UI.overlayPopSeccion.classList.add("w3-hide");
 });
 
+/* ---------- CHECKBOX MOSTRAR U OCULTAR FAMILIAS DE DISPOSITIVOS ---------- */
 
+UI.dibujarCont.querySelectorAll('input[type="checkbox"]').forEach(chk => {
+    chk.addEventListener("change", () => { writeCarriles(); });
+});

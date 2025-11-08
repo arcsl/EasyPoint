@@ -30,6 +30,7 @@
 
 #dibujarCont button.botonAniadir {
     width: 165px;
+    margin-right: 175px;
 }
 
 #dibujarCont button.botonCuadDib {
@@ -83,4 +84,25 @@
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
+}
+
+/* ---------- CHECKBOXES DIBUJAR ---------- */
+
+#dibujarCont .labeltipo {
+    display: inline-flex;
+    align-items: center;
+    vertical-align: middle;
+    font-size: 1.2rem;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+    width: 130px;
+}
+
+#dibujarCont .muestraTipo {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    transform: translateY(-5px);
+    /* pequeño ajuste vertical */
 }

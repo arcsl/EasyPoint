@@ -872,8 +872,8 @@ const dispositivos = {
                         "#D", "#|", "#U",
                     ],
                     "Numeracion": [
-                        "G1", "M", { num: "Y1", señales: ["EA", "ED"], nombre: "Y1" }, null,
-                        "G1", "M", { num: "Y2", señales: ["EA", "ED"], nombre: "Y2" },
+                        "G1", "M", { num: "Y1", señales: ["SA",], nombre: "Y1" }, null,
+                        "G1", "M", { num: "Y2", señales: ["SA",], nombre: "Y2" },
                     ],
                 },
 

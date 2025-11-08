@@ -103,7 +103,6 @@ function renderCarril(index, totalCarriles, carrilData) {
     UI.CarrilesContenedor.appendChild(carril);
 }
 
-
 // ================== DISPOSITIVOS ==================
 
 function addDispositivo(carrilIndex) {
@@ -141,9 +140,28 @@ function renderDispositivo(devicesContainer, carrilIndex, dispIndex, dispData) {
     sel.classList.add("w3-select", "w3-border", "w3-round", "w3-padding", "selectDispositivo");
     sel.appendChild(new Option("", ""));
 
-    Object.keys(dispositivos).forEach(k => sel.appendChild(new Option(k, k)));
-    if (dispData?.tipo) sel.value = dispData.tipo;
+    // Dispositivo actualmente seleccionado (por si pertenece a una familia oculta)
+    const tipoActual = dispData?.tipo || null;
+    const famActual = tipoActual
+        ? (dispositivos[tipoActual]?.Disposicion?.Familia || dispositivos[tipoActual]?.Disposicion?.familia)
+        : null;
 
+    // === Poblar select ===
+    Object.keys(dispositivos).forEach(k => {
+        const disp = dispositivos[k];
+        const fam = disp?.Disposicion?.Familia || disp?.Disposicion?.familia || "";
+
+        // Mostrar si:
+        // - la familia es visible según los checkboxes (familiaVisible)
+        // - o el modelo actual pertenece a una familia oculta pero está seleccionado
+        if (familiaVisible(fam) || k === tipoActual) {
+            sel.appendChild(new Option(k, k));
+        }
+    });
+
+    // Seleccionar el tipo actual si lo hay
+    if (tipoActual) sel.value = tipoActual;
+    
     // Botones dispositivo
     const btnDel = createBoton("w3-red", "papelera", "Eliminar dispositivo", () =>
         elimDispositivo(carrilIndex, dispIndex)
@@ -218,6 +236,15 @@ function renderDispositivo(devicesContainer, carrilIndex, dispIndex, dispData) {
     devicesContainer.appendChild(block);
 }
 
+function familiaVisible(fam) {
+    const map = {
+        PX: UI.mostrarPX.checked,
+        Synco: UI.mostrarSynco.checked,
+        RLU: UI.mostrarRLU.checked,
+        Logo: UI.mostrarLogo.checked,
+    };
+    return !!map[fam]; //Los dos signos de exclamación !! convierten el valor a un booleano puro (true o false), por si acaso fuese undefined o un valor “falsy”.
+}
 
 // ================== SEÑALES ==================
 
