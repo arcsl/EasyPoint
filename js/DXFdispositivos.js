@@ -4,6 +4,51 @@
 
 const dispositivos = {
 
+    "ACOMETIDA": {
+        "Nombre": "ACOMETIDA",
+        "Paginas": [
+            [
+                {   // General
+                    "Numeracion": ["#AGen",],
+                },
+                {   // 24V
+                    "Numeracion": [null,],
+                    "Opcional": [{ nombre: "24V 50Hz", dibujo: "#A24v", Linea1: "Alimentacion 24V 50Hz", Linea2: "", },],
+                },
+                {   // Separación
+                    "Numeracion": [
+                        null, null, null, null, null, null, null, null, null, null, null, null,
+                    ],
+                },
+                {   // Presostato 1
+                    "Numeracion": [null, null, null, null,],
+                    "Opcional": [null, null, null, { nombre: "Presost. 1", dibujo: "#APre1", Linea1: "Presost. Calefacción", Linea2: "B12CN", Espejo1: 22, },],
+                },
+                {   // Separación
+                    "Numeracion": [
+                        null, null, null, null, null, null, null,
+                    ],
+                },
+                {   // Presostato 2
+                    "Numeracion": [null, null, null, null,],
+                    "Opcional": [null, null, null, { nombre: "Presost. 2", dibujo: "#APre2", Linea1: "Presost. Primario ACS", Linea2: "B12CN", Espejo1: 22, },],
+                },
+                {   // Separación
+                    "Numeracion": [
+                        null, null, null, null, null, null, null,
+                    ],
+                },
+                {   // Presostato 3
+                    "Numeracion": [null, null, null, null,],
+                    "Opcional": [null, null, null, { nombre: "Presost. 3", dibujo: "#APre3", Linea1: "Presost. Aerotermia", Linea2: "B12CN", Espejo1: 22, },],
+                },
+            ],
+        ],
+        "Disposicion": {
+            "Familia": "General",
+            "Tipo": "controlador",
+        },
+    },
     "PXM40": {
         "Nombre": "PXM40",
         "Paginas": [
@@ -18,6 +63,8 @@ const dispositivos = {
                 {   // LAN
                     "Simbolos": [null, "#RED", null,],
                     "Numeracion": [null, "LAN", null,],
+                    "Opcional": "#int",
+                    "Etiqueta": "A ROUTER O RACK DE COMUNICACIONES%ETHERNET CAT-6",
                 },
             ],
         ],
@@ -37,13 +84,15 @@ const dispositivos = {
                     "Cinta": [null, "1A", null, null, null, "1B", null,],
                     "Simbolos": [null, "#RED", null, null, null, "#RED", null,],
                     "Numeracion": [null, "#25", null, "LAN", null, "#52", null,],
+                    "Opcional": [null, "#int", null, null, null, null,],
+                    "Etiqueta": [null, "A ROUTER O RACK DE COMUNICACIONES%ETHERNET CAT-6", null, null, null, null,],
                 },
                 {   // KNX
                     "Cinta": "KNX",
                     "Simbolos": ["#|", "#|",],
                     "Numeracion": ["3", "4",],
-                    "Opcional": [null, { nombre: "KNX",  dibujo: "#ext2", Linea1: "Integración KNX", Linea2: "", },],
-                    // "Etiqueta": "INTEGRACION KNX%",
+                    "Opcional": [null, { nombre: "KNX", dibujo: "#ext2", Linea1: "Integración KNX", Linea2: "", },],
+
                 },
                 {   // alimentacion 24V
                     "Cinta": "AC 24V",
@@ -77,21 +126,12 @@ const dispositivos = {
                         "29",],
 
                 },
-                {   // M-BUS
-                    "Cinta": "M-BUS",
-                    "Subcinta": ["+", "-",],
-                    "Simbolos": ["#|", "#|",],
-                    "Numeracion": ["66", "67",],
-                    "Opcional": ["#ext", "#ext",],
-                    "Etiqueta": "INTEGRACION CONTADORES M-BUS%",
-                },
                 {   // COM
                     "Cinta": "COM",
                     "Subcinta": ["+", "-", "#d",],
                     "Simbolos": ["#|", "#|", "#|",],
                     "Numeracion": ["68", "69", "70",],
                     "Opcional": [null, null, { nombre: "COM", dibujo: "#ext3", Linea1: "M-bus / ModBus / BACnet", Linea2: "", },],
-                    // "Etiqueta": "INTEGRACION MODBUS TERCEROS%",
                 },
                 {   // DO1
                     "Cinta": "DO1",
@@ -130,6 +170,8 @@ const dispositivos = {
                     "Cinta": [null, "1A", null, null, null, "1B", null,],
                     "Simbolos": [null, "#RED", null, null, null, "#RED", null,],
                     "Numeracion": [null, "#25", null, "LAN", null, "#52", null,],
+                    "Opcional": [null, "#int", null, null, null, null,],
+                    "Etiqueta": [null, "A ROUTER O RACK DE COMUNICACIONES%ETHERNET CAT-6", null, null, null, null,],
                 },
                 {   // WAN
                     "Cinta": [null, "2", null,],
@@ -141,7 +183,6 @@ const dispositivos = {
                     "Simbolos": ["#|", "#|",],
                     "Numeracion": ["3", "4",],
                     "Opcional": [null, { nombre: "KNX", dibujo: "#ext2", Linea1: "Integración KNX.", Linea2: "", },],
-                    // "Etiqueta": "INTEGRACION KNX%",
                 },
                 {   // alimentacion 24V
                     "Cinta": "AC 24V",
@@ -213,7 +254,6 @@ const dispositivos = {
                     "Simbolos": ["#|", "#|",],
                     "Numeracion": ["66", "67",],
                     "Opcional": [null, { nombre: "MBUS", dibujo: "#ext2", Linea1: "M-bus", Linea2: "", },],
-                    // "Etiqueta": "INTEGRACION CONTADORES M-BUS%",
                 },
                 {   // COM 1
                     "Cinta": "COM1",
@@ -221,7 +261,6 @@ const dispositivos = {
                     "Simbolos": ["#|", "#|", "#|",],
                     "Numeracion": ["68", "69", "70",],
                     "Opcional": [null, null, { nombre: "COM1", dibujo: "#ext3", Linea1: "M-bus / ModBus / BACnet", Linea2: "", },],
-                    // "Etiqueta": "INTEGRACION BACNET TERCEROS%",
                 },
                 {   // COM 2
                     "Cinta": "COM2",
@@ -229,7 +268,7 @@ const dispositivos = {
                     "Simbolos": ["#|", "#|", "#|",],
                     "Numeracion": ["71", "72", "73",],
                     "Opcional": [null, null, { nombre: "COM2", dibujo: "#ext3", Linea1: "ModBus / BACnet", Linea2: "", },],
-                    // "Etiqueta": "INTEGRACION MODBUS TERCEROS%",
+                    // "": "INTEGRACION MODBUS TERCEROS%",
                 },
                 {   // DO1
                     "Cinta": "DO1",
@@ -278,6 +317,8 @@ const dispositivos = {
                     "Cinta": [null, "1A", null, null, null, "1B", null,],
                     "Simbolos": [null, "#RED", null, null, null, "#RED", null,],
                     "Numeracion": [null, "#25", null, "LAN", null, "#52", null,],
+                    "Opcional": [null, "#int", null, null, null, null,],
+                    "Etiqueta": [null, "A ROUTER O RACK DE COMUNICACIONES%ETHERNET CAT-6", null, null, null, null,],
                 },
                 {   // WAN
                     "Cinta": [null, "2", null,],
@@ -288,8 +329,7 @@ const dispositivos = {
                     "Cinta": "KNX",
                     "Simbolos": ["#|", "#|",],
                     "Numeracion": ["3", "4",],
-                    "Opcional": ["#ext", "#ext",],
-                    "Etiqueta": "INTEGRACION KNX%",
+                    "Opcional": [null, { nombre: "KNX", dibujo: "#ext2", Linea1: "Integración KNX.", Linea2: "", },],
                 },
                 {   // alimentacion 24V
                     "Cinta": "AC 24V",
@@ -304,44 +344,39 @@ const dispositivos = {
                     "Numeracion": ["11", { num: "10", señales: ["ED"], nombre: "DI1" },],
                 },
                 {   // M-BUS
-                    "Cinta": "M-BUS",
+                    "Cinta": "MBUS",
                     "Subcinta": ["+", "-",],
                     "Simbolos": ["#|", "#|",],
                     "Numeracion": ["66", "67",],
-                    "Opcional": ["#ext", "#ext",],
-                    "Etiqueta": "INTEGRACION CONTADORES M-BUS%",
+                    "Opcional": [null, { nombre: "MBUS", dibujo: "#ext2", Linea1: "M-bus", Linea2: "", },],
                 },
                 {   // COM 1
-                    "Cinta": "COM 1",
+                    "Cinta": "COM1",
                     "Subcinta": ["+", "-", "#d",],
                     "Simbolos": ["#|", "#|", "#|",],
                     "Numeracion": ["68", "69", "70",],
-                    "Opcional": ["#ext", "#ext", "#ext",],
-                    "Etiqueta": "INTEGRACION TERCEROS%",
+                    "Opcional": [null, null, { nombre: "COM1", dibujo: "#ext3", Linea1: "M-bus / ModBus / BACnet", Linea2: "", },],
                 },
                 {   // COM 2
-                    "Cinta": "COM 2",
+                    "Cinta": "COM2",
                     "Subcinta": ["+", "-", "#d",],
                     "Simbolos": ["#|", "#|", "#|",],
                     "Numeracion": ["71", "72", "73",],
-                    "Opcional": ["#ext", "#ext", "#ext",],
-                    "Etiqueta": "INTEGRACION TERCEROS%",
+                    "Opcional": [null, null, { nombre: "COM2", dibujo: "#ext3", Linea1: "M-bus / ModBus / BACnet", Linea2: "", },],
                 },
                 {   // COM 3
-                    "Cinta": "COM 3",
+                    "Cinta": "COM3",
                     "Subcinta": ["+", "-", "#d",],
                     "Simbolos": ["#|", "#|", "#|",],
                     "Numeracion": ["74", "75", "76",],
-                    "Opcional": ["#ext", "#ext", "#ext",],
-                    "Etiqueta": "INTEGRACION TERCEROS%",
+                    "Opcional": [null, null, { nombre: "COM3", dibujo: "#ext3", Linea1: "M-bus / ModBus / BACnet", Linea2: "", },],
                 },
                 {   // COM 4
-                    "Cinta": "COM 4",
+                    "Cinta": "COM4",
                     "Subcinta": ["+", "-", "#d",],
                     "Simbolos": ["#|", "#|", "#|",],
                     "Numeracion": ["77", "78", "79",],
-                    "Opcional": ["#ext", "#ext", "#ext",],
-                    "Etiqueta": "INTEGRACION TERCEROS%",
+                    "Opcional": [null, null, { nombre: "COM4", dibujo: "#ext3", Linea1: "M-bus / ModBus / BACnet", Linea2: "", },],
                 },
             ],
         ],
@@ -795,36 +830,6 @@ const dispositivos = {
             },
         },
     */
-    "OZW772": {
-        "Nombre": "OZW772",
-        "Paginas": [
-            [
-                {   // alimentacion
-                    "Simbolos": [null, "#|", null,],
-                    "Numeracion": [null, "TRAF", null,],
-                    "Fijo": "#Sch",
-                },
-                {   // LAN
-                    "Simbolos": [null, "#RED", null,],
-                    "Numeracion": [null, "LAN", null,],
-                },
-                {   // Bus KNX
-                    "Simbolos": ["#|", "#|",],
-                    "Numeracion": [
-                        { num: "CE+", extraEstrecho: true, desX: -1 },
-                        { num: "CE-", extraEstrecho: true, desX: 1 },
-                    ],
-                    "Opcional": "#KNX",
-                },
-            ],
-        ],
-        "Disposicion": {
-            "Ancho": 90,
-            "Alto": 90,
-            "Familia": "Synco",
-            "Tipo": "controlador",
-        },
-    },
     "RMK770": {
         "Nombre": "RMK770",
         "Paginas": [
@@ -1366,7 +1371,7 @@ const dispositivos = {
                         { num: "Q14", extraEstrecho: true, desX: 1, señales: ["SD"], nombre: "Q1" }, null,
 
                         "Q23", null, { num: "Q24", señales: ["SD"], nombre: "Q2" }, null,
-                        "Q33", null, { num: "Q34", señales: ["SD"], nombre: "Q3" }, 
+                        "Q33", null, { num: "Q34", señales: ["SD"], nombre: "Q3" },
                     ],
 
                 },
@@ -1394,7 +1399,7 @@ const dispositivos = {
                         null, "M", { num: "X1", señales: ["EA", "ED"], nombre: "X1" }, null,
                         "G1", "M", { num: "X2", señales: ["EA", "ED"], nombre: "X2" }, null,
                         null, "M", { num: "X3", señales: ["EA", "ED"], nombre: "X3" }, null,
-                        null, "M", { num: "X4", señales: ["EA", "ED"], nombre: "X4" }, 
+                        null, "M", { num: "X4", señales: ["EA", "ED"], nombre: "X4" },
                     ],
                 },
                 {   // Salidas analógicas
@@ -1411,7 +1416,7 @@ const dispositivos = {
                         null, "#Qs", null, "#/",
                         null, "#Qs", null, "#/",
                         null, "#Qs", null, "#/",
-                        null, "#Qc", null, 
+                        null, "#Qc", null,
                     ],
                     "Numeracion": [
                         { num: "Q11", extraEstrecho: true, desX: -1 },
@@ -1495,7 +1500,7 @@ const dispositivos = {
                         null, "#Qc", null, "#/",
                         null, "#Qs", null, "#/",
                         null, "#Qs", null, "#/",
-                        null, "#Qc", null, 
+                        null, "#Qc", null,
                     ],
                     "Numeracion": [
                         { num: "Q11", extraEstrecho: true, desX: -1 },
@@ -1534,7 +1539,7 @@ const dispositivos = {
                         null, "M", { num: "X1", señales: ["EA", "ED"], nombre: "X1" }, null,
                         "G1", "M", { num: "X2", señales: ["EA", "ED"], nombre: "X2" }, null,
                         null, "M", { num: "X3", señales: ["EA", "ED"], nombre: "X3" }, null,
-                        "G1", "M", { num: "X4", señales: ["EA", "ED"], nombre: "X4" }, 
+                        "G1", "M", { num: "X4", señales: ["EA", "ED"], nombre: "X4" },
                     ],
                 },
                 {   // Salidas analógicas
@@ -1595,7 +1600,7 @@ const dispositivos = {
                         null, "M", { num: "X3", señales: ["EA", "ED"], nombre: "X3" }, null,
                         "G1", "M", { num: "X4", señales: ["EA", "ED"], nombre: "X4" }, null,
                         null, "M", { num: "X5", señales: ["EA", "ED"], nombre: "X5" }, null,
-                        null, "M", { num: "X6", señales: ["EA", "ED"], nombre: "X6" }, 
+                        null, "M", { num: "X6", señales: ["EA", "ED"], nombre: "X6" },
                     ],
                 },
                 {   // Salidas analógicas
@@ -1641,26 +1646,91 @@ const dispositivos = {
             "Tipo": "modulo",
         },
     },
+    "OZW772": {
+        "Nombre": "OZW772",
+        "Paginas": [
+            [
+                {   // alimentacion
+                    "Simbolos": [null, "#|", null,],
+                    "Numeracion": [null, "TRAF", null,],
+                    "Fijo": "#Sch",
+                },
+                {   // LAN
+                    "Simbolos": [null, "#RED", null,],
+                    "Numeracion": [null, "LAN", null,],
+                    "Opcional": "#int",
+                    "Etiqueta": "A ROUTER O RACK DE COMUNICACIONES%ETHERNET CAT-6",
+                },
+                {   // Bus KNX
+                    "Simbolos": [null, "#|", "#|", null,],
+                    "Numeracion": [
+                        null,
+                        { num: "CE+", desX: -1 },
+                        { num: "CE-", desX: 1 },
+                        null,
+                    ],
+                    "Opcional": "#KNX",
+                },
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 90,
+            "Alto": 90,
+            "Familia": "Synco",
+            "Tipo": "controlador",
+        },
+    },
     "ARCUS": {
         "Nombre": "ARCUS",
         "Paginas": [
             [
-                {   // Bus Mbus
-                    "Simbolos": ["#|", "#|",],
-                    "Numeracion": [
-                        { num: "MB+", extraEstrecho: true, desX: -1 },
-                        { num: "MB-", extraEstrecho: true, desX: 1 },
-                        null,null,null,
-                    ],
-                    // "Opcional": "#MBUS",
-                },
                 {   // Bus KNX
-                    "Simbolos": ["#|", "#|",],
+                    "Simbolos": [null, "#UD", "#UD", null,],
                     "Numeracion": [
-                        { num: "CE+", extraEstrecho: true, desX: -1 },
-                        { num: "CE-", extraEstrecho: true, desX: 1 },
+                        null,
+                        { num: "CE+", desX: -1 },
+                        { num: "CE-", desX: 1 },
+                        null,
                     ],
-                    "Opcional": "#KNX",
+                    "Opcional": "#KNXsl",
+                },
+                {   // Contador 1
+                    "Simbolos": [null, "#|", "#|", null,],
+                    "Numeracion": [
+                        null,
+                        { num: "MB+", desX: -1 },
+                        { num: "MB-", desX: 1 },
+                        null,
+                    ],
+                    "Opcional": [
+                        null, null, null, { nombre: "Cont. 1 ", dibujo: "#MBUS", Linea1: "Contador calderas", Linea2: "UH50-A70", },
+                    ],
+                },
+                {   // Bus Mbus
+                    "noEnv": true,
+                    "Simbolos": [null, "#|", "#|", null,],
+                    "Numeracion": [
+                        null,
+                        { num: "MB+", desX: -1 },
+                        { num: "MB-", desX: 1 },
+                        null,
+                    ],
+                    "Opcional": [
+                        null, null, null, { nombre: "Cont. 2 ", dibujo: "#MBUS2", Linea1: "Contador calderas", Linea2: "UH50-A70", },
+                    ],
+                },
+                {   // Bus Mbus
+                    "noEnv": true,
+                    "Simbolos": [null, "#|", "#|", null,],
+                    "Numeracion": [
+                        null,
+                        { num: "MB+", desX: -1 },
+                        { num: "MB-", desX: 1 },
+                        null,
+                    ],
+                    "Opcional": [
+                        null, null, null, { nombre: "Cont. 3 ", dibujo: "#MBUS2", Linea1: "Contador calderas", Linea2: "UH50-A70", },
+                    ],
                 },
             ],
         ],
@@ -1671,6 +1741,4 @@ const dispositivos = {
             "Tipo": "controlador",
         },
     },
-
-
 }

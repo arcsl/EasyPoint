@@ -18,7 +18,8 @@
         <option value="TEXT">TEXT</option>
         <option value="MTEXT">MTEXT</option>
         <option value="SOLID">SOLID</option>
-        <option value="HATCH">HATCH (puntos)</option>
+        <option value="HATCH">HATCH</option>
+        <option value="TODOS">TODOS</option>
     </select>
 
     <h3>Resultado:</h3>
@@ -100,8 +101,8 @@
 
                 if (code === '0') {
                     const entityType = lines[i + 1]?.trim();
-                    if (entityType === tipo) {
-                        switch (tipo) {
+                    if (entityType === tipo || tipo === "TODOS") {  // <--- añadido
+                        switch (entityType) {                       // <--- usamos entityType real, no tipo
                             case 'LINE':
                                 result.push(...parseLINE(lines, i));
                                 break;

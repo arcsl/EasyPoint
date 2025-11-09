@@ -46,7 +46,7 @@
 
 #dibujarCont button.botonAniadir {
     width: 165px;
-    margin-right: 175px;
+    margin-right: 50px;
 }
 
 #dibujarCont button.botonCuadDib {
@@ -113,7 +113,7 @@
     gap: 8px;
     cursor: pointer;
     user-select: none;
-    width: 130px;
+    width: 120px;
 }
 
 #dibujarCont .muestraTipo {

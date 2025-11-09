@@ -232,6 +232,7 @@ function renderDispositivo(devicesContainer, carrilIndex, dispIndex, dispData) {
 
 function familiaVisible(fam) {
     const map = {
+        General: UI.mostrarGeneral.checked,
         PX: UI.mostrarPX.checked,
         Synco: UI.mostrarSynco.checked,
         RLU: UI.mostrarRLU.checked,
@@ -510,9 +511,11 @@ function descargarDXF() {
             continue; // saltar a la siguiente hoja
         }
 
-        // Resto de hojas = tu lógica actual
+        // Resto de hojas
+        let barrasComunes = false;
         hoja.items.forEach(it => {
             const disp = dispositivos[it.key];
+            if (disp.Disposicion.Familia !== "General") barrasComunes = true;
             entities.push(
                 ...dibujarPaginaDeDispositivo(
                     CajetinX, CajetinY,
@@ -526,7 +529,7 @@ function descargarDXF() {
         });
 
         // Barras comunes L/G/G0/N a lo ancho de los módulos dibujados
-        entities.push(...dibujarBarrasComunes(CajetinX, CajetinY, hoja.items));
+        if (barrasComunes) entities.push(...dibujarBarrasComunes(CajetinX, CajetinY, hoja.items));
     }
 
     // 5) Cerrar y descargar
@@ -579,11 +582,13 @@ function dibujarPlanoGeneralDispositivos(CajetinX, CajetinY, dispositivos) {
     // === Escala fija ===
     const scale = 0.5;
 
-    // === Carriles ===
-    const carriles = (proyectoActual.Asignacion || []).map(carril =>
-        carril.map(d => dispositivos[d.tipo]).filter(Boolean)
-    );
+    // === Carriles (filtrando dispositivos con dimensiones válidas) ===
+    const carriles = (proyectoActual.Asignacion || []).map(carril => carril
+        .map(d => dispositivos[d.tipo])
+        .filter(d => d && (d.Disposicion?.Ancho > 0) && (d.Disposicion?.Alto > 0))
+    ).filter(carril => carril.length > 0);
 
+    // === Dimensiones base ===
     const dims = carriles.map(carril => carril.map(d => ({
         ancho: d.Disposicion?.Ancho || 40,
         alto: d.Disposicion?.Alto || 60,
@@ -591,6 +596,9 @@ function dibujarPlanoGeneralDispositivos(CajetinX, CajetinY, dispositivos) {
         tipo: d.Disposicion?.Tipo || "modulo"
     })));
 
+    if (dims.length === 0) return entidades; // No hay nada que dibujar
+
+    // === Cálculo de alturas y anchos por carril ===
     const carrilAlturas = dims.map(carril =>
         Math.max(...carril.map(d => d.alto))
     );
@@ -776,6 +784,7 @@ function generarLayoutHojas() {
             if (!disp) return;
 
             const tipo = disp?.Disposicion?.Tipo || "controlador";
+            const familia = disp?.Disposicion?.Familia || "Synco";
             const anchos = disp?.Disposicion?.AnchoEnHoja || [disp?.Disposicion?.Ancho || HOJA_UTIL];
             const pages = anchos.length;
 
@@ -783,9 +792,10 @@ function generarLayoutHojas() {
                 items.push({
                     key,
                     tipo,               // "controlador" | "modulo" | ...
+                    familia,            // PX, Synco,General,....
                     pageIndex: p,       // índice de página
                     pages,              // total de páginas
-                    width: anchos[p],
+                    width: anchos[p],   // el ancho de esta pagina
                     carrilIndex,        // indices para volver al estado
                     dispIndex
                 });
@@ -809,6 +819,19 @@ function generarLayoutHojas() {
                     nuevaHoja();
                     hojaActual = hojas[hojas.length - 1];
                 }
+                continue;
+            }
+
+            // Si el item es de familia General → ponerlo solo en una hoja
+            if (it.familia === "General") {
+                if (hojaActual.items.length > 0) {
+                    nuevaHoja();
+                    hojaActual = hojas[hojas.length - 1];
+                }
+                hojaActual.items.push(it);
+                // El siguiente también empieza en hoja nueva
+                nuevaHoja();
+                hojaActual = hojas[hojas.length - 1];
                 continue;
             }
 
@@ -884,23 +907,32 @@ function dibujarPaginaDeDispositivo(hojaX, hojaY, dispositivo, pageIndex, startX
     const franjas = ["Cinta", "Subcinta", "Simbolos", "Numeracion", "Opcional", "Etiqueta", "Fijo"];
 
     const pagina = dispositivo.Paginas[pageIndex];
+
+    // largura en vase a la longitud de "numeracion" de todos los conectores
     const largura = dispositivo?.Disposicion?.AnchoEnHoja?.[pageIndex] ??
         (pagina.map(c => ((c.Numeracion?.length || 0) + 1)).reduce((a, b) => a + b, 0) * paso);
+
+    // idem excluyendo a los conectores marcados con noEnv
+    const larguraNoEnv = pagina
+        .map(c => c.noEnv ? 0 : ((c.Numeracion?.length || 0) + 1))
+        .reduce((a, b) => a + b, 0) * paso;
 
     let inX = hojaX + startX;
     let inY = hojaY + 236;
 
-    // Envolvente + título
-    entidades.push(...hashEnv(inX, inY, largura));
-    entidades.push(textoDXF(inX + 2, inY + 21, dispositivo.Nombre, 3, 'ML', 0, "Negrita"));
+    // Envolvente + título (solo si existe la propiedad alto y ancho o y son mayores que 0)
+    if (dispositivo.Disposicion.Alto && dispositivo.Disposicion.Ancho) {
+        entidades.push(...hashEnv(inX, inY, larguraNoEnv));
+        entidades.push(textoDXF(inX + 2, inY + 21, dispositivo.Nombre, 3, 'ML', 0, "Negrita"));
+    }
 
     // Marca de módulo PX (si aplica)
-    const { Familia, Tipo } = dispositivo.Disposicion || {};
+    const { Familia, Tipo, Alto } = dispositivo.Disposicion || {};
     if (Familia === "PX" && Tipo === "modulo") {
         nModulo++;
         entidades.push(
-            textoDXF(inX + largura - 5, inY + 21, `${nModulo}`, 3, 'MC', 0, "Negrita"),
-            lineaDXF(inX + largura - 10, inY + 18, inX + largura - 10, inY + 24),
+            textoDXF(inX + larguraNoEnv - 5, inY + 21, `${nModulo}`, 3, 'MC', 0, "Negrita"),
+            lineaDXF(inX + larguraNoEnv - 10, inY + 18, inX + larguraNoEnv - 10, inY + 24),
         );
     }
 
@@ -969,7 +1001,7 @@ function dibujarPaginaDeDispositivo(hojaX, hojaY, dispositivo, pageIndex, startX
                         // extraestrecho y desX aparecen cuando el texto no entra y hay que hacerlo mas estrecho
                         // vease los textos de los contactos conmutados del synco
                         const { extraEstrecho = false, desX = 0, num = "-" } = valor;
-                        entidades.push(...hasheador(inX + desX, inY, num, franja, extraEstrecho));
+                        if (!conector.noEnv) entidades.push(...hasheador(inX + desX, inY, num, franja, extraEstrecho));
                     } else if (franja === "Opcional" && valor && typeof valor === "object") {
 
                         const nombreOpt = valor.nombre || valor.num || "(sin nombre)";
@@ -979,6 +1011,8 @@ function dibujarPaginaDeDispositivo(hojaX, hojaY, dispositivo, pageIndex, startX
                         const dibujo = optEstado?.dibujo || valor.dibujo || "";
                         const linea1 = (optEstado?.Linea1 ?? valor.Linea1 ?? "").toUpperCase();
                         const linea2 = (optEstado?.Linea2 ?? valor.Linea2 ?? "").toUpperCase();
+                        const espejo1 = (optEstado?.Espejo1 ?? valor.Espejo1 ?? 0);
+                        const espejo2 = (optEstado?.Espejo2 ?? valor.Espejo2 ?? 0);
 
                         const Xtexto = inX - (conector[franja].length - 1) * paso / 2;
 
@@ -987,18 +1021,25 @@ function dibujarPaginaDeDispositivo(hojaX, hojaY, dispositivo, pageIndex, startX
                             if (linea1 !== "" || linea2 !== "") {
                                 entidades.push(textoMultiDXF(Xtexto, inY - 190, [linea1, linea2], 2.5, 'ML', 90));
                             }
+                            if (espejo1 && linea1 !== "") {
+                                entidades.push(textoDXF(Xtexto + espejo1, inY - 190, linea1, 2.5, 'ML', 90));
+                            }
+                            if (espejo2 && linea2 !== "") {
+                                entidades.push(textoDXF(Xtexto + espejo2, inY - 190, linea2, 2.5, 'ML', 90));
+                            }
+
                         }
 
                     } else {
-                        entidades.push(...hasheador(inX, inY, valor, franja));
+                        if (!conector.noEnv) entidades.push(...hasheador(inX, inY, valor, franja));
                     }
                 }
             });
         }
 
         inX += paso;
-        if (idxCon + 1 < (pagina.length || 0)) {
-            entidades.push(...hasheador(inX, inY, "#Sep"));
+        if (Alto && idxCon + 1 < (pagina.length || 0)) {
+            if (!conector.noEnv) entidades.push(...hasheador(inX, inY, "#Sep"));
         }
     });
 
@@ -1031,20 +1072,44 @@ function obtenerSenialPorUUID(uuid) {
 function dibujarBarrasComunes(CajetinX, CajetinY, hojaItems) {
     const entidades = [];
     const paso = 4;
-    const despY = { L: paso * 1, G: paso * 3, G0: paso * 4, N: paso * 25 };
+    const despY = { L: paso * 1, G: paso * 3, G0: paso * 4, "CE+": paso * 6, "CE-": paso * 7, N: paso * 25 };
 
     if (!hojaItems.length) return entidades;
+
+    let KNX = false;
+
+    // determinar si hay que dibujar el bus knx transversal
+    hojaItems.forEach(item => {
+        if (item.familia === "Synco") KNX = true;
+    });
 
     const xInicio = Math.min(...hojaItems.map(it => it.x)) + CajetinX;
     const xFin = Math.max(...hojaItems.map(it => it.x + it.width)) + CajetinX;
 
     Object.entries(despY).forEach(([key, value]) => {
+
         const y = CajetinY + 236 - value;
-        entidades.push(
-            textoDXF(xInicio - 2, y, key, 2.5, 'MR'),
-            lineaDXF(xInicio, y, xFin, y),
-            textoDXF(xFin + 2, y, key, 2.5, 'ML'),
-        );
+
+        if ((key !== "CE+" && key !== "CE-") || KNX) {
+
+            let linea = "";
+            if (key === "CE+") {
+                linea = lineaDXF(xInicio, y, xFin, y, 0, "Continuous", 1, 96);
+
+            } else if (key === "CE-") {
+                linea = lineaDXF(xInicio, y, xFin, y, 0, "Continuous", 1, 1);
+
+            } else {
+                linea = lineaDXF(xInicio, y, xFin, y);
+            }
+
+            entidades.push(
+                textoDXF(xInicio - 2, y, key, 2.5, 'MR'),
+                linea,
+                textoDXF(xFin + 2, y, key, 2.5, 'ML'),
+            );
+
+        }
     });
 
     return entidades;
