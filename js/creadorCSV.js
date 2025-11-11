@@ -92,7 +92,7 @@ function crearCSV() {
     // Crear enlace temporal
     const enlace = document.createElement("a");
     enlace.href = URL.createObjectURL(blob);
-    enlace.download = nombreProyectoActual + " - " + proyectoActual.Viendo[0].toUpperCase() + proyectoActual.Viendo.slice(1) + " señales.csv";
+    enlace.download = `${nombreProyectoActual || "Proyecto"} - ${primeraMayusc(proyectoActual.Viendo)} de señales.csv`;
     enlace.click();
 
     // Liberar la URL

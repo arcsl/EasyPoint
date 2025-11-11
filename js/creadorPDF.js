@@ -22,7 +22,7 @@ function crearPDF() {
 
     } else if (proyectoActual.Viendo === "listado") {
         tilulosColumnas = ["", "", "Num."];
-        tables = listado.querySelectorAll("table");
+        tables = UI.listadoCont.querySelectorAll("table");
 
     } else {
         alert("❌ No disponible aún.");
@@ -117,8 +117,8 @@ function crearPDF() {
     );
 
     docPDF.content.push(tablaTotalesPDF); // añadimos el objeto tablaTotalesPDF al objeto documento
-    pdfMake.createPdf(docPDF).download(`${nombreProyectoActual} - ${primeraMayusc(proyectoActual.Viendo)} de Puntos de Control.pdf`);     // Generar el PDF final
-
+    const textoSeniales = proyectoActual.Viendo === "memoria" ? "control" : "señales"
+    pdfMake.createPdf(docPDF).download(`${nombreProyectoActual || "Proyecto"} - ${primeraMayusc(proyectoActual.Viendo)} de ${textoSeniales}.pdf`);     // Estudio de control o Memoria de control 
 }
 
 

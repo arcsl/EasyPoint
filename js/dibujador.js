@@ -553,7 +553,7 @@ function descargarDXF() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'generado.dxf';
+    a.download = `${nombreProyectoActual || "Proyecto"} - Esquemas de control.dxf`;
     a.click();
     URL.revokeObjectURL(url);
 }
