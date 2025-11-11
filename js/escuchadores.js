@@ -408,21 +408,21 @@ UI.proyectoExportarBtn.addEventListener("click", () => {
         UI.expWordBtn.classList.add("w3-hide");
         UI.expDXFBtn.classList.add("w3-hide");
         UI.overlayPopExport.style.left = "752px";
-        
+
     } else if (proyectoActual.Viendo === "memoria") {
         UI.expPDFBtn.classList.remove("w3-hide");
         UI.expCSVBtn.classList.add("w3-hide");
         UI.expWordBtn.classList.remove("w3-hide");
         UI.expDXFBtn.classList.add("w3-hide");
         UI.overlayPopExport.style.left = "752px";
-        
+
     } else if (proyectoActual.Viendo === "listado") {
         UI.expPDFBtn.classList.remove("w3-hide");
         UI.expCSVBtn.classList.remove("w3-hide");
         UI.expWordBtn.classList.add("w3-hide");
         UI.expDXFBtn.classList.add("w3-hide");
         UI.overlayPopExport.style.left = "752px";
-        
+
     } else if (proyectoActual.Viendo === "dibujar") {
         UI.expPDFBtn.classList.add("w3-hide");
         UI.expCSVBtn.classList.add("w3-hide");
@@ -459,6 +459,8 @@ UI.sectionToolsBtn.addEventListener("click", () => {
         asignarValoresListado();
         writeSignals();
         actualizaSumatorio();
+        limpiarAsignacion();
+        updateSelectsSeniales();
 
     } else if (proyectoActual.Viendo === "memoria") {
         if (!confirm("Se borraran todas las modificaciones actuales.\n¿Desea continuar?")) return;
@@ -502,7 +504,7 @@ UI.btnAddCarril.onclick = () => {
 
     // 3) Re-pintamos todo
     writeCarriles();
-   
+
 };
 
 

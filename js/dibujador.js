@@ -298,6 +298,7 @@ function renderCanales(channelsContainer, carrilIndex, dispIndex, deviceObj) {
                     proyectoActual.Asignacion[carrilIndex][dispIndex][nombreBorne] = uuid;
                     proyectoNoGuardado();
                     updateSelectsSeniales();
+                    writeSignals();
                 });
 
                 row.append(label, sel);
@@ -418,9 +419,10 @@ function updateSelectsSeniales() {
         // Guardar la selección actual (si es UUID válido)
         let sigActual = null;
         if (sel.value) {
-            try { 
+            try {
                 const parsed = JSON.parse(sel.value);
-                if (parsed?.ID && uuidRegex.test(parsed.ID)) sigActual = parsed;
+                const esUUID = uuidRegex.test(parsed.ID);
+                if (parsed?.ID && esUUID) sigActual = parsed;
             } catch { }
         }
 
@@ -438,9 +440,23 @@ function updateSelectsSeniales() {
 
         // Reinsertar selección actual si sigue siendo válida
         if (sigActual) {
+
+            // Verificar si la ID está en Asignacion
+            const encontrada = proyectoActual.Asignacion
+                .flat()
+                .some(obj => Object.values(obj).includes(sigActual.ID));
+
+            // Si es asi, buscar la uuid dentro de Listado para actualizar Linea 1
+            if (encontrada) {
+                for (const grupo of Object.values(proyectoActual.Listado)) {
+                    const item = grupo.find(e => e.ID === sigActual.ID);
+                    if (item) sigActual = item;
+                }
+            }
+
             const opt = new Option(sigActual.Linea1, JSON.stringify(sigActual));
             opt.selected = true;
-            sel.appendChild(opt);
+            sel.add(opt, 1); // la inserta como segunda opción ( 2ª = index 1 ) para dejar la opcion vacia la primera
         }
     });
 }
@@ -841,12 +857,19 @@ function generarLayoutHojas() {
                     nuevaHoja();
                     hojaActual = hojas[hojas.length - 1];
                 }
+
                 hojaActual.items.push(it);
-                // El siguiente también empieza en hoja nueva
-                nuevaHoja();
-                hojaActual = hojas[hojas.length - 1];
+
+                // Solo crear una hoja nueva si hay más items después
+                const hayMasItems = i < items.length - 1;
+                if (hayMasItems) {
+                    nuevaHoja();
+                    hojaActual = hojas[hojas.length - 1];
+                }
+
                 continue;
             }
+
 
             // No multipágina → compactar con separaciones
             const itemsHoja = hojaActual.items;

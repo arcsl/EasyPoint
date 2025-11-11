@@ -723,7 +723,7 @@ function writeSignals() {
         addSenial.classList = "w3-button w3-green";
 
         addSenial.addEventListener('click', () => {
-            const listaSenial = structuredClone( esq[`Vacio${sig}_1`]());
+            const listaSenial = structuredClone(esq[`Vacio${sig}_1`]());
             listaSenial.ID = crypto.randomUUID();
             listaSeniales.push(listaSenial);
             proyectoNoGuardado();
@@ -744,7 +744,18 @@ function writeSignals() {
             row.Numero = listaSenial.Numero;
 
             const celdaEstadoAsignacion = document.createElement('td');
-            celdaEstadoAsignacion.classList.add("w3-pale-yellow");
+            celdaEstadoAsignacion.id = listaSenial.ID;
+
+            const estaAsignado = proyectoActual.Asignacion
+                .flat() // combina los subarreglos
+                .some(obj => Object.values(obj).includes(listaSenial.ID));
+
+            if (estaAsignado) {
+                celdaEstadoAsignacion.classList.add("w3-pale-green");
+            } else {
+                celdaEstadoAsignacion.classList.add("w3-pale-yellow");
+            }
+
             row.appendChild(celdaEstadoAsignacion);
 
             const elimSenial = document.createElement("button");
@@ -752,6 +763,7 @@ function writeSignals() {
             // elimSenial.textContent = "X";
             elimSenial.innerHTML = '<img src="./images/papelera.svg" alt="Salir" width="12" height="12">';
             elimSenial.classList.add("w3-red", "w3-button");
+            if (estaAsignado) elimSenial.classList.add("w3-invisible");
             elimSenial.addEventListener('click', () => {
                 if (!confirm("Esta acción no se puede deshacer.\n¿Desea continuar?")) return;
                 listaSeniales.splice(listaSeniales.indexOf(listaSenial), 1);
@@ -796,17 +808,19 @@ function writeSignals() {
             celdaTextos.appendChild(inputIndex);
             inputIndex.style.visibility = (val === "RELE" || val === "CONTACTOR" || val === "TERMICO") ? "visible" : "hidden";
             inputIndex.placeholder = "##";
+            inputIndex.value = listaSenial.tagNumber;
             inputIndex.addEventListener('change', (event) => {
                 // el tag number es el numero de contactor o de rele
                 listaSenial.tagNumber = event.target.value;
                 proyectoNoGuardado();
             });
 
-            const inputListaSenialLinea1 = inputNombre(listaSenial.Linea1 ?? "");
+            const inputListaSenialLinea1 = inputNombre(listaSenial.Linea1 || `${sig}_${labelNumSenial.innerText}`);
             celdaTextos.appendChild(inputListaSenialLinea1);
             inputListaSenialLinea1.placeholder = "Nombre de la señal";
             inputListaSenialLinea1.addEventListener('change', (event) => {
-                listaSenial.Linea1 = event.target.value;
+                listaSenial.Linea1 = event.target.value || `${sig}_${labelNumSenial.innerText}`;
+                updateSelectsSeniales();
                 proyectoNoGuardado();
             });
 
@@ -838,6 +852,22 @@ function writeSignals() {
 
 }
 
+function limpiarAsignacion() {
+
+    if (!Array.isArray(proyectoActual.Asignacion)) return;
+
+    proyectoActual.Asignacion.forEach(sublista => {
+        if (!Array.isArray(sublista)) return;
+
+        sublista.forEach(obj => {
+            for (const clave of Object.keys(obj)) {
+                if (clave !== "tipo" && clave !== "_visible") {
+                    delete obj[clave];
+                }
+            }
+        });
+    });
+}
 
 /* ------------------------- MEMORIA ------------------------- */
 
