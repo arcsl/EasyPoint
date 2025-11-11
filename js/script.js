@@ -1,3 +1,6 @@
+/// <reference path="dibujador.js" />
+/// <reference path="escuchadores.js" />
+
 /* ------------------------- REFERENCIAS AL DOM EN OBJETO UI ------------------------- */
 const UI = {};
 document.querySelectorAll("[id]").forEach(el => UI[el.id] = el);
@@ -14,9 +17,9 @@ const nuevoProyectoVacio = {
     Listado: Object.fromEntries(signalTypes.map(key => [key, []])),
     Asignacion: [],
     Info: {
-        Dibu: "",
+        Dibu: localStorage.getItem('nombreUsuarioEasyPoint') ?? "",
         Clie: "",
-        Fech: "",
+        Fech: new Date().toISOString().split("T")[0],
         Loca: "",
         Revi: "",
         Stye: "",
@@ -720,7 +723,8 @@ function writeSignals() {
         addSenial.classList = "w3-button w3-green";
 
         addSenial.addEventListener('click', () => {
-            const listaSenial = esq[`Vacio${sig}_1`]();
+            const listaSenial = structuredClone( esq[`Vacio${sig}_1`]());
+            listaSenial.ID = crypto.randomUUID();
             listaSeniales.push(listaSenial);
             proyectoNoGuardado();
             crearFilaSenial(listaSenial);

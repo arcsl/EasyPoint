@@ -1,3 +1,6 @@
+/// <reference path="script.js" />
+/// <reference path="dibujador.js" />
+
 // ---------- GENERALES ----------
 document.addEventListener("DOMContentLoaded", () => {
 

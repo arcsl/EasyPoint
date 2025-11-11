@@ -1,3 +1,6 @@
+/// <reference path="script.js" />
+/// <reference path="escuchadores.js" />
+
 // ================== CONST & UI ==================
 const HOJA_TOTAL = 400;
 const HOJA_UTIL = 380;
@@ -11,6 +14,7 @@ function writeForm() {
         if (UI[id]) {
             UI[id].value = proyectoActual.Info[id];
             UI[id].addEventListener("change", () => {
+                if (id === "Dibu") localStorage.setItem("nombreUsuarioEasyPoint", UI[id].value);
                 proyectoActual.Info[id] = UI[id].value;
                 proyectoNoGuardado();
             });
@@ -383,10 +387,12 @@ function renderCanales(channelsContainer, carrilIndex, dispIndex, deviceObj) {
 
 function updateSelectsSeniales() {
 
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
     // 1) Copia del listado original
     const pool = structuredClone(proyectoActual.Listado);
 
-    // 2) Quitar señales usadas según estado (no DOM)
+    // 2) Quitar señales ya usadas
     proyectoActual.Asignacion.forEach(carril => {
         carril.forEach(disp => {
             if (!disp || !disp.tipo) return;
@@ -395,7 +401,7 @@ function updateSelectsSeniales() {
                 if (k === "tipo") return;
 
                 const uuid = disp[k];
-                if (!uuid) return;
+                if (!uuid || !uuidRegex.test(uuid)) return; // solo UUID válidos
 
                 const tipo = findTipoSenial(uuid);
                 if (!tipo) return;
@@ -409,21 +415,28 @@ function updateSelectsSeniales() {
     document.querySelectorAll("select.borne-select").forEach(sel => {
         const permitidas = JSON.parse(sel.dataset.seniales || "[]");
 
-        // Guardar selección para reinsertarla
+        // Guardar la selección actual (si es UUID válido)
         let sigActual = null;
         if (sel.value) {
-            try { sigActual = JSON.parse(sel.value); } catch { }
+            try { 
+                const parsed = JSON.parse(sel.value);
+                if (parsed?.ID && uuidRegex.test(parsed.ID)) sigActual = parsed;
+            } catch { }
         }
 
         sel.innerHTML = "";
-        sel.appendChild(new Option("", ""));
+        sel.appendChild(new Option("", "")); // opción vacía
 
+        // Poblar solo con señales que tengan ID válido
         permitidas.forEach(tipo => {
-            (pool[tipo] || []).forEach(sig => {
-                sel.appendChild(new Option(sig.Linea1, JSON.stringify(sig)));
-            });
+            (pool[tipo] || [])
+                .filter(sig => sig && sig.ID && uuidRegex.test(sig.ID))
+                .forEach(sig => {
+                    sel.appendChild(new Option(sig.Linea1, JSON.stringify(sig)));
+                });
         });
 
+        // Reinsertar selección actual si sigue siendo válida
         if (sigActual) {
             const opt = new Option(sigActual.Linea1, JSON.stringify(sigActual));
             opt.selected = true;
