@@ -49,33 +49,6 @@ const dispositivos = {
             "Tipo": "controlador",
         },
     },
-    "PXM40": {
-        "Nombre": "PXM40",
-        "Paginas": [
-            [
-                {   // alimentacion 24V
-                    "Cinta": "AC 24V",
-                    "Subcinta": ["~", "#T", "#uTierra",],
-                    "Simbolos": ["#|", "#|", "#|",],
-                    "Numeracion": ["1", "2", "3",],
-                    "Fijo": ["#G", "#G0", null,],
-                },
-                {   // LAN
-                    "Simbolos": [null, "#RED", null,],
-                    "Numeracion": [null, "LAN", null,],
-                    "Opcional": "#int",
-                    "Etiqueta": "A ROUTER O RACK DE COMUNICACIONES%ETHERNET CAT-6",
-                },
-            ],
-        ],
-        "Disposicion": {
-            "Mensaje": "Recorte en puerta de cuadro.",
-            "Ancho": 258,
-            "Alto": 168,
-            "Familia": "PX",
-            "Tipo": "controlador",
-        },
-    },
     "PXC4.E16-2": {
         "Nombre": "PXC4.E16-2",
         "Paginas": [
@@ -84,8 +57,10 @@ const dispositivos = {
                     "Cinta": [null, "1A", null, null, null, "1B", null,],
                     "Simbolos": [null, "#RED", null, null, null, "#RED", null,],
                     "Numeracion": [null, "#25", null, "LAN", null, "#52", null,],
-                    "Opcional": [null, "#int", null, null, null, null,],
-                    "Etiqueta": [null, "A ROUTER O RACK DE COMUNICACIONES%ETHERNET CAT-6", null, null, null, null,],
+                    "Opcional": [
+                        null, { nombre: "LAN 1A", dibujo: "#int", Linea1: "A controlador anterior en pag # - #", Linea2: "Ethernet UTP CAT-6", }, null,
+                        null, { nombre: "LAN 1B", dibujo: "#int", Linea1: "A router o rack de comunicaciones", Linea2: "Ethernet UTP CAT-6", }, null,
+                    ],
                 },
                 {   // KNX
                     "Cinta": "KNX",
@@ -170,8 +145,10 @@ const dispositivos = {
                     "Cinta": [null, "1A", null, null, null, "1B", null,],
                     "Simbolos": [null, "#RED", null, null, null, "#RED", null,],
                     "Numeracion": [null, "#25", null, "LAN", null, "#52", null,],
-                    "Opcional": [null, "#int", null, null, null, null,],
-                    "Etiqueta": [null, "A ROUTER O RACK DE COMUNICACIONES%ETHERNET CAT-6", null, null, null, null,],
+                    "Opcional": [
+                        null, { nombre: "LAN 1A", dibujo: "#int", Linea1: "A controlador anterior en pag # - #", Linea2: "Ethernet UTP CAT-6", }, null,
+                        null, { nombre: "LAN 1B", dibujo: "#int", Linea1: "A router o rack de comunicaciones", Linea2: "Ethernet UTP CAT-6", }, null,
+                    ],
                 },
                 {   // WAN
                     "Cinta": [null, "2", null,],
@@ -317,8 +294,10 @@ const dispositivos = {
                     "Cinta": [null, "1A", null, null, null, "1B", null,],
                     "Simbolos": [null, "#RED", null, null, null, "#RED", null,],
                     "Numeracion": [null, "#25", null, "LAN", null, "#52", null,],
-                    "Opcional": [null, "#int", null, null, null, null,],
-                    "Etiqueta": [null, "A ROUTER O RACK DE COMUNICACIONES%ETHERNET CAT-6", null, null, null, null,],
+                    "Opcional": [
+                        null, { nombre: "LAN 1A", dibujo: "#int", Linea1: "A controlador anterior en pag # - #", Linea2: "Ethernet UTP CAT-6", }, null,
+                        null, { nombre: "LAN 1B", dibujo: "#int", Linea1: "A router o rack de comunicaciones", Linea2: "Ethernet UTP CAT-6", }, null,
+                    ],
                 },
                 {   // WAN
                     "Cinta": [null, "2", null,],
@@ -725,6 +704,211 @@ const dispositivos = {
             "Alto": 78,
             "Familia": "PX",
             "Tipo": "modulo",
+        },
+    },
+    "PXG3.W100-2": {
+        "Nombre": "PXG3.W100-2",
+        "Paginas": [
+            [
+                {   // LAN
+                    "Cinta": [null, "1A", null, null, null, "1B", null,],
+                    "Simbolos": [null, "#RED", null, null, null, "#RED", null,],
+                    "Numeracion": [null, "#25", null, "LAN", null, "#52", null,],
+                    "Opcional": [
+                        null, { nombre: "LAN 1A", dibujo: "#int", Linea1: "A controlador anterior en pag # - #", Linea2: "Ethernet UTP CAT-6", }, null,
+                        null, { nombre: "LAN 1B", dibujo: "#int", Linea1: "A router o rack de comunicaciones", Linea2: "Ethernet UTP CAT-6", }, null,
+                    ],
+                },
+                {   // alimentacion 24V
+                    "Cinta": "AC 24V",
+                    "Subcinta": ["~", "#T", "#uTierra",],
+                    "Simbolos": ["#|", "#|", "#|",],
+                    "Numeracion": ["5", "6", "7",],
+                    "Fijo": ["#G", "#G0", null,],
+                },
+                {   // WAN
+                    "Cinta": [null, "2", null,],
+                    "Simbolos": [null, "#RED", null,],
+                    "Numeracion": [null, "WAN", null,],
+                },
+                {   // COM 1
+                    "Cinta": "COM1",
+                    "Subcinta": ["+", "-", "#d",],
+                    "Simbolos": ["#|", "#|", "#|",],
+                    "Numeracion": ["65", "66", "67",],
+                },
+                {   // COM 2
+                    "Cinta": "COM2",
+                    "Subcinta": ["+", "-", "#d",],
+                    "Simbolos": ["#|", "#|", "#|",],
+                    "Numeracion": ["68", "69", "60",],
+                },
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 144,
+            "Alto": 125,
+            "Familia": "PX",
+            "Tipo": "controlador",
+        },
+    },
+    "PXM40": {
+        "Nombre": "PXM40",
+        "Paginas": [
+            [
+                {   // alimentacion 24V
+                    "Cinta": "AC 24V",
+                    "Subcinta": ["~", "#T", "#uTierra",],
+                    "Simbolos": ["#|", "#|", "#|",],
+                    "Numeracion": ["1", "2", "3",],
+                    "Fijo": ["#G", "#G0", null,],
+                },
+                {   // LAN
+                    "Simbolos": [null, "#RED", null,],
+                    "Numeracion": [null, "LAN", null,],
+                    "Opcional": [
+                        null, { nombre: "LAN", dibujo: "#int", Linea1: "A router o rack de comunicaciones", Linea2: "Ethernet UTP CAT-6", }, null,
+                    ],
+                },
+            ],
+        ],
+        "Disposicion": {
+            "Mensaje": "Recorte en puerta de cuadro.",
+            "Ancho": 258,
+            "Alto": 168,
+            "Familia": "PX",
+            "Tipo": "controlador",
+        },
+    },
+    "DXR2.E09": {
+        "Nombre": "DXR2.E09",
+        "Paginas": [
+            [
+                {   // KNX
+                    "Cinta": "KNX",
+                    "Simbolos": ["#|", "#|",],
+                    "Numeracion": ["11", "12",],
+                    "Opcional": [null, { nombre: "KNX", dibujo: "#ext2", Linea1: "Temperatura ambiente", Linea2: "QMX3.P35", },],
+                },
+                {   // LAN
+                    "Cinta": [null, "1", null, null, null, "2", null,],
+                    "Simbolos": [null, "#RED", null, null, null, "#RED", null,],
+                    "Numeracion": [null, "#25", null, "LAN", null, "#52", null,],
+                    "Opcional": [
+                        null, { nombre: "LAN 1", dibujo: "#int", Linea1: "A DXR2 anterior", Linea2: "Ethernet UTP CAT-6", }, null,
+                        null, { nombre: "LAN 2", dibujo: "#int", Linea1: "A DXR2 siguiente", Linea2: "Ethernet UTP CAT-6", }, null,
+                    ],
+                },
+                {   // entradas Digitales
+                    "Cinta": [null, "D1", null, null, "#T", "X1", null, null, "#T", "X2",],
+                    "Simbolos": [null, "#U", null, null, "#-", "#U", null, null, "#-", "#U",],
+                    "Numeracion": [
+                        null, { num: "31", señales: ["ED"], nombre: "DI1" },
+                        null, null, "32", { num: "33", señales: ["EA", "ED"], nombre: "X1" },
+                        null, "34", "35", { num: "36", señales: ["EA", "ED"], nombre: "X2" },
+                    ],
+                },
+                {   // alimentacion 230V
+                    "Cinta": "230V~",
+                    "Subcinta": ["L", "N", "L", "N",],
+                    "Simbolos": ["#|", "#|", "#|", "#|",],
+                    "Numeracion": ["51", "52", "53", "54",],
+                    "Fijo": ["#L", "#N", null, null,],
+                },
+                {   // 3 velocidades
+                    "Cinta": ["Q13", null, "Q14", null, null, null, "Q24", null, null, null, "Q34",],
+                    "Simbolos": "#3V",
+                    "Numeracion": [
+                        "61", null, { num: "62", señales: ["SD"], nombre: "Q14" }, null,
+                        null, null, { num: "63", señales: ["SD"], nombre: "Q24" }, null,
+                        null, null, { num: "64", señales: ["SD"], nombre: "Q34" },
+                    ],
+                },
+                {   // salidas analógicas
+                    "Cinta": [null, null, "Y10", null, "V~", "#T", "Y20", null, null, "#T", "Y30",],
+                    "Simbolos": [null, null, "#D", null, "#|", "#-", "#D", null, null, "#-", "#D",],
+                    "Numeracion": [
+                        null, null, { num: "71", señales: ["SA"], nombre: "Y10" }, null,
+                        "73", "72", { num: "74", señales: ["SA"], nombre: "Y20" }, null,
+                        null, "76", { num: "75", señales: ["SA"], nombre: "Y30" },
+                    ],
+                },
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 112,
+            "Alto": 165,
+            "Familia": "PX",
+            "Tipo": "controlador",
+        },
+    },
+    "SWITCH 5P": {
+        "Nombre": "SWITCH XB005",
+        "Paginas": [
+            [
+                {   // alimentacion 24V
+                    "Cinta": "24V AC/DC",
+                    "Subcinta": ["~", "#T", "#uTierra",],
+                    "Simbolos": ["#U", "#U", "#|",],
+                    "Numeracion": ["L+", "M", "#Tierra"],
+                    "Fijo": ["#G", "#G0", null,],
+                },
+                {   // LAN
+                    "Cinta": [null, "P1", null, null, null, "P2", null, null, null, "P3", null, null, null, "P4", null, null, null, "P5", null,],
+                    "Simbolos": [null, "#RED", null, null, null, "#RED", null, null, null, "#RED", null, null, null, "#RED", null, null, null, "#RED", null,],
+                    "Numeracion": [null, "#216", null, null, null, "#213", null, null, null, "LAN", null, null, null, "#132", null, null, null, "#162", null,],
+                    "Opcional": [
+                        null, { nombre: "LAN P1", dibujo: "#int", Linea1: "A controlador anterior en pag # - #", Linea2: "Ethernet UTP CAT-6", }, null,
+                        null, { nombre: "LAN P2", dibujo: "#int", Linea1: "A controlador anterior en pag # - #", Linea2: "Ethernet UTP CAT-6", }, null,
+                        null, { nombre: "LAN P3", dibujo: "#int", Linea1: "A router o rack de comunicaciones", Linea2: "Ethernet UTP CAT-6", }, null,
+                        null, { nombre: "LAN P4", dibujo: "#int", Linea1: "A controlador siguiente en pag # - #", Linea2: "Ethernet UTP CAT-6", }, null,
+                        null, { nombre: "LAN P5", dibujo: "#int", Linea1: "A controlador siguiente en pag # - #", Linea2: "Ethernet UTP CAT-6", }, null,
+                    ],
+                },
+
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 45,
+            "Alto": 100,
+            "Familia": "General",
+            "Tipo": "controlador",
+        },
+    },
+    "SWITCH 8P": {
+        "Nombre": "SWITCH XB008",
+        "Paginas": [
+            [
+                {   // alimentacion 24V
+                    "Cinta": "24V AC/DC",
+                    "Subcinta": ["~", "#T", "#uTierra",],
+                    "Simbolos": ["#U", "#U", "#|",],
+                    "Numeracion": ["L+", "M", "#Tierra"],
+                    "Fijo": ["#G", "#G0", null,],
+                },
+                {   // LAN
+                    "Cinta": [null, "P1", null, null, null, "P2", null, null, null, "P3", null, null, null, "P4", null, null, null, "P5", null, null, null, "P6", null, null, null, "P7", null, null, null, "P8", null,],
+                    "Simbolos": [null, "#RED", null, null, null, "#RED", null, null, null, "#RED", null, null, null, "#RED", null, null, null, "#RED", null, null, null, "#RED", null, null, null, "#RED", null, null, null, "#RED", null,],
+                    "Numeracion": [null, "#216", null, null, null, "#216", null, null, null, "#216", null, null, null, "#25", null, "LAN", null, "#52", null, null, null, "#162", null, null, null, "#162", null, null, null, "#162", null,],
+                    "Opcional": [
+                        null, { nombre: "LAN P1", dibujo: "#int", Linea1: "A controlador anterior en pag # - #", Linea2: "Ethernet UTP CAT-6", }, null,
+                        null, { nombre: "LAN P2", dibujo: "#int", Linea1: "A controlador anterior en pag # - #", Linea2: "Ethernet UTP CAT-6", }, null,
+                        null, { nombre: "LAN P3", dibujo: "#int", Linea1: "A controlador anterior en pag # - #", Linea2: "Ethernet UTP CAT-6", }, null,
+                        null, { nombre: "LAN P4", dibujo: "#int", Linea1: "A router o rack de comunicaciones", Linea2: "Ethernet UTP CAT-6", }, null,
+                        null, { nombre: "LAN P5", dibujo: "#int", Linea1: "A controlador siguiente en pag # - #", Linea2: "Ethernet UTP CAT-6", }, null,
+                        null, { nombre: "LAN P6", dibujo: "#int", Linea1: "A controlador siguiente en pag # - #", Linea2: "Ethernet UTP CAT-6", }, null,
+                        null, { nombre: "LAN P7", dibujo: "#int", Linea1: "A controlador siguiente en pag # - #", Linea2: "Ethernet UTP CAT-6", }, null,
+                        null, { nombre: "LAN P8", dibujo: "#int", Linea1: "A controlador siguiente en pag # - #", Linea2: "Ethernet UTP CAT-6", }, null,
+                    ],
+                },
+
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 45,
+            "Alto": 100,
+            "Familia": "General",
+            "Tipo": "controlador",
         },
     },
     /* - base synco

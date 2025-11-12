@@ -3,5 +3,6 @@
 limitar la cantidad de elementos, por ejemplo solo 2 temperaturas o 2 bombas
 elementos en los que la cantidad esté limitada a 1 que no se pueda elegir el numero, por ejemplo Marcha-paro de caldera o modulacion
 en los elementos que haya posibilidad de elegir , p ej en bomba m/p y Estado, que el valor (u otra propiedad) sea "Marcha paro y estado"  para usarlo en la generacion de la memoria
+PXM40 y cualquier display -> Disposicion.Mensaje: "Recorte en puerta de cuadro"  -->> Que salga en el plano resumen de medidas
 
 ----- FALLOS -----

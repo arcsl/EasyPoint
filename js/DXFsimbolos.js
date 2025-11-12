@@ -47,7 +47,11 @@ function hasheador(posX, posY, hash, franja, extraEstrecho = false) {
     if (hash.startsWith("#")) {
         switch (hash) {
             case "#52": return hash52(posX, desY);
+            case "#132": return hash132(posX, desY);
+            case "#162": return hash162(posX, desY);
             case "#25": return hash25(posX, desY);
+            case "#213": return hash213(posX, desY);
+            case "#216": return hash216(posX, desY);
             case "#UD": return hashUD(posX, desY);
             case "#D": return hashD(posX, desY);
             case "#U": return hashU(posX, desY);
@@ -58,6 +62,7 @@ function hasheador(posX, posY, hash, franja, extraEstrecho = false) {
             case "#d": return hashd(posX, desY);
             case "#RED": return hashLan(posX, desY);
             case "#T": return hashT(posX, desY, tamText);
+            case "#Tierra": return hashTierra(posX, desY);
             case "#uTierra": return hashuTierra(posX, desY);
             case "#Qc": return hashQconmutada(posX, desY);
             case "#Qs": return hashQsimple(posX, desY);
@@ -85,6 +90,7 @@ function hasheador(posX, posY, hash, franja, extraEstrecho = false) {
             case "#MBUS2": return hashMBUS2(posX, desY);
             case "#MBUS2L": return hashMBUS2L(posX, desY);
             case "#MBUS2G": return hashMBUS2G(posX, desY);
+            case "#3V": return hash3V(posX, desY);
             default: {
                 console.warn(`Hash ${hash} no encontrado`);
                 return [];
@@ -111,6 +117,27 @@ function hash52(posX, posY) {
     return entidades;
 
 }
+function hash132(posX, posY) {
+
+    const entidades = [];
+
+    entidades.push(lineaDXF(posX + 0, posY + 0, posX + 0, posY + 2, 0));
+    entidades.push(lineaDXF(posX - 13, posY + 0, posX + 0, posY + 0, 0));
+
+    return entidades;
+
+}
+
+function hash162(posX, posY) {
+
+    const entidades = [];
+
+    entidades.push(lineaDXF(posX + 0, posY + 0, posX + 0, posY + 2, 0));
+    entidades.push(lineaDXF(posX - 16, posY + 0, posX + 0, posY + 0, 0));
+
+    return entidades;
+
+}
 
 function hash25(posX, posY) {
 
@@ -118,6 +145,28 @@ function hash25(posX, posY) {
 
     entidades.push(lineaDXF(posX + 0, posY + 0, posX + 0, posY + 2, 0));
     entidades.push(lineaDXF(posX + 0, posY + 0, posX + 5, posY + 0, 0));
+
+    return entidades;
+
+}
+
+function hash213(posX, posY) {
+
+    const entidades = [];
+
+    entidades.push(lineaDXF(posX + 0, posY + 0, posX + 0, posY + 2, 0));
+    entidades.push(lineaDXF(posX + 0, posY + 0, posX + 13, posY + 0, 0));
+
+    return entidades;
+
+}
+
+function hash216(posX, posY) {
+
+    const entidades = [];
+
+    entidades.push(lineaDXF(posX + 0, posY + 0, posX + 0, posY + 2, 0));
+    entidades.push(lineaDXF(posX + 0, posY + 0, posX + 16, posY + 0, 0));
 
     return entidades;
 
@@ -263,6 +312,21 @@ function hashT(posX, posY, textsize) {
     const entidades = [];
 
     entidades.push(textoDXF(posX, posY, "T", textsize, align = 'MC', rotation = 180));
+
+    return entidades;
+
+}
+
+function hashTierra(posX, posY) {
+
+    const entidades = [];
+
+    entidades.push(lineaDXF(posX + 0, posY + 0, posX + 0, posY + 1.5));  // LINE en línea 0
+    entidades.push(lineaDXF(posX - 1.5, posY + 0, posX + 1.5, posY + 0));  // LINE en línea 26
+    entidades.push(lineaDXF(posX - 1, posY - 0.5, posX + 1, posY - 0.5));  // LINE en línea 52
+    entidades.push(lineaDXF(posX - 0.5, posY - 1, posX + 0.5, posY - 1));  // LINE en línea 78
+
+    entidades.push(arcoDXF(posX + 0, posY - 1, 2, 0, 180, - 1));  // ARC en línea 104
 
     return entidades;
 
@@ -932,8 +996,8 @@ function hashAlimPres3(posX, posY) {
 function hashMBUS(posX, posY) {
     const entidades = [];
 
-    entidades.push(lineaDXF(posX - 4, posY +   0, posX - 4, posY - 104));
-    entidades.push(lineaDXF(posX - 8, posY +   0, posX - 8, posY - 104));
+    entidades.push(lineaDXF(posX - 4, posY + 0, posX - 4, posY - 104));
+    entidades.push(lineaDXF(posX - 8, posY + 0, posX - 8, posY - 104));
 
     // borna 1
     entidades.push(lineaDXF(posX - 2, posY - 104, posX - 6, posY - 104, 40));
@@ -951,10 +1015,10 @@ function hashMBUS(posX, posY) {
     entidades.push(lineaDXF(posX - 8, posY - 110, posX - 8, posY - 116));
 
     // envolvente
-    entidades.push(lineaDXF(posX - 2, posY - 116, posX - 10, posY - 116, 40));  
-    entidades.push(lineaDXF(posX - 2, posY - 132, posX - 10, posY - 132, 40));  
-    entidades.push(lineaDXF(posX - 10, posY - 116, posX - 10, posY - 132, 40));  
-    entidades.push(lineaDXF(posX - 2, posY - 132, posX - 2, posY - 116, 40));  
+    entidades.push(lineaDXF(posX - 2, posY - 116, posX - 10, posY - 116, 40));
+    entidades.push(lineaDXF(posX - 2, posY - 132, posX - 10, posY - 132, 40));
+    entidades.push(lineaDXF(posX - 10, posY - 116, posX - 10, posY - 132, 40));
+    entidades.push(lineaDXF(posX - 2, posY - 132, posX - 2, posY - 116, 40));
 
     entidades.push(textoDXF(posX - 8, posY - 118, "M+", 2.5, "MC", 0, "Standard", 0.7));  // TEXT en línea 456
     entidades.push(textoDXF(posX - 4, posY - 118, "M-", 2.5, "MC", 0, "Standard", 0.7));  // TEXT en línea 492
@@ -976,10 +1040,10 @@ function hashMBUS2(posX, posY) {
     entidades.push(lineaDXF(posX - 10, posY - 104, posX - 10, posY - 110, 40));
     entidades.push(lineaDXF(posX - 6, posY - 104, posX - 6, posY - 110, 40));
 
-    entidades.push(lineaDXF(posX - 2, posY - 116, posX - 10, posY - 116, 40));  
-    entidades.push(lineaDXF(posX - 2, posY - 132, posX - 10, posY - 132, 40));  
-    entidades.push(lineaDXF(posX - 10, posY - 116, posX - 10, posY - 132, 40));  
-    entidades.push(lineaDXF(posX - 2, posY - 132, posX - 2, posY - 116, 40));  
+    entidades.push(lineaDXF(posX - 2, posY - 116, posX - 10, posY - 116, 40));
+    entidades.push(lineaDXF(posX - 2, posY - 132, posX - 10, posY - 132, 40));
+    entidades.push(lineaDXF(posX - 10, posY - 116, posX - 10, posY - 132, 40));
+    entidades.push(lineaDXF(posX - 2, posY - 132, posX - 2, posY - 116, 40));
 
     entidades.push(lineaDXF(posX - 4, posY - 110, posX - 4, posY - 116));  // LINE en línea 104
     entidades.push(lineaDXF(posX - 4, posY - 104, posX - 4, posY - 54));  // LINE en línea 128
@@ -993,4 +1057,37 @@ function hashMBUS2(posX, posY) {
     entidades.push(punto(posX - 28, posY - 58));  // HATCH punto línea 628
 
     return entidades;
+}
+
+function hash3V(posX, posY) {
+
+    const entidades = [];
+
+    entidades.push(textoDXF(posX + 287, posY + 2, "", 2, "MC", 0));  // TEXT en línea 0
+    entidades.push(textoDXF(posX + 363, posY + 14, "", 2, "MC", 0));  // TEXT en línea 34
+    entidades.push(textoDXF(posX + 363, posY + 10, "", 2, "MC", 0));  // TEXT en línea 68
+    entidades.push(textoDXF(posX + 707, posY + 2, "", 2, "MC", 0));  // TEXT en línea 102
+    entidades.push(textoDXF(posX + 783, posY + 14, "", 2, "MC", 0));  // TEXT en línea 136
+    entidades.push(textoDXF(posX + 783, posY + 10, "", 2, "MC", 0));  // TEXT en línea 170
+    entidades.push(textoDXF(posX + 1127, posY + 2, "", 2, "MC", 0));  // TEXT en línea 204
+    entidades.push(textoDXF(posX + 1203, posY + 14, "", 2, "MC", 0));  // TEXT en línea 238
+    entidades.push(textoDXF(posX + 1203, posY + 10, "", 2, "MC", 0));  // TEXT en línea 272
+    entidades.push(lineaDXF(posX - 20, posY - 4, posX - 20, posY + 5));  // LINE en línea 306
+    entidades.push(solidDXF([[posX - 20, posY - 2.5], [posX - 20.5, posY - 4], [posX - 19.5, posY - 4], [posX - 19.5, posY - 4]]));  // SOLID en línea 330
+    entidades.push(lineaDXF(posX - 12, posY - 4, posX - 12, posY - 1));  // LINE en línea 366
+    entidades.push(lineaDXF(posX - 12, posY + 5, posX - 12, posY + 3));  // LINE en línea 390
+    entidades.push(lineaDXF(posX - 12, posY - 1, posX - 14, posY + 3));  // LINE en línea 414
+    entidades.push(solidDXF([[posX - 12, posY - 4], [posX - 12.5, posY - 2.5], [posX - 11.5, posY - 2.5], [posX - 11.5, posY - 2.5]]));  // SOLID en línea 438
+    entidades.push(lineaDXF(posX + 4, posY - 4, posX + 4, posY - 1));  // LINE en línea 474
+    entidades.push(lineaDXF(posX + 4, posY + 5, posX + 4, posY + 3));  // LINE en línea 498
+    entidades.push(lineaDXF(posX + 4, posY - 1, posX + 2, posY + 3));  // LINE en línea 522
+    entidades.push(solidDXF([[posX + 4, posY - 4], [posX + 3.5, posY - 2.5], [posX + 4.5, posY - 2.5], [posX + 4.5, posY - 2.5]]));  // SOLID en línea 546
+    entidades.push(lineaDXF(posX + 20, posY - 4, posX + 20, posY - 1));  // LINE en línea 582
+    entidades.push(lineaDXF(posX + 20, posY + 5, posX + 20, posY + 3));  // LINE en línea 606
+    entidades.push(lineaDXF(posX + 20, posY - 1, posX + 18, posY + 3));  // LINE en línea 630
+    entidades.push(solidDXF([[posX + 20, posY - 4], [posX + 19.5, posY - 2.5], [posX + 20.5, posY - 2.5], [posX + 20.5, posY - 2.5]]));  // SOLID en línea 654
+    entidades.push(lineaDXF(posX - 20, posY + 5, posX + 20, posY + 5));  // LINE en línea 690
+
+    return entidades;
+
 }
