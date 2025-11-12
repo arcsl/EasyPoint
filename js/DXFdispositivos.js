@@ -777,10 +777,10 @@ const dispositivos = {
                             "#D", "#|", "#U",
                         ],
                         "Numeracion": [
-                            "G1", "M", { num: "Y1", señales: ["EA", "ED"], nombre: "Y1" }, null,
-                            "G1", "M", { num: "Y2", señales: ["EA", "ED"], nombre: "Y2" }, null,
-                            "G1", "M", { num: "Y3", señales: ["EA", "ED"], nombre: "Y3" }, null,
-                            "G1", "M", { num: "Y4", señales: ["EA", "ED"], nombre: "Y4" },
+                            "G1", "M", { num: "Y1", señales: ["SA"], nombre: "Y1" }, null,
+                            "G1", "M", { num: "Y2", señales: ["SA"], nombre: "Y2" }, null,
+                            "G1", "M", { num: "Y3", señales: ["SA"], nombre: "Y3" }, null,
+                            "G1", "M", { num: "Y4", señales: ["SA"], nombre: "Y4" },
                         ],
                     },
     
@@ -960,8 +960,8 @@ const dispositivos = {
                         "#D", "#|", "#U",
                     ],
                     "Numeracion": [
-                        "G1", "M", { num: "Y1", señales: ["EA", "ED"], nombre: "Y1" }, null,
-                        "G1", "M", { num: "Y2", señales: ["EA", "ED"], nombre: "Y2" },
+                        "G1", "M", { num: "Y1", señales: ["SA"], nombre: "Y1" }, null,
+                        "G1", "M", { num: "Y2", señales: ["SA"], nombre: "Y2" },
                     ],
                 },
 
@@ -1045,10 +1045,10 @@ const dispositivos = {
                         "#D", "#|", "#U",
                     ],
                     "Numeracion": [
-                        "G1", "M", { num: "Y1", señales: ["EA", "ED"], nombre: "Y1" }, null,
-                        "G1", "M", { num: "Y2", señales: ["EA", "ED"], nombre: "Y2" }, null,
-                        "G1", "M", { num: "Y3", señales: ["EA", "ED"], nombre: "Y3" }, null,
-                        "G1", "M", { num: "Y4", señales: ["EA", "ED"], nombre: "Y4" },
+                        "G1", "M", { num: "Y1", señales: ["SA"], nombre: "Y1" }, null,
+                        "G1", "M", { num: "Y2", señales: ["SA"], nombre: "Y2" }, null,
+                        "G1", "M", { num: "Y3", señales: ["SA"], nombre: "Y3" }, null,
+                        "G1", "M", { num: "Y4", señales: ["SA"], nombre: "Y4" },
                     ],
                 },
 
@@ -1129,8 +1129,8 @@ const dispositivos = {
                         "#D", "#|", "#U",
                     ],
                     "Numeracion": [
-                        "G1", "M", { num: "Y1", señales: ["EA", "ED"], nombre: "Y1" }, null,
-                        "G1", "M", { num: "Y2", señales: ["EA", "ED"], nombre: "Y2" },
+                        "G1", "M", { num: "Y1", señales: ["SA"], nombre: "Y1" }, null,
+                        "G1", "M", { num: "Y2", señales: ["SA"], nombre: "Y2" },
                     ],
                 },
 
@@ -1204,9 +1204,9 @@ const dispositivos = {
                         "#D", "#|", "#U",
                     ],
                     "Numeracion": [
-                        "G1", "M", { num: "Y1", señales: ["EA", "ED"], nombre: "Y1" }, null,
-                        "G1", "M", { num: "Y2", señales: ["EA", "ED"], nombre: "Y2" }, null,
-                        "G1", "M", { num: "Y3", señales: ["EA", "ED"], nombre: "Y3" },
+                        "G1", "M", { num: "Y1", señales: ["SA"], nombre: "Y1" }, null,
+                        "G1", "M", { num: "Y2", señales: ["SA"], nombre: "Y2" }, null,
+                        "G1", "M", { num: "Y3", señales: ["SA"], nombre: "Y3" },
                     ],
                 },
 
@@ -1284,10 +1284,10 @@ const dispositivos = {
                         "#D", "#|", "#U",
                     ],
                     "Numeracion": [
-                        "G1", "M", { num: "Y1", señales: ["EA", "ED"], nombre: "Y1" }, null,
-                        "G1", "M", { num: "Y2", señales: ["EA", "ED"], nombre: "Y2" }, null,
-                        "G1", "M", { num: "Y3", señales: ["EA", "ED"], nombre: "Y3" }, null,
-                        "G1", "M", { num: "Y4", señales: ["EA", "ED"], nombre: "Y4" },
+                        "G1", "M", { num: "Y1", señales: ["SA"], nombre: "Y1" }, null,
+                        "G1", "M", { num: "Y2", señales: ["SA"], nombre: "Y2" }, null,
+                        "G1", "M", { num: "Y3", señales: ["SA"], nombre: "Y3" }, null,
+                        "G1", "M", { num: "Y4", señales: ["SA"], nombre: "Y4" },
                     ],
                 },
 
@@ -1355,7 +1355,7 @@ const dispositivos = {
                         "#D", "#|", "#U",
                     ],
                     "Numeracion": [
-                        "G1", "M", { num: "Y1", señales: ["EA", "ED"], nombre: "Y1" },
+                        "G1", "M", { num: "Y1", señales: ["SA"], nombre: "Y1" },
                     ],
                 },
 
@@ -1407,7 +1407,7 @@ const dispositivos = {
                         "#D", "#|", "#U",
                     ],
                     "Numeracion": [
-                        "G1", "M", { num: "Y1", señales: ["EA", "ED"], nombre: "Y1" },
+                        "G1", "M", { num: "Y1", señales: ["SA"], nombre: "Y1" },
                     ],
                 },
                 {   // Salidas digitales
@@ -1548,8 +1548,8 @@ const dispositivos = {
                         "#D", "#|", "#U",
                     ],
                     "Numeracion": [
-                        "G1", "M", { num: "Y1", señales: ["EA", "ED"], nombre: "Y1" }, null,
-                        "G1", "M", { num: "Y2", señales: ["EA", "ED"], nombre: "Y2" },
+                        "G1", "M", { num: "Y1", señales: ["SA"], nombre: "Y1" }, null,
+                        "G1", "M", { num: "Y2", señales: ["SA"], nombre: "Y2" },
                     ],
                 },
 
@@ -1609,8 +1609,8 @@ const dispositivos = {
                         "#D", "#|", "#U",
                     ],
                     "Numeracion": [
-                        "G1", "M", { num: "Y1", señales: ["EA", "ED"], nombre: "Y1" }, null,
-                        "G1", "M", { num: "Y2", señales: ["EA", "ED"], nombre: "Y2" },
+                        "G1", "M", { num: "Y1", señales: ["SA"], nombre: "Y1" }, null,
+                        "G1", "M", { num: "Y2", señales: ["SA"], nombre: "Y2" },
                     ],
                 },
 

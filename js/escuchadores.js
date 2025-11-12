@@ -460,7 +460,7 @@ UI.sectionToolsBtn.addEventListener("click", () => {
         writeSignals();
         actualizaSumatorio();
         limpiarAsignacion();
-        updateSelectsSeniales();
+        writeCarriles();
 
     } else if (proyectoActual.Viendo === "memoria") {
         if (!confirm("Se borraran todas las modificaciones actuales.\n¿Desea continuar?")) return;

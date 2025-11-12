@@ -744,7 +744,7 @@ ${contenido}${insertEstilo}`;
  * const dxf = solidDXF([[0, 0], [100, 0], [100, 100]]);
  * console.log(dxf);
  */
-function solidDXF(puntos) {
+function solidDXF(puntos, color = 0) {
   // Si hay 3 puntos, repetir el último para que haya 4
   if (puntos.length === 3) {
     puntos.push(puntos[2]);
@@ -755,10 +755,19 @@ function solidDXF(puntos) {
 
   const cuerpo = coords.map((valor, i) => `${etiquetas[i]}\n${valor}`).join('\n');
 
+  let insertColor;
+  if (color === 0) {
+    insertColor = "";
+  } else {
+    insertColor = `
+62
+${color}`;
+  }
+
   return `0
 SOLID
 100
-AcDbEntity
+AcDbEntity${insertColor}
 100
 AcDbTrace
 ${cuerpo}`;

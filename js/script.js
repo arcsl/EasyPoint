@@ -21,10 +21,10 @@ const nuevoProyectoVacio = {
         Clie: "",
         Fech: new Date().toISOString().split("T")[0],
         Loca: "",
-        Revi: "",
-        Stye: "",
+        Revi: "-",
+        Stye: "-",
         Esqu: "",
-        Stdo: "",
+        Stdo: "-",
     }
 }
 

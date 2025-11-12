@@ -1,5 +1,6 @@
 /// <reference path="script.js" />
 /// <reference path="escuchadores.js" />
+/// <reference path="DXFbasicos.js" />
 
 // ================== CONST & UI ==================
 const HOJA_TOTAL = 400;
@@ -508,7 +509,6 @@ function descargarDXF() {
     const primeraHojaItems = []; // hoja sin items de detalle, solo plano
     layout.unshift({ items: primeraHojaItems });
 
-
     // Centrar horizontalmente los items en cada hoja
     centrarItemsEnHojas(layout);
 
@@ -525,6 +525,7 @@ function descargarDXF() {
         const CajetinY = (filas - 1 - Math.floor(idx / columnas)) * 300;
 
         // datos del formulario con instalacion en mayuscula y numero de hoja
+        proyectoActual.Info.Fech = new Date().toISOString().split("T")[0];
         const campos = structuredClone(proyectoActual.Info);
         campos.Inst = nombreProyectoActual.toUpperCase();
         campos.Hoja = `${idx + 1} - ${numHojas}`;
@@ -583,7 +584,7 @@ function dibujarPlanoGeneralDispositivos(CajetinX, CajetinY, dispositivos) {
 
     // === Config fuentes ===
     const FONT_NAME = 5;
-    const FONT_DIM = 2.5;
+    const FONT_DIM = 2;
     const FONT_DIM_COTA = 3;
 
     // === Config separaciones / cotas ===
@@ -654,11 +655,11 @@ function dibujarPlanoGeneralDispositivos(CajetinX, CajetinY, dispositivos) {
     // === Tick helpers ===
     function tickVert(x, y, len = 2) {
         // vertical tick → para cotas horizontales
-        return lineaDXF(x, y - 2 * len, x, y + len, 5);
+        return lineaDXF(x, y - 2 * len, x, y + len, 5, "Continuous", 1, 5);
     }
     function tickHoriz(x, y, len = 2) {
         // horizontal tick → para cotas verticales
-        return lineaDXF(x - len, y, x + 2 * len, y, 5);
+        return lineaDXF(x - len, y, x + 2 * len, y, 5, "Continuous", 1, 5);
     }
 
     // === Flechas (reutilizando SOLID) ===
@@ -666,10 +667,10 @@ function dibujarPlanoGeneralDispositivos(CajetinX, CajetinY, dispositivos) {
         const arrowLen = 3;
         const arrowWidth = arrowLen / 4;
 
-        if (dir === "up") return solidDXF([[x, y], [x - arrowWidth, y - arrowLen], [x + arrowWidth, y - arrowLen]]);
-        if (dir === "down") return solidDXF([[x, y], [x - arrowWidth, y + arrowLen], [x + arrowWidth, y + arrowLen]]);
-        if (dir === "left") return solidDXF([[x, y], [x + arrowLen, y - arrowWidth], [x + arrowLen, y + arrowWidth]]);
-        if (dir === "right") return solidDXF([[x, y], [x - arrowLen, y - arrowWidth], [x - arrowLen, y + arrowWidth]]);
+        if (dir === "up") return solidDXF([[x, y], [x - arrowWidth, y - arrowLen], [x + arrowWidth, y - arrowLen]],5);
+        if (dir === "down") return solidDXF([[x, y], [x - arrowWidth, y + arrowLen], [x + arrowWidth, y + arrowLen]],5);
+        if (dir === "left") return solidDXF([[x, y], [x + arrowLen, y - arrowWidth], [x + arrowLen, y + arrowWidth]],5);
+        if (dir === "right") return solidDXF([[x, y], [x - arrowLen, y - arrowWidth], [x - arrowLen, y + arrowWidth]],5);
         return "";
     }
 
@@ -715,8 +716,16 @@ function dibujarPlanoGeneralDispositivos(CajetinX, CajetinY, dispositivos) {
 
             // Rotación por proporción
             let rot = 0, des_cx = 0, des_cy = 0;
-            if (d.alto > d.ancho * 2) { rot = 90; des_cx = 2.5; des_cy = 2.5; }
-            else if (d.alto > d.ancho) { rot = 45; des_cx = 1.75; des_cy = 0.75; }
+            if (d.alto > d.ancho * 1.75) { 
+                rot = 90; des_cx = 2.5; 
+                des_cy = 2.5; 
+            }
+            else if (d.alto > d.ancho) { 
+                rot = 45; 
+                des_cx = 1.75; 
+                des_cy = 0.75; 
+
+            }
 
             const cx = (x1 + x2) / 2;
             const cy = (y1 + y2) / 2;
@@ -742,7 +751,7 @@ function dibujarPlanoGeneralDispositivos(CajetinX, CajetinY, dispositivos) {
         const textY = (carrilTop + carrilBottom) / 2;
 
         entidades.push(
-            lineaDXF(cotaX, carrilTop, cotaX, carrilBottom, 5)
+            lineaDXF(cotaX, carrilTop, cotaX, carrilBottom, 5, "Continuous", 1, 5)
         );
 
         if (FLECHAS) {
@@ -756,7 +765,7 @@ function dibujarPlanoGeneralDispositivos(CajetinX, CajetinY, dispositivos) {
 
         const textCota = `${carrilAltoReal} mm`;
         entidades.push(
-            textoDXF(cotaTextX, textY, textCota, FONT_DIM_COTA, 'MC', 90)
+            textoDXF(cotaTextX, textY, textCota, FONT_DIM_COTA, 'MC', 90, "Standard", 1, 5)
         );
 
         // === COTAS HORIZONTALES ===
@@ -765,7 +774,7 @@ function dibujarPlanoGeneralDispositivos(CajetinX, CajetinY, dispositivos) {
             const yText = yCota + COTA_HORZ_TEXT_OFFSET_Y * scale;
 
             entidades.push(
-                lineaDXF(xStart, yCota, xEnd, yCota, 5)
+                lineaDXF(xStart, yCota, xEnd, yCota, 5, "Continuous", 1, 5)
             );
 
             if (FLECHAS) {
@@ -781,7 +790,7 @@ function dibujarPlanoGeneralDispositivos(CajetinX, CajetinY, dispositivos) {
             const txt = `${realWidth} mm`;
 
             entidades.push(
-                textoDXF(cx, yText, txt, FONT_DIM_COTA, 'MC', 0)
+                textoDXF(cx, yText, txt, FONT_DIM_COTA, 'MC', 0, "Standard", 1, 5)
             );
         });
 
