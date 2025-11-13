@@ -177,7 +177,7 @@ const dispositivos = {
                     "Cinta": [null, null, null, "U1", null, null, "#T", "U2", null, null, null, "U3", null, null, "#T", "U4",],
                     "Simbolos": [null, null, null, "#UD", null, null, "#-", "#UD", null, null, null, "#UD", null, null, "#-", "#UD",],
                     "Numeracion": [
-                        null, null, null, { num: "20", señales: ["EA", "ED", "SA"], nombre: "U1", desG0: 345 },
+                        null, null, null, { num: "20", señales: ["EA", "ED", "SA"], nombre: "U1" },
                         null, null, "21", { num: "22", señales: ["EA", "ED", "SA"], nombre: "U2" },
                         null, null, null, { num: "23", señales: ["EA", "ED", "SA"], nombre: "U3" },
                         null, null, "24", { num: "25", señales: ["EA", "ED", "SA"], nombre: "U4" },
@@ -1079,7 +1079,7 @@ const dispositivos = {
                     "Numeracion": [
                         { num: "Q11", extraEstrecho: true, desX: -1 },
                         { num: "Q12", extraEstrecho: true, desX: 0 },
-                        { num: "Q14", extraEstrecho: true, desX: 1, señales: ["SD"], nombre: "Q1" }, null,
+                        { num: "Q14", extraEstrecho: true, desX: 1, señales: ["SD"], nombre: "Q1", multSeñalMax: 2}, null,      // multSeñalMax indica que admite señales marcadas con n o menos, o sea deñales que ocupan n salidas, p ej una valvula a 3 puntos ocupa 2 salidas
 
                         "Q23", null, { num: "Q24", señales: ["SD"], nombre: "Q2" }, null,
                         "Q33", null, { num: "Q34", señales: ["SD"], nombre: "Q3" }, null,

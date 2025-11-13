@@ -1000,7 +1000,7 @@ function dibujarPaginaDeDispositivo(hojaX, hojaY, dispositivo, pageIndex, startX
 
             // 1) Si el borne tiene SEÑAL asignada en EL ESTADO → dibujar símbolo correspondiente
             const borneObj = conector.Numeracion[i];
-            const { num, seniales, nombre, desG0 } = normalizarBorne(borneObj);
+            const { num, seniales, nombre, desG0, multSeñales } = normalizarBorne(borneObj);
 
             // nombre del borne (para mapear en estado)
             const nombreBorne = nombre || num || null;
