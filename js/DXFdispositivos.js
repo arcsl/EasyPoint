@@ -1925,4 +1925,44 @@ const dispositivos = {
             "Tipo": "controlador",
         },
     },
+    "IN-KNX-701": {
+        "Nombre": "IN-KNX-701",
+        "Paginas": [
+            [
+                {   // alimentacion 24V
+                    "Cinta": "POWER",
+                    "Simbolos": ["#U", "#U", "#|",],
+                    "Numeracion": ["+", "-", "#Tierra",],
+                    "Fijo": ["#G", "#G0", null,],
+                },                
+                {   // PORT A
+                    "Cinta" : "PORT A",
+                    "Simbolos": ["#UD", "#UD", "#/", "#UD", "#UD",],
+                    "Numeracion": ["A1", "A2", null, "A3", "A4",  ],
+                    "Opcional": [null, null, null, null, "#KNXsl"],
+                },
+                {   // LAN
+                    "Cinta": "Ethernet",
+                    "Simbolos": "#RED",
+                    "Numeracion": [null, "LAN", null,],
+                    "Opcional": "#int",
+                    "Etiqueta": "A ROUTER O RACK DE COMUNICACIONES%ETHERNET CAT-6",
+                },                
+                {   // PORT B
+                    "Cinta" : "PORT B",
+                    "Subcinta" : ["A+", "B-", "SGND", ],                   
+                    "Simbolos": ["#UD", "#UD", "#UD", ],
+                    "Numeracion": ["B1", "B2", "B3", ],
+                    "Opcional": ["#ext", "#ext", "#ext", ],
+                    "Etiqueta": "INTEGRACION COMUNICACION MODBUS RTU%3 x 1mm² APANTALLADO",
+                },                
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 88,
+            "Alto": 90,
+            "Familia": "Synco",
+            "Tipo": "controlador",
+        },
+    },
 }
