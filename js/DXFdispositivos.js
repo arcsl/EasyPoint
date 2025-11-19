@@ -1079,7 +1079,7 @@ const dispositivos = {
                     "Numeracion": [
                         { num: "Q11", extraEstrecho: true, desX: -1 },
                         { num: "Q12", extraEstrecho: true, desX: 0 },
-                        { num: "Q14", extraEstrecho: true, desX: 1, señales: ["SD"], nombre: "Q1", multSeñalMax: 2}, null,      // multSeñalMax indica que admite señales marcadas con n o menos, o sea deñales que ocupan n salidas, p ej una valvula a 3 puntos ocupa 2 salidas
+                        { num: "Q14", extraEstrecho: true, desX: 1, señales: ["SD"], nombre: "Q1", multSeñalMax: 2 }, null,      // multSeñalMax indica que admite señales marcadas con n o menos, o sea deñales que ocupan n salidas, p ej una valvula a 3 puntos ocupa 2 salidas
 
                         "Q23", null, { num: "Q24", señales: ["SD"], nombre: "Q2" }, null,
                         "Q33", null, { num: "Q34", señales: ["SD"], nombre: "Q3" }, null,
@@ -1934,11 +1934,11 @@ const dispositivos = {
                     "Simbolos": ["#U", "#U", "#|",],
                     "Numeracion": ["+", "-", "#Tierra",],
                     "Fijo": ["#G", "#G0", null,],
-                },                
+                },
                 {   // PORT A
-                    "Cinta" : "PORT A",
+                    "Cinta": "PORT A",
                     "Simbolos": ["#UD", "#UD", "#/", "#UD", "#UD",],
-                    "Numeracion": ["A1", "A2", null, "A3", "A4",  ],
+                    "Numeracion": ["A1", "A2", null, "A3", "A4",],
                     "Opcional": [null, null, null, null, "#KNXsl"],
                 },
                 {   // LAN
@@ -1947,21 +1947,341 @@ const dispositivos = {
                     "Numeracion": [null, "LAN", null,],
                     "Opcional": "#int",
                     "Etiqueta": "A ROUTER O RACK DE COMUNICACIONES%ETHERNET CAT-6",
-                },                
+                },
                 {   // PORT B
-                    "Cinta" : "PORT B",
-                    "Subcinta" : ["A+", "B-", "SGND", ],                   
-                    "Simbolos": ["#UD", "#UD", "#UD", ],
-                    "Numeracion": ["B1", "B2", "B3", ],
-                    "Opcional": ["#ext", "#ext", "#ext", ],
+                    "Cinta": "PORT B",
+                    "Subcinta": ["A+", "B-", "SGND",],
+                    "Simbolos": ["#UD", "#UD", "#UD",],
+                    "Numeracion": ["B1", "B2", "B3",],
+                    "Opcional": ["#ext", "#ext", "#ext",],
                     "Etiqueta": "INTEGRACION COMUNICACION MODBUS RTU%3 x 1mm² APANTALLADO",
-                },                
+                },
             ],
         ],
         "Disposicion": {
             "Ancho": 88,
             "Alto": 90,
             "Familia": "Synco",
+            "Tipo": "controlador",
+        },
+    },
+    "RLU202": {
+        "Nombre": "RLU202",
+        "Paginas": [
+            [
+                {   // Alimentacion 24V
+                    "Simbolos": ["#U", "#U",],
+                    "Numeracion": ["G", "G0",],
+                    "Fijo": ["#G", "#G0",],
+                },
+                {   // Entradas universales
+                    "Simbolos": [
+                        null, "#|", "#U", "#/",
+                        "#D", "#|", "#U", "#/",
+                        null, "#|", "#U", "#/",
+                        "#D", "#|", "#U",
+                    ],
+                    "Numeracion": [
+                        null, "M", { num: "X1", señales: ["EA", "ED"], nombre: "X1" }, null,
+                        "G1", "M", { num: "X2", señales: ["EA", "ED"], nombre: "X2" }, null,
+                        null, "M", { num: "X3", señales: ["EA", "ED"], nombre: "X3" }, null,
+                        "G1", "M", { num: "X4", señales: ["EA", "ED"], nombre: "X4" },
+                    ],
+                },
+                {   // Entradas digitales
+                    "Simbolos": [
+                        "#|", "#U",
+                    ],
+                    "Numeracion": [
+                        "M", { num: "D1", señales: ["ED"], nombre: "D1" },
+                    ],
+                },
+                {   // Salidas digitales
+                    "Simbolos": [
+                        null, "#Qc", null, "#/",
+                        null, "#Qs", null,
+                    ],
+                    "Numeracion": [
+                        { num: "Q11", extraEstrecho: true, desX: -1 },
+                        { num: "Q12", extraEstrecho: true, desX: 0 },
+                        { num: "Q14", extraEstrecho: true, desX: 1, señales: ["SD"], nombre: "Q1", multSeñalMax: 2 }, null,      // multSeñalMax indica que admite señales marcadas con n o menos, o sea deñales que ocupan n salidas, p ej una valvula a 3 puntos ocupa 2 salidas
+
+                        "Q23", null, { num: "Q24", señales: ["SD"], nombre: "Q2" },
+                    ],
+
+                },
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 123,
+            "Alto": 90,
+            "Familia": "RLU",
+            "Tipo": "controlador",
+        },
+    },
+    "RLU220": {
+        "Nombre": "RLU220",
+        "Paginas": [
+            [
+                {   // Alimentacion 24V
+                    "Simbolos": ["#U", "#U",],
+                    "Numeracion": ["G", "G0",],
+                    "Fijo": ["#G", "#G0",],
+                },
+                {   // Entradas universales
+                    "Simbolos": [
+                        null, "#|", "#U", "#/",
+                        "#D", "#|", "#U", "#/",
+                        null, "#|", "#U", "#/",
+                        "#D", "#|", "#U",
+                    ],
+                    "Numeracion": [
+                        null, "M", { num: "X1", señales: ["EA", "ED"], nombre: "X1" }, null,
+                        "G1", "M", { num: "X2", señales: ["EA", "ED"], nombre: "X2" }, null,
+                        null, "M", { num: "X3", señales: ["EA", "ED"], nombre: "X3" }, null,
+                        "G1", "M", { num: "X4", señales: ["EA", "ED"], nombre: "X4" },
+                    ],
+                },
+                {   // Entradas digitales
+                    "Simbolos": [
+                        "#|", "#U",
+                    ],
+                    "Numeracion": [
+                        "M", { num: "D1", señales: ["ED"], nombre: "D1" },
+                    ],
+                },
+                {   // Salidas analógicas
+                    "Simbolos": [
+                        "#D", "#|", "#U", "#/",
+                        "#D", "#|", "#U",
+                    ],
+                    "Numeracion": [
+                        "G1", "M", { num: "Y1", señales: ["SA",], nombre: "Y1" }, null,
+                        "G1", "M", { num: "Y2", señales: ["SA",], nombre: "Y2" },
+                    ],
+                },
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 123,
+            "Alto": 90,
+            "Familia": "RLU",
+            "Tipo": "controlador",
+        },
+    },
+    "RLU222": {
+        "Nombre": "RLU222",
+        "Paginas": [
+            [
+                {   // Alimentacion 24V
+                    "Simbolos": ["#U", "#U",],
+                    "Numeracion": ["G", "G0",],
+                    "Fijo": ["#G", "#G0",],
+                },
+                {   // Entradas universales
+                    "Simbolos": [
+                        null, "#|", "#U", "#/",
+                        "#D", "#|", "#U", "#/",
+                        null, "#|", "#U", "#/",
+                        "#D", "#|", "#U",
+                    ],
+                    "Numeracion": [
+                        null, "M", { num: "X1", señales: ["EA", "ED"], nombre: "X1" }, null,
+                        "G1", "M", { num: "X2", señales: ["EA", "ED"], nombre: "X2" }, null,
+                        null, "M", { num: "X3", señales: ["EA", "ED"], nombre: "X3" }, null,
+                        "G1", "M", { num: "X4", señales: ["EA", "ED"], nombre: "X4" },
+                    ],
+                },
+                {   // Entradas digitales
+                    "Simbolos": [
+                        "#|", "#U",
+                    ],
+                    "Numeracion": [
+                        "M", { num: "D1", señales: ["ED"], nombre: "D1" },
+                    ],
+                },
+                {   // Salidas analógicas
+                    "Simbolos": [
+                        "#D", "#|", "#U", "#/",
+                        "#D", "#|", "#U",
+                    ],
+                    "Numeracion": [
+                        "G1", "M", { num: "Y1", señales: ["SA",], nombre: "Y1" }, null,
+                        "G1", "M", { num: "Y2", señales: ["SA",], nombre: "Y2" },
+                    ],
+                },
+                {   // Salidas digitales
+                    "Simbolos": [
+                        null, "#Qc", null, "#/",
+                        null, "#Qs", null,
+                    ],
+                    "Numeracion": [
+                        { num: "Q11", extraEstrecho: true, desX: -1 },
+                        { num: "Q12", extraEstrecho: true, desX: 0 },
+                        { num: "Q14", extraEstrecho: true, desX: 1, señales: ["SD"], nombre: "Q1", multSeñalMax: 2 }, null,      // multSeñalMax indica que admite señales marcadas con n o menos, o sea deñales que ocupan n salidas, p ej una valvula a 3 puntos ocupa 2 salidas
+
+                        "Q23", null, { num: "Q24", señales: ["SD"], nombre: "Q2" },
+                    ],
+
+                },
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 123,
+            "Alto": 90,
+            "Familia": "RLU",
+            "Tipo": "controlador",
+        },
+    },
+    "RLU232": {
+        "Nombre": "RLU232",
+        "Paginas": [
+            [
+                {   // Alimentacion 24V
+                    "Simbolos": ["#U", "#U",],
+                    "Numeracion": ["G", "G0",],
+                    "Fijo": ["#G", "#G0",],
+                },
+                {   // Entradas universales
+                    "Simbolos": [
+                        null, "#|", "#U", "#/",
+                        "#D", "#|", "#U", "#/",
+                        null, "#|", "#U", "#/",
+                        "#D", "#|", "#U", "#/",
+                        null, "#|", "#U",
+                    ],
+                    "Numeracion": [
+                        null, "M", { num: "X1", señales: ["EA", "ED"], nombre: "X1" }, null,
+                        "G1", "M", { num: "X2", señales: ["EA", "ED"], nombre: "X2" }, null,
+                        null, "M", { num: "X3", señales: ["EA", "ED"], nombre: "X3" }, null,
+                        "G1", "M", { num: "X4", señales: ["EA", "ED"], nombre: "X4" }, null,
+                        null, "M", { num: "X5", señales: ["EA", "ED"], nombre: "X5" },
+                    ],
+                },
+                {   // Entradas digitales
+                    "Simbolos": [
+                        "#|", "#U", "#/",
+                        "#|", "#U",
+                    ],
+                    "Numeracion": [
+                        "M", { num: "D1", señales: ["ED"], nombre: "D1" }, null,
+                        "M", { num: "D2", señales: ["ED"], nombre: "D2" },
+                    ],
+                },
+                {   // Salidas analógicas
+                    "Simbolos": [
+                        "#D", "#|", "#U", "#/",
+                        "#D", "#|", "#U", "#/",
+                        "#D", "#|", "#U",
+                    ],
+                    "Numeracion": [
+                        "G1", "M", { num: "Y1", señales: ["SA",], nombre: "Y1" }, null,
+                        "G1", "M", { num: "Y2", señales: ["SA",], nombre: "Y2" }, null,
+                        "G1", "M", { num: "Y3", señales: ["SA",], nombre: "Y3" },
+                    ],
+                },
+                {   // Salidas digitales
+                    "Simbolos": [
+                        null, "#Qc", null, "#/",
+                        null, "#Qs", null,
+                    ],
+                    "Numeracion": [
+                        { num: "Q11", extraEstrecho: true, desX: -1 },
+                        { num: "Q12", extraEstrecho: true, desX: 0 },
+                        { num: "Q14", extraEstrecho: true, desX: 1, señales: ["SD"], nombre: "Q1", multSeñalMax: 2 }, null,      // multSeñalMax indica que admite señales marcadas con n o menos, o sea deñales que ocupan n salidas, p ej una valvula a 3 puntos ocupa 2 salidas
+
+                        "Q33", null, { num: "Q34", señales: ["SD"], nombre: "Q3" },
+                    ],
+
+                },
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 176,
+            "Alto": 90,
+            "Familia": "RLU",
+            "Tipo": "controlador",
+        },
+    },
+    "RLU236": {
+        "Nombre": "RLU236",
+        "Paginas": [
+            [
+                {   // Alimentacion 24V
+                    "Simbolos": ["#U", "#U",],
+                    "Numeracion": ["G", "G0",],
+                    "Fijo": ["#G", "#G0",],
+                },
+                {   // Entradas universales
+                    "Simbolos": [
+                        null, "#|", "#U", "#/",
+                        "#D", "#|", "#U", "#/",
+                        null, "#|", "#U", "#/",
+                        "#D", "#|", "#U", "#/",
+                        null, "#|", "#U",
+                    ],
+                    "Numeracion": [
+                        null, "M", { num: "X1", señales: ["EA", "ED"], nombre: "X1" }, null,
+                        "G1", "M", { num: "X2", señales: ["EA", "ED"], nombre: "X2" }, null,
+                        null, "M", { num: "X3", señales: ["EA", "ED"], nombre: "X3" }, null,
+                        "G1", "M", { num: "X4", señales: ["EA", "ED"], nombre: "X4" }, null,
+                        null, "M", { num: "X5", señales: ["EA", "ED"], nombre: "X5" },
+                    ],
+                },
+                {   // Entradas digitales
+                    "Simbolos": [
+                        "#|", "#U", "#/",
+                        "#|", "#U",
+                    ],
+                    "Numeracion": [
+                        "M", { num: "D1", señales: ["ED"], nombre: "D1" }, null,
+                        "M", { num: "D2", señales: ["ED"], nombre: "D2" },
+                    ],
+                },
+                {   // Salidas analógicas
+                    "Simbolos": [
+                        "#D", "#|", "#U", "#/",
+                        "#D", "#|", "#U", "#/",
+                        "#D", "#|", "#U",
+                    ],
+                    "Numeracion": [
+                        "G1", "M", { num: "Y1", señales: ["SA",], nombre: "Y1" }, null,
+                        "G1", "M", { num: "Y2", señales: ["SA",], nombre: "Y2" }, null,
+                        "G1", "M", { num: "Y3", señales: ["SA",], nombre: "Y3" },
+                    ],
+                },
+                {   // Salidas digitales
+                    "Simbolos": [
+                        null, "#Qc", null, "#/",
+                        null, "#Qs", null, "#/",
+                        null, "#Qs", null, "#/",
+                        null, "#Qc", null, "#/",
+                        null, "#Qs", null, "#/",
+                        null, "#Qs", null,
+                    ],
+                    "Numeracion": [
+                        { num: "Q11", extraEstrecho: true, desX: -1 },
+                        { num: "Q12", extraEstrecho: true, desX: 0 },
+                        { num: "Q14", extraEstrecho: true, desX: 1, señales: ["SD"], nombre: "Q1", multSeñalMax: 2 }, null,      // multSeñalMax indica que admite señales marcadas con n o menos, o sea deñales que ocupan n salidas, p ej una valvula a 3 puntos ocupa 2 salidas
+
+                        "Q23", null, { num: "Q24", señales: ["SD"], nombre: "Q2" }, null,
+                        "Q33", null, { num: "Q34", señales: ["SD"], nombre: "Q3" }, null,
+
+                        { num: "Q41", desX: -1, extraEstrecho: true },
+                        { num: "Q42", desX: 0, extraEstrecho: true },
+                        { num: "Q44", desX: 1, extraEstrecho: true, señales: ["SD"], nombre: "Q4" }, null,
+
+                        "Q53", null, { num: "Q54", señales: ["SD"], nombre: "Q5" }, null,
+                        "Q63", null, { num: "Q64", señales: ["SD"], nombre: "Q6" },
+                    ],
+
+                },
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 176,
+            "Alto": 90,
+            "Familia": "RLU",
             "Tipo": "controlador",
         },
     },
