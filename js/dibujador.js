@@ -1049,28 +1049,31 @@ function dibujarPaginaDeDispositivo(hojaX, hojaY, dispositivo, pageIndex, startX
                         if (!conector.noEnv) entidades.push(...hasheador(inX + desX, inY, num, franja, extraEstrecho));
                     } else if (franja === "Opcional" && valor && typeof valor === "object") {
 
+                        console.log(valor);
+
                         const nombreOpt = valor.nombre || valor.num || "(sin nombre)";
                         const estadoDisp = proyectoActual.Asignacion?.[carrilIndex]?.[dispIndex];
                         const optEstado = estadoDisp?._opcional?.[nombreOpt];
                         const activo = optEstado?.activo ?? true;
+                        const desX = valor.desX ?? 0;
                         const dibujo = optEstado?.dibujo || valor.dibujo || "";
                         const linea1 = (optEstado?.Linea1 ?? valor.Linea1 ?? "").toUpperCase();
                         const linea2 = (optEstado?.Linea2 ?? valor.Linea2 ?? "").toUpperCase();
-                        const espejo1 = (optEstado?.Espejo1 ?? valor.Espejo1 ?? 0);
-                        const espejo2 = (optEstado?.Espejo2 ?? valor.Espejo2 ?? 0);
+                        const espejo1 = optEstado?.Espejo1 ?? valor.Espejo1 ?? 0;
+                        const espejo2 = optEstado?.Espejo2 ?? valor.Espejo2 ?? 0;
 
                         const Xtexto = inX - (conector[franja].length - 1) * paso / 2;
 
                         if (activo) {
                             entidades.push(...hasheador(inX, inY, dibujo, franja));
                             if (linea1 !== "" || linea2 !== "") {
-                                entidades.push(textoMultiDXF(Xtexto, inY - 190, [linea1, linea2], 2.5, 'ML', 90));
+                                entidades.push(textoMultiDXF(Xtexto + desX, inY - 190, [linea1, linea2], 2.5, 'ML', 90));
                             }
                             if (espejo1 && linea1 !== "") {
-                                entidades.push(textoDXF(Xtexto + espejo1, inY - 190, linea1, 2.5, 'ML', 90));
+                                entidades.push(textoDXF(Xtexto + desX + espejo1, inY - 190, linea1, 2.5, 'ML', 90));
                             }
                             if (espejo2 && linea2 !== "") {
-                                entidades.push(textoDXF(Xtexto + espejo2, inY - 190, linea2, 2.5, 'ML', 90));
+                                entidades.push(textoDXF(Xtexto + desX + espejo2, inY - 190, linea2, 2.5, 'ML', 90));
                             }
 
                         }
