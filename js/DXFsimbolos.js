@@ -45,6 +45,10 @@ function hasheador(posX, posY, hash, franja, extraEstrecho = false) {
     if (!hash) return [];
 
     if (hash.startsWith("#")) {
+
+        // mierda apaño toma deuda tecnica como si la fueran a prohibir
+        if (hash.startsWith("#Qsl")) return hashQsimpleLogo(posX, desY, "Q" + hash.slice(4));
+        
         switch (hash) {
             case "#52": return hash52(posX, desY);
             case "#132": return hash132(posX, desY);
@@ -64,6 +68,7 @@ function hasheador(posX, posY, hash, franja, extraEstrecho = false) {
             case "#T": return hashT(posX, desY, tamText);
             case "#Tierra": return hashTierra(posX, desY);
             case "#uTierra": return hashuTierra(posX, desY);
+            case "#inTierra": return hashinTierra(posX, desY);
             case "#Qc": return hashQconmutada(posX, desY);
             case "#Qs": return hashQsimple(posX, desY);
             case "#ext": return hashExterna(posX, desY);
@@ -346,6 +351,19 @@ function hashuTierra(posX, posY) {
 
 }
 
+function hashinTierra(posX, posY) {
+
+    const entidades = [];
+
+    entidades.push(lineaDXF( posX + 3, posY - 52, posX - 3, posY - 52));
+    entidades.push(lineaDXF( posX + 0, posY +  0, posX + 0, posY - 52));
+    entidades.push(lineaDXF( posX - 2, posY - 53, posX + 2, posY - 53));
+    entidades.push(lineaDXF( posX - 1, posY - 54, posX + 1, posY - 54));
+
+    return entidades;
+
+}
+
 function hashQconmutada(posX, posY) {
 
     const entidades = [];
@@ -384,6 +402,17 @@ function hashQsimple(posX, posY) {
 
     entidades.push(solidDXF([[posX - 4, posY - 3.5], [posX - 4.5, posY - 5], [posX - 3.5, posY - 5], [posX - 3.5, posY - 5]]));
     entidades.push(solidDXF([[posX + 4, posY - 5], [posX + 3.5, posY - 3.5], [posX + 4.5, posY - 3.5], [posX + 4.5, posY - 3.5]]));
+
+    return entidades;
+
+} 
+
+function hashQsimpleLogo(posX, posY, texto="") {
+
+    const entidades = [];
+
+    entidades.push(...hashQsimple(posX, posY));
+    entidades.push(textoDXF(posX, posY-2, texto, 2.5, "MC" ));
 
     return entidades;
 

@@ -145,12 +145,12 @@ function logoARC(posX, posY) {
 
 
 // === AUXILIARES ===
-function XX_Externa(posX, posY, Linea1, Linea2, tagNumber, desG0) {
+function XX_Externa(posX, posY, Linea1, Linea2, desG0) {
 
     // console.log({desG0});
     const entidades = [];
     entidades.push(...paloDesplazable(posX, posY, 0, 0));
-    entidades.push(...paloDesplazable(posX - 4, posY, 0, 16));
+    entidades.push(...paloDesplazable(posX - 4, posY, 0, desG0));
     entidades.push(textoMultiDXF(posX - 2, posY - 190, [Linea1, Linea2], 2.5, "ML", 90));
     return entidades;
 
@@ -258,11 +258,11 @@ function ED_Rele(posX, posY, Linea1, Linea2, id, c1, c2, anchoId = 1) {
 
 
 // === EA ===
-function EA_1_Pasiva(posX, posY, Linea1, Linea2, tagNumber) {
+function EA_1_Pasiva(posX, posY, Linea1, Linea2, tagNumber, desG0 = 0) {
 
     const entidades = [];
 
-    entidades.push(...XX_Externa(posX, posY, Linea1, Linea2, tagNumber));
+    entidades.push(...XX_Externa(posX, posY, Linea1, Linea2, desG0));
 
     // dibujo interno elemento de campo
     entidades.push(lineaDXF(posX - 4, posY - 110, posX - 4, posY - 116));
@@ -282,9 +282,9 @@ function EA_1_Pasiva(posX, posY, Linea1, Linea2, tagNumber) {
     return entidades;
 }
 
-function EA_1_Externa(posX, posY, Linea1, Linea2, tagNumber) {
+function EA_1_Externa(posX, posY, Linea1, Linea2, tagNumber, desG0 = 0) {
     const entidades = [];
-    entidades.push(...XX_Externa(posX, posY, Linea1, Linea2, tagNumber));
+    entidades.push(...XX_Externa(posX, posY, Linea1, Linea2, desG0));
     entidades.push(textoDXF(posX - 4, posY - 118, "-", 2.5, "MC"));
     entidades.push(textoDXF(posX + 0, posY - 118, "+", 2.5, "MC"));
     return entidades;
@@ -303,7 +303,7 @@ function EA_1_Activa(posX, posY, Linea1, Linea2, tagNumber) {
     entidades.push(...dispEnvolv(posX, posY, ["G", "M", "U"]));
 
     // Texto señal
-    entidades.push(textoMultiDXF(posX - 2, posY - 190, [Linea1, Linea2], 2.5, "ML", 90));
+    entidades.push(textoMultiDXF(posX - 4, posY - 190, [Linea1, Linea2], 2.5, "ML", 90));
 
     return entidades;
 }
@@ -350,9 +350,9 @@ function EA_3_Activa(posX, posY, Linea1, Linea2, tagNumber) {
 
 
 // === ED ===
-function ED_1_Externa(posX, posY, Linea1, Linea2, tagNumber) {
+function ED_1_Externa(posX, posY, Linea1, Linea2, tagNumber, desG0 = 0) {
     const entidades = [];
-    entidades.push(...XX_Externa(posX, posY, Linea1, Linea2, tagNumber));
+    entidades.push(...XX_Externa(posX, posY, Linea1, Linea2, desG0));
     return entidades;
 }
 
@@ -396,10 +396,10 @@ function ED_1_Termico(posX, posY, Linea1, Linea2, tagNumber) {
 
 
 // === SA ===
-function SA_1_Externa(posX, posY, Linea1, Linea2, tagNumber) {
+function SA_1_Externa(posX, posY, Linea1, Linea2, tagNumber, desG0 = 0) {
     const entidades = [];
 
-    entidades.push(...XX_Externa(posX, posY, Linea1, Linea2, tagNumber));
+    entidades.push(...XX_Externa(posX, posY, Linea1, Linea2, desG0));
 
     entidades.push(textoDXF(posX - 4, posY - 118, "-", 2.5, "MC"));
     entidades.push(textoDXF(posX + 0, posY - 118, "+", 2.5, "MC"));

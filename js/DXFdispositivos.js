@@ -146,8 +146,8 @@ const dispositivos = {
                     "Simbolos": [null, "#RED", null, null, null, "#RED", null,],
                     "Numeracion": [null, "#25", null, "LAN", null, "#52", null,],
                     "Opcional": [
-                        null, { nombre: "LAN 1A", dibujo: "#int", Linea1: "A controlador anterior en pag # - #", Linea2: "Ethernet UTP CAT-6", desX: 12}, null, null,
-                        null, { nombre: "LAN 1B", dibujo: "#int", Linea1: "A router o rack de comunicaciones", Linea2: "Ethernet UTP CAT-6", desX: 12}, null,
+                        null, { nombre: "LAN 1A", dibujo: "#int", Linea1: "A controlador anterior en pag # - #", Linea2: "Ethernet UTP CAT-6", desX: 12 }, null, null,
+                        null, { nombre: "LAN 1B", dibujo: "#int", Linea1: "A router o rack de comunicaciones", Linea2: "Ethernet UTP CAT-6", desX: 12 }, null,
                     ],
                 },
                 {   // WAN
@@ -171,26 +171,26 @@ const dispositivos = {
                 {   // entradas Digitales
                     "Cinta": [null, "D1", null, "#T", "D2",],
                     "Simbolos": [null, "#U", null, "#-", "#U",],
-                    "Numeracion": [null, { num: "8", señales: ["ED"], nombre: "DI1" }, null, "9", { num: "10", señales: ["ED"], nombre: "DI2" },],
+                    "Numeracion": [null, { num: "8", señales: ["ED"], nombre: "DI1", desG0:16, }, null, "9", { num: "10", señales: ["ED"], nombre: "DI2", desG0:16, },],
                 },
                 {   // entradas U1 a U4
                     "Cinta": [null, null, null, "U1", null, null, "#T", "U2", null, null, null, "U3", null, null, "#T", "U4",],
                     "Simbolos": [null, null, null, "#UD", null, null, "#-", "#UD", null, null, null, "#UD", null, null, "#-", "#UD",],
                     "Numeracion": [
-                        null, null, null, { num: "20", señales: ["EA", "ED", "SA"], nombre: "U1" },
-                        null, null, "21", { num: "22", señales: ["EA", "ED", "SA"], nombre: "U2" },
-                        null, null, null, { num: "23", señales: ["EA", "ED", "SA"], nombre: "U3" },
-                        null, null, "24", { num: "25", señales: ["EA", "ED", "SA"], nombre: "U4" },
+                        null, null, null, { num: "20", señales: ["EA", "ED", "SA"], nombre: "U1", desG0:16, },
+                        null, null, "21", { num: "22", señales: ["EA", "ED", "SA"], nombre: "U2", desG0:16, },
+                        null, null, null, { num: "23", señales: ["EA", "ED", "SA"], nombre: "U3", desG0:16, },
+                        null, null, "24", { num: "25", señales: ["EA", "ED", "SA"], nombre: "U4", desG0:16, },
                     ],
                 },
                 {   // entradas U5 a U8
                     "Cinta": [null, null, null, "U5", null, null, "#T", "U6", null, null, null, "U7", null, null, "#T", "U8",],
                     "Simbolos": [null, null, null, "#UD", null, null, "#-", "#UD", null, null, null, "#UD", null, null, "#-", "#UD",],
                     "Numeracion": [
-                        null, null, null, { num: "26", señales: ["EA", "ED", "SA"], nombre: "U5" },
-                        null, null, "27", { num: "28", señales: ["EA", "ED", "SA"], nombre: "U6" },
-                        null, null, null, { num: "29", señales: ["EA", "ED", "SA"], nombre: "U7" },
-                        null, null, "30", { num: "31", señales: ["EA", "ED", "SA"], nombre: "U8" },
+                        null, null, null, { num: "26", señales: ["EA", "ED", "SA"], nombre: "U5", desG0:16, },
+                        null, null, "27", { num: "28", señales: ["EA", "ED", "SA"], nombre: "U6", desG0:16, },
+                        null, null, null, { num: "29", señales: ["EA", "ED", "SA"], nombre: "U7", desG0:16, },
+                        null, null, "30", { num: "31", señales: ["EA", "ED", "SA"], nombre: "U8", desG0:16, },
                     ],
                 },
                 {   // Salidas tension
@@ -209,20 +209,20 @@ const dispositivos = {
                     "Cinta": [null, null, null, "X1", null, null, "#T", "X2", null, null, null, "X3", null, null, "#T", "X4",],
                     "Simbolos": [null, null, null, "#UD", null, null, "#-", "#UD", null, null, null, "#UD", null, null, "#-", "#UD",],
                     "Numeracion": [
-                        null, null, null, { num: "40", señales: ["EA", "ED", "SA"], nombre: "X1" },
-                        null, null, "41", { num: "42", señales: ["EA", "ED", "SA"], nombre: "X2" },
-                        null, null, null, { num: "43", señales: ["EA", "ED", "SA"], nombre: "X3" },
-                        null, null, "44", { num: "45", señales: ["EA", "ED", "SA"], nombre: "X4" },
+                        null, null, null, { num: "40", señales: ["EA", "ED", "SA"], nombre: "X1", desG0:16, },
+                        null, null, "41", { num: "42", señales: ["EA", "ED", "SA"], nombre: "X2", desG0:16, },
+                        null, null, null, { num: "43", señales: ["EA", "ED", "SA"], nombre: "X3", desG0:16, },
+                        null, null, "44", { num: "45", señales: ["EA", "ED", "SA"], nombre: "X4", desG0:16, },
                     ],
                 },
                 {   // entradas X5 a X8
                     "Cinta": [null, null, null, "X5", null, null, "#T", "X6", null, null, null, "X7", null, null, "#T", "X8",],
                     "Simbolos": [null, null, null, "#UD", null, null, "#-", "#UD", null, null, null, "#UD", null, null, "#-", "#UD",],
                     "Numeracion": [
-                        null, null, null, { num: "46", señales: ["EA", "ED", "SA"], nombre: "X5" },
-                        null, null, "47", { num: "48", señales: ["EA", "ED", "SA"], nombre: "X6" },
-                        null, null, null, { num: "49", señales: ["EA", "ED", "SA"], nombre: "X7" },
-                        null, null, "50", { num: "51", señales: ["EA", "ED", "SA"], nombre: "X8" },
+                        null, null, null, { num: "46", señales: ["EA", "ED", "SA"], nombre: "X5", desG0:16, },
+                        null, null, "47", { num: "48", señales: ["EA", "ED", "SA"], nombre: "X6", desG0:16, },
+                        null, null, null, { num: "49", señales: ["EA", "ED", "SA"], nombre: "X7", desG0:16, },
+                        null, null, "50", { num: "51", señales: ["EA", "ED", "SA"], nombre: "X8", desG0:16, },
                     ],
                 },
                 {   // M-BUS
@@ -295,8 +295,8 @@ const dispositivos = {
                     "Simbolos": [null, "#RED", null, null, null, "#RED", null,],
                     "Numeracion": [null, "#25", null, "LAN", null, "#52", null,],
                     "Opcional": [
-                        null, { nombre: "LAN 1A", dibujo: "#int", Linea1: "A controlador anterior en pag # - #", Linea2: "Ethernet UTP CAT-6", desX:12, }, null, null,
-                        null, { nombre: "LAN 1B", dibujo: "#int", Linea1: "A router o rack de comunicaciones", Linea2: "Ethernet UTP CAT-6", desX:12, }, null,
+                        null, { nombre: "LAN 1A", dibujo: "#int", Linea1: "A controlador anterior en pag # - #", Linea2: "Ethernet UTP CAT-6", desX: 12, }, null, null,
+                        null, { nombre: "LAN 1B", dibujo: "#int", Linea1: "A router o rack de comunicaciones", Linea2: "Ethernet UTP CAT-6", desX: 12, }, null,
                     ],
                 },
                 {   // WAN
@@ -363,6 +363,7 @@ const dispositivos = {
             "Ancho": 198,
             "Alto": 125,
             "Familia": "PX",
+            "Tension230": false,            
             "Tipo": "controlador",
         },
     },
@@ -388,6 +389,7 @@ const dispositivos = {
             "Ancho": 96,
             "Alto": 78,
             "Familia": "PX",
+            "Tension230": false,
             "Tipo": "alimentacion",
         },
     },
@@ -413,6 +415,7 @@ const dispositivos = {
             "Ancho": 32,
             "Alto": 78,
             "Familia": "PX",
+            "Tension230": false,
             "Tipo": "alimentacion",
         },
     },
@@ -466,6 +469,7 @@ const dispositivos = {
             "Ancho": 64,
             "Alto": 78,
             "Familia": "PX",
+            "Tension230": false,
             "Tipo": "modulo",
         },
     },
@@ -519,6 +523,8 @@ const dispositivos = {
             "Ancho": 64,
             "Alto": 78,
             "Familia": "PX",
+            "Tension24": false,
+            "Tension230": false,           
             "Tipo": "modulo",
         },
     },
@@ -612,6 +618,8 @@ const dispositivos = {
             "Ancho": 64,
             "Alto": 78,
             "Familia": "PX",
+            "Tension24": false,
+            "Tension230": false,
             "Tipo": "modulo",
         },
     },
@@ -655,6 +663,7 @@ const dispositivos = {
             "Ancho": 64,
             "Alto": 78,
             "Familia": "PX",
+            "Tension24": false,        
             "Tipo": "modulo",
         },
     },
@@ -703,6 +712,7 @@ const dispositivos = {
             "Ancho": 64,
             "Alto": 78,
             "Familia": "PX",
+            "Tension24": false,        
             "Tipo": "modulo",
         },
     },
@@ -715,8 +725,8 @@ const dispositivos = {
                     "Simbolos": [null, "#RED", null, null, null, "#RED", null,],
                     "Numeracion": [null, "#25", null, "LAN", null, "#52", null,],
                     "Opcional": [
-                        null, { nombre: "LAN 1A", dibujo: "#int", Linea1: "A controlador anterior en pag # - #", Linea2: "Ethernet UTP CAT-6", desX:12, }, null, null,
-                        null, { nombre: "LAN 1B", dibujo: "#int", Linea1: "A router o rack de comunicaciones", Linea2: "Ethernet UTP CAT-6", desX:12, }, null,
+                        null, { nombre: "LAN 1A", dibujo: "#int", Linea1: "A controlador anterior en pag # - #", Linea2: "Ethernet UTP CAT-6", desX: 12, }, null, null,
+                        null, { nombre: "LAN 1B", dibujo: "#int", Linea1: "A router o rack de comunicaciones", Linea2: "Ethernet UTP CAT-6", desX: 12, }, null,
                     ],
                 },
                 {   // alimentacion 24V
@@ -749,6 +759,7 @@ const dispositivos = {
             "Ancho": 144,
             "Alto": 125,
             "Familia": "PX",
+            "Tension230": false,            
             "Tipo": "controlador",
         },
     },
@@ -777,6 +788,7 @@ const dispositivos = {
             "Ancho": 258,
             "Alto": 168,
             "Familia": "PX",
+            "Tension230": false,            
             "Tipo": "controlador",
         },
     },
@@ -872,6 +884,7 @@ const dispositivos = {
             "Ancho": 45,
             "Alto": 100,
             "Familia": "General",
+            "Tension230": false,          
             "Tipo": "controlador",
         },
     },
@@ -908,112 +921,10 @@ const dispositivos = {
             "Ancho": 45,
             "Alto": 100,
             "Familia": "General",
+            "Tension230": false,            
             "Tipo": "controlador",
         },
     },
-    /* - base synco
-        "RMT880": {
-            "Nombre": "RMT880",
-            "Paginas": [
-                [
-                    {   // alimentacion 24V
-                        "Simbolos": ["#U", "#U",],
-                        "Numeracion": ["G", "G0",],
-                        "Fijo": ["#G", "#G0",],
-                    },
-                    {   // Entradas universales
-                        "Simbolos": [
-                            null, "#|", "#U", "#/",
-                            "#D", "#|", "#U", "#/",
-                            null, "#|", "#U", "#/",
-                            "#D", "#|", "#U", "#/",
-                            null, "#|", "#U", "#/",
-                            "#D", "#|", "#U", "#/",
-                            null, "#|", "#U", "#/",
-                            "#D", "#|", "#U",
-                        ],
-                        "Numeracion": [
-                            null, "M", { num: "X1", señales: ["EA", "ED"], nombre: "X1" }, null,
-                            "G1", "M", { num: "X2", señales: ["EA", "ED"], nombre: "X2" }, null,
-                            null, "M", { num: "X3", señales: ["EA", "ED"], nombre: "X3" }, null,
-                            "G1", "M", { num: "X4", señales: ["EA", "ED"], nombre: "X4" }, null,
-                            null, "M", { num: "X5", señales: ["EA", "ED"], nombre: "X5" }, null,
-                            "G1", "M", { num: "X6", señales: ["EA", "ED"], nombre: "X6" }, null,
-                            null, "M", { num: "X7", señales: ["EA", "ED"], nombre: "X7" }, null,
-                            "G1", "M", { num: "X8", señales: ["EA", "ED"], nombre: "X8" },
-                        ],
-                    },
-                    {   // Entradas digitales
-                        "Simbolos": [
-                            "#|", "#U", "#/",
-                            "#|", "#U",
-                        ],
-                        "Numeracion": [
-                            "M", { num: "D1", señales: ["ED"], nombre: "D1" }, null,
-                            "M", { num: "D2", señales: ["ED"], nombre: "D2" },
-                        ],
-                    },
-                    {   // Salidas analógicas
-                        "Simbolos": [
-                            "#D", "#|", "#U", "#/",
-                            "#D", "#|", "#U", "#/",
-                            "#D", "#|", "#U", "#/",
-                            "#D", "#|", "#U",
-                        ],
-                        "Numeracion": [
-                            "G1", "M", { num: "Y1", señales: ["SA"], nombre: "Y1" }, null,
-                            "G1", "M", { num: "Y2", señales: ["SA"], nombre: "Y2" }, null,
-                            "G1", "M", { num: "Y3", señales: ["SA"], nombre: "Y3" }, null,
-                            "G1", "M", { num: "Y4", señales: ["SA"], nombre: "Y4" },
-                        ],
-                    },
-    
-                    {   // Salidas digitales
-                        "Simbolos": [
-                            null, "#Qc", null, "#/",
-                            null, "#Qs", null, "#/",
-                            null, "#Qs", null, "#/",
-                            null, "#Qc", null, "#/",
-                            null, "#Qs", null, "#/",
-                            null, "#Qs", null, "#/",
-                            null, "#Qs", null,
-                        ],
-                        "Numeracion": [
-                            { num: "Q11", extraEstrecho: true, desX: -1 },
-                            { num: "Q12", extraEstrecho: true, desX: 0 },
-                            { num: "Q14", extraEstrecho: true, desX: 1, señales: ["SD"], nombre: "Q1" }, null,
-    
-                            "Q23", null, { num: "Q24", señales: ["SD"], nombre: "Q2" }, null,
-                            "Q33", null, { num: "Q34", señales: ["SD"], nombre: "Q3" }, null,
-    
-                            { num: "Q41", desX: -1, extraEstrecho: true },
-                            { num: "Q42", desX: 0, extraEstrecho: true },
-                            { num: "Q44", desX: 1, extraEstrecho: true, señales: ["SD"], nombre: "Q4" }, null,
-    
-                            "Q53", null, { num: "Q54", señales: ["SD"], nombre: "Q5" }, null,
-                            "Q63", null, { num: "Q64", señales: ["SD"], nombre: "Q6" }, null,
-                            "Q73", null, { num: "Q74", señales: ["SD"], nombre: "Q7" },
-                        ],
-    
-                    },
-                    {   // Bus KNX
-                        "Simbolos": ["#UD", "#UD",],
-                        "Numeracion": [
-                            { num: "CE+", extraEstrecho: true, desX: -1 },
-                            { num: "CE-", extraEstrecho: true, desX: 1 },
-                        ],
-                        "Opcional": "#KNX",
-                    },
-                ],
-            ],
-            "Disposicion": {
-                "Ancho": 173,
-                "Alto": 90,
-                "Familia": "Synco",
-                "Tipo": "controlador",
-            },
-        },
-    */
     "RMK770": {
         "Nombre": "RMK770",
         "Paginas": [
@@ -1658,6 +1569,7 @@ const dispositivos = {
             "Ancho": 120,
             "Alto": 90,
             "Familia": "Synco",
+            "Tension230": false,
             "Tipo": "modulo",
         },
     },
@@ -1861,6 +1773,8 @@ const dispositivos = {
             "Ancho": 90,
             "Alto": 90,
             "Familia": "Synco",
+            "Tension24": false,
+            "Tension230": false,
             "Tipo": "controlador",
         },
     },
@@ -1922,6 +1836,8 @@ const dispositivos = {
             "Ancho": 40,
             "Alto": 72,
             "Familia": "Synco",
+            "Tension24": false,
+            "Tension230": false,
             "Tipo": "controlador",
         },
     },
@@ -1962,6 +1878,7 @@ const dispositivos = {
             "Ancho": 88,
             "Alto": 90,
             "Familia": "Synco",
+            "Tension230": false,            
             "Tipo": "controlador",
         },
     },
@@ -2066,6 +1983,7 @@ const dispositivos = {
             "Ancho": 123,
             "Alto": 90,
             "Familia": "RLU",
+            "Tension230": false,            
             "Tipo": "controlador",
         },
     },
@@ -2282,6 +2200,175 @@ const dispositivos = {
             "Ancho": 176,
             "Alto": 90,
             "Familia": "RLU",
+            "Tipo": "controlador",
+        },
+    },
+    "LOGO POWER 0,6A": {
+        "Nombre": "L.POWER",
+        "Paginas": [
+            [
+                {   // alimentacion 230V
+                    "Simbolos": ["#U", "#U",],
+                    "Numeracion": ["L1", "N",],
+                    "Fijo": ["#L", "#N",],
+                },
+                {   // Salida 24vCC
+                    "Simbolos": ["#D", "#D",],
+                    "Numeracion": ["+", "-",],
+                    "Fijo": ["#G", "#G0",],
+                },
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 36,
+            "Alto": 90,
+            "Familia": "Logo",
+            "Tipo": "controlador",
+        },
+    },
+    "LOGO POWER 1,3A": {
+        "Nombre": "LOGO POWER",
+        "Paginas": [
+            [
+                {   // alimentacion 230V
+                    "Simbolos": ["#U", "#U",],
+                    "Numeracion": ["L1", "N",],
+                    "Fijo": ["#L", "#N",],
+                },
+                {   // Salida 24vCC
+                    "Simbolos": ["#D", "#D", "#D", "#D",],
+                    "Numeracion": ["+", "+", "-", "-",],
+                    "Fijo": ["#G", null, "#G0", null,],
+                },
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 18,
+            "Alto": 90,
+            "Familia": "Logo",
+            "Tipo": "controlador",
+        },
+    },
+    "LOGO 230 RCE": {
+        "Nombre": "LOGO 230 RCE",
+        "Paginas": [
+            [
+                {   // alimentacion 24V
+                    "Cinta": "230Vac",
+                    "Simbolos": ["#U", "#U",],
+                    "Numeracion": ["L", "N",],
+                    "Fijo": ["#L", "#N",],
+                },
+
+                {   // entradas I1 a I8
+                    "Cinta": "X10",
+                    "Simbolos": [
+                        null, "#U", "#/",
+                        null, "#U", "#/",
+                        null, "#U", "#/",
+                        null, "#U", "#/",
+                        null, "#U", "#/",
+                        null, "#U", "#/",
+                        null, "#U", "#/",
+                        null, "#U",],
+                    "Numeracion": [
+                        null, { num: "I1", señales: ["ED",], nombre: "I1" }, null,
+                        null, { num: "I2", señales: ["ED",], nombre: "I2" }, null,
+                        null, { num: "I3", señales: ["ED",], nombre: "I3" }, null,
+                        null, { num: "I4", señales: ["ED",], nombre: "I4" }, null,
+                        null, { num: "I5", señales: ["ED",], nombre: "I5" }, null,
+                        null, { num: "I6", señales: ["ED",], nombre: "I6" }, null,
+                        null, { num: "I7", señales: ["ED",], nombre: "I7" }, null,
+                        null, { num: "I8", señales: ["ED",], nombre: "I8" },
+                    ],
+                },
+                {   // tierra
+                    "Simbolos": "#|",
+                    "Numeracion": [null, "#Tierra", null],
+                    "Fijo": "#inTierra",
+                    "Etiqueta": "CONECTAR SOLO A TIERRA REAL%NO TIERRA FLOTANTE/AISLADA",
+                },
+                {   // LAN
+                    "Cinta": "X1 P1",
+                    "Simbolos": "#RED",
+                    "Numeracion": [null, "IE(LAN)", null],
+                    "Opcional": [null, { nombre: "LAN", dibujo: "#int", Linea1: "A switch de comunicaciones en pag # - #", Linea2: "Ethernet UTP CAT-6", desX: 4, }, null],
+                },
+                {   // Salidas Q1 a Q4
+                    "Cinta": "X11",
+                    "Simbolos": [null, "#Qsl1", null, "#/", null, "#Qsl2", null, "#/", null, "#Qsl3", null, "#/", null, "#Qsl4", null,],
+                    "Numeracion": [
+                        "1", null, { num: "2", señales: ["SD"], nombre: "Q1", desY: 2, }, null,
+                        "1", null, { num: "2", señales: ["SD"], nombre: "Q2", desY: 2, }, null,
+                        "1", null, { num: "2", señales: ["SD"], nombre: "Q3", desY: 2, }, null,
+                        "1", null, { num: "2", señales: ["SD"], nombre: "Q4", desY: 2, },
+                    ],
+                },
+
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 72,
+            "Alto": 90,
+            "Familia": "Logo",
+            "Tension24": false,           
+            "Tipo": "controlador",
+        },
+    },
+    "LOGO 12/24 RCE": {
+        "Nombre": "LOGO 12/24 RCE",
+        "Paginas": [
+            [
+                {   // alimentacion 24V
+                    "Cinta": "24Vcc",
+                    "Simbolos": ["#U", "#U",],
+                    "Numeracion": ["L+", "M",],
+                    "Fijo": ["#G", "#G0",],
+                },
+
+                {   // entradas I1 a I8
+                    "Cinta": "X10",
+                    "Simbolos": [null, null, "#U", "#/", null, null, "#U", "#/", null, null, "#U", "#/", null, null, "#U", "#/", null, null, "#U", "#/", null, null, "#U", "#/", null, null, "#U", "#/", null, null, "#U",],
+                    "Numeracion": [
+                        null, null, { num: "I1", señales: ["EA", "ED",], nombre: "I1" }, null,
+                        null, null, { num: "I2", señales: ["EA", "ED",], nombre: "I2" }, null,
+                        null, null, { num: "I3", señales: ["ED",], nombre: "I3" }, null,
+                        null, null, { num: "I4", señales: ["ED",], nombre: "I4" }, null,
+                        null, null, { num: "I5", señales: ["ED",], nombre: "I5" }, null,
+                        null, null, { num: "I6", señales: ["ED",], nombre: "I6" }, null,
+                        null, null, { num: "I7", señales: ["EA", "ED",], nombre: "I7" }, null,
+                        null, null, { num: "I8", señales: ["EA", "ED",], nombre: "I8" },
+                    ],
+                },
+                {   // tierra
+                    "Simbolos": "#|",
+                    "Numeracion": [null, "#Tierra", null],
+                    "Fijo": "#inTierra",
+                    "Etiqueta": "CONECTAR SOLO A TIERRA REAL%NO TIERRA FLOTANTE/AISLADA",
+                },
+                {   // LAN
+                    "Cinta": "X1 P1",
+                    "Simbolos": "#RED",
+                    "Numeracion": [null, "IE(LAN)", null],
+                    "Opcional": [null, { nombre: "LAN", dibujo: "#int", Linea1: "A switch de comunicaciones en pag # - #", Linea2: "Ethernet UTP CAT-6", desX: 4, }, null],
+                },
+                {   // Salidas Q1 a Q4
+                    "Cinta": "X11",
+                    "Simbolos": [null, "#Qsl1", null, "#/", null, "#Qsl2", null, "#/", null, "#Qsl3", null, "#/", null, "#Qsl4", null,],
+                    "Numeracion": [
+                        "1", null, { num: "2", señales: ["SD"], nombre: "Q1", desY: 2, }, null,
+                        "1", null, { num: "2", señales: ["SD"], nombre: "Q2", desY: 2, }, null,
+                        "1", null, { num: "2", señales: ["SD"], nombre: "Q3", desY: 2, }, null,
+                        "1", null, { num: "2", señales: ["SD"], nombre: "Q4", desY: 2, },
+                    ],
+                },
+
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 72,
+            "Alto": 90,
+            "Familia": "Logo",
             "Tipo": "controlador",
         },
     },
