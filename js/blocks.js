@@ -7,10 +7,10 @@ const partesNarrativa = ["Descripcion", "Elementos", "Funcionamiento"];
 const esq = {
 
 	// Vacio para añadir señales en listado de señales
-	VacioEA_1:  (Nombre = "") => ({ Nombre, Tipo: "EA", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa", "Pasiva", "Activa"], }),
-	VacioED_1:  (Nombre = "") => ({ Nombre, Tipo: "ED", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa", "Rele", "Contactor", "Termico",], }),
-	VacioSA_1:  (Nombre = "") => ({ Nombre, Tipo: "SA", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa", "Actuador",], }),
-	VacioSD_1:  (Nombre = "") => ({ Nombre, Tipo: "SD", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa", "Rele", "Contactor",], }),
+	VacioEA_1:  (Nombre = "") => ({ Nombre, Tipo: "EA", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa", "Pasiva", "Activa", "Bus_LTE",], }),
+	VacioED_1:  (Nombre = "") => ({ Nombre, Tipo: "ED", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa", "Rele", "Contactor", "Termico", "Bus_LTE",], }),
+	VacioSA_1:  (Nombre = "") => ({ Nombre, Tipo: "SA", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa", "Actuador", "Bus_LTE",], }),
+	VacioSD_1:  (Nombre = "") => ({ Nombre, Tipo: "SD", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa", "Rele", "Contactor", "Bus_LTE",], }),
 
 	//EA
 	PasivaEA_1: (Nombre = "") => ({ Nombre, Tipo: "EA", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Pasiva", "Activa"], }),
@@ -51,7 +51,7 @@ const opt = {
 	SensorAct1: (Nombre) => ({ Nombre, Seniales: { "EA": 1, }, Esquema: [esq.ActivaEA_1(),], }),
 	SensorAct2: (Nombre) => ({ Nombre, Seniales: { "EA": 2, }, Esquema: [esq.ActivaEA_2(),], }),
 	SensorAct3: (Nombre) => ({ Nombre, Seniales: { "EA": 3, }, Esquema: [esq.ActivaEA_3(),], }),
-	SensorDigi: (Nombre) => ({ Nombre, Seniales: { "ED": 1, }, Esquema: [esq.SimpleED_1(),], }),
+	SensorDigi: (Nombre) => ({ Nombre, Seniales: { "ED": 1, }, Esquema: [esq.EntradED_1(),], }),
 	//Alarma
 	AlamEstTerceros: (Nombre) => ({ Nombre, Seniales: { "ED": 1, }, Esquema: [esq.EntradED_1(),], }),
 	//Actuador
@@ -135,7 +135,7 @@ function blocks() {
 				elem.SimpleSD("Electroválvula de Gas", 1, "GestEVGa"),
 				elem.SimpleED("Cambio de regimen externo", 0, "GestInVe"),
 				elem.ValvulaToNa("Válvula Calor / Frío", 0, "GestVaCF"),
-				elem.SensorPres("Control Presión", 1, "GestPres"),
+				elem.SensorPres("Presión", 1, "GestPres"),
 			],
 		},
 		{
@@ -147,8 +147,8 @@ function blocks() {
 				elem.ModulaCalde("Modulación / Consigna", 1, "CaldModu"),
 				elem.MotorModul("Bomba", 1, "CaldBomb"),
 				elem.ValvTNProp("Válvula Retorno", 0, "CaldValv"),
-				elem.SondaTermos("Control Humos", 0, "CaldHumo"),
-				elem.SensorPres("Control Presión", 0, "CaldPres"),
+				elem.SondaTermos("Temperatura Humos", 0, "CaldHumo"),
+				elem.SensorPres("Presión", 0, "CaldPres"),
 			],
 		},
 		{
@@ -161,7 +161,7 @@ function blocks() {
 				elem.MotorModul("Bomba", 0, "AeroBomb"),
 				elem.TodoNada("Cambio de regimen", 1, "AeroCaFr"),
 				elem.ValvulaToNa("Válvula Calor / Frío / ACS", 0, "AeroVaCF"),
-				elem.SensorPres("Control Presión", 0, "AeroPres"),
+				elem.SensorPres("Presión", 0, "AeroPres"),
 			],
 		},
 		{

@@ -96,6 +96,7 @@ function hasheador(posX, posY, hash, franja, extraEstrecho = false) {
             case "#MBUS2L": return hashMBUS2L(posX, desY);
             case "#MBUS2G": return hashMBUS2G(posX, desY);
             case "#3V": return hash3V(posX, desY);
+            case "#RTD": return hashRTD(posX, desY);
             default: {
                 console.warn(`Hash ${hash} no encontrado`);
                 return [];
@@ -1117,6 +1118,19 @@ function hash3V(posX, posY) {
     entidades.push(lineaDXF(posX + 20, posY - 1, posX + 18, posY + 3));  // LINE en línea 630
     entidades.push(solidDXF([[posX + 20, posY - 4], [posX + 19.5, posY - 2.5], [posX + 20.5, posY - 2.5], [posX + 20.5, posY - 2.5]]));  // SOLID en línea 654
     entidades.push(lineaDXF(posX - 20, posY + 5, posX + 20, posY + 5));  // LINE en línea 690
+
+    return entidades;
+
+}
+
+function hashRTD(posX, posY) {
+
+    const entidades = [];
+
+    entidades.push(lineaDXF(posX    , posY     , posX    , posY - 32)); 
+    entidades.push(lineaDXF(posX    , posY - 32, posX + 4, posY - 32)); 
+    entidades.push(lineaDXF(posX + 4, posY - 32, posX + 4, posY     )); 
+    entidades.push(punto(posX +4, posY - 32));
 
     return entidades;
 

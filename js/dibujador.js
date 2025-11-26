@@ -265,14 +265,22 @@ function renderDispositivo(devicesContainer, carrilIndex, dispIndex, dispData) {
 }
 
 function familiaVisible(fam) {
-    const map = {
-        General: UI.mostrarGeneral.checked,
-        PX: UI.mostrarPX.checked,
-        Synco: UI.mostrarSynco.checked,
-        RLU: UI.mostrarRLU.checked,
-        Logo: UI.mostrarLogo.checked,
-    };
-    return !!map[fam]; //Los dos signos de exclamación !! convierten el valor a un booleano puro (true o false), por si acaso fuese undefined o un valor “falsy”.
+
+    const familiasConRadio = new Set(["General", "PX", "Synco", "RLU", "Logo"]);
+
+    // Si la familia NO está controlada por los radios (por ejemplo "General"),
+    // siempre se muestra.
+    if (!familiasConRadio.has(fam)) {
+        return true;
+    }
+
+    // Obtener la familia seleccionada en los radios
+    const checked = document.querySelector('input[name="familiaFiltro"]:checked');
+    const familiaSeleccionada = checked ? checked.value : null;
+
+    // Solo visible si su familia coincide con la seleccionada
+    return fam === familiaSeleccionada;
+    
 }
 
 // ================== SEÑALES ==================

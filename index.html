@@ -144,16 +144,20 @@
                 <!-- <input id="Stdo" class="w3-margin-right w3-input w3-border-bottom info-cajetin" placeholder="Sustituido por"> -->
             </div>
 
-            <h4 class="w3-padding w3-light-gray titulo-dibujar">Topología de equipos</h4>
+            <div class="w3-row-padding">
+                <div class="w3-col s12 w3-margin-top">
+                    <label class="labeltipo" style="width: 200px;">Equipos a mostrar:</label>
+                    <label class="w3-margin-left labeltipo"><input type="radio" name="familiaFiltro" class="muestraTipo w3-check" id="General" value="General" checked >General</label>
+                    <label class="w3-margin-left labeltipo"><input type="radio" name="familiaFiltro" class="muestraTipo w3-check" id="PX"      value="PX"      >PX</label>
+                    <label class="w3-margin-left labeltipo"><input type="radio" name="familiaFiltro" class="muestraTipo w3-check" id="Synco"   value="Synco"   >Synco</label>
+                    <label class="w3-margin-left labeltipo"><input type="radio" name="familiaFiltro" class="muestraTipo w3-check" id="RLU"     value="RLU"     >RLUs</label>
+                    <label class="w3-margin-left labeltipo"><input type="radio" name="familiaFiltro" class="muestraTipo w3-check" id="Logo"    value="Logo"    >Logo</label>
+                </div>
+            </div>
 
             <div class="w3-row-padding">
                 <div class="w3-col s12 w3-margin-top">
                     <button id="btnAddCarril" class="w3-button w3-green w3-round botonAniadir">+ Carril</button>
-                    <label class="w3-margin-left labeltipo"><input checked id="mostrarGeneral" type="checkbox" class="muestraTipo w3-check">General</label>
-                    <label class="w3-margin-left labeltipo"><input checked id="mostrarPX" type="checkbox" class="muestraTipo w3-check">PX</label>
-                    <label class="w3-margin-left labeltipo"><input checked id="mostrarSynco" type="checkbox" class="muestraTipo w3-check">Synco</label>
-                    <label class="w3-margin-left labeltipo"><input checked id="mostrarRLU" type="checkbox" class="muestraTipo w3-check">RLUs</label>
-                    <label class="w3-margin-left labeltipo"><input checked id="mostrarLogo" type="checkbox" class="muestraTipo w3-check">Logo</label>
                 </div>
             </div>
 

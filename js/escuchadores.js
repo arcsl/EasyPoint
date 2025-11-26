@@ -507,6 +507,16 @@ UI.btnAddCarril.onclick = () => {
 
 };
 
+const radios = document.querySelectorAll('input[name="familiaFiltro"]');
+radios.forEach(radio => {
+    radio.addEventListener('change', () => {
+        const radioSeleccionado = document.querySelector('input[name="familiaFiltro"]:checked').id;
+        proyectoActual.Info.Radio = radioSeleccionado || "General";
+        localStorage.setItem("proyectoActual", JSON.stringify(proyectoActual));
+        writeCarriles();
+    });
+});
+
 
 /* ---------- BOTONES VENTANA POPUP SEÑALES---------- */
 

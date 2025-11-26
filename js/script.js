@@ -25,6 +25,7 @@ const nuevoProyectoVacio = {
         Stye: "-",
         Esqu: "",
         Stdo: "-",
+        Radio: "General",
     }
 }
 
@@ -612,7 +613,7 @@ function asignarValoresListado() {
 
 /**
  * Genera un array de nombres combinados de bloques y elementos.
- * Aplica prefijos y numeración automática si el nombre contiene comas o "y".
+ * Aplica prefijos y numeración automática si el nombre contiene comas o "y"/"e".
  *
  * @param {string} bName - Nombre del bloque.
  * @param {number} bCant - Cantidad de bloques.
@@ -623,69 +624,106 @@ function asignarValoresListado() {
 function procesaNombres(bName, bCant, eName, eCant) {
     /**
      * Divide un nombre compuesto en un prefijo y un array de partes.
-     * Aplica una early exit si no hay exactamente una ocurrencia de " y ".
+     * Soporta " y " y " e " tratándolas como la misma conjunción.
+     * Hace early exit si no hay exactamente una conjunción.
      *
-     * @param {string} nombre - El nombre a procesar, puede contener comas y " y ".
-     * @returns {{prefijo: string, partes: string[]} | null} Objeto con el prefijo y las partes,
-     *          o null si no se cumple la condición de una sola "y" o si las partes son insuficientes.
+     * Ejemplos:
+     *  - "temperatura ida y retorno" ->
+     *      prefijo: "temperatura", partes: ["ida", "retorno"]
+     *  - "Temperatura superior e inferior" ->
+     *      prefijo: "Temperatura", partes: ["superior", "inferior"]
+     *  - "alarma y estado" ->
+     *      prefijo: "", partes: ["alarma", "estado"]
+     *
+     * @param {string} nombre - El nombre a procesar, puede contener comas y "y"/"e".
+     * @returns {{prefijo: string, partes: string[]} | null}
      */
     function splitNombre(nombre) {
-        // Contar cuántas veces aparece " y " -> Early exit: si no hay exactamente una "y"
-        const countY = (nombre.match(/ y /g) || []).length;
+        if (typeof nombre !== "string") return null;
+
+        // Normalizar: tratar " e " como " y "
+        const normalizado = nombre.replace(/ e /gi, " y ");
+
+        // Contar cuántas veces aparece " y "
+        const countY = (normalizado.match(/ y /g) || []).length;
         if (countY !== 1) return null;
 
-        // Dividir por comas, luego cada parte por " y ", aplanar el array resultante y eliminar espacios
-        let partes = nombre.split(",");
+        // Dividir por comas y después por " y "
+        let partes = normalizado.split(",");
         partes = partes.flatMap(p => p.split(" y "));
-        partes = partes.map(p => p.trim());
+        partes = partes
+            .map(p => p.trim())
+            .filter(p => p !== "");
 
-        // Separar prefijo del primer elemento
-        let primerElemento = partes[0];
-        let palabras = primerElemento.split(" ");
-        partes[0] = palabras.pop();        // último elemento del primer elemento
-        const prefijo = palabras.join(" "); // resto de palabras como prefijo
+        // Necesitamos al menos dos partes
+        if (partes.length < 2) return null;
 
-        // Validaciones finales o retornar objeto valido
-        if (prefijo === "" || partes[0] === "" || partes.length < 2) return null;
+        // Intentar obtener un prefijo del primer elemento
+        let prefijo = "";
+        let palabras = partes[0].split(" ").filter(Boolean);
+
+        // Si hay más de una palabra, se toma todo menos la última como prefijo
+        if (palabras.length > 1) {
+            partes[0] = palabras.pop();
+            prefijo = palabras.join(" ");
+        }
+
         return { prefijo, partes };
     }
 
-    // array de bloques
+    // Array de bloques
     let arrayBloques = [];
     if (bCant > 1) {
-        let splitBloques = splitNombre(bName);
+        const splitBloques = splitNombre(bName);
         if (!splitBloques || splitBloques.partes.length !== bCant) {
-            for (let i = 1; i <= bCant; i++) { arrayBloques.push(bName + " " + i); }
+            // Fallback: nombre base con numeración
+            for (let i = 1; i <= bCant; i++) {
+                arrayBloques.push(bName + " " + i);
+            }
         } else {
-            splitBloques.partes.forEach(parte => arrayBloques.push(splitBloques.prefijo + " " + parte));
+            splitBloques.partes.forEach(parte => {
+                const nombre = splitBloques.prefijo
+                    ? splitBloques.prefijo + " " + parte
+                    : parte;
+                arrayBloques.push(nombre);
+            });
         }
     } else {
         arrayBloques = [bName];
     }
 
-    // array de elementos
+    // Array de elementos
     let arrayElems = [];
     if (eCant > 1) {
-        let splitElems = splitNombre(eName);
+        const splitElems = splitNombre(eName);
         if (!splitElems || splitElems.partes.length !== eCant) {
-            for (let i = 1; i <= eCant; i++) { arrayElems.push(eName + " " + i); }
+            // Fallback: nombre base con numeración
+            for (let i = 1; i <= eCant; i++) {
+                arrayElems.push(eName + " " + i);
+            }
         } else {
-            splitElems.partes.forEach(parte => arrayElems.push(splitElems.prefijo + " " + parte));
+            splitElems.partes.forEach(parte => {
+                const nombre = splitElems.prefijo
+                    ? splitElems.prefijo + " " + parte
+                    : parte;
+                arrayElems.push(nombre);
+            });
         }
     } else {
         arrayElems = [eName];
     }
 
-    // --- Combinar bloques y elementos ---
+    // Combinar bloques y elementos
     const resultado = [];
-    for (let b of arrayBloques) {
-        for (let e of arrayElems) {
+    for (const b of arrayBloques) {
+        for (const e of arrayElems) {
             resultado.push(e + " " + b);
         }
     }
 
     return resultado;
 }
+
 
 function writeSignals() {
 
@@ -728,7 +766,7 @@ function writeSignals() {
             const listaSenial = structuredClone(esq[`Vacio${sig}_1`]());
             delete listaSenial.Nombre;
             delete listaSenial.Tipo;
-            const cantidadSeniales =  listaSeniales?.length || 0;
+            const cantidadSeniales = listaSeniales?.length || 0;
             listaSenial.Linea1 = `${sig}_${(cantidadSeniales + 1).toString().padStart(2, '0')}`
             listaSenial.ID = crypto.randomUUID();
             listaSeniales.push(listaSenial);
@@ -736,6 +774,7 @@ function writeSignals() {
             crearFilaSenial(listaSenial);
             renumerarFilas();
             actualizaSumatorio();
+            updateSelectsSeniales();
         });
 
         // crear una fila por cada senial del array
@@ -1099,6 +1138,9 @@ function proyectoNoGuardado() {
 }
 
 function muestraProyecto() {
+
+    // activar el radio (General/PX/Synco/...) que estaba seleccionado
+    document.querySelectorAll('input[name="familiaFiltro"]').forEach(r => { r.checked = (r.id === proyectoActual.Info.Radio); });
 
     // escribir secciones del proyecto en el DOM
     writeBlocks();

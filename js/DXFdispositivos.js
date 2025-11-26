@@ -958,12 +958,12 @@ const dispositivos = {
                 },
                 {   // Entradas digitales
                     "Simbolos": [
-                        "#|", "#U", "#/",
-                        "#|", "#U",
+                        null, "#|", "#U", "#/",
+                        null, "#|", "#U",
                     ],
                     "Numeracion": [
-                        "M", { num: "D1", señales: ["ED"], nombre: "D1" }, null,
-                        "M", { num: "D2", señales: ["ED"], nombre: "D2" },
+                        null, "M", { num: "D1", señales: ["ED"], nombre: "D1" }, null,
+                        null, "M", { num: "D2", señales: ["ED"], nombre: "D2" },
                     ],
                 },
                 {   // Salidas analógicas
@@ -2379,4 +2379,50 @@ const dispositivos = {
             "Tipo": "controlador",
         },
     },
+    "LOGO AM2 RTD": {
+        "Nombre": "LOGO AM2 RTD",
+        "Paginas": [
+            [
+                {   // alimentacion 24V
+                    "Cinta": "24Vcc",
+                    "Simbolos": ["#U", "#U", "#U", "#U",],
+                    "Numeracion": ["L+", "M", "L+", "M",],
+                    "Fijo": ["#G", "#G0", null, null, ],
+                },
+                {   // tierra
+                    "Cinta": "X11",                    
+                    "Simbolos": "#|",
+                    "Numeracion": [null, "#Tierra", null],
+                    "Fijo": "#inTierra",
+                    "Etiqueta": "CONECTAR SOLO A TIERRA REAL%NO TIERRA FLOTANTE/AISLADA",
+                },
+                {   // entradas AI1 a AI2
+                    "Cinta": "X12",
+                    "Simbolos": [
+                        "#U", "#D", "#U", "#/", 
+                        "#U", "#D", "#U",
+                    ],
+                    "Numeracion": [
+                        { num: "U1-", extraEstrecho: true, desX: -1}, 
+                        { num: "IC1", extraEstrecho: true, desX:  0}, 
+                        { num: "U1+", señales: ["EA"], nombre: "AI1", extraEstrecho: true, desX:  1}, 
+                        null,
+                        { num: "U2-", extraEstrecho: true, desX: -1}, 
+                        { num: "IC2", extraEstrecho: true, desX:  0}, 
+                        { num: "U2+", señales: ["EA"], nombre: "AI2", extraEstrecho: true, desX:  1}, 
+                    ],
+                    "Fijo": [
+                        "#RTD", null, null, null,
+                        "#RTD", null, null,
+                    ],
+                },
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 58,
+            "Alto": 90,
+            "Familia": "Logo",
+            "Tipo": "modulo",
+        },
+    },    
 }

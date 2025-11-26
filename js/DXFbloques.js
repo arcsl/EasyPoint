@@ -147,7 +147,6 @@ function logoARC(posX, posY) {
 // === AUXILIARES ===
 function XX_Externa(posX, posY, Linea1, Linea2, desG0 = 0) {
 
-    // console.log({desG0});
     const entidades = [];
     entidades.push(...paloDesplazable(posX, posY, 0, 0));
     entidades.push(...paloDesplazable(posX - 4, posY, 0, desG0));
@@ -168,7 +167,6 @@ function paloDesplazable(posX, posY, desX = 0, desY = 0) {
 
     if (desX === 0) {
         entidades.push(lineaDXF(posX + 0, posY - 104, posX + 0, posY - desY));
-        console.log(desY)
         if (desY !== 0) entidades.push(punto(posX, posY - desY));
     } else {
         entidades.push(lineaDXF(posX + 0, posY - 104, posX + 0, posY - 54));
@@ -233,7 +231,7 @@ function ED_Rele(posX, posY, Linea1, Linea2, id, c1, c2, anchoId = 1, desG0 = 0,
 
     const entidades = [];
 
-    const desComun = desG0 + digLogo24 ? -4 : 0 ;
+    const desComun = desG0 + (digLogo24 ? -4 : 0);
 
     // lineas contacto
     entidades.push(lineaDXF(posX + 0, posY - 58, posX - 4, posY - 58));
@@ -243,7 +241,7 @@ function ED_Rele(posX, posY, Linea1, Linea2, id, c1, c2, anchoId = 1, desG0 = 0,
     entidades.push(lineaDXF(posX + 0, posY + 0, posX + 0, posY - 58));
 
     // punto sobre G0
-    if (desG0 !==0) entidades.push(punto(posX - 4, posY - 16));
+    if (desComun !== 0) entidades.push(punto(posX - 4, posY - desComun));
 
     const desX = anchoId < 1 ? 1 : 0;
 
@@ -257,6 +255,21 @@ function ED_Rele(posX, posY, Linea1, Linea2, id, c1, c2, anchoId = 1, desG0 = 0,
 
     return entidades;
 
+}
+
+function Bus_LTE(posX, posY, Linea1, Linea2) {
+
+    const entidades = [];
+
+    // recuadro
+    entidades.push(lineaDXF(posX +  4, posY      , posX +  4, posY - 194, -1, "DASHED", 0.25 ));
+    entidades.push(lineaDXF(posX +  4, posY - 194, posX - 12, posY - 194, -1, "DASHED", 0.25 ));
+    entidades.push(lineaDXF(posX - 12, posY - 194, posX - 12, posY      , -1, "DASHED", 0.25 ));
+
+    // Texto señal
+    entidades.push(textoMultiDXF(posX - 4, posY - 190, [Linea1, Linea2], 2.5, "ML", 90));
+
+    return entidades;
 }
 
 
@@ -291,6 +304,10 @@ function EA_1_Externa(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0
     entidades.push(textoDXF(posX - 4, posY - 118, "-", 2.5, "MC"));
     entidades.push(textoDXF(posX + 0, posY - 118, "+", 2.5, "MC"));
     return entidades;
+}
+
+function EA_1_Bus_LTE(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0) {
+    return Bus_LTE(posX, posY, Linea1, Linea2);
 }
 
 function EA_1_Activa(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0) {
@@ -356,7 +373,6 @@ function EA_3_Activa(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0)
 function ED_1_Externa(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0, digLogo24 = false) {
     const entidades = [];
     const desComun = desG0 + (digLogo24 ? -4 : 0);
-    console.log({desG0,digLogo24,desComun})
     entidades.push(...XX_Externa(posX, posY, Linea1, Linea2, desComun));
     return entidades;
 }
@@ -401,6 +417,10 @@ function ED_1_Termico(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0
 
 }
 
+function ED_1_Bus_LTE(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0) {
+    return Bus_LTE(posX, posY, Linea1, Linea2);
+}
+
 
 // === SA ===
 function SA_1_Externa(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0) {
@@ -429,6 +449,10 @@ function SA_1_Actuador(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 
     entidades.push(textoMultiDXF(posX - 4, posY - 190, [Linea1, Linea2], 2.5, "ML", 90));
 
     return entidades;
+}
+
+function SA_1_Bus_LTE(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0) {
+    return Bus_LTE(posX, posY, Linea1, Linea2);
 }
 
 
@@ -704,6 +728,10 @@ function SD_2_Actuador(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 
 
     return entidades;
 
+}
+
+function SD_1_Bus_LTE(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0) {
+    return Bus_LTE(posX, posY, Linea1, Linea2);
 }
 
 
