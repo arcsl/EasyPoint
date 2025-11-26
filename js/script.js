@@ -261,6 +261,8 @@ function addBlockHeader(bloque, table) {
     deleteBtn.className = "w3-button w3-red w3-margin-right";
     deleteBtn.addEventListener("click", () => {
 
+        if (!confirm("Esta acción no se puede deshacer.\n¿Desea continuar?")) return;
+
         // eliminar el bloque del proyectoActual
         proyectoActual.Estudio.splice(proyectoActual.Estudio.indexOf(bloque), 1);
         proyectoNoGuardado();
@@ -724,6 +726,10 @@ function writeSignals() {
 
         addSenial.addEventListener('click', () => {
             const listaSenial = structuredClone(esq[`Vacio${sig}_1`]());
+            delete listaSenial.Nombre;
+            delete listaSenial.Tipo;
+            const cantidadSeniales =  listaSeniales?.length || 0;
+            listaSenial.Linea1 = `${sig}_${(cantidadSeniales + 1).toString().padStart(2, '0')}`
             listaSenial.ID = crypto.randomUUID();
             listaSeniales.push(listaSenial);
             proyectoNoGuardado();

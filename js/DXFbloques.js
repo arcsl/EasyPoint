@@ -145,7 +145,7 @@ function logoARC(posX, posY) {
 
 
 // === AUXILIARES ===
-function XX_Externa(posX, posY, Linea1, Linea2, desG0) {
+function XX_Externa(posX, posY, Linea1, Linea2, desG0 = 0) {
 
     // console.log({desG0});
     const entidades = [];
@@ -167,7 +167,8 @@ function paloDesplazable(posX, posY, desX = 0, desY = 0) {
     entidades.push(lineaDXF(posX + 0, posY - 110, posX + 0, posY - 116));
 
     if (desX === 0) {
-        entidades.push(lineaDXF(posX + 0, posY - 104, posX + 0, posY - desY, 0));
+        entidades.push(lineaDXF(posX + 0, posY - 104, posX + 0, posY - desY));
+        console.log(desY)
         if (desY !== 0) entidades.push(punto(posX, posY - desY));
     } else {
         entidades.push(lineaDXF(posX + 0, posY - 104, posX + 0, posY - 54));
@@ -228,19 +229,21 @@ function valvula(posX, posY, text1, text2, text3) {
 
 }
 
-function ED_Rele(posX, posY, Linea1, Linea2, id, c1, c2, anchoId = 1) {
+function ED_Rele(posX, posY, Linea1, Linea2, id, c1, c2, anchoId = 1, desG0 = 0, digLogo24 = false) {
 
     const entidades = [];
+
+    const desComun = desG0 + digLogo24 ? -4 : 0 ;
 
     // lineas contacto
     entidades.push(lineaDXF(posX + 0, posY - 58, posX - 4, posY - 58));
     entidades.push(lineaDXF(posX - 4, posY - 46, posX - 6, posY - 42));
-    entidades.push(lineaDXF(posX - 4, posY - 42, posX - 4, posY - 16));
+    entidades.push(lineaDXF(posX - 4, posY - 42, posX - 4, posY - desComun));
     entidades.push(lineaDXF(posX - 4, posY - 58, posX - 4, posY - 46));
     entidades.push(lineaDXF(posX + 0, posY + 0, posX + 0, posY - 58));
 
     // punto sobre G0
-    entidades.push(punto(posX - 4, posY - 16));
+    if (desG0 !==0) entidades.push(punto(posX - 4, posY - 16));
 
     const desX = anchoId < 1 ? 1 : 0;
 
@@ -258,7 +261,7 @@ function ED_Rele(posX, posY, Linea1, Linea2, id, c1, c2, anchoId = 1) {
 
 
 // === EA ===
-function EA_1_Pasiva(posX, posY, Linea1, Linea2, tagNumber, desG0 = 0) {
+function EA_1_Pasiva(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0) {
 
     const entidades = [];
 
@@ -282,7 +285,7 @@ function EA_1_Pasiva(posX, posY, Linea1, Linea2, tagNumber, desG0 = 0) {
     return entidades;
 }
 
-function EA_1_Externa(posX, posY, Linea1, Linea2, tagNumber, desG0 = 0) {
+function EA_1_Externa(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0) {
     const entidades = [];
     entidades.push(...XX_Externa(posX, posY, Linea1, Linea2, desG0));
     entidades.push(textoDXF(posX - 4, posY - 118, "-", 2.5, "MC"));
@@ -290,14 +293,14 @@ function EA_1_Externa(posX, posY, Linea1, Linea2, tagNumber, desG0 = 0) {
     return entidades;
 }
 
-function EA_1_Activa(posX, posY, Linea1, Linea2, tagNumber) {
+function EA_1_Activa(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0) {
 
     const entidades = [];
 
     // conexiones verticales
-    entidades.push(...paloDesplazable(posX - 0, posY, 0, 0));
-    entidades.push(...paloDesplazable(posX - 4, posY, 0, 16));
-    entidades.push(...paloDesplazable(posX - 8, posY, 0, 12));
+    entidades.push(...paloDesplazable(posX - 8, posY, 0, desG)); // G
+    entidades.push(...paloDesplazable(posX - 4, posY, 0, desG0)); // G0
+    entidades.push(...paloDesplazable(posX - 0, posY, 0, 0)); // U
 
     // material de campo
     entidades.push(...dispEnvolv(posX, posY, ["G", "M", "U"]));
@@ -308,15 +311,15 @@ function EA_1_Activa(posX, posY, Linea1, Linea2, tagNumber) {
     return entidades;
 }
 
-function EA_2_Activa(posX, posY, Linea1, Linea2, tagNumber) {
+function EA_2_Activa(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0) {
 
     const entidades = [];
 
     // conexiones verticales
-    entidades.push(...paloDesplazable(posX - 8, posY, 0, 12));
-    entidades.push(...paloDesplazable(posX - 4, posY, 0, 16));
-    entidades.push(...paloDesplazable(posX - 0, posY, 0, 0));
-    entidades.push(...paloDesplazable(posX + 4, posY, 12, 0));
+    entidades.push(...paloDesplazable(posX - 8, posY, 0, desG)); // G
+    entidades.push(...paloDesplazable(posX - 4, posY, 0, desG0)); // G0
+    entidades.push(...paloDesplazable(posX - 0, posY, 0, 0)); // U1
+    entidades.push(...paloDesplazable(posX + 4, posY, 12, 0)); // U2
 
     // material de campo
     entidades.push(...dispEnvolv(posX + 4, posY, ["G", "M", "U1", "U2"]));
@@ -327,13 +330,13 @@ function EA_2_Activa(posX, posY, Linea1, Linea2, tagNumber) {
     return entidades;
 }
 
-function EA_3_Activa(posX, posY, Linea1, Linea2, tagNumber) {
+function EA_3_Activa(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0) {
 
     const entidades = [];
 
     // conexiones verticales
-    entidades.push(...paloDesplazable(posX + 4, posY, 0, 12)); // G
-    entidades.push(...paloDesplazable(posX + 8, posY, 0, 16)); // G0
+    entidades.push(...paloDesplazable(posX + 4, posY, 0, desG)); // G
+    entidades.push(...paloDesplazable(posX + 8, posY, 0, desG0)); // G0
     entidades.push(...paloDesplazable(posX + 12, posY, -12, 0)); // U1
     entidades.push(...paloDesplazable(posX + 16, posY, 0, 0)); // U2
     entidades.push(...paloDesplazable(posX + 20, posY, 12, 0)); // U3
@@ -350,38 +353,42 @@ function EA_3_Activa(posX, posY, Linea1, Linea2, tagNumber) {
 
 
 // === ED ===
-function ED_1_Externa(posX, posY, Linea1, Linea2, tagNumber, desG0 = 0) {
+function ED_1_Externa(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0, digLogo24 = false) {
     const entidades = [];
-    entidades.push(...XX_Externa(posX, posY, Linea1, Linea2, desG0));
+    const desComun = desG0 + (digLogo24 ? -4 : 0);
+    console.log({desG0,digLogo24,desComun})
+    entidades.push(...XX_Externa(posX, posY, Linea1, Linea2, desComun));
     return entidades;
 }
 
-function ED_1_Rele(posX, posY, Linea1, Linea2, tagNumber) {
+function ED_1_Rele(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0, digLogo24 = false) {
 
     const entidades = [];
 
-    entidades.push(...ED_Rele(posX, posY, Linea1, Linea2, `R${tagNumber}`, "13", "14"));
-
-    return entidades;
-
-}
-
-function ED_1_Contactor(posX, posY, Linea1, Linea2, tagNumber) {
-
-    const entidades = [];
-
-    entidades.push(...ED_Rele(posX, posY, Linea1, Linea2, `KM${tagNumber}`, "13", "14"));
+    // entrada rele base
+    entidades.push(...ED_Rele(posX, posY, Linea1, Linea2, `R${tagNumber}`, "13", "14", 1, desG0, digLogo24));
 
     return entidades;
 
 }
 
-function ED_1_Termico(posX, posY, Linea1, Linea2, tagNumber) {
+function ED_1_Contactor(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0, digLogo24 = false) {
 
     const entidades = [];
 
-    // rele base
-    entidades.push(...ED_Rele(posX, posY, Linea1, Linea2, `FKM${tagNumber}`, "97", "98", 0.8));
+    // entrada rele base
+    entidades.push(...ED_Rele(posX, posY, Linea1, Linea2, `KM${tagNumber}`, "13", "14", 1, desG0, digLogo24));
+
+    return entidades;
+
+}
+
+function ED_1_Termico(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0, digLogo24 = false) {
+
+    const entidades = [];
+
+    // entrada rele base
+    entidades.push(...ED_Rele(posX, posY, Linea1, Linea2, `FKM${tagNumber}`, "97", "98", 0.8, desG0, digLogo24));
 
     // simbolo termico
     entidades.push(lineaDXF(posX - 5, posY - 44, posX - 5.671, posY - 44.335, 0));
@@ -396,7 +403,7 @@ function ED_1_Termico(posX, posY, Linea1, Linea2, tagNumber) {
 
 
 // === SA ===
-function SA_1_Externa(posX, posY, Linea1, Linea2, tagNumber, desG0 = 0) {
+function SA_1_Externa(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0) {
     const entidades = [];
 
     entidades.push(...XX_Externa(posX, posY, Linea1, Linea2, desG0));
@@ -407,13 +414,13 @@ function SA_1_Externa(posX, posY, Linea1, Linea2, tagNumber, desG0 = 0) {
     return entidades;
 }
 
-function SA_1_Actuador(posX, posY, Linea1, Linea2, tagNumber) {
+function SA_1_Actuador(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0) {
 
     const entidades = [];
 
     entidades.push(...paloDesplazable(posX - 0, posY, 0, 0));
-    entidades.push(...paloDesplazable(posX - 4, posY, 0, 16));
-    entidades.push(...paloDesplazable(posX - 8, posY, 0, 12));
+    entidades.push(...paloDesplazable(posX - 4, posY, 0, desG0));
+    entidades.push(...paloDesplazable(posX - 8, posY, 0, desG));
 
     // cuerpo elemento de campo
     entidades.push(...valvula(posX, posY, "G", "G0", "Y"));
@@ -426,7 +433,7 @@ function SA_1_Actuador(posX, posY, Linea1, Linea2, tagNumber) {
 
 
 // === SD ===
-function SD_1_Externa(posX, posY, Linea1, Linea2, tagNumber) {
+function SD_1_Externa(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0) {
     const entidades = [];
     entidades.push(...paloDesplazable(posX - 6, posY, -2, 0));
     entidades.push(...paloDesplazable(posX - 2, posY, 2, 0));
@@ -434,7 +441,7 @@ function SD_1_Externa(posX, posY, Linea1, Linea2, tagNumber) {
     return entidades;
 }
 
-function SD_1_Rele(posX, posY, Linea1, Linea2, tagNumber) {
+function SD_1_Rele(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0) {
 
     const entidades = [];
 
@@ -481,7 +488,7 @@ function SD_1_Rele(posX, posY, Linea1, Linea2, tagNumber) {
 
 }
 
-function SD_1_Contactor(posX, posY, Linea1, Linea2, tagNumber) {
+function SD_1_Contactor(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0) {
 
     const entidades = [];
 
@@ -539,7 +546,7 @@ function SD_1_Contactor(posX, posY, Linea1, Linea2, tagNumber) {
 
 }
 
-function SD_3_Motor3V(posX, posY, Linea1, Linea2, tagNumber) {
+function SD_3_Motor3V(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0) {
 
     const entidades = [];
 
@@ -602,7 +609,7 @@ function SD_3_Motor3V(posX, posY, Linea1, Linea2, tagNumber) {
     return entidades;
 }
 
-function SD_1_Simple(posX, posY, Linea1, Linea2, tagNumber) {
+function SD_1_Simple(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0) {
 
     const entidades = [];
 
@@ -625,7 +632,7 @@ function SD_1_Simple(posX, posY, Linea1, Linea2, tagNumber) {
 
 }
 
-function SD_1_Conmutada(posX, posY, Linea1, Linea2, tagNumber) {
+function SD_1_Conmutada(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0) {
 
     const entidades = [];
 
@@ -648,7 +655,7 @@ function SD_1_Conmutada(posX, posY, Linea1, Linea2, tagNumber) {
 
 }
 
-function SD_2_Externa(posX, posY, Linea1, Linea2, tagNumber) {
+function SD_2_Externa(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0) {
 
     const entidades = [];
 
@@ -672,7 +679,7 @@ function SD_2_Externa(posX, posY, Linea1, Linea2, tagNumber) {
 
 }
 
-function SD_2_Actuador(posX, posY, Linea1, Linea2, tagNumber) {
+function SD_2_Actuador(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0) {
 
     const entidades = [];
 

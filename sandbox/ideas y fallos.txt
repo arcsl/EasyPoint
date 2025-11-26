@@ -5,7 +5,8 @@ elementos en los que la cantidad esté limitada a 1 que no se pueda elegir el nu
 en los elementos que haya posibilidad de elegir , p ej en bomba m/p y Estado, que el valor (u otra propiedad) sea "Marcha paro y estado"  para usarlo en la generacion de la memoria
 PXM40 y cualquier display -->> Disposicion.Mensaje: "Recorte en puerta de cuadro"  -->> Que salga en el plano resumen de medidas
 permitir salidas 3P o sondas de mas de 1 señal solo si las siguientes señales están libres, y al seleccionarlas, bloquear las siguientes señales
-eliminar "#KNXsl" y crear "#CE+" y "#CE-"
 al elegir control presion -> presostato -> en el listado que deje elegir externa o rele
+
+añadir entradas y salidas EX bus para el synco
 
 ----- FALLOS -----

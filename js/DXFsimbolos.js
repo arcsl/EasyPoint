@@ -122,6 +122,7 @@ function hash52(posX, posY) {
     return entidades;
 
 }
+
 function hash132(posX, posY) {
 
     const entidades = [];
@@ -238,7 +239,7 @@ function hashSep(posX, posY) {
 
     const entidades = [];
 
-    entidades.push(lineaDXF(posX + 0, posY + 0, posX + 0, posY + 18, 0));
+    entidades.push(lineaDXF(posX + 0, posY + 0, posX + 0, posY + 18));
 
     return entidades;
 
@@ -248,7 +249,7 @@ function hashSemiSep(posX, posY) {
 
     const entidades = [];
 
-    entidades.push(lineaDXF(posX + 0, posY - 9, posX + 0, posY + 7, 0));
+    entidades.push(lineaDXF(posX + 0, posY - 9, posX + 0, posY + 7));
 
     return entidades;
 
@@ -291,22 +292,22 @@ function hashLan(posX, posY) {
 
     const entidades = [];
 
-    entidades.push(lineaDXF(posX - 6, posY - 5, posX - 6, posY - 2));
-    entidades.push(lineaDXF(posX - 6, posY - 2, posX - 2, posY - 2));
-    entidades.push(lineaDXF(posX - 2, posY - 2, posX - 2, posY - 5));
-    entidades.push(lineaDXF(posX - 2, posY - 5, posX - 6, posY - 5));
-    entidades.push(lineaDXF(posX + 2, posY - 2, posX + 6, posY - 2));
-    entidades.push(lineaDXF(posX + 6, posY - 2, posX + 6, posY - 5));
-    entidades.push(lineaDXF(posX + 6, posY - 5, posX + 2, posY - 5));
-    entidades.push(lineaDXF(posX + 2, posY - 5, posX + 2, posY - 2));
-    entidades.push(lineaDXF(posX - 2, posY + 2, posX - 2, posY + 5));
-    entidades.push(lineaDXF(posX - 2, posY + 5, posX + 2, posY + 5));
-    entidades.push(lineaDXF(posX + 2, posY + 5, posX + 2, posY + 2));
-    entidades.push(lineaDXF(posX + 2, posY + 2, posX - 2, posY + 2));
-    entidades.push(lineaDXF(posX - 4, posY - 2, posX - 4, posY + 0));
-    entidades.push(lineaDXF(posX - 4, posY + 0, posX + 4, posY + 0));
-    entidades.push(lineaDXF(posX + 4, posY + 0, posX + 4, posY - 2));
-    entidades.push(lineaDXF(posX + 0, posY + 0, posX + 0, posY + 2));
+    entidades.push(lineaDXF(posX - 6, posY - 5, posX - 6, posY - 2, 0));
+    entidades.push(lineaDXF(posX - 6, posY - 2, posX - 2, posY - 2, 0));
+    entidades.push(lineaDXF(posX - 2, posY - 2, posX - 2, posY - 5, 0));
+    entidades.push(lineaDXF(posX - 2, posY - 5, posX - 6, posY - 5, 0));
+    entidades.push(lineaDXF(posX + 2, posY - 2, posX + 6, posY - 2, 0));
+    entidades.push(lineaDXF(posX + 6, posY - 2, posX + 6, posY - 5, 0));
+    entidades.push(lineaDXF(posX + 6, posY - 5, posX + 2, posY - 5, 0));
+    entidades.push(lineaDXF(posX + 2, posY - 5, posX + 2, posY - 2, 0));
+    entidades.push(lineaDXF(posX - 2, posY + 2, posX - 2, posY + 5, 0));
+    entidades.push(lineaDXF(posX - 2, posY + 5, posX + 2, posY + 5, 0));
+    entidades.push(lineaDXF(posX + 2, posY + 5, posX + 2, posY + 2, 0));
+    entidades.push(lineaDXF(posX + 2, posY + 2, posX - 2, posY + 2, 0));
+    entidades.push(lineaDXF(posX - 4, posY - 2, posX - 4, posY + 0, 0));
+    entidades.push(lineaDXF(posX - 4, posY + 0, posX + 4, posY + 0, 0));
+    entidades.push(lineaDXF(posX + 4, posY + 0, posX + 4, posY - 2, 0));
+    entidades.push(lineaDXF(posX + 0, posY + 0, posX + 0, posY + 2, 0));
 
     return entidades;
 

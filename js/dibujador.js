@@ -45,7 +45,7 @@ function moveCarril(index, dir) {
 
     proyectoNoGuardado();
     writeCarriles();
-    // actualizarSelectsSeniales();
+    writeSignals();
 }
 
 function renderCarril(index, totalCarriles, carrilData) {
@@ -64,10 +64,11 @@ function renderCarril(index, totalCarriles, carrilData) {
     rowTop.className = "carril-header";
 
     const btnDel = createBoton("w3-red", "papelera", "Eliminar carril", () => {
+        if (!confirm("Esta acción no se puede deshacer.\n¿Desea continuar?")) return;
         proyectoActual.Asignacion.splice(index, 1);
         proyectoNoGuardado();
         writeCarriles();
-        updateSelectsSeniales();
+        writeSignals();
     });
 
     const btnUp = createBoton("w3-blue", "arrow-up", "Subir", () => moveCarril(index, -1));
@@ -92,6 +93,7 @@ function renderCarril(index, totalCarriles, carrilData) {
         carrilData.push({ tipo: null, _visible: false }); // nuevo dispositivo sin tipo
         proyectoNoGuardado();
         writeCarriles();
+        writeSignals();
     };
 
     const devicesContainer = document.createElement("div");
@@ -114,21 +116,45 @@ function addDispositivo(carrilIndex) {
     proyectoActual.Asignacion[carrilIndex].push({ tipo: null, _visible: false });
     proyectoNoGuardado();
     writeCarriles();
+    writeSignals();
 }
 
 function elimDispositivo(carrilIndex, dispIndex) {
     proyectoActual.Asignacion[carrilIndex].splice(dispIndex, 1);
     proyectoNoGuardado();
     writeCarriles();
+    writeSignals();
 }
 
 function moveDispositivo(carrilIndex, dispIndex, dir) {
-    const arr = proyectoActual.Asignacion[carrilIndex];
-    const j = dispIndex + dir;
-    if (j < 0 || j >= arr.length) return;
-    [arr[dispIndex], arr[j]] = [arr[j], arr[dispIndex]];
+    const carrilActual = proyectoActual.Asignacion[carrilIndex];
+    
+    const nuevoIndex = dispIndex + dir;
+    if (nuevoIndex < 0) {
+        // no deberia ser posible que ocurra pero si es el primer carril salir sin hacer nada
+        if (carrilIndex === 0) return;
+        
+        //pasar al final del carril anterior
+        const carrilDestino = proyectoActual.Asignacion[carrilIndex + dir];
+        const first = carrilActual.shift(); // saca el primer elemento
+        carrilDestino.push(first); // lo agrega al final
+        
+    } else if (nuevoIndex >= carrilActual.length) {
+        // no deberia ser posible que ocurra pero si es el ultimo carril salir sin hacer nada
+        if (carrilIndex === proyectoActual.Asignacion.length - 1) return;
+        
+        // pasar al principio del carril siguiente
+        const carrilDestino = proyectoActual.Asignacion[carrilIndex + dir];
+        const last = carrilActual.pop(); // saca el último elemento
+        carrilDestino.unshift(last);     // lo agrega como primer elemento
+
+    } else {
+        // mover dentro del carril
+        [carrilActual[dispIndex], carrilActual[nuevoIndex]] = [carrilActual[nuevoIndex], carrilActual[dispIndex]];
+    }
     proyectoNoGuardado();
     writeCarriles();
+    writeSignals();
 }
 
 function renderDispositivo(devicesContainer, carrilIndex, dispIndex, dispData) {
@@ -168,21 +194,24 @@ function renderDispositivo(devicesContainer, carrilIndex, dispIndex, dispData) {
     if (tipoActual) sel.value = tipoActual;
 
     // === Botones dispositivo ===
-    const btnDel = createBoton("w3-red", "papelera", "Eliminar dispositivo", () =>
+    const btnDel = createBoton("w3-red", "papelera", "Eliminar dispositivo", () => {
+        if (!confirm("Esta acción no se puede deshacer.\n¿Desea continuar?")) return;
         elimDispositivo(carrilIndex, dispIndex)
-    );
+    });
 
     const btnUp = createBoton("w3-blue", "arrow-up", "Subir dispositivo", () =>
         moveDispositivo(carrilIndex, dispIndex, -1)
     );
     btnUp.classList.add("dev-move-up");
-    if (dispIndex === 0) btnUp.disabled = true;
+    if (carrilIndex === 0 && dispIndex === 0) btnUp.disabled = true;
 
     const btnDown = createBoton("w3-blue", "arrow-down", "Bajar dispositivo", () =>
         moveDispositivo(carrilIndex, dispIndex, 1)
     );
     btnDown.classList.add("dev-move-down");
-    if (dispIndex === proyectoActual.Asignacion[carrilIndex].length - 1) btnDown.disabled = true;
+    const ultimoCarril = carrilIndex === proyectoActual.Asignacion.length - 1;
+    const ultimoDispositivo = dispIndex === proyectoActual.Asignacion[carrilIndex].length - 1;
+    if (ultimoCarril && ultimoDispositivo) btnDown.disabled = true;
 
     // === Botón mostrar/ocultar canales ===
     const btnToggle = createBoton("w3-gray", "eye-slash", "Mostrar/Ocultar canales", () => {
@@ -229,7 +258,7 @@ function renderDispositivo(devicesContainer, carrilIndex, dispIndex, dispData) {
         proyectoActual.Asignacion[carrilIndex][dispIndex] = { tipo: sel.value, _visible: prev };
         proyectoNoGuardado();
         writeCarriles();
-        updateSelectsSeniales?.();
+        writeSignals();
     };
 
     devicesContainer.appendChild(block);
@@ -1008,7 +1037,7 @@ function dibujarPaginaDeDispositivo(hojaX, hojaY, dispositivo, pageIndex, startX
 
             // 1) Si el borne tiene SEÑAL asignada en EL ESTADO → dibujar símbolo correspondiente
             const borneObj = conector.Numeracion[i];
-            const { num, seniales, nombre, desG0, multSeñales } = normalizarBorne(borneObj);
+            const { num, seniales, nombre, desG, desG0, digLogo24, multSeñales } = normalizarBorne(borneObj);
 
             // nombre del borne (para mapear en estado)
             const nombreBorne = nombre || num || null;
@@ -1034,7 +1063,7 @@ function dibujarPaginaDeDispositivo(hojaX, hojaY, dispositivo, pageIndex, startX
                             const L2Mayus = sig.Linea2.toUpperCase();
 
                             entidades.push(
-                                ...fn(inX, inY, L1Mayus, L2Mayus, sig.tagNumber, desG0)
+                                ...fn(inX, inY, L1Mayus, L2Mayus, sig.tagNumber, desG, desG0, digLogo24)
                             );
                         } else {
                             console.warn(`⚠️ Falta función símbolo DXF: ${funcionNombre}(x,y,Linea1,Linea2,tag)`);
@@ -1106,10 +1135,12 @@ function normalizarBorne(borne) {
             num: borne.num ?? null,
             seniales: borne.señales ?? [],
             nombre: borne.nombre ?? null,
-            desG0: borne.desG0 ?? null,
+            desG: borne.desG ?? 0,
+            desG0: borne.desG0 ?? 0,
+            digLogo24: borne.digLogo24 ?? false,
         };
     }
-    return { num: borne ?? null, seniales: [], nombre: null, desG0: null };
+    return { num: borne ?? null, seniales: [], nombre: null, desG: 0, desG0: 0, digLogo24: false };
 }
 
 function obtenerSenialPorUUID(uuid) {
@@ -1135,7 +1166,7 @@ function dibujarBarrasComunes(CajetinX, CajetinY, hojaItems) {
     let dostreinta = false;
     let veinticuatro = false;
 
-    
+
     // determinar si hay que dibujar el bus knx transversal
     hojaItems.forEach(item => {
         if (item.familia.toUpperCase() === "SYNCO") {
@@ -1146,8 +1177,6 @@ function dibujarBarrasComunes(CajetinX, CajetinY, hojaItems) {
         if (item.tension230) dostreinta = true;
         if (item.tension24) veinticuatro = true;
     });
-    
-    console.log({dostreinta, veinticuatro});
 
     const xInicio = Math.min(...hojaItems.map(it => it.x)) + CajetinX;
     const xFin = Math.max(...hojaItems.map(it => it.x + it.width)) + CajetinX;
@@ -1185,10 +1214,10 @@ function dibujarBarrasComunes(CajetinX, CajetinY, hojaItems) {
                 lineaDXF(xInicio, y, xFin, y),
                 textoDXF(xFin + 2, y, etiqueta, 2.5, 'ML'),
             );
-        }    
+        }
     });
 
-return entidades;
+    return entidades;
 }
 
 function quitarCaracteresNoASCII(texto) {
