@@ -2744,4 +2744,83 @@ const dispositivos = {
             "Tipo": "modulo",
         },
     },
+    "OPTA RS485": {
+        "Nombre": "OPTA RS485",
+        "Paginas": [
+            [
+                {   // alimentacion 24V
+                    "Cinta": "24Vcc",
+                    "Simbolos": ["#U", "#U", "#U", "#U",],
+                    "Numeracion": ["+", "+", "-", "-",],
+                    "Fijo": ["#G", null, "#G0", null, ],
+                },
+                {   // entradas I1 a I8
+                    "Cinta": "INPUTS",
+                    "Simbolos": [
+                        null, null, "#U", "#/",
+                        null, null, "#U", "#/",
+                        null, null, "#U", "#/",
+                        null, null, "#U", "#/",
+                        null, null, "#U", "#/",
+                        null, null, "#U", "#/",
+                        null, null, "#U", "#/",
+                        null, null, "#U",
+                    ],
+                    "Numeracion": [
+                        null, null, { num: "I1", señales: ["EA", "ED"], nombre: "I1", desG: 12, desG0: 16, digLogo24: true, }, null, // digLogo24 vale para que las entradas digitales cojan el comun del L+ (G) y no del M (G0) en entradas 
+                        null, null, { num: "I2", señales: ["EA", "ED"], nombre: "I2", desG: 12, desG0: 16, digLogo24: true, }, null, // que pueden ser analogicas o digitales ya que las analogicas siguen teniendo que coger comun del M (G0)
+                        null, null, { num: "I3", señales: ["EA", "ED"], nombre: "I3", desG: 12, desG0: 16, digLogo24: true, }, null,
+                        null, null, { num: "I4", señales: ["EA", "ED"], nombre: "I4", desG: 12, desG0: 16, digLogo24: true, }, null,
+                        null, null, { num: "I5", señales: ["EA", "ED"], nombre: "I5", desG: 12, desG0: 16, digLogo24: true, }, null,
+                        null, null, { num: "I6", señales: ["EA", "ED"], nombre: "I6", desG: 12, desG0: 16, digLogo24: true, }, null,
+                        null, null, { num: "I7", señales: ["EA", "ED"], nombre: "I7", desG: 12, desG0: 16, digLogo24: true, }, null,
+                        null, null, { num: "I8", señales: ["EA", "ED"], nombre: "I8", desG: 12, desG0: 16, digLogo24: true, },
+                    ],
+                },
+                {   // tierra
+                    "Simbolos": "#|",
+                    "Numeracion": [null, "#Tierra", null],
+                    "Fijo": "#inTierra",
+                    "Etiqueta": "CONECTAR SOLO A TIERRA REAL%NO TIERRA FLOTANTE/AISLADA",
+                },
+                {   // LAN
+                    "Cinta": "RJ45",
+                    "Simbolos": "#RED",
+                    "Numeracion": [null, "ETH", null],
+                    "Opcional": [null, { nombre: "LAN", dibujo: "#int", Linea1: "A switch de comunicaciones en pag # - #", Linea2: "Ethernet UTP CAT-6", desX: 4, }, null],
+                },
+                {   // Salidas Q1 a Q4
+                    "Cinta": "X11",
+                    "Simbolos": [null, "#Qsl1", null, "#/", null, "#Qsl2", null, "#/", null, "#Qsl3", null, "#/", null, "#Qsl4", null,],
+                    "Numeracion": [
+                        "1", null, { num: "2", señales: ["SD"], nombre: "Q1", desY: 2, }, null,
+                        "1", null, { num: "2", señales: ["SD"], nombre: "Q2", desY: 2, }, null,
+                        "1", null, { num: "2", señales: ["SD"], nombre: "Q3", desY: 2, }, null,
+                        "1", null, { num: "2", señales: ["SD"], nombre: "Q4", desY: 2, },
+                    ],
+                },
+                {   // RS485
+                    "Cinta": "RS485",
+                    "Simbolos": ["#D","#|","#D"],
+                    "Numeracion": [
+                        { num: "A", desX: -1, extraEstrecho: true },
+                        { num: "GND", desX: 0, extraEstrecho: true },
+                        { num: "B", desX: 1, extraEstrecho: true },
+                    ],
+                    "Opcional": [
+                        { nombre: "Modbus", dibujo: "#MoI",  desX: 2}, 
+                        null, 
+                        { nombre: "Modbus", dibujo: "#MoO",  desX: 6}, 
+                    ],
+                },                
+
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 72,
+            "Alto": 90,
+            "Familia": "General",
+            "Tipo": "controlador",
+        },
+    },    
 }

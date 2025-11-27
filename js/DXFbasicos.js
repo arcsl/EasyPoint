@@ -509,7 +509,6 @@ function lineaDXF(posX1, posY1, posX2, posY2, grosor = -1, tipoLinea = "Continuo
 ${tipoLinea}`;
   }
 
-
   // insertar grosor de linea solo si es necesario
   let insertGrosor;
   if (grosor === -1) {
@@ -821,6 +820,80 @@ ${posXcentro}
 ${posYcentro}
 40
 ${radio}${insertGrosor}`;
+}
+
+function elipseDXF(posXcentro, posYcentro, ejeH, ejeV, grosor = -1, tipoLinea = "Continuous", escala = 1, color = 0) {
+
+  //verificar cual es el eje mayor y menor y calvular ratio
+  const ejeHmayor = ejeH > ejeV;
+  const ejeMayor = ejeHmayor ? ejeH : ejeV;
+  const ejeMenor = !ejeHmayor ? ejeH : ejeV;
+  const ratio = (ejeMenor / ejeMayor).toFixed(6);
+
+  // insertar eje mayor
+  let inserEje;
+  if (ejeHmayor) {
+    inserEje = `
+ 11
+${ejeH}
+ 21
+0`;
+  } else {
+    inserEje = `
+ 11
+0
+ 21
+${ejeV}`;
+  }
+
+  // insertar grosor de linea solo si es necesario
+  let insertGrosor;
+  if (grosor === -1) {
+    insertGrosor = "";
+  } else {
+    insertGrosor = `
+370
+${grosor}`;
+  }
+
+  let insertTipo;
+  if (tipoLinea === "Continuous") {
+    insertTipo = "";
+  } else {
+    insertTipo = `
+6
+${tipoLinea}`;
+  }
+
+  let insertColor;
+  if (color === 0) {
+    insertColor = "";
+  } else {
+    insertColor = `
+62
+${color}`;
+  }
+
+
+  return `0
+ELLIPSE
+100
+AcDbEntity${insertTipo}${insertGrosor}${insertColor}
+100
+AcDbEllipse
+10
+${posXcentro}
+20
+${posYcentro}${inserEje}
+ 40
+${ratio}
+ 41
+0.0
+ 42
+6.283185307179586
+48
+${escala}`
+
 }
 
 /**

@@ -15,6 +15,7 @@
         <option value="LINE">LINE</option>
         <option value="ARC">ARC</option>
         <option value="CIRCLE">CIRCLE</option>
+        <option value="ELLIPSE">ELLIPSE</option>
         <option value="TEXT">TEXT</option>
         <option value="MTEXT">MTEXT</option>
         <option value="SOLID">SOLID</option>
@@ -59,7 +60,6 @@
             document.getElementById('salida').value = result.join('\n');
         }
 
-
         function fmt(n) {
             return parseFloat(n).toFixed(3).replace(/\.?0+$/, '').padStart(5);
         }
@@ -91,7 +91,6 @@
             return lines.slice(startIndex, endIndex).join("\n");
         }
 
-
         function parseDXF(dxfText, tipo) {
             const lines = dxfText.split(/\r?\n/);
             const result = [];
@@ -111,6 +110,9 @@
                                 break;
                             case 'CIRCLE':
                                 result.push(...parseCIRCLE(lines, i));
+                                break;
+                            case 'ELLIPSE':
+                                result.push(...parseELLIPSE(lines, i));
                                 break;
                             case 'TEXT':
                                 result.push(...parseTEXT(lines, i));
@@ -222,6 +224,79 @@
             return [
                 (`entidades.push(circunferenciaDXF( posX + ${cxF}, posY + ${cyF}, ${rF}, ${gF} ));  // CIRCLE en línea ${startIndex}`)
                     .replace(/\+\s*-/g, "- ")
+            ];
+        }
+
+        function parseELLIPSE(lines, startIndex) {
+            // Valores por defecto
+            let cx = "0", cy = "0";
+            let vx = "0", vy = "0";
+            let ratio = "1";
+            let grosor = "-1";
+            let tipoLinea = "Continuous";
+            let escala = "1";
+            let color = "0";
+
+            for (let i = startIndex + 2; i < lines.length; i += 2) {
+                const code = lines[i].trim();
+                const value = lines[i + 1]?.trim();
+
+                if (code === "0") break;
+
+                switch (code) {
+                    case "10": cx = value; break;          // centro X
+                    case "20": cy = value; break;          // centro Y
+                    case "11": vx = value; break;          // vector eje mayor X
+                    case "21": vy = value; break;          // vector eje mayor Y
+                    case "40": ratio = value; break;       // minor / major
+                    case "370": grosor = value; break;     // grosor de línea
+                    case "6": tipoLinea = value || "Continuous"; break; // tipo de línea
+                    case "48": escala = value; break;      // escala de tipo de línea
+                    case "62": color = value; break;       // color index
+                    // 41 y 42 (ángulos paramétricos) los ignoramos de momento
+                }
+            }
+
+            const vxNum = parseFloat(vx) || 0;
+            const vyNum = parseFloat(vy) || 0;
+
+            const ratioNumRaw = parseFloat(ratio);
+            const ratioNum = isNaN(ratioNumRaw) || ratioNumRaw === 0 ? 1 : ratioNumRaw;
+
+            const a = Math.sqrt(vxNum * vxNum + vyNum * vyNum); // semieje mayor
+            if (a === 0) return [];
+
+            const b = a * ratioNum; // semieje menor
+
+            let ejeH, ejeV;
+            if (Math.abs(vxNum) >= Math.abs(vyNum)) {
+                // Eje mayor aproximadamente horizontal
+                ejeH = a;
+                ejeV = b;
+            } else {
+                // Eje mayor aproximadamente vertical
+                ejeH = b;
+                ejeV = a;
+            }
+
+            const cxF = fmt(cx);
+            const cyF = fmt(cy);
+            const ejeHF = fmt(ejeH);
+            const ejeVF = fmt(ejeV);
+
+            const gNum = parseFloat(grosor);
+            const gF = isNaN(gNum) ? -1 : gNum;
+
+            const escalaNum = parseFloat(escala);
+            const escalaF = isNaN(escalaNum) ? 1 : escalaNum;
+
+            const colorNum = parseInt(color, 10);
+            const colorF = isNaN(colorNum) ? 0 : colorNum;
+
+            return [
+                (
+                    `entidades.push(elipseDXF( posX + ${cxF}, posY + ${cyF}, ${ejeHF}, ${ejeVF}, ${gF}, "${tipoLinea}", ${escalaF}, ${colorF} ));  // ELLIPSE en línea ${startIndex}`
+                ).replace(/\+\s*-/g, "- ")
             ];
         }
 
@@ -393,6 +468,7 @@
                     .replace(/\+\s*-/g, "- ")
             ];
         }
+
     </script>
 </body>
 
