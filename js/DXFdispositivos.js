@@ -2269,7 +2269,8 @@ const dispositivos = {
                         null, "#U", "#/",
                         null, "#U", "#/",
                         null, "#U", "#/",
-                        null, "#U",],
+                        null, "#U",
+                    ],
                     "Numeracion": [
                         null, { num: "I1", señales: ["ED"], nombre: "I1", desG0: 4, }, null,
                         null, { num: "I2", señales: ["ED"], nombre: "I2", desG0: 4, }, null,
@@ -2327,22 +2328,22 @@ const dispositivos = {
                 {   // entradas I1 a I8
                     "Cinta": "X10",
                     "Simbolos": [
-                        null, null, "#U", "#/", 
-                        null, null, "#U", "#/", 
-                        null, null, "#U", "#/", 
-                        null, null, "#U", "#/", 
-                        null, null, "#U", "#/", 
-                        null, null, "#U", "#/", 
-                        null, null, "#U", "#/", 
+                        null, null, "#U", "#/",
+                        null, null, "#U", "#/",
+                        null, null, "#U", "#/",
+                        null, null, "#U", "#/",
+                        null, null, "#U", "#/",
+                        null, null, "#U", "#/",
+                        null, null, "#U", "#/",
                         null, null, "#U",
                     ],
                     "Numeracion": [
-                        null, null, { num: "I1", señales: ["EA", "ED"], nombre: "I1", desG: 12, desG0: 16, digLogo24: true, }, null, // digLogo24 vale para que las entradas digitales cojan el comun del L+ (G) y no del M (G0)
-                        null, null, { num: "I2", señales: ["EA", "ED"], nombre: "I2", desG: 12, desG0: 16, digLogo24: true, }, null,
-                        null, null, { num: "I3", señales: [      "ED"], nombre: "I3", desG: 12, desG0: 16, digLogo24: true, }, null,
-                        null, null, { num: "I4", señales: [      "ED"], nombre: "I4", desG: 12, desG0: 16, digLogo24: true, }, null,
-                        null, null, { num: "I5", señales: [      "ED"], nombre: "I5", desG: 12, desG0: 16, digLogo24: true, }, null,
-                        null, null, { num: "I6", señales: [      "ED"], nombre: "I6", desG: 12, desG0: 16, digLogo24: true, }, null,
+                        null, null, { num: "I1", señales: ["EA", "ED"], nombre: "I1", desG: 12, desG0: 16, digLogo24: true, }, null, // digLogo24 vale para que las entradas digitales cojan el comun del L+ (G) y no del M (G0) en entradas 
+                        null, null, { num: "I2", señales: ["EA", "ED"], nombre: "I2", desG: 12, desG0: 16, digLogo24: true, }, null, // que pueden ser analogicas o digitales ya que las analogicas siguen teniendo que coger comun del M (G0)
+                        null, null, { num: "I3", señales: ["ED"],       nombre: "I3",           desG0: 12,                  }, null,
+                        null, null, { num: "I4", señales: ["ED"],       nombre: "I4",           desG0: 12,                  }, null,
+                        null, null, { num: "I5", señales: ["ED"],       nombre: "I5",           desG0: 12,                  }, null,
+                        null, null, { num: "I6", señales: ["ED"],       nombre: "I6",           desG0: 12,                  }, null,
                         null, null, { num: "I7", señales: ["EA", "ED"], nombre: "I7", desG: 12, desG0: 16, digLogo24: true, }, null,
                         null, null, { num: "I8", señales: ["EA", "ED"], nombre: "I8", desG: 12, desG0: 16, digLogo24: true, },
                     ],
@@ -2379,18 +2380,18 @@ const dispositivos = {
             "Tipo": "controlador",
         },
     },
-    "LOGO AM2 RTD": {
-        "Nombre": "LOGO AM2 RTD",
+    "LOGO AM2": {
+        "Nombre": "LOGO AM2",
         "Paginas": [
             [
                 {   // alimentacion 24V
-                    "Cinta": "24Vcc",
+                    "Cinta": "X10",
                     "Simbolos": ["#U", "#U", "#U", "#U",],
                     "Numeracion": ["L+", "M", "L+", "M",],
-                    "Fijo": ["#G", "#G0", null, null, ],
+                    "Fijo": ["#G", "#G0", null, null,],
                 },
                 {   // tierra
-                    "Cinta": "X11",                    
+                    "Cinta": "X11",
                     "Simbolos": "#|",
                     "Numeracion": [null, "#Tierra", null],
                     "Fijo": "#inTierra",
@@ -2399,17 +2400,59 @@ const dispositivos = {
                 {   // entradas AI1 a AI2
                     "Cinta": "X12",
                     "Simbolos": [
-                        "#U", "#D", "#U", "#/", 
+                        "#D", "#|", "#D", "#/",
+                        "#D", "#|", "#D",
+                    ],
+                    "Numeracion": [
+                        { num: "I1", desX: -1 },
+                        { num: "M1", desX: 0 },
+                        { num: "U1", desX: 1, señales: ["EA"], nombre: "AI1", },
+                        null,
+                        { num: "I2", desX: -1 },
+                        { num: "M2", desX: 0 },
+                        { num: "U2", desX: 1, señales: ["EA"], nombre: "AI2", },
+                    ],
+                },
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 36,
+            "Alto": 90,
+            "Familia": "Logo",
+            "Tipo": "modulo",
+        },
+    },
+    "LOGO AM2 RTD": {
+        "Nombre": "LOGO AM2 RTD",
+        "Paginas": [
+            [
+                {   // alimentacion 24V
+                    "Cinta": "X10",
+                    "Simbolos": ["#U", "#U", "#U", "#U",],
+                    "Numeracion": ["L+", "M", "L+", "M",],
+                    "Fijo": ["#G", "#G0", null, null,],
+                },
+                {   // tierra
+                    "Cinta": "X11",
+                    "Simbolos": "#|",
+                    "Numeracion": [null, "#Tierra", null],
+                    "Fijo": "#inTierra",
+                    "Etiqueta": "CONECTAR SOLO A TIERRA REAL%NO TIERRA FLOTANTE/AISLADA",
+                },
+                {   // entradas AI1 a AI2
+                    "Cinta": "X12",
+                    "Simbolos": [
+                        "#U", "#D", "#U", "#/",
                         "#U", "#D", "#U",
                     ],
                     "Numeracion": [
-                        { num: "U1-", extraEstrecho: true, desX: -1}, 
-                        { num: "IC1", extraEstrecho: true, desX:  0}, 
-                        { num: "U1+", señales: ["EA"], nombre: "AI1", extraEstrecho: true, desX:  1}, 
+                        { num: "U1-", extraEstrecho: true, desX: -1 },
+                        { num: "IC1", extraEstrecho: true, desX: 0 },
+                        { num: "U1+", señales: ["EA"], nombre: "AI1", extraEstrecho: true, desX: 1 },
                         null,
-                        { num: "U2-", extraEstrecho: true, desX: -1}, 
-                        { num: "IC2", extraEstrecho: true, desX:  0}, 
-                        { num: "U2+", señales: ["EA"], nombre: "AI2", extraEstrecho: true, desX:  1}, 
+                        { num: "U2-", extraEstrecho: true, desX: -1 },
+                        { num: "IC2", extraEstrecho: true, desX: 0 },
+                        { num: "U2+", señales: ["EA"], nombre: "AI2", extraEstrecho: true, desX: 1 },
                     ],
                     "Fijo": [
                         "#RTD", null, null, null,
@@ -2419,10 +2462,286 @@ const dispositivos = {
             ],
         ],
         "Disposicion": {
-            "Ancho": 58,
+            "Ancho": 36,
             "Alto": 90,
             "Familia": "Logo",
             "Tipo": "modulo",
         },
-    },    
+    },
+    "LOGO AM2 AQ": {
+        "Nombre": "LOGO AM2 AQ",
+        "Paginas": [
+            [
+                {   // alimentacion 24V
+                    "Cinta": "X10",
+                    "Simbolos": ["#U", "#U", "#U", "#U",],
+                    "Numeracion": ["L+", "M", "L+", "M",],
+                    "Fijo": ["#G", "#G0", null, null,],
+                },
+                {   // tierra
+                    "Cinta": "X11",
+                    "Simbolos": "#|",
+                    "Numeracion": [null, "#Tierra", null],
+                    "Fijo": "#inTierra",
+                    "Etiqueta": "CONECTAR SOLO A TIERRA REAL%NO TIERRA FLOTANTE/AISLADA",
+                },
+                {   // salidas AI1 a AI2
+                    "Cinta": "X12",
+                    "Simbolos": [
+                        "#D", "#|", "#D", "#/",
+                        "#D", "#|", "#D",
+                    ],
+                    "Numeracion": [
+                        { num: "I1", extraEstrecho: true, },
+                        { num: "M1", extraEstrecho: true, desX: 0, },
+                        { num: "U1+", extraEstrecho: true, desX: 1, señales: ["SA"], nombre: "AQ1", },
+                        null,
+                        { num: "I2", extraEstrecho: true, },
+                        { num: "M2", extraEstrecho: true, desX: 0, },
+                        { num: "U2+", extraEstrecho: true, desX: 1, señales: ["SA"], nombre: "AQ2", },
+                    ],
+                },
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 36,
+            "Alto": 90,
+            "Familia": "Logo",
+            "Tipo": "modulo",
+        },
+    },
+    "LOGO DM8 24R": {
+        "Nombre": "LOGO DM8 24R",
+        "Paginas": [
+            [
+                {   // alimentacion 24V
+                    "Cinta": "24Vcc",
+                    "Simbolos": ["#U", "#U",],
+                    "Numeracion": ["L+", "M",],
+                    "Fijo": ["#G", "#G0",],
+                },
+                {   // entradas I1 a I4
+                    "Cinta": "X10",
+                    "Simbolos": [
+                        null, "#U", "#/",
+                        null, "#U", "#/",
+                        null, "#U", "#/",
+                        null, "#U",
+                    ],
+                    "Numeracion": [
+                        null, { num: "I1", señales: ["ED"], nombre: "I1", desG0: 12, }, null,
+                        null, { num: "I2", señales: ["ED"], nombre: "I2", desG0: 12, }, null,
+                        null, { num: "I3", señales: ["ED"], nombre: "I3", desG0: 12, }, null,
+                        null, { num: "I4", señales: ["ED"], nombre: "I4", desG0: 12, },
+                    ],
+                },
+                {   // Salidas Q1 a Q4
+                    "Cinta": "X11",
+                    "Simbolos": [null, "#Qsl1", null, "#/", null, "#Qsl2", null, "#/", null, "#Qsl3", null, "#/", null, "#Qsl4", null,],
+                    "Numeracion": [
+                        "1", null, { num: "2", señales: ["SD"], nombre: "Q1", desY: 2, }, null,
+                        "1", null, { num: "2", señales: ["SD"], nombre: "Q2", desY: 2, }, null,
+                        "1", null, { num: "2", señales: ["SD"], nombre: "Q3", desY: 2, }, null,
+                        "1", null, { num: "2", señales: ["SD"], nombre: "Q4", desY: 2, },
+                    ],
+                },
+
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 36,
+            "Alto": 90,
+            "Familia": "Logo",
+            "Tipo": "modulo",
+        },
+    },
+    "LOGO DM16 24R": {
+        "Nombre": "LOGO DM16 24R",
+        "Paginas": [
+            [
+                {   // alimentacion 24V
+                    "Cinta": "24Vcc",
+                    "Simbolos": ["#U", "#U",],
+                    "Numeracion": ["L+", "M",],
+                    "Fijo": ["#G", "#G0",],
+                },
+                {   // entradas I1 a I8
+                    "Cinta": "X10",
+                    "Simbolos": [
+                        null, "#U", "#/",
+                        null, "#U", "#/",
+                        null, "#U", "#/",
+                        null, "#U", "#/",
+                        null, "#U", "#/",
+                        null, "#U", "#/",
+                        null, "#U", "#/",
+                        null, "#U",
+                    ],
+                    "Numeracion": [
+                        null, { num: "I1", señales: ["ED"], nombre: "I1", desG0: 12, }, null,
+                        null, { num: "I2", señales: ["ED"], nombre: "I2", desG0: 12, }, null,
+                        null, { num: "I3", señales: ["ED"], nombre: "I3", desG0: 12, }, null,
+                        null, { num: "I4", señales: ["ED"], nombre: "I4", desG0: 12, }, null,
+                        null, { num: "I5", señales: ["ED"], nombre: "I5", desG0: 12, }, null,
+                        null, { num: "I6", señales: ["ED"], nombre: "I6", desG0: 12, }, null,
+                        null, { num: "I7", señales: ["ED"], nombre: "I7", desG0: 12, }, null,
+                        null, { num: "I8", señales: ["ED"], nombre: "I8", desG0: 12, },
+                    ],
+                },
+                {   // Salidas Q1 a Q4
+                    "Cinta": "X11",
+                    "Simbolos": [
+                        null, "#Qsl1", null, "#/",
+                        null, "#Qsl2", null, "#/",
+                        null, "#Qsl3", null, "#/",
+                        null, "#Qsl4", null, 
+                    ],
+                    "Numeracion": [
+                        "1", null, { num: "2", señales: ["SD"], nombre: "Q1", desY: 2, }, null,
+                        "1", null, { num: "2", señales: ["SD"], nombre: "Q2", desY: 2, }, null,
+                        "1", null, { num: "2", señales: ["SD"], nombre: "Q3", desY: 2, }, null,
+                        "1", null, { num: "2", señales: ["SD"], nombre: "Q4", desY: 2, }, 
+                    ],
+                },
+                {   // Salidas Q5 a Q8
+                    "Cinta": "X12",
+                    "Simbolos": [
+                        null, "#Qsl5", null, "#/",
+                        null, "#Qsl6", null, "#/",
+                        null, "#Qsl7", null, "#/",
+                        null, "#Qsl8", null,
+                    ],
+                    "Numeracion": [
+                        "1", null, { num: "2", señales: ["SD"], nombre: "Q5", desY: 2, }, null,
+                        "1", null, { num: "2", señales: ["SD"], nombre: "Q6", desY: 2, }, null,
+                        "1", null, { num: "2", señales: ["SD"], nombre: "Q7", desY: 2, }, null,
+                        "1", null, { num: "2", señales: ["SD"], nombre: "Q8", desY: 2, },
+                    ],
+                },
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 72,
+            "Alto": 90,
+            "Familia": "Logo",
+            "Tipo": "modulo",
+        },
+    },
+    "LOGO DM8 230R": {
+        "Nombre": "LOGO DM8 24R",
+        "Paginas": [
+            [
+                {   // alimentacion 230V
+                    "Cinta": "230V",
+                    "Simbolos": ["#U", "#U",],
+                    "Numeracion": ["L", "N",],
+                    "Fijo": ["#L", "#N",],
+                },
+                {   // entradas I1 a I4
+                    "Cinta": "X10",
+                    "Simbolos": [
+                        null, "#U", "#/",
+                        null, "#U", "#/",
+                        null, "#U", "#/",
+                        null, "#U",
+                    ],
+                    "Numeracion": [
+                        null, { num: "I1", señales: ["ED"], nombre: "I1", desG0: 4, }, null,
+                        null, { num: "I2", señales: ["ED"], nombre: "I2", desG0: 4, }, null,
+                        null, { num: "I3", señales: ["ED"], nombre: "I3", desG0: 4, }, null,
+                        null, { num: "I4", señales: ["ED"], nombre: "I4", desG0: 4, },
+                    ],
+                },
+                {   // Salidas Q1 a Q4
+                    "Cinta": "X11",
+                    "Simbolos": [null, "#Qsl1", null, "#/", null, "#Qsl2", null, "#/", null, "#Qsl3", null, "#/", null, "#Qsl4", null,],
+                    "Numeracion": [
+                        "1", null, { num: "2", señales: ["SD"], nombre: "Q1", desY: 2, }, null,
+                        "1", null, { num: "2", señales: ["SD"], nombre: "Q2", desY: 2, }, null,
+                        "1", null, { num: "2", señales: ["SD"], nombre: "Q3", desY: 2, }, null,
+                        "1", null, { num: "2", señales: ["SD"], nombre: "Q4", desY: 2, },
+                    ],
+                },
+
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 36,
+            "Alto": 90,
+            "Familia": "Logo",
+            "Tipo": "modulo",
+        },
+    },
+    "LOGO DM16 230R": {
+        "Nombre": "LOGO DM16 24R",
+        "Paginas": [
+            [
+                {   // alimentacion 230V
+                    "Cinta": "230V",
+                    "Simbolos": ["#U", "#U",],
+                    "Numeracion": ["L", "N",],
+                    "Fijo": ["#L", "#N",],
+                },
+                {   // entradas I1 a I8
+                    "Cinta": "X10",
+                    "Simbolos": [
+                        null, "#U", "#/",
+                        null, "#U", "#/",
+                        null, "#U", "#/",
+                        null, "#U", "#/",
+                        null, "#U", "#/",
+                        null, "#U", "#/",
+                        null, "#U", "#/",
+                        null, "#U",
+                    ],
+                    "Numeracion": [
+                        null, { num: "I1", señales: ["ED"], nombre: "I1", desG0: 4, }, null,
+                        null, { num: "I2", señales: ["ED"], nombre: "I2", desG0: 4, }, null,
+                        null, { num: "I3", señales: ["ED"], nombre: "I3", desG0: 4, }, null,
+                        null, { num: "I4", señales: ["ED"], nombre: "I4", desG0: 4, }, null,
+                        null, { num: "I5", señales: ["ED"], nombre: "I5", desG0: 4, }, null,
+                        null, { num: "I6", señales: ["ED"], nombre: "I6", desG0: 4, }, null,
+                        null, { num: "I7", señales: ["ED"], nombre: "I7", desG0: 4, }, null,
+                        null, { num: "I8", señales: ["ED"], nombre: "I8", desG0: 4, },
+                    ],
+                },
+                {   // Salidas Q1 a Q4
+                    "Cinta": "X11",
+                    "Simbolos": [
+                        null, "#Qsl1", null, "#/",
+                        null, "#Qsl2", null, "#/",
+                        null, "#Qsl3", null, "#/",
+                        null, "#Qsl4", null, 
+                    ],
+                    "Numeracion": [
+                        "1", null, { num: "2", señales: ["SD"], nombre: "Q1", desY: 2, }, null,
+                        "1", null, { num: "2", señales: ["SD"], nombre: "Q2", desY: 2, }, null,
+                        "1", null, { num: "2", señales: ["SD"], nombre: "Q3", desY: 2, }, null,
+                        "1", null, { num: "2", señales: ["SD"], nombre: "Q4", desY: 2, }, 
+                    ],
+                },
+                {   // Salidas Q5 a Q8
+                    "Cinta": "X12",
+                    "Simbolos": [
+                        null, "#Qsl5", null, "#/",
+                        null, "#Qsl6", null, "#/",
+                        null, "#Qsl7", null, "#/",
+                        null, "#Qsl8", null,
+                    ],
+                    "Numeracion": [
+                        "1", null, { num: "2", señales: ["SD"], nombre: "Q5", desY: 2, }, null,
+                        "1", null, { num: "2", señales: ["SD"], nombre: "Q6", desY: 2, }, null,
+                        "1", null, { num: "2", señales: ["SD"], nombre: "Q7", desY: 2, }, null,
+                        "1", null, { num: "2", señales: ["SD"], nombre: "Q8", desY: 2, },
+                    ],
+                },
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 72,
+            "Alto": 90,
+            "Familia": "Logo",
+            "Tipo": "modulo",
+        },
+    },
 }

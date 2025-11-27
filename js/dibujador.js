@@ -753,6 +753,7 @@ function dibujarPlanoGeneralDispositivos(CajetinX, CajetinY, dispositivos) {
             );
 
             // Rotación por proporción
+            let compensaX = 0; // compensar la X cuando giramos 45º para que quede mejor centrado
             let rot = 0, des_cx = 0, des_cy = 0;
             if (d.alto > d.ancho * 1.75) {
                 rot = 90; des_cx = 2.5;
@@ -760,9 +761,9 @@ function dibujarPlanoGeneralDispositivos(CajetinX, CajetinY, dispositivos) {
             }
             else if (d.alto > d.ancho) {
                 rot = 45;
-                des_cx = 1.75;
+                des_cx = 1.75; 
                 des_cy = 0.75;
-
+                compensaX = 2
             }
 
             const cx = (x1 + x2) / 2;
@@ -772,12 +773,12 @@ function dibujarPlanoGeneralDispositivos(CajetinX, CajetinY, dispositivos) {
             let multAncho = d.familia.toUpperCase().startsWith("LOGO") ? 0.7 : 1;
 
             entidades.push(
-                textoDXF(cx - des_cx, cy + 2.5 - des_cy, d.nombre, FONT_NAME, 'MC', rot, "Negrita", multAncho)
+                textoDXF(cx - des_cx + compensaX, cy + 2.5 - des_cy, d.nombre, FONT_NAME, 'MC', rot, "Negrita", multAncho)
             );
 
             const dimText = `${d.ancho} x ${d.alto} mm`;
             entidades.push(
-                textoDXF(cx + des_cx, cy - 2.5 + des_cy, dimText, FONT_DIM, 'MC', rot)
+                textoDXF(cx + des_cx + compensaX, cy - 2.5 + des_cy, dimText, FONT_DIM, 'MC', rot)
             );
 
             tramoAnchoAcum += d.ancho;

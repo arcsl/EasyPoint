@@ -607,10 +607,24 @@ function textoDXF(posX, posY, text, textsize = 2.5, align = 'ML', rotation = 0, 
       x0 = posX - desY;
       y0 = posY + desX;
       break;
-    default:
-      console.warn(`Rotación no soportada: ${rotation}° (usa 0, 90, 180, 270)`);
-      x0 = posX - desX;
-      y0 = posY - desY;
+    default: {
+      // Caso genérico: rotación arbitraria (45°, 30°, etc.)
+      const rad = rotation * Math.PI / 180;
+      const cos = Math.cos(rad);
+      const sin = Math.sin(rad);
+
+      const vx = desX;
+      const vy = desY;
+
+      // Rθ(v) = (vx*cos - vy*sin, vx*sin + vy*cos)
+      const rx = vx * cos - vy * sin;
+      const ry = vx * sin + vy * cos;
+
+      // p0 = pa - Rθ(v)
+      x0 = posX - rx;
+      y0 = posY - ry;
+      break;
+    }
   }
 
   let insertRotation;
