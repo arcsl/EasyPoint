@@ -2340,10 +2340,10 @@ const dispositivos = {
                     "Numeracion": [
                         null, null, { num: "I1", señales: ["EA", "ED"], nombre: "I1", desG: 12, desG0: 16, digLogo24: true, }, null, // digLogo24 vale para que las entradas digitales cojan el comun del L+ (G) y no del M (G0) en entradas 
                         null, null, { num: "I2", señales: ["EA", "ED"], nombre: "I2", desG: 12, desG0: 16, digLogo24: true, }, null, // que pueden ser analogicas o digitales ya que las analogicas siguen teniendo que coger comun del M (G0)
-                        null, null, { num: "I3", señales: ["ED"],       nombre: "I3",           desG0: 12,                  }, null,
-                        null, null, { num: "I4", señales: ["ED"],       nombre: "I4",           desG0: 12,                  }, null,
-                        null, null, { num: "I5", señales: ["ED"],       nombre: "I5",           desG0: 12,                  }, null,
-                        null, null, { num: "I6", señales: ["ED"],       nombre: "I6",           desG0: 12,                  }, null,
+                        null, null, { num: "I3", señales: ["ED"], nombre: "I3", desG0: 12, }, null,
+                        null, null, { num: "I4", señales: ["ED"], nombre: "I4", desG0: 12, }, null,
+                        null, null, { num: "I5", señales: ["ED"], nombre: "I5", desG0: 12, }, null,
+                        null, null, { num: "I6", señales: ["ED"], nombre: "I6", desG0: 12, }, null,
                         null, null, { num: "I7", señales: ["EA", "ED"], nombre: "I7", desG: 12, desG0: 16, digLogo24: true, }, null,
                         null, null, { num: "I8", señales: ["EA", "ED"], nombre: "I8", desG: 12, desG0: 16, digLogo24: true, },
                     ],
@@ -2594,13 +2594,13 @@ const dispositivos = {
                         null, "#Qsl1", null, "#/",
                         null, "#Qsl2", null, "#/",
                         null, "#Qsl3", null, "#/",
-                        null, "#Qsl4", null, 
+                        null, "#Qsl4", null,
                     ],
                     "Numeracion": [
                         "1", null, { num: "2", señales: ["SD"], nombre: "Q1", desY: 2, }, null,
                         "1", null, { num: "2", señales: ["SD"], nombre: "Q2", desY: 2, }, null,
                         "1", null, { num: "2", señales: ["SD"], nombre: "Q3", desY: 2, }, null,
-                        "1", null, { num: "2", señales: ["SD"], nombre: "Q4", desY: 2, }, 
+                        "1", null, { num: "2", señales: ["SD"], nombre: "Q4", desY: 2, },
                     ],
                 },
                 {   // Salidas Q5 a Q8
@@ -2711,13 +2711,13 @@ const dispositivos = {
                         null, "#Qsl1", null, "#/",
                         null, "#Qsl2", null, "#/",
                         null, "#Qsl3", null, "#/",
-                        null, "#Qsl4", null, 
+                        null, "#Qsl4", null,
                     ],
                     "Numeracion": [
                         "1", null, { num: "2", señales: ["SD"], nombre: "Q1", desY: 2, }, null,
                         "1", null, { num: "2", señales: ["SD"], nombre: "Q2", desY: 2, }, null,
                         "1", null, { num: "2", señales: ["SD"], nombre: "Q3", desY: 2, }, null,
-                        "1", null, { num: "2", señales: ["SD"], nombre: "Q4", desY: 2, }, 
+                        "1", null, { num: "2", señales: ["SD"], nombre: "Q4", desY: 2, },
                     ],
                 },
                 {   // Salidas Q5 a Q8
@@ -2752,7 +2752,7 @@ const dispositivos = {
                     "Cinta": "24Vcc",
                     "Simbolos": ["#U", "#U", "#U", "#U",],
                     "Numeracion": ["+", "+", "-", "-",],
-                    "Fijo": ["#G", null, "#G0", null, ],
+                    "Fijo": ["#G", null, "#G0", null,],
                 },
                 {   // entradas I1 a I8
                     "Cinta": "INPUTS",
@@ -2801,18 +2801,18 @@ const dispositivos = {
                 },
                 {   // RS485
                     "Cinta": "RS485",
-                    "Simbolos": ["#D","#|","#D"],
+                    "Simbolos": ["#D", "#|", "#D"],
                     "Numeracion": [
                         { num: "A", desX: -1, extraEstrecho: true },
                         { num: "GND", desX: 0, extraEstrecho: true },
                         { num: "B", desX: 1, extraEstrecho: true },
                     ],
                     "Opcional": [
-                        { nombre: "Modbus", dibujo: "#MoI",  desX: 2}, 
-                        null, 
-                        { nombre: "Modbus", dibujo: "#MoO",  desX: 6}, 
+                        { nombre: "Modbus", dibujo: "#MoI", desX: 2 },
+                        null,
+                        { nombre: "Modbus", dibujo: "#MoO", desX: 6 },
                     ],
-                },                
+                },
 
             ],
         ],
@@ -2822,5 +2822,222 @@ const dispositivos = {
             "Familia": "General",
             "Tipo": "controlador",
         },
-    },    
+    },
+    "WTV776": {
+        "Nombre": "WTV776",
+        "Paginas": [
+            [
+                {   // LAN
+                    "Simbolos": "#RED",
+                    "Numeracion": [null, "ETH", null,],
+                    "Opcional": [null, { nombre: "LAN", dibujo: "#int", Linea1: "A switch de comunicaciones en pag # - #", Linea2: "Ethernet UTP CAT-6", desX: 4, }, null],
+                },
+                {   // ABC
+                    "Cinta": "RS-232",                    
+                    "Subcinta": ["A", "B", "C",],
+                    "Simbolos": ["#|", "#|", "#|",],
+                    "Numeracion": ["1", "2", "3",],
+                },
+                {   // M1 M2
+                    "Cinta": "MASTER",
+                    "Subcinta": "M-Bus",
+                    "Simbolos": ["#|", "#|",],
+                    "Numeracion": ["4", "5",],
+                    "Opcional": [null, { nombre: "M-bus", dibujo: "#ext2", Linea1: "Bus de contadores (max 20)", Linea2: "2 x 0.8mm²", }],
+                },
+                {   // Entradas Digitales
+                    "Cinta": "DIGITAL IN",
+                    "Subcinta": ["C", null, null, "I1", null, null, "I2", null, null, "I3",],
+                    "Simbolos": ["#|", "#/", null, "#U", "#/", null, "#U", "#/", null, "#U"],
+                    "Numeracion": [
+                        "8", null,
+                        null, { num: "9", señales: ["ED"], nombre: "I1" }, null,
+                        null, { num: "10", señales: ["ED"], nombre: "I2" }, null,
+                        null, { num: "11", señales: ["ED"], nombre: "I3" },
+                    ],
+                },
+                {   // Salidas Digitales
+                    "Cinta": "DIGITAL OUT",
+                    "Subcinta": [
+                        "C", null, "O1", null,
+                        "C", null, "O2",
+                    ],
+                    "Simbolos": [
+                        null, "#Qs", null, "#/",
+                        null, "#Qs", null,
+                    ],
+                    "Numeracion": [
+                        "12", null, { num: "13", señales: ["SD"], nombre: "O1" }, null,
+                        "14", null, { num: "15", señales: ["SD"], nombre: "O2" },
+                    ],
+                },
+                {   // alimentacion 24V
+                    "Cinta": "PWR",
+                    "Subcinta": "24Vac/dc",
+                    "Simbolos": ["#U", "#U",],
+                    "Numeracion": ["16", "17",],
+                    "Fijo": ["#G0", "#G",],
+                },
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 71,
+            "Alto": 110,
+            "Familia": "Otros",
+            "Tipo": "controlador",
+        },
+    },
+    "WTV531": {
+        "Nombre": "WTV531",
+        "Paginas": [
+            [
+                {   // M-bus slave
+                    "Cinta": "SLAVE",
+                    "Subcinta": "M-bus",
+                    "Simbolos": ["#|", "#|",],
+                    "Numeracion": ["1", "2",],
+                },
+                {   // ABC
+                    "Cinta": "RS-232",                    
+                    "Subcinta": ["A", "B", "C",],
+                    "Simbolos": ["#|", "#|", "#|",],
+                    "Numeracion": ["3", "4", "5",],
+                    "Fijo": "#ABC",
+                },
+                {   // M1 M2
+                    "Cinta": "M-bus MASTER",
+                    "Simbolos": [
+                        "#|", "#|", "#/",
+                        "#|", "#|", "#/",
+                        "#|", "#|", "#/",
+                        "#|", "#|",
+                    ],
+                    "Numeracion": [
+                        "6", "7", null,
+                        "6", "7", null,
+                        "6", "7", null,
+                        "6", "7",
+                    ],
+                    "Opcional": [
+                        null, { nombre: "M-bus 1", dibujo: "#ext2", Linea1: "Bus de contadores portal 1", Linea2: "2 x 0.8mm²", desX: 18, }, null,
+                        null, { nombre: "M-bus 2", dibujo: "#ext2", Linea1: "Bus de contadores portal 2", Linea2: "2 x 0.8mm²", desX: 18, }, null,
+                        null, { nombre: "M-bus 3", dibujo: "#ext2", Linea1: "Bus de contadores portal 3", Linea2: "2 x 0.8mm²", desX: 18, }, null,
+                        null, { nombre: "M-bus 4", dibujo: "#ext2", Linea1: "Bus de contadores portal 4", Linea2: "2 x 0.8mm²", desX: 18, },
+                    ],
+                },
+                {   // alimentacion 24V
+                    "Cinta": "PWR",
+                    "Subcinta": "24Vac/dc",
+                    "Simbolos": ["#U", "#U",],
+                    "Numeracion": ["16", "17",],
+                    "Fijo": ["#G0", "#G",],
+                },
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 71,
+            "Alto": 110,
+            "Familia": "Otros",
+            "Tipo": "modulo",
+        },
+    },
+    "WTX631 LVL": {
+        "Nombre": "WTX631 LVL",
+        "Paginas": [
+            [
+                {   // M-bus slave
+                    "Cinta": "SLAVE",
+                    "Subcinta": "M-bus",
+                    "Simbolos": ["#|", "#|",],
+                    "Numeracion": ["1", "2",],
+                },
+                {   // ABC
+                    "Cinta": "RS-232",
+                    "Subcinta": ["A", "B", "C",],
+                    "Simbolos": ["#|", "#|", "#|",],
+                    "Numeracion": ["6", "7", "8",],
+                    "Fijo": "#ABC",
+                },
+                {   // DEF
+                    "Cinta": "RS-485",
+                    "Subcinta": ["D", "E", "F",],
+                    "Simbolos": ["#|", "#|", "#|",],
+                    "Numeracion": ["3", "4", "5",],
+                },                
+                {   // M1 M2
+                    "Cinta": "MASTER",
+                    "Subcinta": "M-bus",
+                    "Simbolos": [
+                        "#|", "#|", null,
+                        "#|", "#|", null,
+                        "#|", "#|", null,
+                        "#|", "#|",
+                    ],
+                    "Numeracion": [
+                        "9", "10", null,
+                        "9", "10", null,
+                        "9", "10", null,
+                        "9", "10",
+                    ],
+                    "Opcional": [
+                        null, { nombre: "M-bus 1", dibujo: "#ext2", Linea1: "Bus de contadores portal 1", Linea2: "2 x 0.8mm²", desX: 18, }, null,
+                        null, { nombre: "M-bus 2", dibujo: "#ext2", Linea1: "Bus de contadores portal 2", Linea2: "2 x 0.8mm²", desX: 18, }, null,
+                        null, { nombre: "M-bus 3", dibujo: "#ext2", Linea1: "Bus de contadores portal 3", Linea2: "2 x 0.8mm²", desX: 18, }, null,
+                        null, { nombre: "M-bus 4", dibujo: "#ext2", Linea1: "Bus de contadores portal 4", Linea2: "2 x 0.8mm²", desX: 18, },
+                    ],
+                },
+                {   // alimentacion
+                    "Cinta": "Vin LC",
+                    "Subcinta": ["VA", "VB",],
+                    "Simbolos": ["#U", "#U",],
+                    "Numeracion": ["11", "12",],
+                    "Fijo": ["#Va", "#Vb",],
+                },
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 71,
+            "Alto": 110,
+            "Familia": "Otros",
+            "Tipo": "modulo",
+        },
+    },
+    "WTX631 PWR": {
+        "Nombre": "WTX631 PWR",
+        "Paginas": [
+            [
+                {   // alimentacion 230V
+                    "Cinta": "Power",
+                    "Subcinta": "230Vac",
+                    "Simbolos": ["#U", "#U",],
+                    "Numeracion": ["1", "2",],
+                    "Fijo": ["#L", "#N",],
+                },
+                {   // tierra
+                    "Cinta": "#uTierra",
+                    "Simbolos": ["#|", "#|", ],
+                    "Numeracion": ["3", "4",]
+                },
+                {   // Vout LC
+                    "Cinta": "Vout LC",
+                    "Subcinta": ["VA", "VB",],                    
+                    "Simbolos": ["#D", "#D",],
+                    "Numeracion": ["5", "6",],
+                    "Fijo": "#VLC"
+                },
+                {   // Vout 24Vdc
+                    "Cinta": "24Vdc",
+                    "Subcinta": ["V+", "V-",],
+                    "Simbolos": ["#D", "#D",],
+                    "Numeracion": ["7", "8",],
+                },
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 71,
+            "Alto": 110,
+            "Familia": "Otros",
+            "Tipo": "modulo",
+        },
+    },        
 }
