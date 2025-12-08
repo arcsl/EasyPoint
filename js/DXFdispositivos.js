@@ -883,7 +883,7 @@ const dispositivos = {
         "Disposicion": {
             "Ancho": 45,
             "Alto": 100,
-            "Familia": "General",
+            "Familia": "Otros",
             "Tension230": false,
             "Tipo": "controlador",
         },
@@ -920,7 +920,7 @@ const dispositivos = {
         "Disposicion": {
             "Ancho": 45,
             "Alto": 100,
-            "Familia": "General",
+            "Familia": "Otros",
             "Tension230": false,
             "Tipo": "controlador",
         },
@@ -1882,6 +1882,123 @@ const dispositivos = {
             "Tipo": "controlador",
         },
     },
+    "RDG200KN": {
+        "Nombre": "RDG200KN",
+        "Paginas": [
+            [
+                {   // alimentacion 230V
+                    "Cinta": "230V~",
+                    "Simbolos": ["#U", "#U",],
+                    "Numeracion": ["L", "N",],
+                    "Fijo": ["#L", "#N", null, null,],
+                },
+                {   // entradas 
+                    "Simbolos": [
+                        null, "#U", "#/",
+                        "#-", "#U", "#/",
+                        null, "#UD",],
+                    "Numeracion": [
+                        null, { num: "X1", señales: ["ED"], nombre: "X1", desG0: 16, }, null,
+                        "M", { num: "X2", señales: ["EA", "ED"], nombre: "X2", }, null,
+                        null, { num: "U1", señales: ["EA", "ED", "SA"], nombre: "U1", desGO: 16, },
+                    ],
+                },
+                {   // Bus KNX
+                    "Simbolos": ["#UD", "#UD",],
+                    "Numeracion": [
+                        { num: "CE+", extraEstrecho: true, desX: -1 },
+                        { num: "CE-", extraEstrecho: true, desX: 1 },
+                    ],
+                    "Opcional": "#KNX",
+                },
+                {   // 3 velocidades
+                    "Simbolos": "#3V",
+                    "Numeracion": [
+                        null, null, { num: "Q1", señales: ["SD"], nombre: "Q1" }, null,
+                        null, null, { num: "Q2", señales: ["SD"], nombre: "Q2" }, null,
+                        null, null, { num: "Q3", señales: ["SD"], nombre: "Q3" },
+                    ],
+                },
+                {   // salidas digitales
+                    "Simbolos": [
+                        null, null, "#D", "#/",
+                        null, null, "#D", "#/",
+                        null, null, "#D", "#/",
+                        null, null, "#D"],
+                    "Numeracion": [
+                        null, null, { num: "Y1", señales: ["SD"], nombre: "Y1", desGO: 100, }, null,
+                        null, null, { num: "Y2", señales: ["SD"], nombre: "Y2", desGO: 100, }, null,
+                        null, null, { num: "Y3", señales: ["SD"], nombre: "Y3", desGO: 100, }, null,
+                        null, null, { num: "Y4", señales: ["SD"], nombre: "Y4", desGO: 100, },
+                    ],
+                },
+                {   // salidas analógicas
+                    "Simbolos": [null, null, "#D", null, "#|", "#-", "#D", null, null, "#-", "#D",],
+                    "Numeracion": [
+                        null, null, { num: "Y50", señales: ["SA"], nombre: "Y50", desG: 12, desGO: 16, },
+                    ],
+                },
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 92,
+            "Alto": 134,
+            "Tension24": false,
+            "Familia": "Synco",
+            "Tipo": "controlador",
+        },
+    },
+    "QMX3": {
+        "Nombre": "QMX3",
+        "Paginas": [
+            [
+                {   // Bus KNX
+                    "Simbolos": ["#UD", "#UD",],
+                    "Numeracion": [
+                        { num: "CE+", extraEstrecho: true, desX: -1 },
+                        { num: "CE-", extraEstrecho: true, desX: 1 },
+                    ],
+                    "Fijo": "#KNX",
+                },
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 88,
+            "Alto": 86,
+            "Tension230": false,
+            "Tension24": false,
+            "Familia": "KNX",
+            "Tipo": "controlador",
+        },
+    },
+    "N125": {
+        "Nombre": "N125",
+        "Paginas": [
+            [
+                {   // alimentacion 230V
+                    "Cinta": "230V~",
+                    "Simbolos": ["#U", "#U",],
+                    "Numeracion": ["L", "N",],
+                    "Fijo": ["#L", "#N", null, null,],
+                },
+                {   // Bus KNX
+                    "Simbolos": ["#UD", "#UD",],
+                    "Numeracion": [
+                        { num: "CE+", extraEstrecho: true, desX: -1 },
+                        { num: "CE-", extraEstrecho: true, desX: 1 },
+                    ],
+                    "Opcional": "#KNX",
+                },
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 72,
+            "Alto": 90,
+            "Tension24": false,
+            "Familia": "KNX",
+            "Tipo": "controlador",
+        },
+    },
     "RLU202": {
         "Nombre": "RLU202",
         "Paginas": [
@@ -2833,7 +2950,7 @@ const dispositivos = {
                     "Opcional": [null, { nombre: "LAN", dibujo: "#int", Linea1: "A switch de comunicaciones en pag # - #", Linea2: "Ethernet UTP CAT-6", desX: 4, }, null],
                 },
                 {   // ABC
-                    "Cinta": "RS-232",                    
+                    "Cinta": "RS-232",
                     "Subcinta": ["A", "B", "C",],
                     "Simbolos": ["#|", "#|", "#|",],
                     "Numeracion": ["1", "2", "3",],
@@ -2898,7 +3015,7 @@ const dispositivos = {
                     "Numeracion": ["1", "2",],
                 },
                 {   // ABC
-                    "Cinta": "RS-232",                    
+                    "Cinta": "RS-232",
                     "Subcinta": ["A", "B", "C",],
                     "Simbolos": ["#|", "#|", "#|",],
                     "Numeracion": ["3", "4", "5",],
@@ -2963,7 +3080,7 @@ const dispositivos = {
                     "Subcinta": ["D", "E", "F",],
                     "Simbolos": ["#|", "#|", "#|",],
                     "Numeracion": ["3", "4", "5",],
-                },                
+                },
                 {   // M1 M2
                     "Cinta": "MASTER",
                     "Subcinta": "M-bus",
@@ -3015,12 +3132,12 @@ const dispositivos = {
                 },
                 {   // tierra
                     "Cinta": "#uTierra",
-                    "Simbolos": ["#|", "#|", ],
+                    "Simbolos": ["#|", "#|",],
                     "Numeracion": ["3", "4",]
                 },
                 {   // Vout LC
                     "Cinta": "Vout LC",
-                    "Subcinta": ["VA", "VB",],                    
+                    "Subcinta": ["VA", "VB",],
                     "Simbolos": ["#D", "#D",],
                     "Numeracion": ["5", "6",],
                     "Fijo": "#VLC"
@@ -3039,5 +3156,5 @@ const dispositivos = {
             "Familia": "Otros",
             "Tipo": "modulo",
         },
-    },        
+    },
 }
