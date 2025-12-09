@@ -1,3 +1,8 @@
+#dibujarCont h4 {
+    border-bottom: 1px solid black;
+    background-color: #DED;
+}
+
 #dibujarCont {
     width: 1000px;
 }
@@ -113,7 +118,7 @@
     gap: 8px;
     cursor: pointer;
     user-select: none;
-    width: 120px;
+    width: 230px;
 }
 
 #dibujarCont .muestraTipo {

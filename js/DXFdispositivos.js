@@ -1754,7 +1754,7 @@ const dispositivos = {
                 {   // LAN
                     "Simbolos": [null, "#RED", null,],
                     "Numeracion": [null, "LAN", null,],
-                    "Opcional": "#int",
+                    "Fijo": "#int",
                     "Etiqueta": "A ROUTER O RACK DE COMUNICACIONES%ETHERNET CAT-6",
                 },
                 {   // Bus KNX
@@ -1790,7 +1790,7 @@ const dispositivos = {
                         { num: "CE-", desX: 1 },
                         null,
                     ],
-                    "Opcional": "#KNXsl",
+                    "Fijo": [ null, null, "#KNXsl", null, ],
                 },
                 {   // Contador 1
                     "Simbolos": [null, "#|", "#|", null,],
@@ -1835,13 +1835,13 @@ const dispositivos = {
         "Disposicion": {
             "Ancho": 40,
             "Alto": 72,
-            "Familia": "Synco",
+            "Familia": "KNX",
             "Tension24": false,
             "Tension230": false,
             "Tipo": "controlador",
         },
     },
-    "IN-KNX-701": {
+    "PASARELA KNX": {
         "Nombre": "IN-KNX-701",
         "Paginas": [
             [
@@ -1855,13 +1855,13 @@ const dispositivos = {
                     "Cinta": "PORT A",
                     "Simbolos": ["#UD", "#UD", "#/", "#UD", "#UD",],
                     "Numeracion": ["A1", "A2", null, "A3", "A4",],
-                    "Opcional": [null, null, null, null, "#KNXsl"],
+                    "Fijo": [null, null, null, null, "#KNXsl"],
                 },
                 {   // LAN
                     "Cinta": "Ethernet",
                     "Simbolos": "#RED",
                     "Numeracion": [null, "LAN", null,],
-                    "Opcional": "#int",
+                    "Fijo": "#int",
                     "Etiqueta": "A ROUTER O RACK DE COMUNICACIONES%ETHERNET CAT-6",
                 },
                 {   // PORT B
@@ -1869,7 +1869,7 @@ const dispositivos = {
                     "Subcinta": ["A+", "B-", "SGND",],
                     "Simbolos": ["#UD", "#UD", "#UD",],
                     "Numeracion": ["B1", "B2", "B3",],
-                    "Opcional": ["#ext", "#ext", "#ext",],
+                    "Fijo": ["#ext", "#ext", "#ext",],
                     "Etiqueta": "INTEGRACION COMUNICACION MODBUS RTU%3 x 1mm² APANTALLADO",
                 },
             ],
@@ -1877,7 +1877,7 @@ const dispositivos = {
         "Disposicion": {
             "Ancho": 88,
             "Alto": 90,
-            "Familia": "Synco",
+            "Familia": "KNX",
             "Tension230": false,
             "Tipo": "controlador",
         },
@@ -1944,7 +1944,7 @@ const dispositivos = {
             "Ancho": 92,
             "Alto": 134,
             "Tension24": false,
-            "Familia": "Synco",
+            "Familia": "KNX",
             "Tipo": "controlador",
         },
     },
@@ -2907,7 +2907,7 @@ const dispositivos = {
                     "Opcional": [null, { nombre: "LAN", dibujo: "#int", Linea1: "A switch de comunicaciones en pag # - #", Linea2: "Ethernet UTP CAT-6", desX: 4, }, null],
                 },
                 {   // Salidas Q1 a Q4
-                    "Cinta": "X11",
+                    "Cinta": "OUTPUTS",
                     "Simbolos": [null, "#Qsl1", null, "#/", null, "#Qsl2", null, "#/", null, "#Qsl3", null, "#/", null, "#Qsl4", null,],
                     "Numeracion": [
                         "1", null, { num: "2", señales: ["SD"], nombre: "Q1", desY: 2, }, null,
@@ -2925,9 +2925,9 @@ const dispositivos = {
                         { num: "B", desX: 1, extraEstrecho: true },
                     ],
                     "Opcional": [
-                        { nombre: "Modbus", dibujo: "#MoI", desX: 2 },
+                        { nombre: "Modbus In", dibujo: "#MoI", desX: 2, Linea1:"De anterior equipo", },
                         null,
-                        { nombre: "Modbus", dibujo: "#MoO", desX: 6 },
+                        { nombre: "Modbus Ou", dibujo: "#MoO", desX: 6, Linea1:"A proximo equipo", },
                     ],
                 },
 
@@ -2936,10 +2936,205 @@ const dispositivos = {
         "Disposicion": {
             "Ancho": 72,
             "Alto": 90,
-            "Familia": "General",
+            "Familia": "Modbus",
             "Tipo": "controlador",
         },
     },
+    "EM1.8U": {
+        "Nombre": "EM1.8U",
+        "Paginas": [
+            [
+                {   // entradas X1 a X4
+                    "Simbolos": [
+                        null, null, "#UD", "#/",
+                        null, "#|", "#UD", "#/",
+                        null, null, "#UD", "#/",
+                        null, "#|", "#UD",
+                    ],
+                    "Numeracion": [
+                        null, null, { num: "X1", señales: ["EA", "ED", "SA", ], nombre: "X1", desG: 12, desG0: 16, }, null,
+                        null, "#T", { num: "X2", señales: ["EA", "ED", "SA", ], nombre: "X2", desG: 12, }, null,
+                        null, null, { num: "X3", señales: ["EA", "ED", "SA", ], nombre: "X3", desG: 12, desG0: 16, }, null,
+                        null, "#T", { num: "X4", señales: ["EA", "ED", "SA", ], nombre: "X4", desG: 12, },
+                    ],
+                },
+                {   // entradas X5 a X8
+                    "Simbolos": [
+                        null, null, "#UD", "#/",
+                        null, "#|", "#UD", "#/",
+                        null, null, "#UD", "#/",
+                        null, "#|", "#UD",
+                    ],
+                    "Numeracion": [
+                        null, null, { num: "X5", señales: ["EA", "ED", "SA", ], nombre: "X5", desG: 12, desG0: 16, }, null,
+                        null, "#T", { num: "X6", señales: ["EA", "ED", "SA", ], nombre: "X6", desG: 12, }, null,
+                        null, null, { num: "X7", señales: ["EA", "ED", "SA", ], nombre: "X7", desG: 12, desG0: 16, }, null,
+                        null, "#T", { num: "X8", señales: ["EA", "ED", "SA", ], nombre: "X8", desG: 12, },
+                    ],
+                },               
+                {   // alimentacion 24V
+                    "Cinta": "AC/DC",
+                    "Simbolos": ["#U", "#U", ],
+                    "Numeracion": [
+                        { num: "24V", desX: -1, extraEstrecho: true } ,
+                        "#T",
+                    ],
+                    "Fijo": ["#G", "#G0",],
+                },                
+                {   // RS485
+                    "Cinta": "RS485",
+                    "Simbolos": ["#D", "#|", "#D",],
+                    "Numeracion": ["+", "#T", "-", ],
+                    "Opcional": [
+                        { nombre: "Modbus In", dibujo: "#MoI", desX: 2, Linea1:"De anterior equipo", },
+                        null,
+                        { nombre: "Modbus Ou", dibujo: "#MoO", desX: 6, Linea1:"A proximo equipo", },
+                    ],
+                },
+
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 75,
+            "Alto": 104,
+            "Familia": "Modbus",
+            "Tipo": "controlador",
+        },
+    },
+    "EM1.8D": {
+        "Nombre": "EM1.8D",
+        "Paginas": [
+            [
+                {   // entradas D1 a D4
+                    "Simbolos": [
+                        null, "#U", "#/",
+                        "#|", "#U", "#/",
+                        null, "#U", "#/",
+                        "#|", "#U",
+                    ],
+                    "Numeracion": [
+                        null, { num: "D1", señales: ["ED"], nombre: "D1", desG0: 16, }, null,
+                        "#T", { num: "D2", señales: ["ED"], nombre: "D2", }, null,
+                        null, { num: "D3", señales: ["ED"], nombre: "D3", desG0: 16, }, null,
+                        "#T", { num: "D4", señales: ["ED"], nombre: "D4", },
+                    ],
+                },
+                {   // entradas D5 a D8
+                    "Simbolos": [
+                        null, "#UD", "#/",
+                        "#|", "#UD", "#/",
+                        null, "#UD", "#/",
+                        "#|", "#UD",
+                    ],
+                    "Numeracion": [
+                        null, { num: "D5", señales: ["ED"], nombre: "D5", desG0: 16, }, null,
+                        "#T", { num: "D6", señales: ["ED"], nombre: "D6", }, null,
+                        null, { num: "D7", señales: ["ED"], nombre: "D7", desG0: 16, }, null,
+                        "#T", { num: "D8", señales: ["ED"], nombre: "D8", },
+                    ],
+                },               
+                {   // alimentacion 24V
+                    "Cinta": "AC/DC",
+                    "Simbolos": ["#U", "#U", ],
+                    "Numeracion": [
+                        { num: "24V", desX: -1, extraEstrecho: true } ,
+                        "#T",
+                    ],
+                    "Fijo": ["#G", "#G0",],
+                },                
+                {   // RS485
+                    "Cinta": "RS485",
+                    "Simbolos": ["#D", "#|", "#D",],
+                    "Numeracion": ["+", "#T", "-", ],
+                    "Opcional": [
+                        { nombre: "Modbus In", dibujo: "#MoI", desX: 2, Linea1:"De anterior equipo", },
+                        null,
+                        { nombre: "Modbus Ou", dibujo: "#MoO", desX: 6, Linea1:"A proximo equipo", },
+                    ],
+                },
+
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 75,
+            "Alto": 104,
+            "Familia": "Modbus",
+            "Tipo": "controlador",
+        },
+    },          
+    "EM1.8R": {
+        "Nombre": "EM1.8R",
+        "Paginas": [
+            [
+                {   // salidas DO1 a DO4
+                    "Simbolos": [
+                        null, null, null, null, 
+                        null, null, "#Q8R", "#/", 
+                        null, null, null, null, 
+                        null, null, "#Q8R",
+                    ],  
+                    "Numeracion": [
+                        "C1-2", null, { num: "DO1", señales: ["SD"], nombre: "DO1" }, null,
+                        null, null, { num: "DO2", señales: ["SD"], nombre: "DO2" }, null,
+                        "C3-4", null, { num: "DO3", señales: ["SD"], nombre: "DO3" }, null,
+                        null, null, { num: "DO4", señales: ["SD"], nombre: "DO4" }, 
+                    ],
+                    "Fijo": [
+                        "#G", null, null, null, 
+                        null, null, null, null, 
+                        "#G", null, null, null, 
+                        null, null, null,
+                    ],  
+                },
+                {   // salidas DO1 a DO4
+                    "Simbolos": [
+                        null, null, null, null, 
+                        null, null, "#Q8R", "#/", 
+                        null, null, null, null, 
+                        null, null, "#Q8R",
+                    ],  
+                    "Numeracion": [
+                        "C5-6", null, { num: "DO5", señales: ["SD"], nombre: "DO5" }, null,
+                        null, null, { num: "DO6", señales: ["SD"], nombre: "DO6" }, null,
+                        "C7-8", null, { num: "DO7", señales: ["SD"], nombre: "DO7" }, null,
+                        null, null, { num: "DO8", señales: ["SD"], nombre: "DO8" }, 
+                    ],
+                    "Fijo": [
+                        "#G", null, null, null, 
+                        null, null, null, null, 
+                        "#G", null, null, null, 
+                        null, null, null,
+                    ],  
+                },
+                {   // alimentacion 24V
+                    "Cinta": "AC/DC",
+                    "Simbolos": ["#U", "#U", ],
+                    "Numeracion": [
+                        { num: "24V", desX: -1, extraEstrecho: true } ,
+                        "#T",
+                    ],
+                    "Fijo": ["#G", "#G0",],
+                },                
+                {   // RS485
+                    "Cinta": "RS485",
+                    "Simbolos": ["#D", "#|", "#D",],
+                    "Numeracion": ["+", "#T", "-", ],
+                    "Opcional": [
+                        { nombre: "Modbus In", dibujo: "#MoI", desX: 2, Linea1:"De anterior equipo", },
+                        null,
+                        { nombre: "Modbus Ou", dibujo: "#MoO", desX: 6, Linea1:"A proximo equipo", },
+                    ],
+                },
+
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 75,
+            "Alto": 104,
+            "Familia": "Modbus",
+            "Tipo": "controlador",
+        },
+    },          
     "WTV776": {
         "Nombre": "WTV776",
         "Paginas": [
@@ -3000,7 +3195,7 @@ const dispositivos = {
         "Disposicion": {
             "Ancho": 71,
             "Alto": 110,
-            "Familia": "Otros",
+            "Familia": "Contaje",
             "Tipo": "controlador",
         },
     },
@@ -3054,7 +3249,7 @@ const dispositivos = {
         "Disposicion": {
             "Ancho": 71,
             "Alto": 110,
-            "Familia": "Otros",
+            "Familia": "Contaje",
             "Tipo": "modulo",
         },
     },
@@ -3115,7 +3310,7 @@ const dispositivos = {
         "Disposicion": {
             "Ancho": 71,
             "Alto": 110,
-            "Familia": "Otros",
+            "Familia": "Contaje",
             "Tipo": "modulo",
         },
     },
@@ -3153,7 +3348,7 @@ const dispositivos = {
         "Disposicion": {
             "Ancho": 71,
             "Alto": 110,
-            "Familia": "Otros",
+            "Familia": "Contaje",
             "Tipo": "modulo",
         },
     },

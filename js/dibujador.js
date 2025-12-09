@@ -128,21 +128,21 @@ function elimDispositivo(carrilIndex, dispIndex) {
 
 function moveDispositivo(carrilIndex, dispIndex, dir) {
     const carrilActual = proyectoActual.Asignacion[carrilIndex];
-    
+
     const nuevoIndex = dispIndex + dir;
     if (nuevoIndex < 0) {
         // no deberia ser posible que ocurra pero si es el primer carril salir sin hacer nada
         if (carrilIndex === 0) return;
-        
+
         //pasar al final del carril anterior
         const carrilDestino = proyectoActual.Asignacion[carrilIndex + dir];
         const first = carrilActual.shift(); // saca el primer elemento
         carrilDestino.push(first); // lo agrega al final
-        
+
     } else if (nuevoIndex >= carrilActual.length) {
         // no deberia ser posible que ocurra pero si es el ultimo carril salir sin hacer nada
         if (carrilIndex === proyectoActual.Asignacion.length - 1) return;
-        
+
         // pasar al principio del carril siguiente
         const carrilDestino = proyectoActual.Asignacion[carrilIndex + dir];
         const last = carrilActual.pop(); // saca el último elemento
@@ -266,13 +266,10 @@ function renderDispositivo(devicesContainer, carrilIndex, dispIndex, dispData) {
 
 function familiaVisible(fam) {
 
-    const familiasConRadio = new Set(["General", "PX", "Synco", "RLU", "Logo"]);
+    const familiasConRadio = new Set(["General", "PX", "Synco", "RLU", "Logo", "KNX", "Contaje", "Modbus"]);
 
-    // Si la familia NO está controlada por los radios (por ejemplo "General"),
-    // siempre se muestra.
-    if (!familiasConRadio.has(fam)) {
-        return true;
-    }
+    // Si la familia NO está en ninguna categoria de los radios, se muestra esi esta seleccionada la categoria "General".
+    if (!familiasConRadio.has(fam)) return UI.General.checked;
 
     // Obtener la familia seleccionada en los radios
     const checked = document.querySelector('input[name="familiaFiltro"]:checked');
@@ -280,7 +277,7 @@ function familiaVisible(fam) {
 
     // Solo visible si su familia coincide con la seleccionada
     return fam === familiaSeleccionada;
-    
+
 }
 
 // ================== SEÑALES ==================
@@ -761,7 +758,7 @@ function dibujarPlanoGeneralDispositivos(CajetinX, CajetinY, dispositivos) {
             }
             else if (d.alto > d.ancho) {
                 rot = 45;
-                des_cx = 1.75; 
+                des_cx = 1.75;
                 des_cy = 0.75;
                 compensaX = 2
             }
