@@ -425,6 +425,8 @@ function updateSelectsSeniales() {
 
     const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
+    let canalesExtraOcupados = 0;
+
     // 1) Copia del listado original
     const pool = structuredClone(proyectoActual.Listado);
 
@@ -448,7 +450,10 @@ function updateSelectsSeniales() {
     });
 
     // 3) Reconstruir selects DOM
-    document.querySelectorAll("select.borne-select").forEach(sel => {
+    const selectores = Array.from(document.querySelectorAll("select.borne-select"));
+    for (let i = 0; i < selectores.length; i++) {
+
+        const sel = selectores[i];
         const permitidas = JSON.parse(sel.dataset.seniales || "[]");
 
         // Guardar la selección actual (si es UUID válido)
@@ -462,38 +467,94 @@ function updateSelectsSeniales() {
         }
 
         sel.innerHTML = "";
-        sel.appendChild(new Option("", "")); // opción vacía
 
-        // Poblar solo con señales que tengan ID válido
-        permitidas.forEach(tipo => {
-            (pool[tipo] || [])
-                .filter(sig => sig && sig.ID && uuidRegex.test(sig.ID))
-                .forEach(sig => {
-                    sel.appendChild(new Option(sig.Linea1, JSON.stringify(sig)));
-                });
-        });
+        if (canalesExtraOcupados > 0) {
+            sel.disabled = true;
+            canalesExtraOcupados--;
+        } else {
+            sel.disabled = false;
+            if (sigActual) canalesExtraOcupados = sigActual.Numero - 1;
 
-        // Reinsertar selección actual si sigue siendo válida
-        if (sigActual) {
+            sel.appendChild(new Option("", "")); // opción vacía
 
-            // Verificar si la ID está en Asignacion
-            const encontrada = proyectoActual.Asignacion
-                .flat()
-                .some(obj => Object.values(obj).includes(sigActual.ID));
+            // Poblar solo con señales que tengan ID válido
+            permitidas.forEach(tipo => {
+                (pool[tipo] || [])
+                    .filter(sig => sig && sig.ID && uuidRegex.test(sig.ID))
+                    .forEach(sig => {
 
-            // Si es asi, buscar la uuid dentro de Listado para actualizar Linea 1
-            if (encontrada) {
-                for (const grupo of Object.values(proyectoActual.Listado)) {
-                    const item = grupo.find(e => e.ID === sigActual.ID);
-                    if (item) sigActual = item;
+                        // Si la señal ocupa más de un canal, comprobar que haya
+                        // suficientes selects siguientes que permitan el mismo tipo
+                        // y que además estén vacíos (sin selección).
+                        const numero = Number(sig.Numero) || 1;
+                        let puedeOcupar = true;
+                        if (numero > 1) {
+                            // comprobar existencia de los siguientes numero-1 selects
+                            for (let offset = 1; offset < numero; offset++) {
+                                const idx = i + offset;
+                                const selSiguiente = selectores[idx];
+
+                                // si no existe el select siguiente -> no se puede usar
+                                if (!selSiguiente) {
+                                    puedeOcupar = false;
+                                    break;
+                                }
+
+                                // comprobar que el siguiente admite el mismo tipo
+                                const permitidasSgte = JSON.parse(selSiguiente.dataset.seniales || "[]");
+                                if (!Array.isArray(permitidasSgte) || !permitidasSgte.includes(tipo)) {
+                                    puedeOcupar = false;
+                                    break;
+                                }
+
+                                // comprobar que el siguiente no tenga seleccionado nada
+                                // (consideramos "vacío" si .value es falsy o JSON parse no contiene ID válido)
+                                const val = selSiguiente.value;
+                                if (val) {
+                                    try {
+                                        const parsed = JSON.parse(val);
+                                        if (parsed && parsed.ID && uuidRegex.test(parsed.ID)) {
+                                            // ya tiene selección -> no puede ocupar
+                                            puedeOcupar = false;
+                                            break;
+                                        }
+                                    } catch {
+                                        // si el valor no es JSON, tratamos como ocupado por seguridad
+                                        puedeOcupar = false;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+
+                        if (!puedeOcupar) return; // saltar esta señal si no cumple condiciones
+
+                        sel.appendChild(new Option(sig.Linea1, JSON.stringify(sig)));
+                    });
+            });
+
+            // Reinsertar selección actual si sigue siendo válida
+            if (sigActual) {
+
+                // Verificar si la ID está en Asignacion
+                const encontrada = proyectoActual.Asignacion
+                    .flat()
+                    .some(obj => Object.values(obj).includes(sigActual.ID));
+
+                // Si es asi, buscar la uuid dentro de Listado para actualizar Linea 1
+                if (encontrada) {
+                    for (const grupo of Object.values(proyectoActual.Listado)) {
+                        const item = grupo.find(e => e.ID === sigActual.ID);
+                        if (item) sigActual = item;
+                    }
                 }
-            }
 
-            const opt = new Option(sigActual.Linea1, JSON.stringify(sigActual));
-            opt.selected = true;
-            sel.add(opt, 1); // la inserta como segunda opción ( 2ª = index 1 ) para dejar la opcion vacia la primera
+                const opt = new Option(sigActual.Linea1, JSON.stringify(sigActual));
+                opt.selected = true;
+                sel.add(opt, 1); // la inserta como segunda opción ( 2ª = index 1 ) para dejar la opcion vacia la primera
+            }
         }
-    });
+    }
 }
 
 function findTipoSenial(id) {
