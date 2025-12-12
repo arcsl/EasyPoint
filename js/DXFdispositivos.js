@@ -2337,7 +2337,7 @@ const dispositivos = {
             ],
         ],
         "Disposicion": {
-            "Ancho": 36,
+            "Ancho": 13,
             "Alto": 90,
             "Familia": "Logo",
             "Tipo": "controlador",
@@ -2360,12 +2360,58 @@ const dispositivos = {
             ],
         ],
         "Disposicion": {
-            "Ancho": 18,
+            "Ancho": 36,
             "Alto": 90,
             "Familia": "Logo",
             "Tipo": "controlador",
         },
     },
+    "LOGO POWER 2,5A": {
+        "Nombre": "LOGO POWER",
+        "Paginas": [
+            [
+                {   // alimentacion 230V
+                    "Simbolos": ["#U", "#U",],
+                    "Numeracion": ["L1", "N",],
+                    "Fijo": ["#L", "#N",],
+                },
+                {   // Salida 24vCC
+                    "Simbolos": ["#D", "#D", "#D", "#D",],
+                    "Numeracion": ["+", "+", "-", "-",],
+                    "Fijo": ["#G", null, "#G0", null,],
+                },
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 54,
+            "Alto": 90,
+            "Familia": "Logo",
+            "Tipo": "controlador",
+        },
+    },
+    "LOGO POWER 4A": {
+        "Nombre": "LOGO POWER",
+        "Paginas": [
+            [
+                {   // alimentacion 230V
+                    "Simbolos": ["#U", "#U",],
+                    "Numeracion": ["L1", "N",],
+                    "Fijo": ["#L", "#N",],
+                },
+                {   // Salida 24vCC
+                    "Simbolos": ["#D", "#D", "#D", "#D",],
+                    "Numeracion": ["+", "+", "-", "-",],
+                    "Fijo": ["#G", null, "#G0", null,],
+                },
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 90,
+            "Alto": 90,
+            "Familia": "Logo",
+            "Tipo": "controlador",
+        },
+    },        
     "LOGO 230 RCE": {
         "Nombre": "LOGO 230 RCE",
         "Paginas": [
