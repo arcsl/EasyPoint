@@ -1012,77 +1012,138 @@ function interpretarNarrativa(texto, bloque) {
 
     if (!texto) return "";
 
-    // 1 Condicional: {{ ... }}{Ref} → Muestra solo si el elemento Ref está "checked"
-    texto = texto.replace(/\{\{(.*?)\}\}\{(.*?)\}/g, (match, contenido, ref) => {
-        const elem = bloque.Elementos.find(e => e.Ref === ref);
-        return (elem && elem.Checked) ? contenido : "";
-    });
-
-    // 2 Condicional por cantidad > 1: [[ ... ]]{Ref}
-    texto = texto.replace(/\[\[(.*?)\]\]\{(.*?)\}/g, (match, contenido, ref) => {
-        const elem = bloque.Elementos.find(e => e.Ref === ref);
-        return (elem && elem.Cantidad > 1) ? contenido : "";
-    });
-
-    // 3 Multiples checks <opcion1 / opcion2>
-    texto = texto.replace(/<(.*?)>/g, (match, opciones) => {
-        if (opciones.includes("|")) {
-            const opts = opciones.split("|").map(o => o.trim());
-            const checkboxes = opts.map(o => {
-                const checked = o.startsWith("+");
-                const label = o.replace(/^\+/, "").trim();
-                return `<br><input type="checkbox" onchange="guardaCambiosMemoria()" ${checked ? "checked" : ""}><label class="narrativa-checkbox">${label}</label>`;
-            }).join("\n");
-            return `<span class="narrativa-checkbox-group">${checkboxes}</span>`;
-        }
-        return match;
-    });
-
-    // 4 Propiedad de un elemento: [{Propiedad}]{Ref}
-    texto = texto.replace(/\[\{(.*?)\}\]\{(.*?)\}/g, (match, prop, ref) => {
-        const elem = bloque.Elementos.find(e => e.Ref === ref) || (ref === "MainBloc" ? bloque : null);
-        if (!elem) return "";
-
-        // Si la propiedad es "Opcion", se devuelve el nombre de la opción seleccionada
-        if (prop === "Opcion" && elem.Opciones && elem.Opciones.length > 0) {
-            const seleccion = elem.Opciones[elem.Opcion] || {};
-            return seleccion.Nombre || "";
-        }
-
-        // Caso general
-        return (elem && prop in elem) ? elem[prop] : "";
-    });
-
-    // 5 Selección por cantidad: [opcion1 / opcion2]{Ref}
-    texto = texto.replace(/\[(?=[^[\]]*\/)(.*?)\/(.*?)\]\{(.*?)\}/g, (match, singular, plural, ref) => {
-        const elem = bloque.Elementos.find(e => e.Ref === ref);
-        const cantidad = elem ? (elem.Cantidad || 0) : 0;
-        return cantidad > 1 ? plural : singular;
-    });
-
-    // 6 Selector editable por el usuario: [op1 | op2 | op3]
-    texto = texto.replace(/\[(?=[^[\]]*\|)(.*?)\]/g, (match, opciones) => {
-        if (opciones.includes("|")) {
-            const opts = opciones.split("|").map(o => o.trim());
-            const select = `<select class="narrativa-select" onchange="guardaCambiosMemoria()">${opts.map(o => `<option>${o}</option>`).join("")}</select>`;
-            return select;
-        }
-        return match; // se deja intacto si no contiene "|"
-    });
-
-    // 7 Limpieza de referencias sueltas: {...}
-    texto = texto.replace(/\{.*?\}/g, "");
-
-    // 8 Eliminar abreviaturas
-    texto = texto
-        .replace(/\bTemp /g, "Temperatura ")
-        .replace(/\bTemp, /g, "Temperatura, ")
-        .replace(/\bHum /g, "Humedad ")
-        .replace(/\bCO2\b/gi, "CO<sub>2</sub>");
+    texto = resolverCondicionales(texto, bloque);
+    texto = resolverMultiplesChecks(texto);
+    texto = resolverPropiedades(texto, bloque);
+    texto = resolverCantidad(texto, bloque);
+    texto = resolverSelectores(texto);
+    texto = limpiarReferencias(texto);
+    texto = normalizarTexto(texto);
 
     return texto.trim();
 
+    function resolverCondicionales(texto, bloque) {
+
+        // {{ ... }}{condición}
+        texto = texto.replace(/\{\{(.*?)\}\}\{(.*?)\}/g, (match, contenido, refExpr) => {
+            return evaluarCondicion(refExpr, bloque) ? contenido : "";
+        });
+
+        // [[ ... ]]{Ref} se mantiene igual (cantidad)
+        texto = texto.replace(/\[\[(.*?)\]\]\{(.*?)\}/g, (match, contenido, ref) => {
+            const elem = bloque.Elementos.find(e => e.Ref === ref);
+            return (elem && elem.Cantidad > 1) ? contenido : "";
+        });
+
+        return texto;
+    }
+
+    function resolverMultiplesChecks(texto) {
+
+        return texto.replace(/<(.*?)>/g, (match, opciones) => {
+
+            if (!opciones.includes("|")) return match;
+
+            const opts = opciones.split("|").map(o => o.trim());
+
+            const checkboxes = opts.map(o => {
+                const checked = o.startsWith("+");
+                const label = o.replace(/^\+/, "").trim();
+
+                return `<br><input type="checkbox" onchange="guardaCambiosMemoria()" ${checked ? "checked" : ""}>
+                    <label class="narrativa-checkbox">${label}</label>`;
+            }).join("\n");
+
+            return `<span class="narrativa-checkbox-group">${checkboxes}</span>`;
+        });
+    }
+
+    function resolverPropiedades(texto, bloque) {
+
+        return texto.replace(/\[\{(.*?)\}\]\{(.*?)\}/g, (match, prop, ref) => {
+
+            const elem = bloque.Elementos.find(e => e.Ref === ref)
+                || (ref === "MainBloc" ? bloque : null);
+
+            if (!elem) return "";
+
+            if (prop === "Opcion" && elem.Opciones && elem.Opciones.length > 0) {
+                const seleccion = elem.Opciones[elem.Opcion] || {};
+                return seleccion.Nombre || "";
+            }
+
+            return (prop in elem) ? elem[prop] : "";
+        });
+    }
+
+    function resolverCantidad(texto, bloque) {
+
+        return texto.replace(/\[(?=[^[\]]*\/)(.*?)\/(.*?)\]\{(.*?)\}/g,
+            (match, singular, plural, ref) => {
+
+                const elem = bloque.Elementos.find(e => e.Ref === ref);
+                if (!elem || !elem.Checked) return singular;
+                const cantidad = elem.Cantidad || 0;
+
+                return cantidad > 1 ? plural : singular;
+
+            }
+        );
+    }
+
+    function resolverSelectores(texto) {
+
+        return texto.replace(/\[(?=[^[\]]*\|)(.*?)\]/g, (match, opciones) => {
+
+            if (!opciones.includes("|")) return match;
+
+            const opts = opciones.split("|").map(o => o.trim());
+
+            return `<select class="narrativa-select" onchange="guardaCambiosMemoria()">
+                    ${opts.map(o => `<option>${o}</option>`).join("")}
+                </select>`;
+        });
+    }
+
+    function limpiarReferencias(texto) {
+        return texto.replace(/\{.*?\}/g, "");
+    }
+
+    function normalizarTexto(texto) {
+
+        return texto
+            .replace(/\bTemp /g, "Temperatura ")
+            .replace(/\bTemp, /g, "Temperatura, ")
+            .replace(/\bHum /g, "Humedad ")
+            .replace(/\bCO2\b/gi, "CO<sub>2</sub>");
+    }
+
 }
+
+function evaluarCondicion(refExpr, bloque) {
+
+    if (!refExpr) return false;
+
+    // OR
+    if (refExpr.includes("|")) {
+        return refExpr.split("|").some(ref => evaluarCondicion(ref.trim(), bloque));
+    }
+
+    // AND
+    if (refExpr.includes("&")) {
+        return refExpr.split("&").every(ref => evaluarCondicion(ref.trim(), bloque));
+    }
+
+    // NOT
+    if (refExpr.startsWith("!")) {
+        return !evaluarCondicion(refExpr.slice(1), bloque);
+    }
+
+    // Ref simple
+    const elem = bloque.Elementos.find(e => e.Ref === refExpr);
+    return !!(elem && elem.Checked);
+}
+
 
 function guardaCambiosMemoria() {
 

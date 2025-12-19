@@ -7,10 +7,10 @@ const partesNarrativa = ["Descripcion", "Elementos", "Funcionamiento"];
 const esq = {
 
 	// Vacio para añadir señales en listado de señales
-	VacioEA_1:  (Nombre = "") => ({ Nombre, Tipo: "EA", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa", "Pasiva", "Activa", "Bus_LTE",], }),
-	VacioED_1:  (Nombre = "") => ({ Nombre, Tipo: "ED", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa", "Rele", "Contactor", "Termico", "Bus_LTE",], }),
-	VacioSA_1:  (Nombre = "") => ({ Nombre, Tipo: "SA", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa", "Actuador", "Bus_LTE",], }),
-	VacioSD_1:  (Nombre = "") => ({ Nombre, Tipo: "SD", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa", "Rele", "Contactor", "Bus_LTE",], }),
+	VacioEA_1: (Nombre = "") => ({ Nombre, Tipo: "EA", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa", "Pasiva", "Activa", "Bus_LTE",], }),
+	VacioED_1: (Nombre = "") => ({ Nombre, Tipo: "ED", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa", "Rele", "Contactor", "Termico", "Bus_LTE",], }),
+	VacioSA_1: (Nombre = "") => ({ Nombre, Tipo: "SA", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa", "Actuador", "Bus_LTE",], }),
+	VacioSD_1: (Nombre = "") => ({ Nombre, Tipo: "SD", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa", "Rele", "Contactor", "Bus_LTE",], }),
 
 	//EA
 	PasivaEA_1: (Nombre = "") => ({ Nombre, Tipo: "EA", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Pasiva", "Activa"], }),
@@ -21,15 +21,15 @@ const esq = {
 	//ED
 	SimpleED_1: (Nombre = "") => ({ Nombre, Tipo: "ED", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa",], }),
 	EntradED_1: (Nombre = "") => ({ Nombre, Tipo: "ED", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa", "Rele",], }),
-	MotorED_1:  (Nombre = "") => ({ Nombre, Tipo: "ED", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa", "Rele", "Contactor", "Termico",], }),
+	MotorED_1: (Nombre = "") => ({ Nombre, Tipo: "ED", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa", "Rele", "Contactor", "Termico",], }),
 	//SA
 	SimpleSA_1: (Nombre = "") => ({ Nombre, Tipo: "SA", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa",], }),
 	ActuadSA_1: (Nombre = "") => ({ Nombre, Tipo: "SA", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 1, Opciones: ["Externa", "Actuador",], }),
 	//SD
 	SimpleSD_1: (Nombre = "") => ({ Nombre, Tipo: "SD", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Externa",], }),
 	SalidaSD_1: (Nombre = "") => ({ Nombre, Tipo: "SD", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 1, Opciones: ["Externa", "Rele",], }),
-	MotorSD_1:  (Nombre = "") => ({ Nombre, Tipo: "SD", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 1, Opciones: ["Externa", "Rele", "Contactor",], }),
-	MotorSD_3:  (Nombre = "") => ({ Nombre, Tipo: "SD", Numero: 3, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Motor3V",], }),
+	MotorSD_1: (Nombre = "") => ({ Nombre, Tipo: "SD", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 1, Opciones: ["Externa", "Rele", "Contactor",], }),
+	MotorSD_3: (Nombre = "") => ({ Nombre, Tipo: "SD", Numero: 3, Linea1: "", Linea2: "", tagNumber: "", Opcion: 0, Opciones: ["Motor3V",], }),
 	ActuadSD_1: (Nombre = "") => ({ Nombre, Tipo: "SD", Numero: 1, Linea1: "", Linea2: "", tagNumber: "", Opcion: 3, Opciones: ["Externa", "Rele", "Simple", "Conmutada",], }),
 	ActuadSD_2: (Nombre = "") => ({ Nombre, Tipo: "SD", Numero: 2, Linea1: "", Linea2: "", tagNumber: "", Opcion: 1, Opciones: ["Externa", "Actuador",], }),
 }
@@ -62,7 +62,7 @@ const opt = {
 	ActuadorTN2M: (Nombre) => ({ Nombre, Seniales: { "ED": 2, "SD": 1, }, Esquema: [esq.EntradED_1("FC Abierto"), esq.EntradED_1("FC Cerrado"), esq.ActuadSD_1(),], }),
 
 	// elemento
-	SoloMP:    (Nombre) => ({ Nombre, Seniales: { "SD": 1, }, Esquema: [esq.SalidaSD_1(),], }),
+	SoloMP: (Nombre) => ({ Nombre, Seniales: { "SD": 1, }, Esquema: [esq.SalidaSD_1(),], }),
 
 	//motor
 	MPyEstado: (Nombre) => ({ Nombre, Seniales: { "ED": 1, "SD": 1, }, Esquema: [esq.EntradED_1("Estado"), esq.SalidaSD_1("M/P"),], }),
@@ -85,7 +85,7 @@ const elem = {
 
 	//sensores 
 	SensorAire: (Nombre, Cantidad, Ref = "") => ({ Nombre, Cantidad, Ref, Opciones: [opt.SensorPasi("Temperatura"), opt.SensorAct2("Temp y Hum"), opt.SensorAct2("Temp y CO2"), opt.SensorAct3("Temp, Hum y CO2"),], }),
-	SondaTermos: (Nombre, Cantidad, Ref = "") => ({ Nombre, Cantidad, Ref, Opciones: [opt.SensorPasi("Temperatura"), opt.SensorDigi("Termostato"),], }),
+	SondaTermos: (Nombre, Cantidad, Ref = "") => ({ Nombre, Cantidad, Ref, Opciones: [opt.SensorPasi("Sonda"), opt.SensorDigi("Termostato"),], }),
 	SensorPres: (Nombre, Cantidad, Ref = "") => ({ Nombre, Cantidad, Ref, Opciones: [opt.SensorDigi("Presostato"), opt.SensorAct1("Sonda"),], }),
 	SoloActiva: (Nombre, Cantidad, Ref = "") => ({ Nombre, Cantidad, Ref, Opciones: [opt.SensorAct1("Sonda"),], }),
 
@@ -245,6 +245,58 @@ function blocks() {
 	];
 }
 
+/*
+----- SENSOR -----
+
+"Descripcion": [
+	"{{Se dispone de un sensor de [{Opcion}]{Ref} destinado a la medición de las condiciones correspondientes.}}{Ref}"
+]
+"Elementos": [
+	"{{Sensor de [{Opcion}]{Ref}.}}{Ref}"
+]
+"Funcionamiento": [
+	"{{La señal proporcionada por el sensor se empleará como variable de referencia para la regulación del sistema.}}{Ref}",
+	"{{Dicha señal permitirá la compensación de las consignas de impulsión en función de las condiciones exteriores.}}{Ref}",
+	"{{Adicionalmente, el valor medido podrá utilizarse para: <+Optimizar estrategias de ventilación.|Gestionar el cambio de régimen de funcionamiento.|Mejorar la eficiencia energética global del sistema.>}}{Ref}"
+]
+
+
+----- BOMBA -----
+
+"Descripcion": [
+	"{{La instalación dispone de una bomba de circulación destinada a asegurar el caudal necesario en el circuito correspondiente.}}{BombRef}"
+]
+"Elementos": [
+	"{{Bomba de circulación del circuito.}}{BombRef}"
+]
+"Funcionamiento": [
+	"{{La bomba se pondrá en marcha cuando exista demanda activa del circuito.}}{BombRef}",
+	"{{El paro de la bomba se realizará una vez desaparecida la demanda, aplicando un retardo configurable para garantizar la evacuación térmica.}}{BombRef}",
+	"{{El control de la bomba se realizará en modo [todo/nada | modulante], en función de las necesidades de la instalación.}}{BombRef}",
+	"[[En caso de existir varias bombas, el sistema gestionará su funcionamiento alternado para equilibrar las horas de servicio y aumentar la fiabilidad del sistema.]]{BombRef}"
+]
+
+
+
+----- VALVULA -----
+
+"Descripcion": [
+	"{{La instalación dispone de una válvula motorizada proporcional destinada a la regulación del caudal o de la temperatura del circuito.}}{ValvRef}"
+]
+"Elementos": [
+	"{{Válvula motorizada proporcional para regulación del circuito.}}{ValvRef}"
+]
+"Funcionamiento": [
+	"{{La válvula regulará su posición de apertura de forma proporcional para mantener la consigna de temperatura establecida.}}{ValvRef}",
+	"{{La señal de control aplicada a la válvula se calculará en función de la diferencia entre la consigna y el valor medido por la sonda asociada.}}{ValvRef}",
+	"{{En ausencia de demanda, la válvula adoptará una posición de seguridad configurable.}}{ValvRef}",
+	"{{La válvula podrá operar en modo [mezcla | inyección | bypass], en función de la configuración hidráulica del circuito.}}{ValvRef}"
+]
+
+
+*/
+
+
 const Narrativa = {
 	"Exterior": {
 		"Descripcion": [
@@ -259,58 +311,51 @@ const Narrativa = {
 	},
 	"General Producción": {
 		"Descripcion": [
-			"El gestor de producción coordina el funcionamiento conjunto de los distintos productor[/es]{MainBloc} térmicos, regulando su arranque y modulación para optimizar el rendimiento energético del sistema.",
-			"Actúa como elemento principal de control de generación térmica, estableciendo las consignas de impulsión y ordenando el encendido o parada de los equipos según la demanda detectada en la instalación.",
-			"El sistema está preparado para operar tanto en modo calefacción como en refrigeración, gestionando automáticamente el cambio de régimen cuando procede.",
-			"# El control de la presión y temperatura de los circuitos se complementa con funciones de protección, como el paro por presión mínima o máxima, la inhibición por temperatura fuera de rango y la gestión de alarmas críticas. Dichas protecciones se coordinan con los equipos de seguridad mecánica existentes, de modo que se garantice la integridad del sistema incluso ante fallos de control o pérdida de comunicaciones.",
+			"El gestor de producción coordina el funcionamiento conjunto de los distintos productor[/es]{MainBloc} térmicos de la instalación, estableciendo una estrategia común de arranque, paro y modulación.",
+			"Su función es adaptar la generación térmica a la demanda real del sistema, mejorando el rendimiento energético y garantizando un funcionamiento estable y seguro.",
+			"El control centralizado de producción permite una gestión coherente de los distintos equipos, evitando maniobras innecesarias y asegurando la correcta operación del conjunto."
 		],
-
 		"Elementos": [
-			"{{Sonda de [{Opcion}]{GestTemp} que mide la temperatura de impulsión general del circuito de producción.}}{GestTemp}",
-			"{{Bomba principal de impulsión que asegura la circulación del fluido entre los productor[/es]{MainBloc} y el colector general.}}{GestBomb}",
-			"{{Ventilación forzada del local técnico, controlada automáticamente por el sistema en función de la demanda térmica o la presencia de equipos en marcha.}}{GestVent}",
-			"{{Electroválvula de gas que habilita el suministro de combustible únicamente durante el funcionamiento de los equipos que lo requieren.}}{GestEVGa}",
-			"{{Válvula de conmutación calor/frío que establece la dirección del flujo térmico en función del modo operativo activo.}}{GestVaCF}",
-			"{{Sensor de presión del circuito de producción, encargado de supervisar el correcto estado hidráulico del sistema.}}{GestPres}",
-			"{{Entrada digital de cambio de régimen externo (verano/invierno) para integración con sistemas superiores de control o BMS.}}{GestInVe}"
+			"{{Sonda de [{Opcion}]{GestTemp} de temperatura de impulsión general del circuito de producción.}}{GestTemp}",
+			"{{Bomba principal de impulsión del circuito de producción.}}{GestBomb}",
+			"{{Sistema de ventilación forzada del local técnico.}}{GestVent}",
+			"{{Electroválvula de gas común a los equipos de producción.}}{GestEVGa}",
+			"{{Válvula de conmutación calor/frío del circuito de producción.}}{GestVaCF}",
+			"{{Sensor de presión del circuito de producción.}}{GestPres}",
 		],
-
 		"Funcionamiento": [
-			"El gestor analiza la demanda térmica procedente de los distintos consumidores y determina el número de productor[/es]{MainBloc} necesarios, activando o deteniendo cada uno según las condiciones de carga y eficiencia.",
-			"{{El control de temperatura se realiza a partir de la lectura de la sonda [{Opcion}]{GestTemp}, ajustando la consigna de impulsión en función del modo operativo y las condiciones exteriores.}}{GestTemp}",
-			"{{La bomba principal se pondrá en marcha cuando exista demanda activa y se mantendrá en funcionamiento un tiempo de purga tras la finalización de la misma, para asegurar la evacuación térmica.}}{GestBomb}",
-			"{{La electroválvula de gas permanecerá abierta únicamente cuando se encuentren operativos equipos que requieran combustible fósil.}}{GestEVGa}",
-			"{{La ventilación forzada se activará durante el funcionamiento de los equipos y permanecerá activa un tiempo adicional tras su parada para garantizar la renovación del aire en el local técnico.}}{GestVent}",
-			"{{El cambio de régimen externo permite conmutar automáticamente entre calefacción y refrigeración, ajustando la posición de la válvula calor/frío y las consignas de control correspondientes.}}{GestInVe}",
-			"{{La válvula de cambio calor/frío modificará su posición conforme al modo operativo activo, asegurando la correcta dirección del flujo térmico.}}{GestVaCF}",
-			"{{El sensor de presión supervisará el circuito y generará alarma en caso de valores fuera de los márgenes de funcionamiento establecidos.}}{GestPres}"
-		]
-	}
-	,
+			"El gestor de producción recibe la demanda térmica del sistema y determina el número de productores necesarios en cada momento, activando o deteniendo los equipos de forma coordinada.",
+			"{{La regulación de la producción se basa en la lectura de la sonda de [{Opcion}]{GestTemp} de impulsión general, comparando el valor medido con la consigna establecida para decidir la secuencia de arranque y parada de los productores.}}{GestTemp}",
+			"{{La bomba principal de impulsión se pondrá en marcha al habilitarse la producción y se mantendrá operativa mientras existan equipos de generación activos, mas un retardo adicional a la parada.}}{GestBomb}",
+			"{{La electroválvula de gas permanecerá habilitada únicamente durante el funcionamiento de los equipos que lo requieran. Se activará unos segundos antes de que lo haga el primer productor y se desactivara unos segundos despues de que se hayan desactivado todos los productores.}}{GestEVGa}",
+			"{{La ventilación forzada se activará unos minutos antes del encendido de los productores, garantizando unas condiciones adecuadas de ventilacion. Una vez se hayan desactivado todos los productores, se mantendra encendida unos minutos antes de desactivarse.}}{GestVent}",
+			"{{El cambio de régimen externo permitirá conmutar el sistema entre calefacción y refrigeración, adaptando la lógica de control del gestor de producción}}{GestInVe}{{ y la posición de la válvula calor/frío}}{GestInVe&GestVaCF}{{.}}{GestInVe}",
+			"{{La válvula de conmutación calor/frío ajustará su posición en función del régimen activo del sistema, asegurando la correcta dirección del flujo térmico.}}{GestVaCF}",
+			"{{El sensor de presión supervisará el estado hidráulico del circuito de producción y, en caso de detectarse una condición de fallo, se inhibirá el funcionamiento de los productores y bomba(s) asociadas hidraulicamente.}}{GestPres}"
+		],
+	},
 	"Caldera": {
 		"Descripcion": [
-			"El conjunto de caldera[/s]{MainBloc} constituye el elemento principal de producción térmica del sistema, aportando la energía necesaria a los distintos circuitos consumidores.",
+			"La caldera constituye uno de los elementos principales de producción térmica del sistema, aportando la energía necesaria para atender las demandas de los distintos circuitos consumidores.",
+			"Su funcionamiento se integra dentro de la estrategia general de generación, adaptándose a las condiciones de carga y a las consignas establecidas por el sistema de control."
 		],
 		"Elementos": [
-			"{{Orden de marcha paro.}}{CaldMaPa}",
-			"{{Supervisión de funcionamiento,}}{CaldEsAl}",
-			"{{Modulación de [{Opcion}]{CaldModu}.}}{CaldModu}",
-			"{{Sonda[/s]{CaldTemp} de temperatura de [impulsión/impulsión y retorno]{CaldTemp}.}}{CaldTemp}",
-			"{{Grupo de bombeo externo.}}{CaldBomb}",
-			"{{Válvula motorizada en retorno.}}{CaldValv}",
-			"{{Supervisión de temperatura de humos.}}{CaldHumo}",
-			"{{Supervision de presión del circuito.}}{CaldPres}",
+			"{{[{Opcion}]{CaldTemp}[/s]{CaldTemp} para la temperatura de [impulsión/impulsión y retorno]{CaldTemp}.}}{CaldTemp}",
+			"{{[{Opcion}]{CaldHumo} para la temperatura de humos.}}{CaldHumo}",
+			"{{[{Opcion}]{CaldPres} para la presión del circuito hidráulico.}}{CaldPres}",
+			"{{Bomba[/s]{CaldBomb} asociada[/s]{CaldBomb} a la caldera.}}{CaldBomb}",
+			"{{Válvula motorizada [{Opcion}]{CaldValv} en retorno.}}{CaldValv}",
 		],
 		"Funcionamiento": [
-			"El arranque será [por demanda de la instalación|por demanda de la cascada|por horario|por señal externa].",
-			"{{Antes de arrancar se debe verificar el funcionamiento correcto de [la bomba / una de las bombas]{CaldBomb}.}}{CaldBomb}",
-			"[[El sistema gestionara el funcionamiento de solo una de las bombas en cada momento, rotando automaticamente la bomba que funciona por horas de servicio o por fallo.]]{CaldBomb}",
-			"{{La válvula motorizada de [aislamiento cerrará cuando la caldera no este en uso para evitar recirculaciones no deseadas|retorno modulará para mantener una temperatura mínima para evitar condensaciones].}}{CaldValv}",
-			"{{Se supervisará la temperatura de [impulsión/impulsión y retorno]{CaldTemp}.}}{CaldTemp}",
-			"{{Se ajustará la modulación de [{Opcion}]{CaldModu} para mantener la consigna establecida [por demanda|manualmente por el usuario].}}{CaldModu}",
-			"{{Se supervisará [{NombreUsuario}]{CaldEsAl} de la[/s]{MainBloc} [{NombreUsuario}]{MainBloc} y en caso de generarse alarma se detendrá el funcionamiento.}}{CaldEsAl}",
-			"{{Se supervisará la temperatura de los humos de la[/s]{MainBloc} [{NombreUsuario}]{MainBloc} y en caso de generarse alarma se detendrá el funcionamiento.}}{CaldHumo}",
-			"{{Se supervisará la presion del circuito hidráulico del sistema y en caso de generarse una alarma se detendrá el funcionamiento.}}{CaldPres}",
+			"La caldera entrará en funcionamiento cuando reciba la orden de habilitación correspondiente, de acuerdo con la estrategia definida para la producción térmica del sistema.",
+			"{{Antes del arranque de la caldera se verificará el correcto funcionamiento del circuito hidráulico asociado}}{CaldBomb}{{, asegurando la circulación de fluido a través del intercambiador.}}{CaldBomb}",
+			"{{Cuando existan varias bombas asociadas, el sistema gestionará su funcionamiento de forma alternada para equilibrar las horas de servicio y aumentar la fiabilidad del conjunto.}}{CaldBomb}",
+			"{{La válvula de retorno regulará su posición para mantener condiciones adecuadas de funcionamiento de la caldera}}{CaldValv}{{, evitando temperaturas de retorno excesivamente bajas y posibles fenómenos de condensación.}}{CaldValv}",
+			"{{La temperatura de funcionamiento de la caldera se supervisará mediante la sonda[/s]{CaldTemp} instalada[/s]{CaldTemp}, permitiendo verificar el correcto comportamiento térmico del equipo.}}{CaldTemp}",
+			"{{La potencia de la caldera se ajustará mediante el sistema de modulación tipo [{Opcion}]{CaldModu}, adaptando su funcionamiento a la demanda térmica existente.}}{CaldModu}",
+			"{{El estado de la caldera y la presencia de posibles alarmas se supervisarán de forma continua}}{CaldEsAl}{{, deteniéndose su funcionamiento en caso de detectarse una condición anómala.}}{CaldEsAl}",
+			"{{La temperatura de los humos será supervisada durante el funcionamiento de la caldera}}{CaldHumo}{{, generándose una condición de alarma en caso de superarse los límites admisibles.}}{CaldHumo}",
+			"{{La presión del circuito hidráulico se supervisará de forma permanente}}{CaldPres}{{ y, en caso de detectarse una condición de fallo, se inhibirá el funcionamiento de la caldera y de los elementos hidráulicos asociados.}}{CaldPres}"
 		],
 	},
 	"Aerotermia": {
