@@ -1029,11 +1029,13 @@ function interpretarNarrativa(texto, bloque) {
             return evaluarCondicion(refExpr, bloque) ? contenido : "";
         });
 
+
+        // eliminamos [[...]] al haber introducido el qty() en evaluarCondicion
         // [[ ... ]]{Ref} se mantiene igual (cantidad)
-        texto = texto.replace(/\[\[(.*?)\]\]\{(.*?)\}/g, (match, contenido, ref) => {
-            const elem = bloque.Elementos.find(e => e.Ref === ref);
-            return (elem && elem.Cantidad > 1) ? contenido : "";
-        });
+        // texto = texto.replace(/\[\[(.*?)\]\]\{(.*?)\}/g, (match, contenido, ref) => {
+        //     const elem = bloque.Elementos.find(e => e.Ref === ref);
+        //     return (elem && elem.Cantidad > 1) ? contenido : "";
+        // });
 
         return texto;
     }
@@ -1069,7 +1071,7 @@ function interpretarNarrativa(texto, bloque) {
 
             if (prop === "Opcion" && elem.Opciones && elem.Opciones.length > 0) {
                 const seleccion = elem.Opciones[elem.Opcion] || {};
-                return seleccion.Nombre || "";
+                return seleccion.Nombre.toLowerCase() || "";
             }
 
             return (prop in elem) ? elem[prop] : "";
@@ -1136,7 +1138,44 @@ function evaluarCondicion(refExpr, bloque) {
 
     // NOT
     if (refExpr.startsWith("!")) {
-        return !evaluarCondicion(refExpr.slice(1), bloque);
+        return !evaluarCondicion(refExpr.slice(1).trim(), bloque);
+    }
+
+    // Ref.is("Valor")
+    const isMatch = refExpr.match(/^(\w+)\.is\(["'](.+?)["']\)$/);
+    if (isMatch) {
+        const ref = isMatch[1];
+        const valor = isMatch[2];
+
+        const elem = bloque.Elementos.find(e => e.Ref === ref);
+        if (!elem || !elem.Checked) return false;
+
+        if (!elem.Opciones || elem.Opcion == null) return false;
+
+        const opcionSeleccionada = elem.Opciones[elem.Opcion];
+        return opcionSeleccionada && opcionSeleccionada.Nombre === valor;
+    }
+
+    // Ref.qty("opN")
+    const qtyMatch = refExpr.match(/^(\w+)\.qty\(["']([<>]=?|==)\s*(\d+)["']\)$/);
+    if (qtyMatch) {
+        const ref = qtyMatch[1];
+        const operador = qtyMatch[2];
+        const valor = parseInt(qtyMatch[3], 10);
+
+        const elem = bloque.Elementos.find(e => e.Ref === ref);
+        if (!elem || !elem.Checked) return false;
+
+        const cantidad = elem.Cantidad || 0;
+
+        switch (operador) {
+            case ">":  return cantidad > valor;
+            case ">=": return cantidad >= valor;
+            case "<":  return cantidad < valor;
+            case "<=": return cantidad <= valor;
+            case "==": return cantidad === valor;
+            default:   return false;
+        }
     }
 
     // Ref simple
