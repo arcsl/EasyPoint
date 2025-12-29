@@ -249,52 +249,7 @@ function blocks() {
 }
 
 /*
------ SENSOR -----
 
-"Descripcion": [
-	"{{Se dispone de un sensor de [{Opcion}]{Ref} destinado a la medición de las condiciones correspondientes.}}{Ref}"
-]
-"Elementos": [
-	"{{Sensor de [{Opcion}]{Ref}.}}{Ref}"
-]
-"Funcionamiento": [
-	"{{La señal proporcionada por el sensor se empleará como variable de referencia para la regulación del sistema.}}{Ref}",
-	"{{Dicha señal permitirá la compensación de las consignas de impulsión en función de las condiciones exteriores.}}{Ref}",
-	"{{Adicionalmente, el valor medido podrá utilizarse para: <+Optimizar estrategias de ventilación.|Gestionar el cambio de régimen de funcionamiento.|Mejorar la eficiencia energética global del sistema.>}}{Ref}"
-]
-
-
------ BOMBA -----
-
-"Descripcion": [
-	"{{La instalación dispone de una bomba de circulación destinada a asegurar el caudal necesario en el circuito correspondiente.}}{BombRef}"
-]
-"Elementos": [
-	"{{Bomba de circulación del circuito.}}{BombRef}"
-]
-"Funcionamiento": [
-	"{{La bomba se pondrá en marcha cuando exista demanda activa del circuito.}}{BombRef}",
-	"{{El paro de la bomba se realizará una vez desaparecida la demanda, aplicando un retardo configurable para garantizar la evacuación térmica.}}{BombRef}",
-	"{{El control de la bomba se realizará en modo [todo/nada | modulante], en función de las necesidades de la instalación.}}{BombRef}",
-	"[[En caso de existir varias bombas, el sistema gestionará su funcionamiento alternado para equilibrar las horas de servicio y aumentar la fiabilidad del sistema.]]{BombRef}"
-]
-
-
-
------ VALVULA -----
-
-"Descripcion": [
-	"{{La instalación dispone de una válvula motorizada proporcional destinada a la regulación del caudal o de la temperatura del circuito.}}{ValvRef}"
-]
-"Elementos": [
-	"{{Válvula motorizada proporcional para regulación del circuito.}}{ValvRef}"
-]
-"Funcionamiento": [
-	"{{La válvula regulará su posición de apertura de forma proporcional para mantener la consigna de temperatura establecida.}}{ValvRef}",
-	"{{La señal de control aplicada a la válvula se calculará en función de la diferencia entre la consigna y el valor medido por la sonda asociada.}}{ValvRef}",
-	"{{En ausencia de demanda, la válvula adoptará una posición de seguridad configurable.}}{ValvRef}",
-	"{{La válvula podrá operar en modo [mezcla | inyección | bypass], en función de la configuración hidráulica del circuito.}}{ValvRef}"
-]
 
 
 */
@@ -324,7 +279,7 @@ const Narrativa = {
 			"{{Sistema de ventilación forzada.}}{GestVent}",
 			"{{Electroválvula de gas.}}{GestEVGa}",
 			"{{Válvulas de conmutación calor/frío.}}{GestVaCF}",
-			"{{Sensor de presión del circuito hidráulico.}}{GestPres}",
+			"{{Lectura de presión del circuito hidráulico por [{Opcion}]{AeroPres}.}}{GestPres}",
 		],
 		"Funcionamiento": [
 			"El gestor de producción recibe la demanda térmica del sistema y determina el número de productores necesarios en cada momento, activando o deteniendo los equipos de forma coordinada.",
@@ -347,7 +302,7 @@ const Narrativa = {
 		"Elementos": [
 			"{{Temperatura[/s]{CaldTemp} de [impulsión/impulsión y retorno]{CaldTemp} general[/es]{CaldTemp}.}}{CaldTemp}",
 			"{{[{Opcion}]{CaldHumo} para la temperatura de humos.}}{CaldHumo}",
-			"{{[{Opcion}]{CaldPres} para la presión del circuito hidráulico.}}{CaldPres}",
+			"{{Lectura de la presión estática del circuito hidráulico por [{Opcion}]{AeroPres}.}}{CaldPres}",
 			"{{Bomba[/s]{CaldBomb} asociada[/s]{CaldBomb} a la caldera.}}{CaldBomb}",
 			"{{Válvula motorizada [{Opcion}]{CaldValv} en retorno.}}{CaldValv}",
 		],
@@ -368,7 +323,7 @@ const Narrativa = {
 			"{{Una vez en marcha, la potencia de la caldera se ajusta mediante modulación a tres puntos, incrementando o reduciendo el aporte térmico para mantener la temperatura de caldera en torno al valor de consigna.}}{CaldModu.is('3 Puntos')}",
 			"{{Una vez en marcha, la potencia de la caldera se ajusta mediante la activación o no de una segunda etapa para mantener la temperatura de caldera alrededor del valor de consigna establecido.}}{CaldModu.is('2ª llama')}",
 			"{{La temperatura de  humos se supervisa durante el funcionamiento de la caldera para emitir una larma en caso de superar un valor umbral (configurable) y detener el funcionamiento de la caldera.}}{CaldHumo}",
-			"{{En caso de detectar una caida de presión en el circuito hidráulico, se inhibe el funcionamiento de los elementos asociados hidraulicamente.}}{CaldPres}"
+			"{{En caso de detectar una caida de presión en el circuito hidráulico, se inhibe el funcionamiento de la caldera}}{CaldPres}{{ y la[/s]{CaldBomb} bomba[/s]{CaldBomb}}}{CaldBomb}{{.}}{CaldPres}"
 		],
 	},
 	"Aerotermia": {
@@ -377,23 +332,35 @@ const Narrativa = {
 		],
 		"Elementos": [
 			"{{Temperatura[/s]{AeroTemp} de [impulsión/impulsión y retorno]{AeroTemp} general[/es]{AeroTemp}.}}{AeroTemp}",
-			"{{[{Opcion}]{AeroPres} para la presión del circuito hidráulico.}}{AeroPres}",
+			"{{Lectura de la presión estática del circuito hidráulico por [{Opcion}]{AeroPres}.}}{AeroPres}",
 			"{{Bomba[/s]{AeroBomb} asociada[/s]{AeroBomb} a la aerotermia.}}{AeroBomb}",
-			"{{Válvula motorizada de selección entre modos de trabajo.}}{AeroVaCF}",
+			"{{Válvula motorizada para conmutación entre modos de trabajo.}}{AeroVaCF}",
 		],
 		"Funcionamiento": [
-			"El arranque de la aerotermia se producirá [por demanda de la instalación|por horario|por control externo].",
-			"{{Antes del arranque de la aerotermia se verifica el correcto funcionamiento de la[/s]{AeroBomb} bomba[/s]{AeroBomb} asociada[/s]{AeroBomb}, para garantizar que existe circulación de fluido.}}{AeroBomb}",
+
+			// MP, alarma/estado y consigna
+			"{{El arranque de la [{NombreUsuario}]{MainBloc} se produce [por demanda de la instalación|por horario|por control externo].}}{AeroMaPa}",
+			"{{Se supervisará el [{NombreUsuario}]{AeroAlar} del equipo para deshabilitarlo en caso de anomalía.}}{AeroAlar}",
+			"{{El sistema envia a la [{NombreUsuario}]{MainBloc} una señal analógica de consigna, siendo el control interno del equipo el encargado de modular la potencia necesaria para alcanzar dicho valor.}}{AeroModu.is('0-10 Consigna')}",
+			"{{El sistema envia a la [{NombreUsuario}]{MainBloc} una señal digital para el cambio de consigna, siendo el control interno del equipo el encargado de modular la potencia necesaria para alcanzar los valores previamente definidos en dicho control.}}{AeroModu.is('2 consignas')}",
+
+
+			// Bombas
+			"{{Antes del arranque se verifica el correcto funcionamiento de la[/s]{AeroBomb} bomba[/s]{AeroBomb} asociada[/s]{AeroBomb}, para garantizar que existe circulación de fluido.}}{AeroBomb}",
 			"{{El sistema gestiona el funcionamiento de las bombas asociadas de forma alternada, realizando la rotación de la bomba en funcionamiento en función de las horas de servicio o en caso de fallo de la otra bomba, de modo que se mantenga la disponibilidad de la aerotermia.}}{AeroBomb.qty('>1')}",
-			"{{El bombeo se mantiene encendido una cantidad de tiempo configurable tras el apagado de la aerotermia para aprovechar el calor remanente.}}{AeroBomb}",
-			"{{Se supervisa continuamente la temperatura de impulsión a modo informativo.}}{AeroTemp}",
+			"{{El bombeo se mantiene encendido una cantidad de tiempo configurable tras el apagado de la aerotermia para aprovechar la energia termica remanente.}}{AeroBomb}",
 
-			"{{Durante el funcionamiento en modo calefacción o refrigeración, la válvula [{NombreUsuario}]{AeroVaCF} ajustará la posición correspondiente para dirigir el flujo térmico al circuito adecuado.}}{AeroVaCF}",
-			"{{El cambio de régimen [{NombreUsuario}]{AeroCaFr} permitirá la conmutación automática entre calefacción y refrigeración según la demanda.}}{AeroCaFr}",
-			"{{El sistema envia a la caldera una señal analógica de consigna de temperatura, siendo el control interno del equipo el encargado de modular la potencia necesaria para alcanzar dicho valor.}}{AeroModu}",
+			// Camio de modo
+			// TODO
+			"{{Mediante el [{NombreUsuario}]{AeroCaFr} se estpermitirá la conmutación automática entre calefacción y refrigeración según la demanda.}}{AeroCaFr}",
 
-			"{{Se supervisará el [{NombreUsuario}]{AeroAlar} de la[/s]{MainBloc}, y en caso de generarse alarma se detendrá el funcionamiento del equipo.}}{AeroAlar}",
-			"{{Se controlará la presión del circuito mediante el sensor correspondiente, generando una alarma ante valores fuera del rango permitido.}}{AeroPres}"
+
+			"{{Al cambiar de modo de funcionamiento de la aerotermia, tambien cambia la posición de la [{NombreUsuario}]{AeroVaCF} para dirigir el fluido al circuito adecuado.}}{AeroVaCF}",
+			"{{Se supervisa continuamente la temperatura de impulsión [a modo informativo|y para generar alarma en caso de desviacion prolongada].}}{AeroTemp}",
+
+			// Generales
+			"{{En caso de detectar una caida de presión en el circuito hidráulico, se inhibe el funcionamiento de la caldera}}{AeroPres}{{ y la[/s]{AeroBomb} bomba[/s]{AeroBomb}}}{AeroBomb}{{.}}{AeroPres}"
+
 		]
 	},
 	"Circuito Calefacción/Distribución": {
