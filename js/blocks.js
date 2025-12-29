@@ -197,6 +197,7 @@ function blocks() {
 				elem.ValvTNProp("Válvula", 1, "CircValv"),
 				elem.SimpleED("Cambio de regimen externo", 0, "CircInVe"),
 				elem.ValvulaToNa("Válvula Calor / Frío", 0, "CircVaCF"),
+				elem.SimpleED("Orden arranque externa", 0, "CircExMP"),
 				elem.Demanda("Demanda a terceros", 0, "CircDema"),
 			],
 		},
@@ -344,45 +345,78 @@ const Narrativa = {
 			"{{El sistema envia a la [{NombreUsuario}]{MainBloc} una señal analógica de consigna, siendo el control interno del equipo el encargado de modular la potencia necesaria para alcanzar dicho valor.}}{AeroModu.is('0-10 Consigna')}",
 			"{{El sistema envia a la [{NombreUsuario}]{MainBloc} una señal digital para el cambio de consigna, siendo el control interno del equipo el encargado de modular la potencia necesaria para alcanzar los valores previamente definidos en dicho control.}}{AeroModu.is('2 consignas')}",
 
-
 			// Bombas
 			"{{Antes del arranque se verifica el correcto funcionamiento de la[/s]{AeroBomb} bomba[/s]{AeroBomb} asociada[/s]{AeroBomb}, para garantizar que existe circulación de fluido.}}{AeroBomb}",
 			"{{El sistema gestiona el funcionamiento de las bombas asociadas de forma alternada, realizando la rotación de la bomba en funcionamiento en función de las horas de servicio o en caso de fallo de la otra bomba, de modo que se mantenga la disponibilidad de la aerotermia.}}{AeroBomb.qty('>1')}",
 			"{{El bombeo se mantiene encendido una cantidad de tiempo configurable tras el apagado de la aerotermia para aprovechar la energia termica remanente.}}{AeroBomb}",
 
 			// Camio de modo
-			// TODO
-			"{{Mediante el [{NombreUsuario}]{AeroCaFr} se estpermitirá la conmutación automática entre calefacción y refrigeración según la demanda.}}{AeroCaFr}",
-
-
-			"{{Al cambiar de modo de funcionamiento de la aerotermia, tambien cambia la posición de la [{NombreUsuario}]{AeroVaCF} para dirigir el fluido al circuito adecuado.}}{AeroVaCF}",
-			"{{Se supervisa continuamente la temperatura de impulsión [a modo informativo|y para generar alarma en caso de desviacion prolongada].}}{AeroTemp}",
+			"{{La señal externa [{NombreUsuario}]{AeroCaFr} provoca el cambio de modo de funcionamiento conmutando los elementos automáticaticamente.}}{AeroCaFr}",
+			"{{Al cambiar de modo de funcionamiento de la [{NombreUsuario}]{MainBloc}, tambien cambia la posición de la [{NombreUsuario}]{AeroVaCF}.}}{AeroVaCF}",
 
 			// Generales
+			"{{Se supervisa continuamente la temperatura de impulsión [a modo informativo|y se genera una alarma en caso de desviacion prolongada].}}{AeroTemp}",
 			"{{En caso de detectar una caida de presión en el circuito hidráulico, se inhibe el funcionamiento de la caldera}}{AeroPres}{{ y la[/s]{AeroBomb} bomba[/s]{AeroBomb}}}{AeroBomb}{{.}}{AeroPres}"
 
 		]
 	},
 	"Circuito Calefacción/Distribución": {
+
 		"Descripcion": [
-			"El circuito de [calefacción | refrigeración | mixto (calor/frío) | suelo radiante | fancoils | climatizadores]{MainBloc} se encarga de distribuir la energía térmica generada por el sistema de producción hacia los distintos elementos terminales o zonas de consumo.",
+			"El circuito de [{NombreUsuario}]{MainBloc} constituye el elemento encargado de distribuir la energía térmica hasta los distintos emisores o zonas de consumo.",
 			"Su regulación permite mantener la temperatura del fluido de impulsión dentro de los valores de consigna adecuados, optimizando el confort y la eficiencia energética del conjunto.",
+		],
+		/*
+		"Descripcion": [
 			"Las consignas de impulsión se determinan dinámicamente en función de las condiciones exteriores, aplicando curvas de compensación climática configurables que permiten ajustar la temperatura de suministro a las necesidades reales del edificio. Esta regulación proporcional-adaptativa, basada en el principio de control compensado, contribuye a reducir el consumo energético sin comprometer el confort térmico de los usuarios.",
 			"Se han implementado distintos modos de funcionamiento (ECO Día, ECO Noche, Reducción por Ausencia, etc.) que adaptan automáticamente las consignas de temperatura y los tiempos de operación a las condiciones de ocupación y horarios de uso previstos. La transición entre modos se realiza de forma gradual, aplicando rampas de consigna y retardos configurables que evitan oscilaciones térmicas y preservan la estabilidad hidráulica del sistema.",
 			"La distribución hidráulica se gestiona mediante un conjunto de bombas modulantes controladas por variadores de frecuencia, que ajustan su velocidad en función de la presión diferencial medida y de las válvulas de control de los circuitos secundarios. Esta regulación proporcional mantiene la presión del sistema dentro de los valores de diseño, optimizando el consumo eléctrico y asegurando un reparto homogéneo del caudal en los distintos ramales.",
 		],
+		*/
 
 		"Elementos": [
-			"{{Sonda de temperatura de impulsión del circuito.}}{CircTemp}",
-			"{{Sonda de ambiente para control o limitación de temperatura interior.}}{CircAmbi}",
-			"{{Sensor de presión diferencial para modulación o control de caudal.}}{CircDife}",
-			"{{Bomba de circulación, con regulación [todo/nada | modulante | control diferencial]{CircBomb}.}}{CircBomb}",
-			"{{Válvula de control proporcional o de dos/tres puntos para regulación de temperatura de impulsión.}}{CircValv}",
-			"{{Cambio de régimen externo (calor / frío).}}{CircInVe}",
-			"{{Válvula de selección de modo (Calor / Frío / ACS).}}{CircVaCF}",
-			"{{Señal de demanda externa o habilitación desde otros equipos o sistemas.}}{CircDema}"
+			"{{Sonda[/s]{CircTemp} de temperatura de impulsión[/ y retorno]{CircTemp} del circuito.}}{CircTemp}",
+			"{{Sonda de ambiente para supervisión o limitación de la temperatura interior.}}{CircAmbi}",
+			"{{Sensor de presión diferencial}}{CircDife}{{ para regulación del bombeo}}{CircBomb}{{.}}{CircDife}",
+			"{{Bomba[/s]{CircBomb} para la circulación del fluido.}}{CircBomb}",
+			"{{Válvula de corte para permitir o no la circulacion de fluido.}}{CircValv.is(\"Todo/Nada\")}",
+			"{{Válvula de control para la regulación de la temperatura.}}{CircValv.is(\"0..10Vcc\")|CircValv.is(\"3 Puntos\")}",
+			"{{Válvula de cambio de régimen calor / frío.}}{CircVaCF}"
 		],
 
+		"Funcionamiento": [
+
+			// MP	
+			// TODO añadir la orden de arranque externa 0..10V
+			"{{El [{NombreUsuario}]{MainBloc} se activar por señal de demanda externa.}}{CircExMP}",
+			"{{El [{NombreUsuario}]{MainBloc} se activar [por horario y condiciones exteriores|por horario|por demanda de los consumidores que atiende].}}{!CircExMP}",
+			
+			// Temperatura, consigna, valvula
+			"{{La consigna de temperatura de impulsion [se calcula por curva con compensación por temperatura exterior|se establece según la maxima demanda de consumidores|se preconfigura a punto fijo].}}{CircTemp}",
+			"{{La válvula de control regulará la temperatura de impulsión del circuito de forma proporcional para adecuarse a la consigna establecida.}}{CircValv.is(\"0..10Vcc\")|CircValv.is(\"3 Puntos\")}",
+			"{{La válvula todo/nada, abre para permitir el paso de fluido cuando se active el circuito.}}{CircValv.is(\"Todo/Nada\")}",
+			"{{La sonda de temperatura ambiente, se utiliza para [limitar la temperatura de impulsión del circuito|parar el circuito] en función de las condiciones interiores.}}{CircAmbi}",
+			"{{El sensor de presión diferencial se usa [solo como lectura|para compensar la temperatura de impulsion por demanda].}}{!CircBomb|CircBomb.is(\"M/P y Estado\")&CircDife}",
+			
+			// Bombas
+			"{{Durante el funcionamiento se verifica el correcto funcionamiento de la[/s]{CircBomb} bomba[/s]{CircBomb}, para garantizar que existe circulación de fluido.}}{CircBomb}",
+			"{{El sistema gestiona el funcionamiento de las bombas de forma alterna, realizando la rotación de la bomba en funcionamiento en función de las horas de servicio o en caso de fallo de la otra bomba, de modo que se mantenga la disponibilidad del circuito.}}{CircBomb.qty('>1')}",
+			"{{El bombeo se modula para mantener una lectura de presion diferencial fija configurable.}}{CircDife&CircBomb.is(\"0..10Vcc\")}",
+			"{{El bombeo se modula para mantener un salto termico constante configurable.}}{!CircDife&CircBomb.is(\"0..10Vcc\")&CircTemp.qty(\">1\")}",
+			"{{El bombeo se modula a una velocidad fija configurable.}}{!CircDife&CircBomb.is(\"0..10Vcc\")&!CircTemp.qty(\">1\")}",
+			"{{El bombeo se mantiene encendido una cantidad de tiempo configurable tras el apagado del circuito para aprovechar la energia termica remanente.}}{CircBomb}",
+
+			// calor frio
+			"{{En en modo refrigeración, con la lectura de temperatura y humedad ambiente se hace el calculo de punto de rocio. Con ese calculo de temperatura mas un diferencial se establece el limite minimo detemperatura de impulsion  para evitar riesgos de condensación.}}{CircAmbi.is(\"Temp y Hum\")|CircAmbi.is(\"Temp, Hum y CO2\")$!CircValv.is(\"Todo/Nada\")}",
+			"{{En en modo refrigeración, con la lectura de temperatura y humedad ambiente se hace el calculo de punto de rocio. Si la temperatura de impulsion alcanza ese calculo de temperatura se cierrala la válvula para evitar riesgos de condensación.}}{CircAmbi.is(\"Temp y Hum\")|CircAmbi.is(\"Temp, Hum y CO2\")$CircValv.is(\"Todo/Nada\")}",
+			"{{La válvula de cambio de régimen, actua automáticamente respecto modo de operación activo.}}{CircVaCF}",
+			
+			// demanda a terceros			
+			"{{Una vez el circuito esta en marcha, la señal de demanda hacia el control de terceros, se modula conforme a la consigna establecida mas un direfencial configurable, para solicitar el arranque de la produccion térmica.}}{CircDema.is(\"0..10Vcc\")}",
+			"{{Una vez el circuito esta en marcha, se activa la señal de demanda hacia el control de terceros para solicitar el arranque de la produccion térmica.}}{CircDema.is(\"Todo/Nada\")}",
+
+		],
+		/*
 		"Funcionamiento": [
 			"El circuito se activará [por demanda de zona | por horario | por señal externa]{CircDema}, habilitando la bomba y la válvula de control asociadas.",
 			"{{La válvula [{NombreUsuario}]{CircValv} regulará la temperatura de impulsión del circuito en función de la consigna establecida, manteniendo un equilibrio térmico adecuado.}}{CircValv}",
@@ -392,7 +426,8 @@ const Narrativa = {
 			"{{El sensor de presión diferencial permitirá la regulación del caudal del circuito, ajustando la bomba modulante para compensar variaciones de carga hidráulica.}}{CircDife}",
 			"{{En modo de funcionamiento combinado (calor/frío), la válvula [{NombreUsuario}]{CircVaCF} seleccionará automáticamente el circuito correspondiente en función del régimen activo del sistema.}}{CircVaCF}",
 			"{{Cuando exista una señal de habilitación externa, el circuito permanecerá a la espera hasta recibir la orden de demanda, momento en el cual iniciará su secuencia de arranque.}}{CircDema}"
-		]
+		],
+		*/
 	},
 	"ACS": {
 		"Descripcion": [
