@@ -1,6 +1,6 @@
 const signalTypes = ["EA", "ED", "SA", "SD"];
 const signalTexts = ["Entradas Analógicas", "Entradas Digitales", "Salidas Analógicas", "Salidas Digitales"];
-const partesNarrativa = ["Descripcion", "Elementos", "Funcionamiento"];
+const partesNarrativa = ["Descripción", "Elementos", "Funcionamiento"];
 
 // En el array estan las diferentes opciones de dibujar la señal en el esquema
 // El nombre del bloque a llamar será el Tipo + el numero + opcion elejida: ej ED + 1 + "Contactor" = ED_1_Contactor
@@ -93,6 +93,10 @@ const elem = {
 	//Alarma
 	AlamEstTerceros: (Nombre, Cantidad, Ref = "") => ({ Nombre, Cantidad, Ref, Opciones: [opt.AlamEstTerceros("Externa"),], }),
 
+	// demandas
+	DemandaIN: (Nombre, Cantidad, Ref = "") => ({ Nombre, Cantidad, Ref, Opciones: [opt.SimpleED("Todo/Nada"), opt.SimpleEA("0..10Vcc"),], }),
+	DemandaOUT: (Nombre, Cantidad, Ref = "") => ({ Nombre, Cantidad, Ref, Opciones: [opt.SimpleSD("Todo/Nada"), opt.SimpleSA("0..10Vcc"),], }),
+
 	//valvulas
 	ValvulaToNa: (Nombre, Cantidad, Ref = "") => ({ Nombre, Cantidad, Ref, Opciones: [opt.ActuadorTN1M("1 Micro"), opt.ActuadorTN2M("2 Micros"), opt.ActuadorTN0M("Sin Micros"),], }),
 	ValvulaProp: (Nombre, Cantidad, Ref = "") => ({ Nombre, Cantidad, Ref, Opciones: [opt.Actuador010V("0..10Vcc"), opt.Actuador3Pun("3 Puntos"),], }),
@@ -110,7 +114,6 @@ const elem = {
 	ModulaAerot: (Nombre, Cantidad, Ref = "") => ({ Nombre, Cantidad, Ref, Opciones: [opt.SimpleSA("0-10 Consigna"), opt.SimpleSD("2 consignas"),], }),
 	ModulaCalde: (Nombre, Cantidad, Ref = "") => ({ Nombre, Cantidad, Ref, Opciones: [opt.SimpleSA("0-10 Consigna"), opt.SimpleSA("0-10 Potencia"), opt.Actuador3Pun("3 Puntos"), opt.SimpleSD("2ª llama"),], }),
 	MPyEstado: (Nombre, Cantidad, Ref = "") => ({ Nombre, Cantidad, Ref, Opciones: [opt.MPyEstado("M/P y Estado"),], }),
-	Demanda: (Nombre, Cantidad, Ref = "") => ({ Nombre, Cantidad, Ref, Opciones: [opt.SimpleSA("0..10Vcc"), opt.SimpleSD("Todo/Nada"),], }),
 
 }
 
@@ -190,30 +193,32 @@ function blocks() {
 		{
 			"Nombre": "Circuito Calefacción/Distribución",
 			"Elementos": [
-				elem.SoloSondaTemp("Temp Impulsion", 1, "CircTemp"),
+				elem.SoloSondaTemp("Temperatura impulsion", 1, "CircTemp"),
 				elem.SensorAire("Sensor Ambiente", 0, "CircAmbi"),
-				elem.SoloActiva("Presion Diferencial", 0, "CircDife"),
-				elem.MotorModul("Bomba", 1, "CircBomb"),
 				elem.ValvTNProp("Válvula", 1, "CircValv"),
+				elem.MotorModul("Bomba", 1, "CircBomb"),
+				elem.SoloActiva("Presion Diferencial", 0, "CircDife"),
+				elem.ValvulaProp("Válvula bypass", 0, "CircVaBy"),
 				elem.SimpleED("Cambio de regimen externo", 0, "CircInVe"),
-				elem.ValvulaToNa("Válvula Calor / Frío", 0, "CircVaCF"),
-				elem.SimpleED("Orden arranque externa", 0, "CircExMP"),
-				elem.Demanda("Demanda a terceros", 0, "CircDema"),
+				elem.ValvulaToNa("Válvula calor / frío", 0, "CircVaCF"),
+				elem.DemandaIN("Demanda de terceros", 0, "CircExMP"),
+				elem.DemandaOUT("Demanda a terceros", 0, "CircDema"),
 			],
 		},
 		{
 			"Nombre": "ACS",
 			"Elementos": [
-				elem.SoloSondaTemp("Temperatura Secundario", 0, "ACSTeSe"),
-				elem.SoloSondaTemp("Temperatura Depósito", 1, "ACSTeDe"),
-				elem.SoloSondaTemp("Temperatura Consumidores", 1, "ACSTeCo"),
+				elem.SoloSondaTemp("Temperatura primario", 0, "ACSTePr"),
+				elem.SoloSondaTemp("Temperatura secundario", 0, "ACSTeSe"),
+				elem.SoloSondaTemp("Temperatura depósito", 1, "ACSTeDe"),
+				elem.SoloSondaTemp("Temperatura ida consumo", 1, "ACSTeIC"),
+				elem.SoloSondaTemp("Temperatura retorno consumo", 1, "ACSTeRC"),
 				elem.MotorModul("Bomba Primario", 1, "ACSBoPr"),
 				elem.MotorModul("Bomba Secundario", 0, "ACSBoSe"),
 				elem.MotorModul("Bomba Retorno", 1, "ACSBoRe"),
 				elem.ValvTNProp("Válvula Primario", 0, "ACSVaPr"),
 				elem.ValvulaProp("Válvula Consumidores", 1, "ACSVaCo"),
 				elem.ValvulaToNa("Bypass Válvula Consumidores", 0, "ACSVaBy"),
-				elem.Demanda("Demanda a terceros", 0, "ACSDema"),
 			],
 		},
 		{
@@ -233,7 +238,6 @@ function blocks() {
 				elem.Recuperdor("Recuperador", 0),
 				elem.ValvTNProp("Compuertas", 0),
 				elem.SimpleED("Cambio de regimen externo", 0),
-				elem.Demanda("Demanda a terceros", 0),
 			],
 		},
 		{
@@ -250,26 +254,51 @@ function blocks() {
 }
 
 /*
+	Herramientas para narrativa
 
+	Logicas:
+	Nombre          |            Sintaxis           | Descripción                                  
+	----------------|-------------------------------|----------------------------------------------------------------------------------
+	Ref activa      |         {{ ... }}{Ref}        | Se muestra el texto si la referencia esta checked
+	Opcion elegida  |   {{ ... }}{Ref.is('..A..')}  | Se muestra el texto si la opcion elegida de la referencia es la A
+	Cantidad        |    {{ ... }}{Ref.qty('>2')}   | Se muestra el texto si la cantidad de la referencia cumple la condicion expresada (en este caso ser mayor que 2) Se puede usar >, >=, <, <= y ==
+	OR              |       {{ ... }}{Ref|Ref}      | Se muestra el texto si se cumple una de las dos Ref, que puede ser cualquiera de las 3 primeras de esta tabla de arriba
+	AND             |       {{ ... }}{Ref&Ref}      | Se muestra el texto si se cumplen las dos Ref, que puede ser cualquiera de las 3 primeras de esta tabla de arriba
+	NOT             |         {{ ... }}{!Ref}       | Se muestra el texto si no se cumple la Ref, que puede ser cualquiera de las 3 primeras de esta tabla de arriba (En este caso se muestra el texto si la referencia NO esta checked)
 
+	Estilisticas:
+	Nombre          |            Sintaxis           | Descripción                                  
+	----------------|-------------------------------|----------------------------------------------------------------------------------
+	multicheck      |  < ..A.. | +..B.. | +..C.. >  | Muestra varias opciones que el usuario puede marcar simultaneamente. Las que empiezan por "+" aparecen seleccionadas por defecto (en este caso la B y la C)
+	selector        |   [ ..A.. | ..B.. | ..C.. ]   | Muestra un selector para que el usuario elija una sola opcion
+	singular/plural |      [ ..A../..B..]{Ref}      | Muestra el texto A si la cantidad de la referencia es 1 o el texto B si es mayor que 1
+	texto usuario   |     [{NombreUsuario}]{Ref}    | Muestra el texto que el usuario haya introducido para esa referencia
+	cantidad        |        [{Cantidad}]{Ref}      | Muestra la cantidad numerica de la referencia
+	opcion elegida  |         [{Opcion}]{Ref}       | Muestra el texto de la opcion elegida de la referencia
+	
+
+	Referenciales:
+	Nombre          |            Sintaxis           | Descripción                                  
+	----------------|-------------------------------|----------------------------------------------------------------------------------
+	Ref al bloque   |          ...{MainBloc}        | Realiza la accion que sea con respecto al bloque actual. (nombre del bloque o si hay mas de 1 o lo que corresponda)
 
 */
 
 
 const Narrativa = {
 	"Exterior": {
-		"Descripcion": [
+		"Descripción": [
 			"{{La medicion de condiciones exteriores permite compensar la respuesta térmica de la instalación, mejorando el confort y la eficiencia energética.}}{CondExte}"
 		],
 		"Elementos": [
 			"{{Sensor de [{Opcion}]{CondExte} exterior.}}{CondExte}"
 		],
 		"Funcionamiento": [
-			`{{La señal proporcionada por el sensor se utilizará para: <+Ajustar la consigna de impulsión de los circuitos de distribucion.|Cambiar el regimen de trabajo entre invierno y verano.|Optimizar estrategias de ventilación para enfriamiento y calentamiento gratuitos.|Optimizar estrategias de ventilación por calidad de aire exterior.>}}{CondExte}`
+			"{{La señal proporcionada por el sensor se utilizará para: <+Ajustar la consigna de impulsión de los circuitos de distribucion.|Cambiar el regimen de trabajo entre invierno y verano.|Optimizar estrategias de ventilación para enfriamiento y calentamiento gratuitos.|Optimizar estrategias de ventilación por calidad de aire exterior.>}}{CondExte}"
 		],
 	},
 	"Cascada Producción": {
-		"Descripcion": [
+		"Descripción": [
 			"El gestor de cascada de producción, coordina el funcionamiento de un conjunto de productores térmicos, estableciendo una estrategia común de arranque, paro y modulación.",
 			"Su función es adaptar la generación térmica a la demanda real del sistema, mejorando el rendimiento energético y garantizando un funcionamiento estable y seguro.",
 			"El control centralizado de producción permite una gestión coherente de los distintos equipos, evitando maniobras innecesarias y asegurando la correcta operación del conjunto."
@@ -280,7 +309,8 @@ const Narrativa = {
 			"{{Sistema de ventilación forzada.}}{GestVent}",
 			"{{Electroválvula de gas.}}{GestEVGa}",
 			"{{Válvulas de conmutación calor/frío.}}{GestVaCF}",
-			"{{Lectura de presión del circuito hidráulico por [{Opcion}]{AeroPres}.}}{GestPres}",
+			"{{Sonda de presión estática del circuito hidráulico.}}{GestPres.is(\"Sonda\")}",
+			"{{Presostato de seguridad por [mínima/máxima] en el circuito hidráulico.}}{GestPres.is(\"Presostato\")}",
 		],
 		"Funcionamiento": [
 			"El gestor de producción recibe la demanda térmica del sistema y determina el número de productores necesarios en cada momento, activando o deteniendo los equipos de forma coordinada.",
@@ -296,14 +326,15 @@ const Narrativa = {
 		],
 	},
 	"Caldera": {
-		"Descripcion": [
+		"Descripción": [
 			"La caldera constituye uno de los elementos principales de producción térmica del sistema, aportando la energía necesaria para atender las demandas de los distintos circuitos consumidores.",
 			"Su funcionamiento se integra dentro de la estrategia general de generación, adaptándose a las condiciones de carga y a las consignas establecidas por el sistema de control."
 		],
 		"Elementos": [
 			"{{Temperatura[/s]{CaldTemp} de [impulsión/impulsión y retorno]{CaldTemp} general[/es]{CaldTemp}.}}{CaldTemp}",
 			"{{[{Opcion}]{CaldHumo} para la temperatura de humos.}}{CaldHumo}",
-			"{{Lectura de la presión estática del circuito hidráulico por [{Opcion}]{AeroPres}.}}{CaldPres}",
+			"{{Sonda de presión estática del circuito hidráulico.}}{CaldPres.is(\"Sonda\")}",
+			"{{Presostato de seguridad por [mínima/máxima] en el circuito hidráulico.}}{CaldPres.is(\"Presostato\")}",
 			"{{Bomba[/s]{CaldBomb} asociada[/s]{CaldBomb} a la caldera.}}{CaldBomb}",
 			"{{Válvula motorizada [{Opcion}]{CaldValv} en retorno.}}{CaldValv}",
 		],
@@ -313,7 +344,7 @@ const Narrativa = {
 			"El arranque de la caldera se produce [por demanda de la instalación|por horario|por control externo].",
 			"{{Antes del arranque de la caldera se verifica el correcto funcionamiento de la[/s]{CaldBomb} bomba[/s]{CaldBomb} asociada[/s]{CaldBomb}, para garantizar que existe circulación de fluido.}}{CaldBomb}",
 			"{{El sistema gestiona el funcionamiento de las bombas asociadas de forma alternada, realizando la rotación de la bomba en funcionamiento en función de las horas de servicio o en caso de fallo de la otra bomba, de modo que se mantenga la disponibilidad de la caldera.}}{CaldBomb.qty('>1')}",
-			"{{El bombeo se mantiene encendido una cantidad de tiempo configurable tras el apagado de la caldera para aprovechar el calor remanente y los disparos por inercia termica.}}{CaldBomb}",
+			"{{El bombeo se mantiene encendido una cantidad de tiempo configurable tras el apagado de la caldera para aprovechar el calor remanente y los disparos por inercia térmica.}}{CaldBomb}",
 			"{{Se supervisa continuamente la temperatura de impulsión de caldera, para verificar el correcto funcionamiento.}}{CaldTemp}",
 			"{{Se supervisa continuamente la temperatura de retorno de caldera, y en caso de temperaturas de retorno excesivamente bajas, se regula la válvula de retorno para evitar la condensación de los humos.}}{CaldValv.is('0..10Vcc')|CaldValv.is('3 Puntos')}",
 			"{{La válvula de aislamiento se mantiene cerrada cuando la caldera se encuentre parada o en condición de fallo y se abre unicamente cuando es necerario arrancar la caldera. Asi se evitan recirculaciones no deseadas a traves de la caldera cuando esta está apagada.}}{CaldValv.is('Todo/Nada')}",
@@ -328,13 +359,14 @@ const Narrativa = {
 		],
 	},
 	"Aerotermia": {
-		"Descripcion": [
-			"La unidad de aerotermia es un elemento principal de producción térmica del sistema, intercambiando energía termica con el aire exterior para aportar calor o frío a los distintos consumidores.",
+		"Descripción": [
+			"La unidad de aerotermia es un elemento principal de producción térmica del sistema, intercambiando energía térmica con el aire exterior para aportar calor o frío a los distintos consumidores.",
 		],
 		"Elementos": [
-			"{{Temperatura[/s]{AeroTemp} de [impulsión/impulsión y retorno]{AeroTemp} general[/es]{AeroTemp}.}}{AeroTemp}",
-			"{{Lectura de la presión estática del circuito hidráulico por [{Opcion}]{AeroPres}.}}{AeroPres}",
-			"{{Bomba[/s]{AeroBomb} asociada[/s]{AeroBomb} a la aerotermia.}}{AeroBomb}",
+			"{{Temperatura[/s]{AeroTemp} de impulsión[/ y retorno]{AeroTemp} general[/es]{AeroTemp}.}}{AeroTemp}",
+			"{{Sonda de presión estática del circuito hidráulico.}}{AeroPres.is(\"Sonda\")}",
+			"{{Presostato de seguridad por [mínima/máxima] en el circuito hidráulico.}}{AeroPres.is(\"Presostato\")}",
+			"{{Bomba[/s]{AeroBomb} de circulación.}}{AeroBomb}",
 			"{{Válvula motorizada para conmutación entre modos de trabajo.}}{AeroVaCF}",
 		],
 		"Funcionamiento": [
@@ -348,7 +380,7 @@ const Narrativa = {
 			// Bombas
 			"{{Antes del arranque se verifica el correcto funcionamiento de la[/s]{AeroBomb} bomba[/s]{AeroBomb} asociada[/s]{AeroBomb}, para garantizar que existe circulación de fluido.}}{AeroBomb}",
 			"{{El sistema gestiona el funcionamiento de las bombas asociadas de forma alternada, realizando la rotación de la bomba en funcionamiento en función de las horas de servicio o en caso de fallo de la otra bomba, de modo que se mantenga la disponibilidad de la aerotermia.}}{AeroBomb.qty('>1')}",
-			"{{El bombeo se mantiene encendido una cantidad de tiempo configurable tras el apagado de la aerotermia para aprovechar la energia termica remanente.}}{AeroBomb}",
+			"{{El bombeo se mantiene encendido una cantidad de tiempo configurable tras el apagado de la aerotermia para aprovechar la energía térmica remanente.}}{AeroBomb}",
 
 			// Camio de modo
 			"{{La señal externa [{NombreUsuario}]{AeroCaFr} provoca el cambio de modo de funcionamiento conmutando los elementos automáticaticamente.}}{AeroCaFr}",
@@ -360,25 +392,51 @@ const Narrativa = {
 
 		]
 	},
+	"Solar": {
+		"Descripcion": [
+			"El sistema solar térmico tiene como finalidad el aprovechamiento de la energía solar para la producción o apoyo de energía térmica en la instalación.",
+			"La instalación se compone de un circuito primario de captación y, opcionalmente, de circuitos secundarios de acumulación o transferencia, integrados con el resto de sistemas térmicos."
+		],
+		"Elementos": [
+			"{{Sonda de radiación solar para detección de condiciones favorables de captación.}}{SolRad}",
+			"{{Sonda de temperatura en los paneles solares.}}{SolTePa}",
+			"{{Sonda de temperatura en el circuito secundario.}}{SolTeSe}",
+			"{{Sonda de temperatura en el depósito solar.}}{SolTeDe}",
+			"{{Bomba de circulación del circuito primario solar.}}{SolBoPr}",
+			"{{Bomba de circulación del circuito secundario solar.}}{SolBoSe}",
+			"{{Bomba de transvase entre circuitos.}}{SolBoTr}",
+			"{{Aerotermo para disipación de excedentes térmicos.}}{SolAero}",
+			"{{Válvula de control del circuito primario.}}{SolVaPr}",
+			"{{Válvula de control del circuito secundario.}}{SolVaSe}",
+			"{{Sistema de control de presión del circuito solar.}}{SolPres}"
+		],
+		"Funcionamiento": [
+			"{{}}{SolRad}",
+			"{{}}{SolTePa}",
+			"{{}}{SolTeDe}",
+			"{{}}{SolBoPr}",
+			"{{}}{SolBoSe}",
+			"{{}}{SolBoTr}",
+			"{{}}{SolAero}",
+			"{{}}{SolVaPr}",
+			"{{}}{SolVaSe}",
+			"{{}}{SolPres}"
+		]
+	},
 	"Circuito Calefacción/Distribución": {
 
-		"Descripcion": [
-			"El circuito de [{NombreUsuario}]{MainBloc} constituye el elemento encargado de distribuir la energía térmica hasta los distintos emisores o zonas de consumo.",
-			"Su regulación permite mantener la temperatura del fluido de impulsión dentro de los valores de consigna adecuados, optimizando el confort y la eficiencia energética del conjunto.",
+		"Descripción": [
+			"El [{NombreUsuario}]{MainBloc} se encarga de distribuir la energía térmica hasta las zonas de consumo.",
+			"Su regulación permite mantener la temperatura del fluido circulado en el valor de consigna establecido, optimizando el confort y la eficiencia energética.",
 		],
-		/*
-		"Descripcion": [
-			"Las consignas de impulsión se determinan dinámicamente en función de las condiciones exteriores, aplicando curvas de compensación climática configurables que permiten ajustar la temperatura de suministro a las necesidades reales del edificio. Esta regulación proporcional-adaptativa, basada en el principio de control compensado, contribuye a reducir el consumo energético sin comprometer el confort térmico de los usuarios.",
-			"Se han implementado distintos modos de funcionamiento (ECO Día, ECO Noche, Reducción por Ausencia, etc.) que adaptan automáticamente las consignas de temperatura y los tiempos de operación a las condiciones de ocupación y horarios de uso previstos. La transición entre modos se realiza de forma gradual, aplicando rampas de consigna y retardos configurables que evitan oscilaciones térmicas y preservan la estabilidad hidráulica del sistema.",
-			"La distribución hidráulica se gestiona mediante un conjunto de bombas modulantes controladas por variadores de frecuencia, que ajustan su velocidad en función de la presión diferencial medida y de las válvulas de control de los circuitos secundarios. Esta regulación proporcional mantiene la presión del sistema dentro de los valores de diseño, optimizando el consumo eléctrico y asegurando un reparto homogéneo del caudal en los distintos ramales.",
-		],
-		*/
 
 		"Elementos": [
+
 			"{{Sonda[/s]{CircTemp} de temperatura de impulsión[/ y retorno]{CircTemp} del circuito.}}{CircTemp}",
 			"{{Sonda de ambiente para supervisión o limitación de la temperatura interior.}}{CircAmbi}",
-			"{{Sensor de presión diferencial}}{CircDife}{{ para regulación del bombeo}}{CircBomb}{{.}}{CircDife}",
 			"{{Bomba[/s]{CircBomb} para la circulación del fluido.}}{CircBomb}",
+			"{{Sensor de presión diferencial}}{CircDife}{{ para regulación del bombeo}}{CircBomb}{{.}}{CircDife}",
+			"{{Válvula de bypass entre ida y retorno.}}{CircVaBy}",
 			"{{Válvula de corte para permitir o no la circulacion de fluido.}}{CircValv.is(\"Todo/Nada\")}",
 			"{{Válvula de control para la regulación de la temperatura.}}{CircValv.is(\"0..10Vcc\")|CircValv.is(\"3 Puntos\")}",
 			"{{Válvula de cambio de régimen calor / frío.}}{CircVaCF}"
@@ -387,83 +445,133 @@ const Narrativa = {
 		"Funcionamiento": [
 
 			// MP	
-			// TODO añadir la orden de arranque externa 0..10V
-			"{{El [{NombreUsuario}]{MainBloc} se activar por señal de demanda externa.}}{CircExMP}",
-			"{{El [{NombreUsuario}]{MainBloc} se activar [por horario y condiciones exteriores|por horario|por demanda de los consumidores que atiende].}}{!CircExMP}",
-			
+			"{{El [{NombreUsuario}]{MainBloc} se activa por señal de demanda externa.}}{CircExMP.is(\"Todo/Nada\")}",
+			"{{El [{NombreUsuario}]{MainBloc} se activa cuando la señal de demanda externa interpretada en ºC [sea superior a un valor configurable|sea superior o inferior a un valor configurable en modo calor o frio respectivamente].}}{CircExMP.is(\"0..10Vcc\")}",
+			"{{El [{NombreUsuario}]{MainBloc} se activa [por horario y condiciones exteriores|por horario|por demanda de las zonas].}}{!CircExMP}",
+
 			// Temperatura, consigna, valvula
-			"{{La consigna de temperatura de impulsion [se calcula por curva con compensación por temperatura exterior|se establece según la maxima demanda de consumidores|se preconfigura a punto fijo].}}{CircTemp}",
+			"La consigna de trabajo [se calcula por curva de compensación por temperatura exterior|se establece según la máxima demanda de consumidores|se preconfigura a punto fijo].",
+			"En funcion a la consigna establecida, se añade un diferencial configurable para emitir una demanda hacia los productores térmicos.",
+			"{{Se supervisa la temperatura de impulsión para verificar que sea acorde a la consigna establecida.}}{CircTemp}",
 			"{{La válvula de control regulará la temperatura de impulsión del circuito de forma proporcional para adecuarse a la consigna establecida.}}{CircValv.is(\"0..10Vcc\")|CircValv.is(\"3 Puntos\")}",
 			"{{La válvula todo/nada, abre para permitir el paso de fluido cuando se active el circuito.}}{CircValv.is(\"Todo/Nada\")}",
-			"{{La sonda de temperatura ambiente, se utiliza para [limitar la temperatura de impulsión del circuito|parar el circuito] en función de las condiciones interiores.}}{CircAmbi}",
-			"{{El sensor de presión diferencial se usa [solo como lectura|para compensar la temperatura de impulsion por demanda].}}{!CircBomb|CircBomb.is(\"M/P y Estado\")&CircDife}",
-			
+			"{{La sonda de temperatura ambiente, se utiliza para }}{CircAmbi}{{limitar la temperatura de impulsión del circuito}}{CircValv.is(\"0..10Vcc\")|CircValv.is(\"3 Puntos\")&CircAmbi}{{cerrar la válvula todo/nada}}{CircValv.is(\"Todo/Nada\")&CircAmbi}{{parar el circuito}}{!CircValv&CircAmbi}{{ para evitar <+sobrecalentamiento|sobreenfriamiento> del ambiente.}}{CircAmbi}",
+			"{{El sensor de presión diferencial se usa solamente como lectura.}}{!CircBomb|CircBomb.is(\"M/P y Estado\")&!CircVaBy&CircDife}",
+			"{{El sensor de presión diferencial se usa para modular la válvula de bypass y mantener una presion diferencial fija configurable.}}{CircVaBy&CircDife}",
+
 			// Bombas
 			"{{Durante el funcionamiento se verifica el correcto funcionamiento de la[/s]{CircBomb} bomba[/s]{CircBomb}, para garantizar que existe circulación de fluido.}}{CircBomb}",
 			"{{El sistema gestiona el funcionamiento de las bombas de forma alterna, realizando la rotación de la bomba en funcionamiento en función de las horas de servicio o en caso de fallo de la otra bomba, de modo que se mantenga la disponibilidad del circuito.}}{CircBomb.qty('>1')}",
-			"{{El bombeo se modula para mantener una lectura de presion diferencial fija configurable.}}{CircDife&CircBomb.is(\"0..10Vcc\")}",
-			"{{El bombeo se modula para mantener un salto termico constante configurable.}}{!CircDife&CircBomb.is(\"0..10Vcc\")&CircTemp.qty(\">1\")}",
-			"{{El bombeo se modula a una velocidad fija configurable.}}{!CircDife&CircBomb.is(\"0..10Vcc\")&!CircTemp.qty(\">1\")}",
-			"{{El bombeo se mantiene encendido una cantidad de tiempo configurable tras el apagado del circuito para aprovechar la energia termica remanente.}}{CircBomb}",
+			"{{El bombeo se modula para mantener una lectura de presion diferencial fija configurable, para compensar variaciones de carga hidráulica, garantizando el caudal necesario en cada momento.}}{CircDife&CircBomb.is(\"0..10Vcc\")}",
+			"{{El bombeo se modula para mantener un salto termico constante configurable, para compensar variaciones de carga hidráulica, garantizando el caudal necesario en cada momento.}}{!CircDife&CircBomb.is(\"0..10Vcc\")&CircTemp.qty(\">1\")}",
+			"{{El bombeo se modula a una velocidad fija configurable para mantener el caudal nominal de diseño del circuito.}}{!CircDife&CircBomb.is(\"0..10Vcc\")&!CircTemp.qty(\">1\")}",
+			"{{El bombeo se mantiene encendido una cantidad de tiempo configurable tras el apagado del circuito para aprovechar la energía térmica remanente.}}{CircBomb}",
 
 			// calor frio
-			"{{En en modo refrigeración, con la lectura de temperatura y humedad ambiente se hace el calculo de punto de rocio. Con ese calculo de temperatura mas un diferencial se establece el limite minimo detemperatura de impulsion  para evitar riesgos de condensación.}}{CircAmbi.is(\"Temp y Hum\")|CircAmbi.is(\"Temp, Hum y CO2\")$!CircValv.is(\"Todo/Nada\")}",
-			"{{En en modo refrigeración, con la lectura de temperatura y humedad ambiente se hace el calculo de punto de rocio. Si la temperatura de impulsion alcanza ese calculo de temperatura se cierrala la válvula para evitar riesgos de condensación.}}{CircAmbi.is(\"Temp y Hum\")|CircAmbi.is(\"Temp, Hum y CO2\")$CircValv.is(\"Todo/Nada\")}",
-			"{{La válvula de cambio de régimen, actua automáticamente respecto modo de operación activo.}}{CircVaCF}",
-			
+			"{{En en modo refrigeración, con la lectura de temperatura y humedad ambiente se hace el cálculo de punto de rocio.}}{CircAmbi.is(\"Temp y Hum\")|CircAmbi.is(\"Temp, Hum y CO2\")}",
+			"{{Con ese cálculo de temperatura mas un diferencial se establece el limite mínimo de temperatura de impulsión para evitar el riesgo de condensación.}}{CircAmbi.is(\"Temp y Hum\")|CircAmbi.is(\"Temp, Hum y CO2\")&!CircValv.is(\"Todo/Nada\")}",
+			"{{Si la temperatura de impulsión alcanza ese cálculo de temperatura, se cierra la la válvula todo/nada para evitar el riesgo de condensación.}}{CircAmbi.is(\"Temp y Hum\")|CircAmbi.is(\"Temp, Hum y CO2\")&CircValv.is(\"Todo/Nada\")}",
+			"{{La[/s]{CircVaCF} válvula[/s]{CircVaCF} de cambio de régimen, seleccionará[/n]{CircVaCF} automáticamente el circuito correspondiente en función del régimen activo del sistema.}}{CircVaCF}",
+
 			// demanda a terceros			
-			"{{Una vez el circuito esta en marcha, la señal de demanda hacia el control de terceros, se modula conforme a la consigna establecida mas un direfencial configurable, para solicitar el arranque de la produccion térmica.}}{CircDema.is(\"0..10Vcc\")}",
-			"{{Una vez el circuito esta en marcha, se activa la señal de demanda hacia el control de terceros para solicitar el arranque de la produccion térmica.}}{CircDema.is(\"Todo/Nada\")}",
+			"{{Una vez el circuito esta en marcha, la señal de demanda hacia terceros, se modula conforme a la consigna establecida mas un direfencial configurable, para solicitar el arranque de la produccion térmica.}}{CircDema.is(\"0..10Vcc\")}",
+			"{{Una vez el circuito esta en marcha, se activa la señal de demanda hacia terceros para solicitar el arranque de la produccion térmica.}}{CircDema.is(\"Todo/Nada\")}",
 
 		],
-		/*
-		"Funcionamiento": [
-			"El circuito se activará [por demanda de zona | por horario | por señal externa]{CircDema}, habilitando la bomba y la válvula de control asociadas.",
-			"{{La válvula [{NombreUsuario}]{CircValv} regulará la temperatura de impulsión del circuito en función de la consigna establecida, manteniendo un equilibrio térmico adecuado.}}{CircValv}",
-			"{{La bomba [{NombreUsuario}]{CircBomb} ajustará su velocidad de funcionamiento en función de <+presión diferencial | +salto térmico | control externo>, garantizando el caudal necesario en cada momento.}}{CircBomb}",
-			"{{Cuando exista sonda de ambiente, esta limitará la temperatura máxima de impulsión para evitar sobrecalentamientos o sobreenfriamientos del recinto.}}{CircAmbi}",
-			"{{Si la sonda de ambiente mide además humedad relativa, se calculará el punto de rocío y el control limitará la impulsión para mantener el fluido por encima del mismo, evitando condensaciones en modo refrescante.}}{CircAmbi}",
-			"{{El sensor de presión diferencial permitirá la regulación del caudal del circuito, ajustando la bomba modulante para compensar variaciones de carga hidráulica.}}{CircDife}",
-			"{{En modo de funcionamiento combinado (calor/frío), la válvula [{NombreUsuario}]{CircVaCF} seleccionará automáticamente el circuito correspondiente en función del régimen activo del sistema.}}{CircVaCF}",
-			"{{Cuando exista una señal de habilitación externa, el circuito permanecerá a la espera hasta recibir la orden de demanda, momento en el cual iniciará su secuencia de arranque.}}{CircDema}"
-		],
-		*/
 	},
 	"ACS": {
 		"Descripcion": [
-			"El sistema de producción de agua caliente sanitaria (ACS) está constituido por el conjunto de intercambio térmico, depósito acumulador y circuitos hidráulicos de carga, consumo y retorno.",
-			"Su función es mantener la temperatura del agua sanitaria dentro de los valores de confort e higiene establecidos, garantizando la disponibilidad continua del servicio.",
-			"La producción de Agua Caliente Sanitaria (ACS) se gestiona mediante un subsistema específico que controla la temperatura de acumulación, el régimen de carga y las maniobras asociadas al circuito de recirculación. El sistema prioriza la demanda de ACS frente a la de climatización cuando se detectan condiciones de uso intensivo, activando la producción mediante el productor térmico más eficiente disponible.",
-			"La regulación de la temperatura de acumulación se realiza mediante consignas adaptativas que tienen en cuenta tanto la demanda instantánea como el perfil horario de consumo. La recirculación se controla en función de la temperatura de retorno y del horario de servicio, asegurando un tiempo de espera mínimo en los puntos de consumo y evitando pérdidas térmicas innecesarias durante los periodos de baja utilización.",
-			"Para garantizar la calidad sanitaria del agua, el sistema dispone de una función de choque térmico antilegionella que se ejecuta de forma periódica, elevando la temperatura del acumulador por encima del umbral de desinfección durante un tiempo definido. Este proceso se gestiona de forma totalmente automática y con registro de eventos, de modo que pueda verificarse su cumplimiento durante las labores de mantenimiento preventivo.",
-			"El control de la producción de ACS se encuentra completamente integrado en la lógica general del sistema, compartiendo variables de estado, consignas y prioridades con el gestor principal. De este modo, se evitan conflictos entre demandas simultáneas y se garantiza una utilización racional de los recursos energéticos disponibles.",
+			"El sistema de Agua Caliente Sanitaria es el encargado de la producción, acumulación y distribución de agua caliente destinada a consumo.",
+			"Su diseño garantiza la disponibilidad, manteniendo las condiciones de temperatura para el confort de los usuarios y el cumplimiento de normativa de higiene y seguridad sanitaria.",
+		],
 
-
+		"Elementos": [
+			"{{Sonda de temperatura en el primario de produccion de ACS.}}{ACSTePr}",
+			"{{Sonda de temperatura en el secundario del intercambiador de ACS.}}{ACSTeSe}",
+			"{{Sonda[/s]{ACSTeDe} de temperatura }}{ACSTeDe}{{[superior e inferior en el depósito acumulador |en depósito caliente y frío ]}}{ACSTeDe.qty(\">1\")}{{en el depósito acumulador}}{ACSTeDe.qty(\"==1\")}{{.}}{ACSTeDe}",
+			"{{Sonda de temperatura en la ida de consumo.}}{ACSTeIC}",
+			"{{Sonda de temperatura en el retorno de consumo.}}{ACSTeRC}",
+			"{{Bomba del circuito primario.}}{ACSBoPr}",
+			"{{Bomba del circuito secundario.}}{ACSBoSe}",
+			"{{Bomba de retorno de consumo.}}{ACSBoRe}",
+			"{{Válvula de mezcla en primario de ACS.}}{ACSVaPr}",
+			"{{Válvula de mezcla en ida de consumo.}}{ACSVaCo}",
+			"{{Bypass de la válvula de consumo.}}{ACSVaBy}"
+		],
+		// TODO terminar descripcion del funcionamiento
+		"Funcionamiento": [
+			"{{La producción de ACS se regula en función de la temperatura de acumulación.}}{ACSTeDe}",
+			"{{La producción instantanea de ACS se regula en función a la temperatura de ida de consumo (producción instantanea)].}}{ACSTeCo&!ACSTeIC}",
+			"La consigna de trabajo [se calcula por curva de compensación por temperatura exterior|se establece según la máxima demanda de consumidores|se preconfigura a punto fijo].",
+			"En funcion a la consigna establecida, se añade un diferencial configurable para emitir una demanda hacia los productores térmicos.",
+			"{{La válvula [{NombreUsuario}]{ACSVaPr} regulará la aportación de energía térmica al intercambiador para mantener la temperatura de acumulación en el valor de consigna.}}{ACSVaPr}",
+			"{{La bomba [{NombreUsuario}]{ACSBoPr} se activará durante los procesos de carga del depósito, garantizando el caudal necesario en el circuito primario.}}{ACSBoPr}",
+			"{{Cuando exista bomba de secundario, esta permitirá la recirculación interna del intercambiador para mejorar la estabilidad térmica y la eficiencia de la transferencia.}}{ACSBoSe}",
+			"{{La bomba [{NombreUsuario}]{ACSBoRe} mantendrá la temperatura de la red de distribución de ACS, reduciendo el tiempo de espera en los puntos de consumo.}}{ACSBoRe}",
+			"{{La válvula [{NombreUsuario}]{ACSVaCo} regulará el caudal de ACS hacia los consumidores en función de la demanda y de las condiciones de temperatura.}}{ACSVaCo}",
+			"{{Cuando exista bypass, este permitirá un caudal mínimo de recirculación para favorecer la homogeneidad térmica del sistema.}}{ACSVaBy}",
+			"{{La temperatura del retorno de consumidores se supervisará para ajustar la regulación del sistema y compensar posibles pérdidas térmicas.}}{ACSTeIC}",
+			"{{La temperatura del retorno de consumidores se supervisará para ajustar la regulación del sistema y compensar posibles pérdidas térmicas.}}{ACSTeRC}",
+		]
+	},
+	"Climatizador": {
+		"Descripcion": [
+			"El climatizador es el equipo encargado del tratamiento y acondicionamiento del aire impulsado a los espacios servidos.",
+			"Integra funciones de ventilación, calefacción, refrigeración y control de calidad del aire interior."
 		],
 		"Elementos": [
-			"{{Sonda de temperatura en el secundario de intercambio para control de producción.}}{ACSTeSe}",
-			"{{Sonda de temperatura en el depósito acumulador para regulación de carga.}}{ACSTeDe}",
-			"{{Sonda de temperatura en el retorno de consumidores para supervisión y compensación térmica.}}{ACSTeCo}",
-			"{{Bomba de primario encargada del caudal de energía térmica desde el sistema de producción.}}{ACSBoPr}",
-			"{{Bomba de secundario para recirculación dentro del propio intercambiador.}}{ACSBoSe}",
-			"{{Bomba de retorno encargada de mantener la red de ACS en temperatura, evitando enfriamientos.}}{ACSBoRe}",
-			"{{Válvula de control del circuito primario, modulante o de dos/tres puntos, para regular el aporte de energía térmica.}}{ACSVaPr}",
-			"{{Válvula de consumidores encargada de la distribución del ACS hacia la red de consumo.}}{ACSVaCo}",
-			"{{Bypass de la válvula de consumidores para equilibrado hidráulico o mantenimiento de temperatura.}}{ACSVaBy}",
-			"{{Señal de demanda a terceros para solicitar producción de calor cuando el sistema no gestiona directamente la fuente térmica.}}{ACSDema}"
+			"{{Sonda de ambiente o retorno del climatizador.}}{CliAmb}",
+			"{{Sonda de temperatura de impulsión.}}{CliImp}",
+			"{{Sonda de recuperación térmica.}}{CliReco}",
+			"{{Sonda de toma de aire exterior.}}{CliExt}",
+			"{{Sonda de salida de aire al exterior.}}{CliSal}",
+			"{{Válvula de control de la batería térmica.}}{CliVaBat}",
+			"{{Bomba asociada a la batería térmica.}}{CliBoBat}",
+			"{{Presostato de detección de filtro sucio.}}{CliFil}",
+			"{{Sensor de presión del ventilador.}}{CliPres}",
+			"{{Ventilador del climatizador.}}{CliVent}",
+			"{{Sistema de humectación.}}{CliHum}",
+			"{{Sistema de recuperación de calor.}}{CliRecup}",
+			"{{Compuertas de regulación de aire.}}{CliComp}",
+			"{{Señal externa de cambio de régimen.}}{CliInVe}"
 		],
 		"Funcionamiento": [
-			"El control de la producción de ACS se realiza a partir de la lectura de las sondas de temperatura de depósito y secundario, regulando el caudal de energía térmica a través de la válvula de control del primario.",
-			"{{La válvula [{NombreUsuario}]{ACSVaPr} ajustará la aportación térmica al intercambiador para mantener la temperatura de acumulación dentro de los límites de consigna.}}{ACSVaPr}",
-			"{{La bomba de primario [{NombreUsuario}]{ACSBoPr} se activará junto con la válvula de control, asegurando el caudal necesario durante el proceso de carga del depósito.}}{ACSBoPr}",
-			"{{Cuando exista bomba de secundario, esta permitirá la recirculación interna para estabilizar la temperatura en el intercambiador y mejorar la transferencia térmica.}}{ACSBoSe}",
-			"{{La bomba de retorno [{NombreUsuario}]{ACSBoRe} mantendrá la temperatura del circuito de distribución, evitando enfriamientos en los puntos de consumo y reduciendo el tiempo de espera del usuario.}}{ACSBoRe}",
-			"{{En caso de disponer de válvula de consumidores, esta regulará el caudal hacia la red de ACS en función de la demanda y las condiciones de temperatura.}}{ACSVaCo}",
-			"{{Cuando exista válvula de bypass, esta permitirá un flujo mínimo de recirculación para garantizar la homogeneidad térmica o el equilibrado hidráulico del sistema.}}{ACSVaBy}",
-			"{{Si el sistema no gestiona directamente los productores de calor, se generará una señal de [{NombreUsuario}]{ACSDema} hacia el sistema externo para solicitar la carga del depósito cuando la temperatura descienda por debajo del umbral establecido.}}{ACSDema}",
-			"{{El control supervisará continuamente la temperatura de consumo [{NombreUsuario}]{ACSTeCo}, corrigiendo las desviaciones mediante la modulación de válvulas y bombas asociadas.}}{ACSTeCo}"
+			"{{}}{CliAmb}",
+			"{{}}{CliImp}",
+			"{{}}{CliReco}",
+			"{{}}{CliExt}",
+			"{{}}{CliSal}",
+			"{{}}{CliVaBat}",
+			"{{}}{CliBoBat}",
+			"{{}}{CliFil}",
+			"{{}}{CliPres}",
+			"{{}}{CliVent}",
+			"{{}}{CliHum}",
+			"{{}}{CliRecup}",
+			"{{}}{CliComp}",
+			"{{}}{CliInVe}"
 		]
-	}
+	},
+	"Fan Coil": {
+		"Descripcion": [
+			"El fan coil es una unidad terminal destinada a la climatización de zonas individuales mediante la impulsión de aire tratado.",
+			"Permite el control independiente de la temperatura ambiente en cada espacio servido."
+		],
+		"Elementos": [
+			"{{Sensor de ambiente o retorno del fan coil.}}{FCAm}",
+			"{{Sonda de temperatura de impulsión.}}{FCImp}",
+			"{{Válvula de control de la batería.}}{FCVaBat}",
+			"{{Presostato de filtro sucio.}}{FCFil}",
+			"{{Ventilador del fan coil.}}{FCVent}"
+		],
+		"Funcionamiento": [
+			"{{}}{FCAm}",
+			"{{}}{FCImp}",
+			"{{}}{FCVaBat}",
+			"{{}}{FCFil}",
+			"{{}}{FCVent}"
+		]
+	},
 }
 
 const Intro = [

@@ -1056,7 +1056,7 @@ function interpretarNarrativa(texto, bloque) {
                     <label class="narrativa-checkbox">${label}</label>`;
             }).join("\n");
 
-            return `<span class="narrativa-checkbox-group">${checkboxes}</span>`;
+            return `<span class="narrativa-checkbox-group">${checkboxes}</span><br>`;
         });
     }
 
@@ -1182,7 +1182,6 @@ function evaluarCondicion(refExpr, bloque) {
     const elem = bloque.Elementos.find(e => e.Ref === refExpr);
     return !!(elem && elem.Checked);
 }
-
 
 function guardaCambiosMemoria() {
 

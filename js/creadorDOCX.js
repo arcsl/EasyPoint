@@ -157,7 +157,7 @@ async function generarMemoriaDOCX() {
             if (siguiente && siguiente.tagName === "UL") {
                 siguiente.querySelectorAll("li").forEach(li => {
                     children.push(new Paragraph({
-                        text: li.textContent.trim(),
+                        text: obtenerTextoPlano(li),
                         spacing: { before: 50, after: 50 },
                         indent: { left: 600 },
                     }));
@@ -181,4 +181,48 @@ async function generarMemoriaDOCX() {
     link.download = `${nombreProyectoActual || "Proyecto"} - Memoria de control.docx`;
     link.click();
     URL.revokeObjectURL(link.href);
+}
+
+function obtenerTextoPlano(li) {
+    const clon = li.cloneNode(true);
+
+    // Resolver selects para mostrar solo el texto seleccionado
+    clon.querySelectorAll("select").forEach(select => {
+        const seleccion = select.selectedOptions[0]?.textContent || "";
+        select.replaceWith(document.createTextNode(seleccion));
+    });
+
+    // Resolver multichecks para mostrar las selecciones en texto concatenado
+    clon.querySelectorAll(".narrativa-checkbox-group").forEach(grupo => {
+
+        const seleccionados = [];
+
+        const inputs = grupo.querySelectorAll("input[type='checkbox']");
+        inputs.forEach(input => {
+            if (input.checked) {
+                const label = input.nextElementSibling;
+                if (label) {
+                    seleccionados.push(label.textContent.trim());
+                }
+            }
+        });
+
+        let textoFinal = "";
+        if (seleccionados.length === 1) {
+            textoFinal = seleccionados[0];
+        } else if (seleccionados.length === 2) {
+            textoFinal = `${seleccionados[0]} y ${seleccionados[1]}`;
+        } else if (seleccionados.length > 2) {
+            textoFinal =
+                seleccionados.slice(0, -1).join(", ")
+                + " y "
+                + seleccionados[seleccionados.length - 1];
+        }
+
+        grupo.replaceWith(document.createTextNode(textoFinal));
+    });
+
+    return clon.textContent
+        .replace(/\s+/g, " ")
+        .trim();
 }
