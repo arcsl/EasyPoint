@@ -474,44 +474,58 @@ const Narrativa = {
 			"{{La[/s]{CircVaCF} válvula[/s]{CircVaCF} de cambio de régimen, seleccionará[/n]{CircVaCF} automáticamente el circuito correspondiente en función del régimen activo del sistema.}}{CircVaCF}",
 
 			// demanda a terceros			
-			"{{Una vez el circuito esta en marcha, la señal de demanda hacia terceros, se modula conforme a la consigna establecida mas un direfencial configurable, para solicitar el arranque de la produccion térmica.}}{CircDema.is(\"0..10Vcc\")}",
-			"{{Una vez el circuito esta en marcha, se activa la señal de demanda hacia terceros para solicitar el arranque de la produccion térmica.}}{CircDema.is(\"Todo/Nada\")}",
+			"{{Una vez el circuito esta en marcha, la señal de demanda hacia terceros, se modula conforme a la consigna establecida mas un direfencial configurable, para solicitar el arranque de la producción térmica.}}{CircDema.is(\"0..10Vcc\")}",
+			"{{Una vez el circuito esta en marcha, se activa la señal de demanda hacia terceros para solicitar el arranque de la producción térmica.}}{CircDema.is(\"Todo/Nada\")}",
 
 		],
 	},
 	"ACS": {
 		"Descripcion": [
-			"El sistema de Agua Caliente Sanitaria es el encargado de la producción, acumulación y distribución de agua caliente destinada a consumo.",
-			"Su diseño garantiza la disponibilidad, manteniendo las condiciones de temperatura para el confort de los usuarios y el cumplimiento de normativa de higiene y seguridad sanitaria.",
+			"El sistema de Agua Caliente Sanitaria (ACS) es el encargado de la producción, acumulación y distribución de agua caliente destinada al consumo.",
+			"Su diseño garantiza la disponibilidad del servicio, manteniendo las condiciones de temperatura necesarias para el confort de los usuarios y el cumplimiento de la normativa vigente en materia de higiene y seguridad sanitaria."
 		],
-
 		"Elementos": [
-			"{{Sonda de temperatura en el primario de produccion de ACS.}}{ACSTePr}",
+			"{{Sonda de temperatura en el primario de producción de ACS.}}{ACSTePr}",
 			"{{Sonda de temperatura en el secundario del intercambiador de ACS.}}{ACSTeSe}",
-			"{{Sonda[/s]{ACSTeDe} de temperatura }}{ACSTeDe}{{[superior e inferior en el depósito acumulador |en depósito caliente y frío ]}}{ACSTeDe.qty(\">1\")}{{en el depósito acumulador}}{ACSTeDe.qty(\"==1\")}{{.}}{ACSTeDe}",
-			"{{Sonda de temperatura en la ida de consumo.}}{ACSTeIC}",
+			"{{Sonda[/s]{ACSTeDe} de temperatura }}{ACSTeDe}{{[superior e inferior del depósito acumulador |en depósito caliente y frío ]}}{ACSTeDe.qty(\">1\")}{{en el depósito acumulador}}{ACSTeDe.qty(\"==1\")}{{.}}{ACSTeDe}",
+			"{{Sonda de temperatura en la impulsión hacia los consumidores.}}{ACSTeIC}",
 			"{{Sonda de temperatura en el retorno de consumo.}}{ACSTeRC}",
-			"{{Bomba del circuito primario.}}{ACSBoPr}",
-			"{{Bomba del circuito secundario.}}{ACSBoSe}",
-			"{{Bomba de retorno de consumo.}}{ACSBoRe}",
-			"{{Válvula de mezcla en primario de ACS.}}{ACSVaPr}",
-			"{{Válvula de mezcla en ida de consumo.}}{ACSVaCo}",
+			"{{Bomba del circuito primario de ACS.}}{ACSBoPr}",
+			"{{Bomba del circuito secundario de ACS.}}{ACSBoSe}",
+			"{{Bomba de retorno de la red de consumo.}}{ACSBoRe}",
+			"{{Válvula de mezcla en el primario de ACS.}}{ACSVaPr}",
+			"{{Válvula de mezcla en la impulsión hacia consumidores.}}{ACSVaCo}",
 			"{{Bypass de la válvula de consumo.}}{ACSVaBy}"
 		],
-		// TODO terminar descripcion del funcionamiento
 		"Funcionamiento": [
-			"{{La producción de ACS se regula en función de la temperatura de acumulación.}}{ACSTeDe}",
-			"{{La producción instantanea de ACS se regula en función a la temperatura de ida de consumo (producción instantanea)].}}{ACSTeCo&!ACSTeIC}",
-			"La consigna de trabajo [se calcula por curva de compensación por temperatura exterior|se establece según la máxima demanda de consumidores|se preconfigura a punto fijo].",
-			"En funcion a la consigna establecida, se añade un diferencial configurable para emitir una demanda hacia los productores térmicos.",
-			"{{La válvula [{NombreUsuario}]{ACSVaPr} regulará la aportación de energía térmica al intercambiador para mantener la temperatura de acumulación en el valor de consigna.}}{ACSVaPr}",
-			"{{La bomba [{NombreUsuario}]{ACSBoPr} se activará durante los procesos de carga del depósito, garantizando el caudal necesario en el circuito primario.}}{ACSBoPr}",
-			"{{Cuando exista bomba de secundario, esta permitirá la recirculación interna del intercambiador para mejorar la estabilidad térmica y la eficiencia de la transferencia.}}{ACSBoSe}",
-			"{{La bomba [{NombreUsuario}]{ACSBoRe} mantendrá la temperatura de la red de distribución de ACS, reduciendo el tiempo de espera en los puntos de consumo.}}{ACSBoRe}",
-			"{{La válvula [{NombreUsuario}]{ACSVaCo} regulará el caudal de ACS hacia los consumidores en función de la demanda y de las condiciones de temperatura.}}{ACSVaCo}",
-			"{{Cuando exista bypass, este permitirá un caudal mínimo de recirculación para favorecer la homogeneidad térmica del sistema.}}{ACSVaBy}",
-			"{{La temperatura del retorno de consumidores se supervisará para ajustar la regulación del sistema y compensar posibles pérdidas térmicas.}}{ACSTeIC}",
-			"{{La temperatura del retorno de consumidores se supervisará para ajustar la regulación del sistema y compensar posibles pérdidas térmicas.}}{ACSTeRC}",
+			// TODO terminar descripcion del funcionamiento
+			// Producción
+			"Se define un horario de producción configurable.",
+			"{{Se establece una consigna de temperatura de acumulación y un diferencial asociado, ambos configurables.}}{ACSTeDe}",
+			"{{Se establece una consigna configurable de temperatura de impulsión a consumidores.}}{ACSTeCo&!ACSTeIC}",
+			"{{El arranque y parada de la producción se realiza comparando la temperatura de acumulación con la consigna y su diferencial.}}{ACSTeDe}",
+			"{{Dentro del horario establecido, la producción funciona de forma continua y se regula en función de la temperatura de impulsión a consumidores, operando como producción instantánea.}}{ACSTeCo&!ACSTeIC}",
+			"En función de la consigna establecida, se aplica un diferencial configurable para generar la demanda hacia los productores térmicos.",
+
+			"{{-- PRIMARIO --}}{ACSVaPr|ACSBoPr}",
+			"{{La [{NombreUsuario}]{ACSVaPr} regula la aportación de energía térmica para mantener la [{NombreUsuario}]{ACSTeSe} en el valor de consigna de acumulación más un diferencial configurable.}}{ACSVaPr.is(\"0..10Vcc\")|ACSVaPr.is(\"3 Puntos\")&ACSTeSe&ACSTeDe}",
+			"{{La [{NombreUsuario}]{ACSVaPr} regula la aportación de energía térmica para elevar la [{NombreUsuario}]{ACSTeDe} hasta el valor de consigna de acumulación.}}{ACSVaPr.is(\"0..10Vcc\")|ACSVaPr.is(\"3 Puntos\")&!ACSTeSe&ACSTeDe}",
+			"{{La [{NombreUsuario}]{ACSVaPr} regula la aportación de energía térmica para mantener la [{NombreUsuario}]{ACSTeIC} en el valor de consigna de impulsión a consumidores.}}{ACSVaPr.is(\"0..10Vcc\")|ACSVaPr.is(\"3 Puntos\")&!ACSTeDe}",
+			"{{Durante el funcionamiento de la producción se verifica el correcto estado de la[/s]{ACSBoPr} bomba[/s]{ACSBoPr}, garantizando la circulación de fluido.}}{ACSBoPr}",
+			"{{El sistema gestiona el funcionamiento alternado de las bombas, realizando la rotación en función de las horas de servicio o ante el fallo de una de ellas.}}{ACSBoPr.qty('>1')}",
+			"{{Tras la parada de la producción, el bombeo se mantiene activo durante un tiempo configurable para aprovechar la energía térmica remanente.}}{ACSBoPr}",
+
+			"{{-- SECUNDARIO --}}{ACSTeSe|ACSBoSe}",
+			"{{Durante el funcionamiento de la producción se verifica el correcto estado de la[/s]{ACSBoSe} bomba[/s]{ACSBoSe}, garantizando la circulación de fluido.}}{ACSBoSe}",
+			"{{Cuando la temperatura de acumulación es superior a la temperatura de los productores, la[/s]{ACSBoSe} bomba[/s]{ACSBoSe} de secundario se detiene[/n]{ACSBoSe} para evitar la cesión de energía del depósito hacia el primario, actuando como protección frente a descargas térmicas.}}{ACSBoSe&ACSTeDe}",
+			"{{El sistema gestiona el funcionamiento alternado de las bombas de secundario, realizando la rotación en función de las horas de servicio o ante el fallo de una de ellas.}}{ACSBoSe.qty('>1')}",
+			"{{Tras la parada de la producción, el bombeo de secundario se mantiene activo durante un tiempo configurable para aprovechar la energía térmica remanente.}}{ACSBoSe}",
+
+			"{{-- CONSUMO --}}{ACSTeIC|ACSTeRC|ACSBore}",
+			"{{La válvula [{NombreUsuario}]{ACSVaCo} regula la mezcla de ACS hacia los consumidores para mantener la consigna de temperatura prefijada.}}{ACSTeIC&ACSVaCo}",
+			"{{Durante el tratamiento antilegionela por choque térmico, la válvula de bypass permanece abierta para permitir el envío del agua a la máxima temperatura disponible.}}{ACSVaBy}",
+			"{{La temperatura de impulsión a consumidores se supervisa para ajustar la regulación del sistema y compensar posibles pérdidas térmicas.}}{ACSTeIC}",
+			"{{La temperatura de retorno de consumidores se supervisa para ajustar la regulación del sistema y compensar posibles pérdidas térmicas.}}{ACSTeRC}"
 		]
 	},
 	"Climatizador": {
