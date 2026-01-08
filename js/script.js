@@ -990,7 +990,13 @@ function crearMemoria() {
             seccionArray.forEach(texto => {
                 const textoPuntoListado = interpretarNarrativa(texto, bloque).trim();
                 if (textoPuntoListado !== "") {
-                    const puntoListado = document.createElement("li");
+                    let puntoListado;
+                    if(textoPuntoListado.startsWith("--")) {
+                        listado.appendChild(document.createElement("br"));    // 1 linea de separacion
+                        puntoListado =  document.createElement("p");
+                    } else {
+                        puntoListado =  document.createElement("li");
+                    }
                     puntoListado.innerHTML = textoPuntoListado;
                     listado.appendChild(puntoListado);
                 }

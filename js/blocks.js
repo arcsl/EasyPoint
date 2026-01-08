@@ -219,25 +219,26 @@ function blocks() {
 				elem.ValvTNProp("Válvula Primario", 0, "ACSVaPr"),
 				elem.ValvulaProp("Válvula Consumidores", 1, "ACSVaCo"),
 				elem.ValvulaToNa("Bypass Válvula Consumidores", 0, "ACSVaBy"),
+				elem.ValvulaToNa("Válvula Retorno Consumidores", 0, "ACSVaRe"),
 			],
 		},
 		{
 			"Nombre": "Climatizador",
 			"Elementos": [
-				elem.SensorAire("Sonda Ambiente / Retorno", 1),
-				elem.SensorAire("Sonda Impulsión", 1),
-				elem.SensorAire("Sonda Recuperación", 0),
-				elem.SensorAire("Sonda toma aire del Exterior", 0),
-				elem.SensorAire("Sonda salida aire al Exterior", 0),
-				elem.ValvTNProp("Válvula Batería", 1),
-				elem.MotorModul("Bomba Batería", 0),
-				elem.SimpleED("Presostato filtro sucio", 0),
-				elem.SoloActiva("Presión Ventilador", 0),
-				elem.MotorModul("Ventilador", 1),
-				elem.ExterModul("Humectador", 0),
-				elem.Recuperdor("Recuperador", 0),
-				elem.ValvTNProp("Compuertas", 0),
-				elem.SimpleED("Cambio de regimen externo", 0),
+				elem.SensorAire("Sonda Ambiente / Retorno", 1, "CliAmb"),
+				elem.SensorAire("Sonda Impulsión", 1, "CliImp"),
+				elem.SensorAire("Sonda Recuperación", 0, "CliReco"),
+				elem.SensorAire("Sonda toma aire del Exterior", 0, "CliExt"),
+				elem.SensorAire("Sonda salida aire al Exterior", 0, "CliSal"),
+				elem.ValvTNProp("Válvula Batería", 1, "CliVaBat"),
+				elem.MotorModul("Bomba Batería", 0, "CliBoBat"),
+				elem.SimpleED("Presostato filtro sucio", 0, "CliFil"),
+				elem.SoloActiva("Presión Ventilador", 0, "CliPres"),
+				elem.MotorModul("Ventilador", 1, "CliVent"),
+				elem.ExterModul("Humectador", 0, "CliHum"),
+				elem.Recuperdor("Recuperador", 0, "CliRecup"),
+				elem.ValvTNProp("Compuertas", 0, "CliComp"),
+				elem.SimpleED("Cambio de regimen externo", 0, "CliInVe"),
 			],
 		},
 		{
@@ -490,81 +491,135 @@ const Narrativa = {
 			"{{Sonda[/s]{ACSTeDe} de temperatura }}{ACSTeDe}{{[superior e inferior del depósito acumulador |en depósito caliente y frío ]}}{ACSTeDe.qty(\">1\")}{{en el depósito acumulador}}{ACSTeDe.qty(\"==1\")}{{.}}{ACSTeDe}",
 			"{{Sonda de temperatura en la impulsión hacia los consumidores.}}{ACSTeIC}",
 			"{{Sonda de temperatura en el retorno de consumo.}}{ACSTeRC}",
-			"{{Bomba del circuito primario de ACS.}}{ACSBoPr}",
-			"{{Bomba del circuito secundario de ACS.}}{ACSBoSe}",
-			"{{Bomba de retorno de la red de consumo.}}{ACSBoRe}",
+			"{{Bomba[/s]{ACSBoRe} de primario de ACS.}}{ACSBoPr}",
+			"{{Bomba[/s]{ACSBoRe} de secundario de ACS.}}{ACSBoSe}",
+			"{{Bomba[/s]{ACSBoRe} de recirculacion de consumo.}}{ACSBoRe}",
 			"{{Válvula de mezcla en el primario de ACS.}}{ACSVaPr}",
 			"{{Válvula de mezcla en la impulsión hacia consumidores.}}{ACSVaCo}",
-			"{{Bypass de la válvula de consumo.}}{ACSVaBy}"
+			"{{Bypass de la válvula de consumo.}}{ACSVaBy}",
+			"{{Válvula en retorno de consumo.}}{ACSVaRe}",
+
 		],
 		"Funcionamiento": [
-			// TODO terminar descripcion del funcionamiento
-			// Producción
-			"Se define un horario de producción configurable.",
+			// PRODUCCIÓN
+			"Se define un horario de producción configurable, dentro del cual el sistema de ACS puede operar de forma automática.",
 			"{{Se establece una consigna de temperatura de acumulación y un diferencial asociado, ambos configurables.}}{ACSTeDe}",
-			"{{Se establece una consigna configurable de temperatura de impulsión a consumidores.}}{ACSTeCo&!ACSTeIC}",
-			"{{El arranque y parada de la producción se realiza comparando la temperatura de acumulación con la consigna y su diferencial.}}{ACSTeDe}",
-			"{{Dentro del horario establecido, la producción funciona de forma continua y se regula en función de la temperatura de impulsión a consumidores, operando como producción instantánea.}}{ACSTeCo&!ACSTeIC}",
+			"{{Se establece una consigna configurable de temperatura de impulsión a consumidores.}}{ACSTeIC}",
+			"{{El arranque y la parada de la producción se realizan comparando la temperatura de acumulación con la consigna y su diferencial.}}{ACSTeDe}",
+			"{{Dentro del horario establecido, la producción funciona de forma continua y se regula en función de la temperatura de impulsión a consumidores, operando como producción instantánea.}}{ACSTeIC&!ACSTeDe}",
 			"En función de la consigna establecida, se aplica un diferencial configurable para generar la demanda hacia los productores térmicos.",
+			"Cuando la demanda de ACS está activa, se puede configurar su prioridad frente a otros servicios térmicos, garantizando una recuperación rápida de la temperatura de servicio.",
 
+			// PRIMARIO
 			"{{-- PRIMARIO --}}{ACSVaPr|ACSBoPr}",
 			"{{La [{NombreUsuario}]{ACSVaPr} regula la aportación de energía térmica para mantener la [{NombreUsuario}]{ACSTeSe} en el valor de consigna de acumulación más un diferencial configurable.}}{ACSVaPr.is(\"0..10Vcc\")|ACSVaPr.is(\"3 Puntos\")&ACSTeSe&ACSTeDe}",
 			"{{La [{NombreUsuario}]{ACSVaPr} regula la aportación de energía térmica para elevar la [{NombreUsuario}]{ACSTeDe} hasta el valor de consigna de acumulación.}}{ACSVaPr.is(\"0..10Vcc\")|ACSVaPr.is(\"3 Puntos\")&!ACSTeSe&ACSTeDe}",
 			"{{La [{NombreUsuario}]{ACSVaPr} regula la aportación de energía térmica para mantener la [{NombreUsuario}]{ACSTeIC} en el valor de consigna de impulsión a consumidores.}}{ACSVaPr.is(\"0..10Vcc\")|ACSVaPr.is(\"3 Puntos\")&!ACSTeDe}",
 			"{{Durante el funcionamiento de la producción se verifica el correcto estado de la[/s]{ACSBoPr} bomba[/s]{ACSBoPr}, garantizando la circulación de fluido.}}{ACSBoPr}",
-			"{{El sistema gestiona el funcionamiento alternado de las bombas, realizando la rotación en función de las horas de servicio o ante el fallo de una de ellas.}}{ACSBoPr.qty('>1')}",
-			"{{Tras la parada de la producción, el bombeo se mantiene activo durante un tiempo configurable para aprovechar la energía térmica remanente.}}{ACSBoPr}",
+			"{{El sistema gestiona el funcionamiento alternado de las bombas de primario, realizando la rotación en función de las horas de servicio o ante el fallo de una de ellas.}}{ACSBoPr.qty('>1')}",
 
+			// SECUNDARIO
 			"{{-- SECUNDARIO --}}{ACSTeSe|ACSBoSe}",
 			"{{Durante el funcionamiento de la producción se verifica el correcto estado de la[/s]{ACSBoSe} bomba[/s]{ACSBoSe}, garantizando la circulación de fluido.}}{ACSBoSe}",
-			"{{Cuando la temperatura de acumulación es superior a la temperatura de los productores, la[/s]{ACSBoSe} bomba[/s]{ACSBoSe} de secundario se detiene[/n]{ACSBoSe} para evitar la cesión de energía del depósito hacia el primario, actuando como protección frente a descargas térmicas.}}{ACSBoSe&ACSTeDe}",
+			"{{Cuando la temperatura del acumulador es superior a la temperatura disponible en el primario, la[/s]{ACSBoSe} bomba[/s]{ACSBoSe} de secundario se detiene[/n]{ACSBoSe} para evitar la cesión de energía del depósito hacia el sistema de producción, actuando como protección frente a descargas térmicas.}}{ACSBoSe&ACSTeDe}",
 			"{{El sistema gestiona el funcionamiento alternado de las bombas de secundario, realizando la rotación en función de las horas de servicio o ante el fallo de una de ellas.}}{ACSBoSe.qty('>1')}",
 			"{{Tras la parada de la producción, el bombeo de secundario se mantiene activo durante un tiempo configurable para aprovechar la energía térmica remanente.}}{ACSBoSe}",
 
-			"{{-- CONSUMO --}}{ACSTeIC|ACSTeRC|ACSBore}",
-			"{{La válvula [{NombreUsuario}]{ACSVaCo} regula la mezcla de ACS hacia los consumidores para mantener la consigna de temperatura prefijada.}}{ACSTeIC&ACSVaCo}",
-			"{{Durante el tratamiento antilegionela por choque térmico, la válvula de bypass permanece abierta para permitir el envío del agua a la máxima temperatura disponible.}}{ACSVaBy}",
-			"{{La temperatura de impulsión a consumidores se supervisa para ajustar la regulación del sistema y compensar posibles pérdidas térmicas.}}{ACSTeIC}",
-			"{{La temperatura de retorno de consumidores se supervisa para ajustar la regulación del sistema y compensar posibles pérdidas térmicas.}}{ACSTeRC}"
+			// CONSUMO Y RECIRCULACIÓN
+			"{{-- CONSUMO Y RECIRCULACIÓN --}}{ACSTeIC|ACSTeRC|ACSBoRe}",
+			"{{Se define un horario de recirculación y consumo independiente al de producción.}}{ACSBoRe&ACSTeRC}",
+			"{{La válvula de consumo regula la mezcla de ACS hacia los consumidores para mantener la consigna de temperatura prefijada.}}{ACSTeIC&ACSVaCo}",
+			"{{La[/s]{ACSBoRe} bomba[/s]{ACSBoRe} de retorno mantiene la red de ACS en temperatura, reduciendo el tiempo de espera en los puntos de consumo.}}{ACSBoRe}",
+			"{{El sistema gestiona el funcionamiento alternado de las bombas de retorno, realizando la rotación en función de las horas de servicio o ante el fallo de una de ellas.}}{ACSBoRe.qty('>1')}",
+			"{{El tratamiento antilegionella por choque térmico, se puede anular o configurar con una periodicidad diaria o semanal con una consigna de calentamiento independiente.}}{ACSTeDe|ACSTeIC}",
+			"{{Durante el tratamiento antilegionella por choque térmico, la válvula de bypass permanece abierta para permitir que el agua alcance la máxima temperatura disponible en toda la red.}}{ACSVaBy}",
+			"{{La temperatura de retorno de consumidores se supervisa para evaluar el estado térmico de la red y optimizar la recirculación.}}{ACSTeRC}",
+
 		]
+
 	},
 	"Climatizador": {
 		"Descripcion": [
-			"El climatizador es el equipo encargado del tratamiento y acondicionamiento del aire impulsado a los espacios servidos.",
+			"El [{NombreUsuario}]{MainBloc} es el equipo encargado del tratamiento y acondicionamiento del aire impulsado a los espacios servidos u otros equipos de tratamiento final del aire.",
 			"Integra funciones de ventilación, calefacción, refrigeración y control de calidad del aire interior."
 		],
 		"Elementos": [
-			"{{Sonda de ambiente o retorno del climatizador.}}{CliAmb}",
+			"{{Sonda de [{NombreUsuario}]{CliAmb}.}}{CliAmb}",
 			"{{Sonda de temperatura de impulsión.}}{CliImp}",
 			"{{Sonda de recuperación térmica.}}{CliReco}",
 			"{{Sonda de toma de aire exterior.}}{CliExt}",
 			"{{Sonda de salida de aire al exterior.}}{CliSal}",
-			"{{Válvula de control de la batería térmica.}}{CliVaBat}",
-			"{{Bomba asociada a la batería térmica.}}{CliBoBat}",
-			"{{Presostato de detección de filtro sucio.}}{CliFil}",
-			"{{Sensor de presión del ventilador.}}{CliPres}",
-			"{{Ventilador del climatizador.}}{CliVent}",
+			"{{Válvula[/s]{CliVaBat} de control de la[/s]{CliVaBat} batería[/s]{CliVaBat}.}}{CliVaBat}",
+			"{{Bomba[/s]{CliBoBat} asociada[/s]{CliBoBat} a la[/s]{CliVaBat} batería[/s]{CliVaBat}.}}{CliBoBat}",
+			"{{Presostato[/s]{CliFil} de detección de filtro[/s]{CliFil} sucio[/s]{CliFil}.}}{CliFil}",
+			"{{Sensor[/es]{CliPres} de presión [del/de los]{CliPres} ventilador[/es]{CliPres}.}}{CliPres}",
+			"{{[{NombreUsuario}]{CliVent}.}}{CliVent}",
 			"{{Sistema de humectación.}}{CliHum}",
 			"{{Sistema de recuperación de calor.}}{CliRecup}",
-			"{{Compuertas de regulación de aire.}}{CliComp}",
-			"{{Señal externa de cambio de régimen.}}{CliInVe}"
+			"{{Compuertas de recuperación de aire.}}{CliComp}",
 		],
 		"Funcionamiento": [
-			"{{}}{CliAmb}",
-			"{{}}{CliImp}",
-			"{{}}{CliReco}",
-			"{{}}{CliExt}",
-			"{{}}{CliSal}",
-			"{{}}{CliVaBat}",
-			"{{}}{CliBoBat}",
-			"{{}}{CliFil}",
-			"{{}}{CliPres}",
-			"{{}}{CliVent}",
-			"{{}}{CliHum}",
-			"{{}}{CliRecup}",
-			"{{}}{CliComp}",
-			"{{}}{CliInVe}"
-		]
+
+			// MODOS Y HABILITACIÓN GENERAL
+			"Se dispone de un horario para el funcionamiento del climatizador que permite cambiar de nivel confort / economico / parado, modificando las consignas y limitaciones de funcionamiento. De este modo durante periodos programados de baja ocupación, el sistema puede operar ajustando consignas y caudales para minimizar el consumo energético.",
+			"{{El cambio invierno/verano del climatizador se realiza mediante una señal externa, adaptando su funcionamiento al modo activo del sistema.}}{CliInVe}",
+
+			// SONDA IMPULSION / AMBIENTE / RETORNO
+			"{{-- AMBIENTE --}}{CliAmb&!CliImp}",
+			"{{-- IMPULSION --}}{CliImp&!CliAmb}",
+			"{{-- CASCADA --}}{CliImp&CliAmb}",
+			"{{La [{NombreUsuario}]{CliAmb} se utiliza como referencia principal para el control del aire tratado. En función de la temperatura medida, el sistema calcula la demanda térmica necesaria para mantener la consigna establecida.}}{CliAmb}",
+			"{{Se supervisa la temperatura de impulsión [para mantenerla entre los limites consignados|para regularla a la consigna establecida].}}{CliImp}",
+			"{{Se aplica una estrategia en cascada, de modo que la consigna de impulsión se ajusta dinámicamente en función de la desviación detectada en la temperatura ambiente.}}{CliImp&CliAmb}",
+
+			// BATERIAS
+			"{{-- BATERIA[/S]{CliVaBat} --}}{CliVaBat}",
+			"{{La [{NombreUsuario}]{CliVaBat} regula[/n]{CliVaBat} la aportación de energía térmica en la[/s]{CliVaBat} batería[/s]{CliVaBat} para alcanzar la consigna}}{CliVaBat}{{de impulsión}}{CliImp&CliVaBat}{{de ambiente}}{!CliImp&CliVaBat}{{.}}{CliVaBat}",
+			"{{La regulación de la válvula se realiza de forma proporcional o escalonada, en función del tipo de actuador configurado.}}{CliVaBat}",
+
+			// BOMBAS
+			"{{-- BOMBA[/S]{CliBoBat} --}}{CliBoBat}",
+			"{{Cuando existe bomba asociada a la batería, esta se activa conjuntamente con la demanda térmica para garantizar la circulación de fluido.}}{CliBoBat}",
+			"{{Durante el funcionamiento se supervisa el estado de la[/s]{CliBoBat} bomba[/s]{CliBoBat} para asegurar la correcta transferencia de energía.}}{CliBoBat}",
+			"{{El sistema gestiona el funcionamiento alternado de las bombas, realizando la rotación en función de las horas de servicio o ante el fallo de una de ellas.}}{CliBoBat.qty('>1')}",
+
+			// ANTIHIELO
+			"{{-- ANTIHIELO --}}{CliVaBat|CliBoBat}",
+			"{{Se utiliza la lectura de temperatura exterior para protección antihielo. En situacion de riesgo:<Se detiene[/n]{CliVent} [el/los]{CliVent} ventilador[/es]{CliVent}|+Se abre[/n]{CliVaBat} la válvula[/s]{CliVaBat} al 75%|Se arranca[/n]{CliBoBat} la[/s]{CliBoBat} bomba[/s]{CliBoBat} que recircula[/n]{CliBoBat} sobre la[/s]{CliVaBat} bateria[/s]{CliVaBat}|+Se establece una demanda mínima a los productores de calor>}}{CliVaBat|CliBoBat}",
+
+			// VENTILACIÓN
+			"{{-- VENTILADOR[/ES]{CliVent} --}}{CliVent}",
+			"{{[El/Los]{CliVent} ventilador[/es]{CliVent} garantiza[/n]{CliVent} la circulación del aire tratado en los espacios servidos, funcionando según el modo activo del climatizador.}}{CliVent}",
+			"{{Durante el funcionamiento se supervisa el estado del ventilador para asegurar la correcta la circulación del aire.}}{CliVent}",
+			"{{El ventilador modula la velocidad en funcion a la sonda de presión, para optimizar el confort y el consumo energético.}}{CliVent.is(\"0..10Vcc\")&CliPres}",
+			"{{El ventilador modula la velocidad [a punto fijo configurable|en funcion a la desviaciorn de la consigna de temperatura], para optimizar el confort y el consumo energético.}}{CliVent.is(\"0..10Vcc\")&!CliPres}",			
+			"{{Ante la detección de un fallo de ventilación, el sistema detiene el funcionamiento del resto de elementos, la demanda producción térmica y genera la señal de alarma correspondiente.}}{CliVent}",
+
+			// FILTROS
+			"{{-- FILTRO[/S]{CliFil} --}}{CliFil}",
+			"{{[El/Los]{CliFil} presostato[/s]{CliFil} de filtro[/s]{CliFil} supervisa[/n]{CliFil} el estado de ensuciamiento, detectando pérdidas de carga excesivas.}}{CliFil}",
+			"{{Cuando se detecta un filtro sucio, el sistema genera una señal de aviso sin interrumpir el funcionamiento del climatizador.}}{CliFil}",
+
+			// AIRE EXTERIOR Y COMPUERTAS
+			"{{-- COMPUERTA[/S]{CliComp} --}}{CliComp}",
+			"{{Las compuertas de aire regulan la proporción de aire exterior, retorno y expulsión, garantizando la ventilación higiénica mínima.}}{CliComp}",
+			"{{En modos de ahorro energético o recirculación, las compuertas se posicionan para minimizar las pérdidas térmicas.}}{CliComp}",
+			"{{En función de las condiciones exteriores respecto a las interiores, el sistema puede incrementar la aportación de aire exterior para aprovechar el enfriamiento gratuito.}}{CliComp&CliExt}",
+			"{{Si la calidad del aire interior es mala, el sistema fuerza la apertura de compuertas aunque las condiciones exteriores no sean favorables, en aras de la salubridad.}}{CliAmb.is(\"Temp y CO2\")&CliComp|CliAmb.is(\"Temp, Hum y CO2\")&CliComp}",
+			"En condiciones favorables, el climatizador puede activar estrategias de refrigeración nocturna (fuera de horario) mediante aire exterior.",
+			
+			// RECUPERACIÓN DE CALOR
+			"{{-- RECUPERADOR --}}{CliRecup}",
+			"{{El sistema de recuperación de calor aprovecha la energía del aire extraído para precalentar o preenfriar el aire de impulsión.}}{CliRecup}",
+			"{{La recuperación se regula automáticamente para maximizar la eficiencia energética sin comprometer el confort.}}{CliRecup}",
+			"{{La recuperación puede inhibirse cuando las condiciones exteriores resultan más favorables que el aire de retorno.}}{CliRecup&CliExt}",
+			
+			// HUMECTACIÓN / DESHUMECTACION
+			"{{-- HUMECTACIÓN --}}{CliHum}",
+			"{{El sistema de humectación permite ajustar la humedad del aire impulsado cuando las condiciones lo requieren.}}{CliHum}",
+			"{{La humectación se habilita únicamente dentro de los límites de seguridad definidos para evitar condensaciones o sobrehumectación.}}{CliHum}",
+
+		],
 	},
 	"Fan Coil": {
 		"Descripcion": [
