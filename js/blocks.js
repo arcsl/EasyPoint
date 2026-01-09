@@ -100,12 +100,15 @@ const elem = {
 	//valvulas
 	ValvulaToNa: (Nombre, Cantidad, Ref = "") => ({ Nombre, Cantidad, Ref, Opciones: [opt.ActuadorTN1M("1 Micro"), opt.ActuadorTN2M("2 Micros"), opt.ActuadorTN0M("Sin Micros"),], }),
 	ValvulaProp: (Nombre, Cantidad, Ref = "") => ({ Nombre, Cantidad, Ref, Opciones: [opt.Actuador010V("0..10Vcc"), opt.Actuador3Pun("3 Puntos"),], }),
-	ValvTNProp: (Nombre, Cantidad, Ref = "") => ({ Nombre, Cantidad, Ref, Opciones: [opt.Actuador3Pun("3 Puntos"), opt.ActuadorTN1M("Todo/Nada"), opt.Actuador010V("0..10Vcc"),], }),
+	ValvFanCoil: (Nombre, Cantidad, Ref = "") => ({ Nombre, Cantidad, Ref, Opciones: [opt.SimpleSD("Todo/Nada"), opt.Actuador010V("0..10Vcc"), opt.Actuador3Pun("3 Puntos"), ], }),
+	ValvTNProp: (Nombre, Cantidad, Ref = "") => ({ Nombre, Cantidad, Ref, Opciones: [opt.ActuadorTN1M("Todo/Nada"), opt.Actuador010V("0..10Vcc"), opt.Actuador3Pun("3 Puntos"), ], }),
+	ValvPropTN: (Nombre, Cantidad, Ref = "") => ({ Nombre, Cantidad, Ref, Opciones: [opt.Actuador010V("0..10Vcc"), opt.Actuador3Pun("3 Puntos"), opt.ActuadorTN1M("Todo/Nada"),], }),
+	ValvCalef: (Nombre, Cantidad, Ref = "") => ({ Nombre, Cantidad, Ref, Opciones: [opt.Actuador3Pun("3 Puntos"), opt.Actuador010V("0..10Vcc"), opt.ActuadorTN1M("Todo/Nada"),], }),
 
 	//organos de gobierno
 	ExterModul: (Nombre, Cantidad, Ref = "") => ({ Nombre, Cantidad, Ref, Opciones: [opt.MPyEstado("M/P y Estado"), opt.MPEst010V("0..10Vcc"),], }),
 	MotorModul: (Nombre, Cantidad, Ref = "") => ({ Nombre, Cantidad, Ref, Opciones: [opt.MotorToNa("M/P y Estado"), opt.Motor010V("0..10Vcc"),], }),
-	MotorFC: (Nombre, Cantidad, Ref = "") => ({ Nombre, Cantidad, Ref, Opciones: [opt.SimpleSA("0..10Vcc"), opt.SimpleSD("1veloc"), opt.Motor3vel("3veloc"),], }),
+	MotorFC: (Nombre, Cantidad, Ref = "") => ({ Nombre, Cantidad, Ref, Opciones: [opt.SimpleSA("0..10Vcc"), opt.SimpleSD("1 Velocidad"), opt.Motor3vel("3 Velocidades"),], }),
 	Recuperdor: (Nombre, Cantidad, Ref = "") => ({ Nombre, Cantidad, Ref, Opciones: [opt.SimpleSD("Bypass"), opt.MotorToNa("M/P y Estado"), opt.Motor010V("0..10Vcc"),], }),
 
 	//productores
@@ -195,7 +198,7 @@ function blocks() {
 			"Elementos": [
 				elem.SoloSondaTemp("Temperatura impulsion", 1, "CircTemp"),
 				elem.SensorAire("Sensor Ambiente", 0, "CircAmbi"),
-				elem.ValvTNProp("Válvula", 1, "CircValv"),
+				elem.ValvCalef("Válvula", 1, "CircValv"),
 				elem.MotorModul("Bomba", 1, "CircBomb"),
 				elem.SoloActiva("Presion Diferencial", 0, "CircDife"),
 				elem.ValvulaProp("Válvula bypass", 0, "CircVaBy"),
@@ -230,25 +233,28 @@ function blocks() {
 				elem.SensorAire("Sonda Recuperación", 0, "CliReco"),
 				elem.SensorAire("Sonda toma aire del Exterior", 0, "CliExt"),
 				elem.SensorAire("Sonda salida aire al Exterior", 0, "CliSal"),
-				elem.ValvTNProp("Válvula Batería", 1, "CliVaBat"),
+				elem.ValvPropTN("Válvula Batería", 1, "CliVaBat"),
 				elem.MotorModul("Bomba Batería", 0, "CliBoBat"),
 				elem.SimpleED("Presostato filtro sucio", 0, "CliFil"),
 				elem.SoloActiva("Presión Ventilador", 0, "CliPres"),
 				elem.MotorModul("Ventilador", 1, "CliVent"),
 				elem.ExterModul("Humectador", 0, "CliHum"),
 				elem.Recuperdor("Recuperador", 0, "CliRecup"),
-				elem.ValvTNProp("Compuertas", 0, "CliComp"),
+				elem.ValvPropTN("Compuertas", 0, "CliComp"),
 				elem.SimpleED("Cambio de regimen externo", 0, "CliInVe"),
 			],
 		},
 		{
 			"Nombre": "Fan Coil",
 			"Elementos": [
-				elem.SondaTermos("Sensor Ambiente / Retorno", 1),
-				elem.SensorAire("Temperatura Impulsión", 0),
-				elem.ValvTNProp("Válvula Batería", 1),
-				elem.SimpleED("Presostato filtro sucio", 0),
-				elem.MotorFC("Ventilador", 1),
+				elem.SensorAire("Sonda ambiente / retorno", 1, "FCAm"),
+				elem.SoloSondaTemp("Temperatura impulsión", 0, "FCImp"),
+				elem.SimpleED("Presostato filtro sucio", 0, "FCFil"),
+				elem.SimpleED("Contacto tarjetero / ventana", 0, "FCCont"),
+				elem.ValvFanCoil("Válvula batería", 1, "FCVaBat"),
+				elem.ValvTNProp("Compuerta renovación aire", 0, "FCComp"),				
+				elem.MotorFC("Ventilador", 1, "FCVent"),
+				elem.SimpleED("Cambio de regimen externo", 0, "FCInVe"),
 			],
 		},
 	];
@@ -344,17 +350,17 @@ const Narrativa = {
 
 			"El arranque de la caldera se produce [por demanda de la instalación|por horario|por control externo].",
 			"{{Antes del arranque de la caldera se verifica el correcto funcionamiento de la[/s]{CaldBomb} bomba[/s]{CaldBomb} asociada[/s]{CaldBomb}, para garantizar que existe circulación de fluido.}}{CaldBomb}",
-			"{{El sistema gestiona el funcionamiento de las bombas asociadas de forma alternada, realizando la rotación de la bomba en funcionamiento en función de las horas de servicio o en caso de fallo de la otra bomba, de modo que se mantenga la disponibilidad de la caldera.}}{CaldBomb.qty('>1')}",
+			"{{El sistema gestiona el funcionamiento de las bombas asociadas de forma alternada, realizando la rotación de la bomba en funcionamiento en función de las horas de servicio o en caso de fallo de la otra bomba, de modo que se mantenga la disponibilidad de la caldera.}}{CaldBomb.qty(\">1\")}",
 			"{{El bombeo se mantiene encendido una cantidad de tiempo configurable tras el apagado de la caldera para aprovechar el calor remanente y los disparos por inercia térmica.}}{CaldBomb}",
 			"{{Se supervisa continuamente la temperatura de impulsión de caldera, para verificar el correcto funcionamiento.}}{CaldTemp}",
-			"{{Se supervisa continuamente la temperatura de retorno de caldera, y en caso de temperaturas de retorno excesivamente bajas, se regula la válvula de retorno para evitar la condensación de los humos.}}{CaldValv.is('0..10Vcc')|CaldValv.is('3 Puntos')}",
-			"{{La válvula de aislamiento se mantiene cerrada cuando la caldera se encuentre parada o en condición de fallo y se abre unicamente cuando es necerario arrancar la caldera. Asi se evitan recirculaciones no deseadas a traves de la caldera cuando esta está apagada.}}{CaldValv.is('Todo/Nada')}",
-			"{{Para permitir el arranque de la caldera se supervisará el estado del final de carrera de válvula abierta, para garantizar el paso de fluido.}}{CaldValv.is('Todo/Nada')}",
+			"{{Se supervisa continuamente la temperatura de retorno de caldera, y en caso de temperaturas de retorno excesivamente bajas, se regula la válvula de retorno para evitar la condensación de los humos.}}{CaldValv.is(\"0..10Vcc\")|CaldValv.is(\"3 Puntos\")}",
+			"{{La válvula de aislamiento se mantiene cerrada cuando la caldera se encuentre parada o en condición de fallo y se abre unicamente cuando es necerario arrancar la caldera. Asi se evitan recirculaciones no deseadas a traves de la caldera cuando esta está apagada.}}{CaldValv.is(\"Todo/Nada\")}",
+			"{{Para permitir el arranque de la caldera se supervisará el estado del final de carrera de válvula abierta, para garantizar el paso de fluido.}}{CaldValv.is(\"Todo/Nada\")}",
 			"{{Por seguridad, en el caso de que la temperatura de caldera alcance un límite (configurable), ésta se deshabilita manteniendo las condiciones de circulacion de fluido y se habilita nuevamente cuando la temperatura descienda por debajo de dicho límite menos una histéresis (configurable). Por lo tanto la consigna maxima de funcionamiento de la caldera se establece siempre por debajo de este umbral de seguridad.}}{CaldTemp}",
-			"{{El sistema envia a la caldera una señal analógica de consigna de temperatura, siendo el control interno del equipo el encargado de modular la potencia necesaria para alcanzar dicho valor.}}{CaldModu.is('0-10 Consigna')}",
-			"{{Una vez en marcha, la potencia de la caldera se ajusta mediante modulación 0..10Vcc, incrementando o reduciendo el aporte térmico para mantener la temperatura de caldera en torno al valor de consigna.}}{CaldModu.is('0-10 Potencia')}",
-			"{{Una vez en marcha, la potencia de la caldera se ajusta mediante modulación a tres puntos, incrementando o reduciendo el aporte térmico para mantener la temperatura de caldera en torno al valor de consigna.}}{CaldModu.is('3 Puntos')}",
-			"{{Una vez en marcha, la potencia de la caldera se ajusta mediante la activación o no de una segunda etapa para mantener la temperatura de caldera alrededor del valor de consigna establecido.}}{CaldModu.is('2ª llama')}",
+			"{{El sistema envia a la caldera una señal analógica de consigna de temperatura, siendo el control interno del equipo el encargado de modular la potencia necesaria para alcanzar dicho valor.}}{CaldModu.is(\"0-10 Consigna\")}",
+			"{{Una vez en marcha, la potencia de la caldera se ajusta mediante modulación 0..10Vcc, incrementando o reduciendo el aporte térmico para mantener la temperatura de caldera en torno al valor de consigna.}}{CaldModu.is(\"0-10 Potencia\")}",
+			"{{Una vez en marcha, la potencia de la caldera se ajusta mediante modulación a tres puntos, incrementando o reduciendo el aporte térmico para mantener la temperatura de caldera en torno al valor de consigna.}}{CaldModu.is(\"3 Puntos\")}",
+			"{{Una vez en marcha, la potencia de la caldera se ajusta mediante la activación o no de una segunda etapa para mantener la temperatura de caldera alrededor del valor de consigna establecido.}}{CaldModu.is(\"2ª llama\")}",
 			"{{La temperatura de  humos se supervisa durante el funcionamiento de la caldera para emitir una larma en caso de superar un valor umbral (configurable) y detener el funcionamiento de la caldera.}}{CaldHumo}",
 			"{{En caso de detectar una caida de presión en el circuito hidráulico, se inhibe el funcionamiento de la caldera}}{CaldPres}{{ y la[/s]{CaldBomb} bomba[/s]{CaldBomb}}}{CaldBomb}{{.}}{CaldPres}"
 		],
@@ -394,7 +400,7 @@ const Narrativa = {
 		]
 	},
 	"Solar": {
-		"Descripcion": [
+		"Descripción": [
 			"El sistema solar térmico tiene como finalidad el aprovechamiento de la energía solar para la producción o apoyo de energía térmica en la instalación.",
 			"La instalación se compone de un circuito primario de captación y, opcionalmente, de circuitos secundarios de acumulación o transferencia, integrados con el resto de sistemas térmicos."
 		],
@@ -481,7 +487,7 @@ const Narrativa = {
 		],
 	},
 	"ACS": {
-		"Descripcion": [
+		"Descripción": [
 			"El sistema de Agua Caliente Sanitaria (ACS) es el encargado de la producción, acumulación y distribución de agua caliente destinada al consumo.",
 			"Su diseño garantiza la disponibilidad del servicio, manteniendo las condiciones de temperatura necesarias para el confort de los usuarios y el cumplimiento de la normativa vigente en materia de higiene y seguridad sanitaria."
 		],
@@ -502,12 +508,8 @@ const Narrativa = {
 		],
 		"Funcionamiento": [
 			// PRODUCCIÓN
-			"Se define un horario de producción configurable, dentro del cual el sistema de ACS puede operar de forma automática.",
-			"{{Se establece una consigna de temperatura de acumulación y un diferencial asociado, ambos configurables.}}{ACSTeDe}",
-			"{{Se establece una consigna configurable de temperatura de impulsión a consumidores.}}{ACSTeIC}",
-			"{{El arranque y la parada de la producción se realizan comparando la temperatura de acumulación con la consigna y su diferencial.}}{ACSTeDe}",
-			"{{Dentro del horario establecido, la producción funciona de forma continua y se regula en función de la temperatura de impulsión a consumidores, operando como producción instantánea.}}{ACSTeIC&!ACSTeDe}",
-			"En función de la consigna establecida, se aplica un diferencial configurable para generar la demanda hacia los productores térmicos.",
+			"Se dispone de un horario para el funcionamiento del ACS que permite cambiar de nivel ( normal / reducido / parado), modificando en cada nivel las consignas y limitaciones de funcionamiento.",
+			"De este modo durante periodos programados de baja ocupación, el sistema puede operar ajustando consignas y caudales para minimizar el consumo energético.",
 			"Cuando la demanda de ACS está activa, se puede configurar su prioridad frente a otros servicios térmicos, garantizando una recuperación rápida de la temperatura de servicio.",
 
 			// PRIMARIO
@@ -518,51 +520,60 @@ const Narrativa = {
 			"{{Durante el funcionamiento de la producción se verifica el correcto estado de la[/s]{ACSBoPr} bomba[/s]{ACSBoPr}, garantizando la circulación de fluido.}}{ACSBoPr}",
 			"{{El sistema gestiona el funcionamiento alternado de las bombas de primario, realizando la rotación en función de las horas de servicio o ante el fallo de una de ellas.}}{ACSBoPr.qty('>1')}",
 
-			// SECUNDARIO
+			// SECUNDARIO Y ACUMULACION
 			"{{-- SECUNDARIO --}}{ACSTeSe|ACSBoSe}",
 			"{{Durante el funcionamiento de la producción se verifica el correcto estado de la[/s]{ACSBoSe} bomba[/s]{ACSBoSe}, garantizando la circulación de fluido.}}{ACSBoSe}",
 			"{{Cuando la temperatura del acumulador es superior a la temperatura disponible en el primario, la[/s]{ACSBoSe} bomba[/s]{ACSBoSe} de secundario se detiene[/n]{ACSBoSe} para evitar la cesión de energía del depósito hacia el sistema de producción, actuando como protección frente a descargas térmicas.}}{ACSBoSe&ACSTeDe}",
-			"{{El sistema gestiona el funcionamiento alternado de las bombas de secundario, realizando la rotación en función de las horas de servicio o ante el fallo de una de ellas.}}{ACSBoSe.qty('>1')}",
+			"{{El sistema gestiona el funcionamiento alternado de las bombas, realizando la rotación en función de las horas de servicio o ante el fallo de una de ellas.}}{ACSBoSe.qty('>1')}",
 			"{{Tras la parada de la producción, el bombeo de secundario se mantiene activo durante un tiempo configurable para aprovechar la energía térmica remanente.}}{ACSBoSe}",
 
+			// ACUMULACION
+			"{{-- ACUMULACION --}}{ACSTeDe}",
+			"{{Se establece una consigna de temperatura de acumulación y un diferencial asociado, ambos configurables.}}{ACSTeDe}",
+			"{{El arranque y la parada de la producción se realizan comparando la temperatura de acumulación con la consigna y su diferencial.}}{ACSTeDe}",
+
 			// CONSUMO Y RECIRCULACIÓN
-			"{{-- CONSUMO Y RECIRCULACIÓN --}}{ACSTeIC|ACSTeRC|ACSBoRe}",
+			"{{-- CONSUMO Y RECIRCULACIÓN --}}{ACSTeIC|ACSTeRC|ACSBoRe|ACSVaRe}",
 			"{{Se define un horario de recirculación y consumo independiente al de producción.}}{ACSBoRe&ACSTeRC}",
+			"{{Dentro del horario establecido, la producción funciona de forma continua y se regula en función de la temperatura de impulsión a consumidores, operando como producción instantánea.}}{ACSTeIC&!ACSTeDe}",
+			"{{Se establece una consigna configurable de temperatura de impulsión a consumidores.}}{ACSTeIC}",
 			"{{La válvula de consumo regula la mezcla de ACS hacia los consumidores para mantener la consigna de temperatura prefijada.}}{ACSTeIC&ACSVaCo}",
 			"{{La[/s]{ACSBoRe} bomba[/s]{ACSBoRe} de retorno mantiene la red de ACS en temperatura, reduciendo el tiempo de espera en los puntos de consumo.}}{ACSBoRe}",
 			"{{El sistema gestiona el funcionamiento alternado de las bombas de retorno, realizando la rotación en función de las horas de servicio o ante el fallo de una de ellas.}}{ACSBoRe.qty('>1')}",
 			"{{El tratamiento antilegionella por choque térmico, se puede anular o configurar con una periodicidad diaria o semanal con una consigna de calentamiento independiente.}}{ACSTeDe|ACSTeIC}",
 			"{{Durante el tratamiento antilegionella por choque térmico, la válvula de bypass permanece abierta para permitir que el agua alcance la máxima temperatura disponible en toda la red.}}{ACSVaBy}",
-			"{{La temperatura de retorno de consumidores se supervisa para evaluar el estado térmico de la red y optimizar la recirculación.}}{ACSTeRC}",
-
+			"{{La temperatura de retorno de consumidores se supervisa y registra para consulta posterior.}}{ACSTeRC&!ACSVaRe}",
+			"{{La temperatura de retorno de consumidores se compara con la temperatura de un segundo acumulador que se calienta un un sistema de apoyo (solar/aerotermia/...). Cuando la temperatura del segundo acumulador es superior a la del retorno, la válvula conmuta para que el flujo de retorno pase por ese segundo acumulador.}}{ACSTeRC&ACSVaRe}",
+			"{{La válvula de retorno conmuta [por horario|por selector manual|...].}}{!ACSTeRC&ACSVaRe}",
 		]
 
 	},
 	"Climatizador": {
-		"Descripcion": [
+		"Descripción": [
 			"El [{NombreUsuario}]{MainBloc} es el equipo encargado del tratamiento y acondicionamiento del aire impulsado a los espacios servidos u otros equipos de tratamiento final del aire.",
 			"Integra funciones de ventilación, calefacción, refrigeración y control de calidad del aire interior."
 		],
 		"Elementos": [
-			"{{Sonda de [{NombreUsuario}]{CliAmb}.}}{CliAmb}",
-			"{{Sonda de temperatura de impulsión.}}{CliImp}",
-			"{{Sonda de recuperación térmica.}}{CliReco}",
-			"{{Sonda de toma de aire exterior.}}{CliExt}",
-			"{{Sonda de salida de aire al exterior.}}{CliSal}",
-			"{{Válvula[/s]{CliVaBat} de control de la[/s]{CliVaBat} batería[/s]{CliVaBat}.}}{CliVaBat}",
-			"{{Bomba[/s]{CliBoBat} asociada[/s]{CliBoBat} a la[/s]{CliVaBat} batería[/s]{CliVaBat}.}}{CliBoBat}",
-			"{{Presostato[/s]{CliFil} de detección de filtro[/s]{CliFil} sucio[/s]{CliFil}.}}{CliFil}",
-			"{{Sensor[/es]{CliPres} de presión [del/de los]{CliPres} ventilador[/es]{CliPres}.}}{CliPres}",
-			"{{[{NombreUsuario}]{CliVent}.}}{CliVent}",
-			"{{Sistema de humectación.}}{CliHum}",
-			"{{Sistema de recuperación de calor.}}{CliRecup}",
-			"{{Compuertas de recuperación de aire.}}{CliComp}",
+			"{{[{NombreUsuario}]{CliAmb}}}{CliAmb}",
+			"{{[{NombreUsuario}]{CliImp}}}{CliImp}",
+			"{{[{NombreUsuario}]{CliReco}}}{CliReco}",
+			"{{[{NombreUsuario}]{CliExt}}}{CliExt}",
+			"{{[{NombreUsuario}]{CliSal}}}{CliSal}",
+			"{{[{NombreUsuario}]{CliVaBat}}}{CliVaBat}",
+			"{{[{NombreUsuario}]{CliBoBat}}}{CliBoBat}",
+			"{{[{NombreUsuario}]{CliFil}}}{CliFil}",
+			"{{[{NombreUsuario}]{CliPres}}}{CliPres}",
+			"{{[{NombreUsuario}]{CliVent}}}{CliVent}",
+			"{{[{NombreUsuario}]{CliHum}}}{CliHum}",
+			"{{[{NombreUsuario}]{CliRecup}}}{CliRecup}",
+			"{{[{NombreUsuario}]{CliComp}}}{CliComp}",
 		],
 		"Funcionamiento": [
 
 			// MODOS Y HABILITACIÓN GENERAL
 			"Se dispone de un horario para el funcionamiento del climatizador que permite cambiar de nivel confort / economico / parado, modificando las consignas y limitaciones de funcionamiento. De este modo durante periodos programados de baja ocupación, el sistema puede operar ajustando consignas y caudales para minimizar el consumo energético.",
-			"{{El cambio invierno/verano del climatizador se realiza mediante una señal externa, adaptando su funcionamiento al modo activo del sistema.}}{CliInVe}",
+			"{{El cambio invierno/verano del climatizador se realiza automáticamente, según el régimen actual de la instalacion, adaptando su funcionamiento y demandas en consecuencia.}}{!CliInVe&CliVaBat.qty(\"==1\")}",
+			"{{El cambio invierno/verano del climatizador se realiza mediante una señal digital externa, adaptando su funcionamiento y demandas en consecuencia.}}{CliInVe}",
 
 			// SONDA IMPULSION / AMBIENTE / RETORNO
 			"{{-- AMBIENTE --}}{CliAmb&!CliImp}",
@@ -592,7 +603,7 @@ const Narrativa = {
 			"{{[El/Los]{CliVent} ventilador[/es]{CliVent} garantiza[/n]{CliVent} la circulación del aire tratado en los espacios servidos, funcionando según el modo activo del climatizador.}}{CliVent}",
 			"{{Durante el funcionamiento se supervisa el estado del ventilador para asegurar la correcta la circulación del aire.}}{CliVent}",
 			"{{El ventilador modula la velocidad en funcion a la sonda de presión, para optimizar el confort y el consumo energético.}}{CliVent.is(\"0..10Vcc\")&CliPres}",
-			"{{El ventilador modula la velocidad [a punto fijo configurable|en funcion a la desviaciorn de la consigna de temperatura], para optimizar el confort y el consumo energético.}}{CliVent.is(\"0..10Vcc\")&!CliPres}",			
+			"{{El ventilador modula la velocidad [a punto fijo configurable|en funcion a la desviaciorn de la consigna de temperatura], para optimizar el confort y el consumo energético.}}{CliVent.is(\"0..10Vcc\")&!CliPres}",
 			"{{Ante la detección de un fallo de ventilación, el sistema detiene el funcionamiento del resto de elementos, la demanda producción térmica y genera la señal de alarma correspondiente.}}{CliVent}",
 
 			// FILTROS
@@ -607,13 +618,13 @@ const Narrativa = {
 			"{{En función de las condiciones exteriores respecto a las interiores, el sistema puede incrementar la aportación de aire exterior para aprovechar el enfriamiento gratuito.}}{CliComp&CliExt}",
 			"{{Si la calidad del aire interior es mala, el sistema fuerza la apertura de compuertas aunque las condiciones exteriores no sean favorables, en aras de la salubridad.}}{CliAmb.is(\"Temp y CO2\")&CliComp|CliAmb.is(\"Temp, Hum y CO2\")&CliComp}",
 			"En condiciones favorables, el climatizador puede activar estrategias de refrigeración nocturna (fuera de horario) mediante aire exterior.",
-			
+
 			// RECUPERACIÓN DE CALOR
 			"{{-- RECUPERADOR --}}{CliRecup}",
 			"{{El sistema de recuperación de calor aprovecha la energía del aire extraído para precalentar o preenfriar el aire de impulsión.}}{CliRecup}",
 			"{{La recuperación se regula automáticamente para maximizar la eficiencia energética sin comprometer el confort.}}{CliRecup}",
 			"{{La recuperación puede inhibirse cuando las condiciones exteriores resultan más favorables que el aire de retorno.}}{CliRecup&CliExt}",
-			
+
 			// HUMECTACIÓN / DESHUMECTACION
 			"{{-- HUMECTACIÓN --}}{CliHum}",
 			"{{El sistema de humectación permite ajustar la humedad del aire impulsado cuando las condiciones lo requieren.}}{CliHum}",
@@ -622,24 +633,51 @@ const Narrativa = {
 		],
 	},
 	"Fan Coil": {
-		"Descripcion": [
-			"El fan coil es una unidad terminal destinada a la climatización de zonas individuales mediante la impulsión de aire tratado.",
-			"Permite el control independiente de la temperatura ambiente en cada espacio servido."
+		"Descripción": [
+			"[El/Los]{MainBloc} [{NombreUsuario}]{MainBloc} [es/son]{MainBloc} una[/s]{MainBloc} unidad[/es]{MainBloc} terminal[/es]{MainBloc} destinada[/s]{MainBloc} a la climatización de zonas individuales mediante la impulsión de aire tratado.",
+			"Permite al usuario el control del ambiente a su conveniencia, en cada espacio servido."
 		],
 		"Elementos": [
-			"{{Sensor de ambiente o retorno del fan coil.}}{FCAm}",
-			"{{Sonda de temperatura de impulsión.}}{FCImp}",
-			"{{Válvula de control de la batería.}}{FCVaBat}",
-			"{{Presostato de filtro sucio.}}{FCFil}",
-			"{{Ventilador del fan coil.}}{FCVent}"
+			"{{[{NombreUsuario}]{FCAm}}}{FCAm}",
+			"{{[{NombreUsuario}]{FCImp}}}{FCImp}",
+			"{{[{NombreUsuario}]{FCVaBat}}}{FCVaBat}",
+			"{{[{NombreUsuario}]{FCFil}}}{FCFil}",
+			"{{[{NombreUsuario}]{FCComp}}}{FCComp}",
+			"{{[{NombreUsuario}]{FCVent}}}{FCVent}",
 		],
 		"Funcionamiento": [
-			"{{}}{FCAm}",
-			"{{}}{FCImp}",
-			"{{}}{FCVaBat}",
-			"{{}}{FCFil}",
-			"{{}}{FCVent}"
+
+			// MODOS Y HABILITACIÓN GENERAL
+			"Se dispone de un [horario|selector] para el funcionamiento del fan coil que permite cambiar de nivel confort / economico / parado, modificando las consignas y limitaciones de funcionamiento. De este modo durante periodos de baja ocupación, el sistema puede operar ajustando consignas y caudales para minimizar el consumo energético.",
+			"{{El cambio invierno/verano del fan coil se realiza automáticamente, según el régimen actual de la instalacion, adaptando su funcionamiento y demandas en consecuencia.}}{!CliInVe&CliVaBat.qty(\"==1\")}",
+			"{{El cambio invierno/verano del fan coil se realiza mediante una señal digital externa, adaptando su funcionamiento y demandas en consecuencia.}}{CliInVe}",
+
+			// Sensores y demanda
+			"-- TEMPERATURA --",
+			"{{La [{NombreUsuario}]{FCAm} se utiliza como referencia principal para la regulación.}}{FCAm}",
+			"{{La temperatura de impulsión se utiliza como referencia principal para la regulación.}}{FCImp&!FCAm}",
+			"{{La temperatura de impulsión se limita entre dos valores configurables para evitar sensación de disconfort por parte del usuario.}}{FCImp&FCAm}",
+			"{{Cuando la temperatura se desvía de la consigna configurada mas un diferencial, se genera una demanda térmica a productores.}}{FCAm|FCImp}",
+			"{{La regulación de la[/s]{FCVaBat} válvula[/s]{FCVaBat} se realiza de forma proporcional por lazo PI.}}{FCVaBat.is(\"0..10Vcc\")|FCVaBat.is(\"3 Puntos\")}",
+			"{{La regulación de la[/s]{FCVaBat} válvula[/s]{FCVaBat} se activando y desactivando la valvula. Se establece una banda muerta configurable en torno a la consigna, de modo que la válvula se activa o desactiva la llegar la temperatura de referencia a los extremos de dicha banda.}}{FCVaBat.is(\"Todo/Nada\")}",
+			
+			// Control del ventilador
+			"-- VENTILADOR --",
+			"{{El ventilador del fan coil se activa [por horario|cuando hay demanda térmica] y condiciones adecuadas en la batería.}}{FCVent}",
+			"{{El ventilador conmutara entre las velocidades automaticamente, acelerando mas en la medida en la que el ambiente esté desviado de la consigna.}}{FCVent.is(\"3 Velocidades\")}",
+			"{{Una vez se llega a la consigna, se retarda un tiempo configurable la parada del ventilador para aprovechar la inercia térmica de la batería.}}{FCVent}",
+
+			// TODO
+			"{{El ventilador se activa [por horario|cuando hay demanda térmica y con un retarto respecto de la válvula de calor para evitar sensacón de estar impulsando aire frio.}}{FCVent}",
+			"{{El sistema coordina la apertura de la válvula y el funcionamiento del ventilador para evitar impulsión de aire sin aporte térmico efectivo.}}{FCVaBat&FCVent}",
+
+			"-- EXTRAS --",
+			"{{La temperatura de impulsión se utiliza como señal de supervisión para proteger el funcionamiento del fan coil y mejorar el confort térmico.}}{FCImp}",
+			"{{La detección de filtro sucio genera un aviso de mantenimiento para garantizar el correcto caudal de aire y la eficiencia del sistema.}}{FCFil}",
+			"{{En ausencia prolongada de demanda térmica, el sistema mantiene el fan coil en estado de reposo, conservando únicamente las funciones de supervisión.}}{FCAm}",
+			"{{El fan coil reanuda automáticamente su funcionamiento cuando se detecta una nueva demanda térmica.}}{FCAm}"
 		]
+
 	},
 }
 
