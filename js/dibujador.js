@@ -1104,7 +1104,7 @@ function dibujarPaginaDeDispositivo(hojaX, hojaY, dispositivo, pageIndex, startX
 
             // 1) Si el borne tiene SEÑAL asignada en EL ESTADO → dibujar símbolo correspondiente
             const borneObj = conector.Numeracion[i];
-            const { num, seniales, nombre, desG, desG0, digLogo24, multSeñales } = normalizarBorne(borneObj);
+            const { num, seniales, nombre, desG, desG0, digLogo24, multSeñales, tipoQ } = normalizarBorne(borneObj);          
 
             // nombre del borne (para mapear en estado)
             const nombreBorne = nombre || num || null;
@@ -1120,10 +1120,8 @@ function dibujarPaginaDeDispositivo(hojaX, hojaY, dispositivo, pageIndex, startX
                         const opcionTexto = (sig.Opciones?.[sig.Opcion]) || "";
 
                         // Construcción del nombre de función JS
-                        const funcionNombre = `${tipo}_${numero}_${opcionTexto}`; // Debes tenerla definida en window
+                        const funcionNombre = `${tipo}_${numero}_${opcionTexto}${tipoQ}`;
                         const fn = window[funcionNombre];
-
-                        // console.log ({fn});
 
                         if (typeof fn === "function") {
                             const L1Mayus = sig.Linea1.toUpperCase();
@@ -1205,9 +1203,10 @@ function normalizarBorne(borne) {
             desG: borne.desG ?? 0,
             desG0: borne.desG0 ?? 0,
             digLogo24: borne.digLogo24 ?? false,
+            tipoQ: borne.tipoQ ?? "",
         };
     }
-    return { num: borne ?? null, seniales: [], nombre: null, desG: 0, desG0: 0, digLogo24: false };
+    return { num: borne ?? null, seniales: [], nombre: null, desG: 0, desG0: 0, digLogo24: false, tipoQ: "" };
 }
 
 function obtenerSenialPorUUID(uuid) {

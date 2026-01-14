@@ -465,6 +465,71 @@ function SD_1_Externa(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0
     return entidades;
 }
 
+function SD_1_Rele8T(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0) {
+
+    const entidades = [];
+
+    // texto señal
+    entidades.push(textoMultiDXF(posX - 2, posY - 190, [Linea1, Linea2], 2.5, "ML", 90));
+
+    // textos
+    entidades.push(textoDXF( posX - 19, posY - 41, "1", 1, "MC", 0 ));  
+    entidades.push(textoDXF( posX - 17, posY - 41, "0", 1, "MC", 0 ));  
+    entidades.push(textoDXF( posX - 15, posY - 41, "2", 1, "MC", 0 ));  
+    entidades.push(textoDXF( posX -  9, posY -  58, `R${tagNumber}`, 2.5, "MR"));
+
+    // bornas
+    entidades.push(lineaDXF( posX +  2, posY - 104, posX -  2, posY - 104, 40));  
+    entidades.push(lineaDXF( posX +  2, posY - 110, posX -  2, posY - 110, 40));  
+    entidades.push(lineaDXF( posX -  2, posY - 104, posX -  2, posY - 110, 40));  
+    entidades.push(lineaDXF( posX +  2, posY - 104, posX +  2, posY - 110, 40));  
+    entidades.push(lineaDXF( posX -  2, posY - 104, posX -  6, posY - 104, 40));  
+    entidades.push(lineaDXF( posX -  2, posY - 110, posX -  6, posY - 110, 40));  
+    entidades.push(lineaDXF( posX -  6, posY - 104, posX -  6, posY - 110, 40));  
+    entidades.push(lineaDXF( posX -  2, posY - 104, posX -  2, posY - 110, 40));  
+    
+    // dibujo
+    entidades.push(lineaDXF( posX +  0, posY - 110, posX +  0, posY - 116));  
+    entidades.push(lineaDXF( posX -  4, posY - 110, posX -  4, posY - 116));  
+    entidades.push(lineaDXF( posX - 12, posY -  60, posX - 12, posY -  64));  
+    entidades.push(lineaDXF( posX - 12, posY -  64, posX -  4, posY -  64));  
+    entidades.push(lineaDXF( posX -  4, posY -  64, posX -  4, posY -  60));  
+    entidades.push(lineaDXF( posX -  4, posY -  60, posX - 12, posY -  60));  
+    entidades.push(lineaDXF( posX +  0, posY -  68, posX -  8, posY -  68));  
+    entidades.push(lineaDXF( posX -  4, posY -  90, posX -  6, posY -  86));  
+    entidades.push(lineaDXF( posX -  4, posY -  90, posX -  4, posY - 104));  
+    entidades.push(lineaDXF( posX -  4, posY -  86, posX -  4, posY -  77));  
+    entidades.push(lineaDXF( posX -  4, posY -  77, posX +  0, posY -  77));  
+    entidades.push(lineaDXF( posX +  0, posY - 104, posX +  0, posY -  77));  
+    entidades.push(lineaDXF( posX -  8, posY -  46, posX - 10, posY -  42));  
+    entidades.push(lineaDXF( posX - 20, posY -  43, posX - 20, posY -  45));  
+    entidades.push(lineaDXF( posX - 19, posY -  42, posX - 17, posY -  46));  
+    entidades.push(lineaDXF( posX - 20, posY -  43, posX - 19, posY -  43));  
+    entidades.push(lineaDXF( posX - 21, posY -  45, posX - 20, posY -  45));  
+    entidades.push(lineaDXF( posX - 12, posY -  46, posX - 14, posY -  42));  
+    entidades.push(lineaDXF( posX - 12, posY -  46, posX - 12, posY -  50));  
+    entidades.push(lineaDXF( posX - 12, posY -  50, posX -  8, posY -  50));  
+    entidades.push(lineaDXF( posX - 12, posY -  42, posX - 12, posY -  16));  
+    entidades.push(lineaDXF( posX +  0, posY -  68, posX +  0, posY +   0));  
+    entidades.push(lineaDXF( posX -  8, posY +   0, posX -  8, posY -  42));  
+    entidades.push(lineaDXF( posX -  8, posY -  46, posX -  8, posY -  60));  
+    entidades.push(lineaDXF( posX -  8, posY -  64, posX -  8, posY -  68));  
+    
+    // discontinuas
+    entidades.push(lineaDXF( posX - 17, posY -  46, posX - 17, posY -  42, -1, "DASHED", 0.1));  
+    entidades.push(lineaDXF( posX - 17, posY -  46, posX - 15, posY -  42, -1, "DASHED", 0.1));  
+    entidades.push(lineaDXF( posX -  9, posY -  44, posX - 20, posY -  44, -1, "DASHED", 0.1));  
+    entidades.push(lineaDXF( posX - 10, posY -  88, posX - 10, posY -  64, -1, "DASHED", 0.1));  
+    entidades.push(lineaDXF( posX - 10, posY -  88, posX -  5, posY -  88, -1, "DASHED", 0.1));  
+
+    // puntos
+    entidades.push(punto(posX - 8, posY - 50));  
+    entidades.push(punto(posX - 12, posY - 16));  
+
+    return entidades;
+
+}
+
 function SD_1_Rele(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0) {
 
     const entidades = [];

@@ -667,6 +667,68 @@ const dispositivos = {
             "Tipo": "modulo",
         },
     },
+    "TXM1.8T": {
+        "Nombre": "TXM1.8T",
+        "Paginas": [
+            [
+                {   // Canal 1
+                    "Cinta": "(1)",
+                    "Subcinta": [null, "V~", null, "Y1", null,],
+                    "Simbolos": [null, "#D", null, "#U", null, ],
+                    "Numeracion": [null, "2", null, { num: "4", señales: ["SD"], nombre: "DO1", tipoQ: "8T" }, null,],
+                },
+                {   // Canal 2
+                    "Cinta": "(2)",
+                    "Subcinta": [null, "V~", null, "Y2", null,],
+                    "Simbolos": [null, "#D", null, "#U", null, ],
+                    "Numeracion": [null, "6", null, { num: "8", señales: ["SD"], nombre: "DO2", tipoQ: "8T" }, null,],
+                },
+                {   // Canal 3
+                    "Cinta": "(3)",
+                    "Subcinta": [null, "V~", null, "Y3", null,],
+                    "Simbolos": [null, "#D", null, "#U", null, ],
+                    "Numeracion": [null, "10", null, { num: "12", señales: ["SD"], nombre: "DO3", tipoQ: "8T" }, null,],
+                },
+                {   // Canal 4
+                    "Cinta": "(4)",
+                    "Subcinta": [null, "V~", null, "Y4", null,],
+                    "Simbolos": [null, "#D", null, "#U", null, ],
+                    "Numeracion": [null, "14", null, { num: "16", señales: ["SD"], nombre: "DO4", tipoQ: "8T" }, null,],
+                },
+                {   // Canal 5
+                    "Cinta": "(5)",
+                    "Subcinta": [null, "V~", null, "Y5", null,],
+                    "Simbolos": [null, "#D", null, "#U", null, ],
+                    "Numeracion": [null, "19", null, { num: "21", señales: ["SD"], nombre: "DO5", tipoQ: "8T" }, null,],
+                },
+                {   // Canal 6
+                    "Cinta": "(6)",
+                    "Subcinta": [null, "V~", null, "Y6", null,],
+                    "Simbolos": [null, "#D", null, "#U", null, ],
+                    "Numeracion": [null, "23", null, { num: "25", señales: ["SD"], nombre: "DO6", tipoQ: "8T" }, null,],
+                },
+                {   // Canal 7
+                    "Cinta": "(7)",
+                    "Subcinta": [null, "V~", null, "Y7", null,],
+                    "Simbolos": [null, "#D", null, "#U", null, ],
+                    "Numeracion": [null, "27", null, { num: "29", señales: ["SD"], nombre: "DO7", tipoQ: "8T" }, null,],
+                },
+                {   // Canal 8
+                    "Cinta": "(8)",
+                    "Subcinta": [null, "V~", null, "Y8", null,],
+                    "Simbolos": [null, "#D", null, "#U", null, ],
+                    "Numeracion": [null, "31", null, { num: "33", señales: ["SD"], nombre: "DO8", tipoQ: "8T" }, null,],
+                },
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 64,
+            "Alto": 78,
+            "Familia": "PX",
+            "Tension230": false,
+            "Tipo": "modulo",
+        },
+    },
     "TXM1.4D3R": {
         "Nombre": "TXM1.4D3R",
         "Paginas": [
@@ -1790,7 +1852,7 @@ const dispositivos = {
                         { num: "CE-", desX: 1 },
                         null,
                     ],
-                    "Fijo": [ null, null, "#KNXsl", null, ],
+                    "Fijo": [null, null, "#KNXsl", null,],
                 },
                 {   // Contador 1
                     "Simbolos": [null, "#|", "#|", null,],
@@ -2411,7 +2473,7 @@ const dispositivos = {
             "Familia": "Logo",
             "Tipo": "controlador",
         },
-    },        
+    },
     "LOGO 230 RCE": {
         "Nombre": "LOGO 230 RCE",
         "Paginas": [
@@ -2971,9 +3033,9 @@ const dispositivos = {
                         { num: "B", desX: 1, extraEstrecho: true },
                     ],
                     "Opcional": [
-                        { nombre: "Modbus In", dibujo: "#MoI", desX: 2, Linea1:"De anterior equipo", },
+                        { nombre: "Modbus In", dibujo: "#MoI", desX: 2, Linea1: "De anterior equipo", },
                         null,
-                        { nombre: "Modbus Ou", dibujo: "#MoO", desX: 6, Linea1:"A proximo equipo", },
+                        { nombre: "Modbus Ou", dibujo: "#MoO", desX: 6, Linea1: "A proximo equipo", },
                     ],
                 },
 
@@ -2998,10 +3060,10 @@ const dispositivos = {
                         null, "#|", "#UD",
                     ],
                     "Numeracion": [
-                        null, null, { num: "X1", señales: ["EA", "ED", "SA", ], nombre: "X1", desG: 12, desG0: 16, }, null,
-                        null, "#T", { num: "X2", señales: ["EA", "ED", "SA", ], nombre: "X2", desG: 12, }, null,
-                        null, null, { num: "X3", señales: ["EA", "ED", "SA", ], nombre: "X3", desG: 12, desG0: 16, }, null,
-                        null, "#T", { num: "X4", señales: ["EA", "ED", "SA", ], nombre: "X4", desG: 12, },
+                        null, null, { num: "X1", señales: ["EA", "ED", "SA",], nombre: "X1", desG: 12, desG0: 16, }, null,
+                        null, "#T", { num: "X2", señales: ["EA", "ED", "SA",], nombre: "X2", desG: 12, }, null,
+                        null, null, { num: "X3", señales: ["EA", "ED", "SA",], nombre: "X3", desG: 12, desG0: 16, }, null,
+                        null, "#T", { num: "X4", señales: ["EA", "ED", "SA",], nombre: "X4", desG: 12, },
                     ],
                 },
                 {   // entradas X5 a X8
@@ -3012,29 +3074,29 @@ const dispositivos = {
                         null, "#|", "#UD",
                     ],
                     "Numeracion": [
-                        null, null, { num: "X5", señales: ["EA", "ED", "SA", ], nombre: "X5", desG: 12, desG0: 16, }, null,
-                        null, "#T", { num: "X6", señales: ["EA", "ED", "SA", ], nombre: "X6", desG: 12, }, null,
-                        null, null, { num: "X7", señales: ["EA", "ED", "SA", ], nombre: "X7", desG: 12, desG0: 16, }, null,
-                        null, "#T", { num: "X8", señales: ["EA", "ED", "SA", ], nombre: "X8", desG: 12, },
+                        null, null, { num: "X5", señales: ["EA", "ED", "SA",], nombre: "X5", desG: 12, desG0: 16, }, null,
+                        null, "#T", { num: "X6", señales: ["EA", "ED", "SA",], nombre: "X6", desG: 12, }, null,
+                        null, null, { num: "X7", señales: ["EA", "ED", "SA",], nombre: "X7", desG: 12, desG0: 16, }, null,
+                        null, "#T", { num: "X8", señales: ["EA", "ED", "SA",], nombre: "X8", desG: 12, },
                     ],
-                },               
+                },
                 {   // alimentacion 24V
                     "Cinta": "AC/DC",
-                    "Simbolos": ["#U", "#U", ],
+                    "Simbolos": ["#U", "#U",],
                     "Numeracion": [
-                        { num: "24V", desX: -1, extraEstrecho: true } ,
+                        { num: "24V", desX: -1, extraEstrecho: true },
                         "#T",
                     ],
                     "Fijo": ["#G", "#G0",],
-                },                
+                },
                 {   // RS485
                     "Cinta": "RS485",
                     "Simbolos": ["#D", "#|", "#D",],
-                    "Numeracion": ["+", "#T", "-", ],
+                    "Numeracion": ["+", "#T", "-",],
                     "Opcional": [
-                        { nombre: "Modbus In", dibujo: "#MoI", desX: 2, Linea1:"De anterior equipo", },
+                        { nombre: "Modbus In", dibujo: "#MoI", desX: 2, Linea1: "De anterior equipo", },
                         null,
-                        { nombre: "Modbus Ou", dibujo: "#MoO", desX: 6, Linea1:"A proximo equipo", },
+                        { nombre: "Modbus Ou", dibujo: "#MoO", desX: 6, Linea1: "A proximo equipo", },
                     ],
                 },
 
@@ -3078,24 +3140,24 @@ const dispositivos = {
                         null, { num: "D7", señales: ["ED"], nombre: "D7", desG0: 16, }, null,
                         "#T", { num: "D8", señales: ["ED"], nombre: "D8", },
                     ],
-                },               
+                },
                 {   // alimentacion 24V
                     "Cinta": "AC/DC",
-                    "Simbolos": ["#U", "#U", ],
+                    "Simbolos": ["#U", "#U",],
                     "Numeracion": [
-                        { num: "24V", desX: -1, extraEstrecho: true } ,
+                        { num: "24V", desX: -1, extraEstrecho: true },
                         "#T",
                     ],
                     "Fijo": ["#G", "#G0",],
-                },                
+                },
                 {   // RS485
                     "Cinta": "RS485",
                     "Simbolos": ["#D", "#|", "#D",],
-                    "Numeracion": ["+", "#T", "-", ],
+                    "Numeracion": ["+", "#T", "-",],
                     "Opcional": [
-                        { nombre: "Modbus In", dibujo: "#MoI", desX: 2, Linea1:"De anterior equipo", },
+                        { nombre: "Modbus In", dibujo: "#MoI", desX: 2, Linea1: "De anterior equipo", },
                         null,
-                        { nombre: "Modbus Ou", dibujo: "#MoO", desX: 6, Linea1:"A proximo equipo", },
+                        { nombre: "Modbus Ou", dibujo: "#MoO", desX: 6, Linea1: "A proximo equipo", },
                     ],
                 },
 
@@ -3107,68 +3169,68 @@ const dispositivos = {
             "Familia": "Modbus",
             "Tipo": "controlador",
         },
-    },          
+    },
     "EM1.8R": {
         "Nombre": "EM1.8R",
         "Paginas": [
             [
                 {   // salidas DO1 a DO4
                     "Simbolos": [
-                        null, null, null, null, 
-                        null, null, "#Q8R", "#/", 
-                        null, null, null, null, 
+                        null, null, null, null,
+                        null, null, "#Q8R", "#/",
+                        null, null, null, null,
                         null, null, "#Q8R",
-                    ],  
+                    ],
                     "Numeracion": [
                         "C1-2", null, { num: "DO1", señales: ["SD"], nombre: "DO1" }, null,
                         null, null, { num: "DO2", señales: ["SD"], nombre: "DO2" }, null,
                         "C3-4", null, { num: "DO3", señales: ["SD"], nombre: "DO3" }, null,
-                        null, null, { num: "DO4", señales: ["SD"], nombre: "DO4" }, 
+                        null, null, { num: "DO4", señales: ["SD"], nombre: "DO4" },
                     ],
                     "Fijo": [
-                        "#G", null, null, null, 
-                        null, null, null, null, 
-                        "#G", null, null, null, 
+                        "#G", null, null, null,
+                        null, null, null, null,
+                        "#G", null, null, null,
                         null, null, null,
-                    ],  
+                    ],
                 },
                 {   // salidas DO1 a DO4
                     "Simbolos": [
-                        null, null, null, null, 
-                        null, null, "#Q8R", "#/", 
-                        null, null, null, null, 
+                        null, null, null, null,
+                        null, null, "#Q8R", "#/",
+                        null, null, null, null,
                         null, null, "#Q8R",
-                    ],  
+                    ],
                     "Numeracion": [
                         "C5-6", null, { num: "DO5", señales: ["SD"], nombre: "DO5" }, null,
                         null, null, { num: "DO6", señales: ["SD"], nombre: "DO6" }, null,
                         "C7-8", null, { num: "DO7", señales: ["SD"], nombre: "DO7" }, null,
-                        null, null, { num: "DO8", señales: ["SD"], nombre: "DO8" }, 
+                        null, null, { num: "DO8", señales: ["SD"], nombre: "DO8" },
                     ],
                     "Fijo": [
-                        "#G", null, null, null, 
-                        null, null, null, null, 
-                        "#G", null, null, null, 
+                        "#G", null, null, null,
+                        null, null, null, null,
+                        "#G", null, null, null,
                         null, null, null,
-                    ],  
+                    ],
                 },
                 {   // alimentacion 24V
                     "Cinta": "AC/DC",
-                    "Simbolos": ["#U", "#U", ],
+                    "Simbolos": ["#U", "#U",],
                     "Numeracion": [
-                        { num: "24V", desX: -1, extraEstrecho: true } ,
+                        { num: "24V", desX: -1, extraEstrecho: true },
                         "#T",
                     ],
                     "Fijo": ["#G", "#G0",],
-                },                
+                },
                 {   // RS485
                     "Cinta": "RS485",
                     "Simbolos": ["#D", "#|", "#D",],
-                    "Numeracion": ["+", "#T", "-", ],
+                    "Numeracion": ["+", "#T", "-",],
                     "Opcional": [
-                        { nombre: "Modbus In", dibujo: "#MoI", desX: 2, Linea1:"De anterior equipo", },
+                        { nombre: "Modbus In", dibujo: "#MoI", desX: 2, Linea1: "De anterior equipo", },
                         null,
-                        { nombre: "Modbus Ou", dibujo: "#MoO", desX: 6, Linea1:"A proximo equipo", },
+                        { nombre: "Modbus Ou", dibujo: "#MoO", desX: 6, Linea1: "A proximo equipo", },
                     ],
                 },
 
@@ -3180,7 +3242,7 @@ const dispositivos = {
             "Familia": "Modbus",
             "Tipo": "controlador",
         },
-    },          
+    },
     "WTV776": {
         "Nombre": "WTV776",
         "Paginas": [
