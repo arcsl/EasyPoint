@@ -924,6 +924,7 @@ function generarLayoutHojas() {
             const tipo = disp?.Disposicion?.Tipo || "controlador";
             const familia = disp?.Disposicion?.Familia || "Synco";
             const tension230 = disp?.Disposicion?.Tension230 ?? true;
+            const tension230sec = disp?.Disposicion?.Tension230sec ?? false;
             const tension24 = disp?.Disposicion?.Tension24 ?? true;
             const anchos = disp?.Disposicion?.AnchoEnHoja || [disp?.Disposicion?.Ancho || HOJA_UTIL];
             const pages = anchos.length;
@@ -934,6 +935,7 @@ function generarLayoutHojas() {
                     tipo,               // "controlador" | "modulo" | ...
                     familia,            // PX, Synco,General,....
                     tension230,         // true/false
+                    tension230sec,      // true/false
                     tension24,          // true/false
                     pageIndex: p,       // índice de página
                     pages,              // total de páginas
@@ -1084,6 +1086,8 @@ function dibujarPaginaDeDispositivo(hojaX, hojaY, dispositivo, pageIndex, startX
             lineaDXF(inX + larguraNoEnv - 10, inY + 18, inX + larguraNoEnv - 10, inY + 24),
         );
     }
+    
+    let canalModulo = 0; // numero de cala del modulo (solo se usa para salidas triac a rele TXM1.8T p ej)
 
     // Relleno por conectores
     pagina.forEach((conector, idxCon) => {
@@ -1096,12 +1100,11 @@ function dibujarPaginaDeDispositivo(hojaX, hojaY, dispositivo, pageIndex, startX
                 entidades.push(...hasheador(posXCent, inY, conector[franja], franja));
             }
         });
-
+        canalModulo++;
         // Columnas del conector
         const nCols = conector.Numeracion?.length || 0;
         for (let i = 0; i < nCols; i++) {
             inX += paso;
-
             // 1) Si el borne tiene SEÑAL asignada en EL ESTADO → dibujar símbolo correspondiente
             const borneObj = conector.Numeracion[i];
             const { num, seniales, nombre, desG, desG0, digLogo24, multSeñales, tipoQ } = normalizarBorne(borneObj);          
@@ -1120,7 +1123,13 @@ function dibujarPaginaDeDispositivo(hojaX, hojaY, dispositivo, pageIndex, startX
                         const opcionTexto = (sig.Opciones?.[sig.Opcion]) || "";
 
                         // Construcción del nombre de función JS
-                        const funcionNombre = `${tipo}_${numero}_${opcionTexto}${tipoQ}`;
+                        let funcionNombre = ""; 
+                        if (tipoQ === "8T") {
+                            funcionNombre = `${tipo}_${numero}_Rele8T`;
+                            sig.tagNumber = nModulo + "." + canalModulo;
+                        } else {
+                            funcionNombre = `${tipo}_${numero}_${opcionTexto}`;
+                        }
                         const fn = window[funcionNombre];
 
                         if (typeof fn === "function") {
@@ -1221,6 +1230,7 @@ function obtenerSenialPorUUID(uuid) {
 }
 
 function dibujarBarrasComunes(CajetinX, CajetinY, hojaItems) {
+
     const entidades = [];
     const paso = 4;
     const despY = { "S0": paso * 1, "G": paso * 3, "G0": paso * 4, "CE+": paso * 6, "CE-": paso * 7, "N0": paso * 25 };
@@ -1230,17 +1240,19 @@ function dibujarBarrasComunes(CajetinX, CajetinY, hojaItems) {
     let KNX = false;
     let Logo = false;
     let dostreinta = false;
+    let dostreintasec = false;
     let veinticuatro = false;
 
-
-    // determinar si hay que dibujar el bus knx transversal
+    // determinar que lineas hay que dibujar
     hojaItems.forEach(item => {
+        console.log(item);
         if (item.familia.toUpperCase() === "SYNCO") {
             KNX = true;
         } else if (item.familia.toUpperCase() === "LOGO") {
             Logo = true;
         }
         if (item.tension230) dostreinta = true;
+        if (item.tension230sec) dostreinta = true;
         if (item.tension24) veinticuatro = true;
     });
 
