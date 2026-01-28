@@ -1116,20 +1116,19 @@ function dibujarPaginaDeDispositivo(hojaX, hojaY, dispositivo, pageIndex, startX
                 const uuid = dispEstado?.[nombreBorne] || null;
 
                 if (uuid) {
+
                     const info = obtenerSenialPorUUID(uuid);
+
                     if (info) {
+
                         const { tipo, sig } = info; // tipo = EA | ED | SA | SD
                         const numero = sig.Numero;
                         const opcionTexto = (sig.Opciones?.[sig.Opcion]) || "";
+                        const funcionNombre = `${tipo}_${numero}_${opcionTexto}${tipoQ}`;
 
+                        if (tipoQ === "8T") sig.tagNumber = nModulo + "." + canalModulo;
+                        
                         // Construcción del nombre de función JS
-                        let funcionNombre = ""; 
-                        if (tipoQ === "8T") {
-                            funcionNombre = `${tipo}_${numero}_Rele8T`;
-                            sig.tagNumber = nModulo + "." + canalModulo;
-                        } else {
-                            funcionNombre = `${tipo}_${numero}_${opcionTexto}`;
-                        }
                         const fn = window[funcionNombre];
 
                         if (typeof fn === "function") {
@@ -1245,7 +1244,6 @@ function dibujarBarrasComunes(CajetinX, CajetinY, hojaItems) {
 
     // determinar que lineas hay que dibujar
     hojaItems.forEach(item => {
-        console.log(item);
         if (item.familia.toUpperCase() === "SYNCO") {
             KNX = true;
         } else if (item.familia.toUpperCase() === "LOGO") {

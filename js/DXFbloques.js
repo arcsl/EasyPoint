@@ -31,7 +31,7 @@ function cajetin(posX, posY, infoCajetin = {}) {
     entidades.push(lineaDXF(posX + 200, posY + 0, posX + 200, posY + 40, 40));
     entidades.push(lineaDXF(posX + 400, posY + 40, posX + 200, posY + 40, 40));
 
-    // lineas horizontales cajetin
+
     entidades.push(lineaDXF(posX + 400, posY + 36, posX + 200, posY + 36));
     entidades.push(lineaDXF(posX + 400, posY + 32, posX + 200, posY + 32));
     entidades.push(lineaDXF(posX + 400, posY + 28, posX + 200, posY + 28));
@@ -41,7 +41,7 @@ function cajetin(posX, posY, infoCajetin = {}) {
     entidades.push(lineaDXF(posX + 400, posY + 8, posX + 230, posY + 8));
     entidades.push(lineaDXF(posX + 382, posY + 4, posX + 230, posY + 4));
 
-    // lineas verticales cajetin
+
     entidades.push(lineaDXF(posX + 230, posY + 0, posX + 230, posY + 40));
 
     entidades.push(lineaDXF(posX + 268, posY + 40, posX + 268, posY + 28));
@@ -233,7 +233,7 @@ function ED_Rele(posX, posY, Linea1, Linea2, id, c1, c2, anchoId = 1, desG0 = 0,
 
     const desComun = desG0 + (digLogo24 ? -4 : 0);
 
-    // lineas contacto
+
     entidades.push(lineaDXF(posX + 0, posY - 58, posX - 4, posY - 58));
     entidades.push(lineaDXF(posX - 4, posY - 46, posX - 6, posY - 42));
     entidades.push(lineaDXF(posX - 4, posY - 42, posX - 4, posY - desComun));
@@ -469,33 +469,37 @@ function SD_1_Rele_Base(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 =
 
     const entidades = [];
 
-    //discontinuas
-    entidades.push(lineaDXF(posX - 1, posY - 60, posX - 12, posY - 60, -1, "DASHED", 0.1));
-    entidades.push(lineaDXF(posX - 9, posY - 62, posX - 9, posY - 58, -1, "DASHED", 0.1));
-    entidades.push(lineaDXF(posX - 9, posY - 62, posX - 7, posY - 58, -1, "DASHED", 0.1));
+    // 3 posiciones
+    entidades.push(lineaDXF(posX - 9, posY - 60, posX - 11, posY - 56));   
+    entidades.push(lineaDXF(posX - 9, posY - 60, posX -  9, posY - 56, -1, "DASHED", 0.1));
+    entidades.push(lineaDXF(posX - 9, posY - 60, posX -  7, posY - 56, -1, "DASHED", 0.1));
+    entidades.push(textoDXF(posX - 11, posY - 55, "1", 1, "MC", 0));
+    entidades.push(textoDXF(posX - 9, posY - 55, "0", 1, "MC", 0));
+    entidades.push(textoDXF(posX - 7, posY - 55, "2", 1, "MC", 0));
+       
+    // palomilla selector
+    entidades.push(lineaDXF(posX - 11, posY - 57, posX - 12, posY - 57));
+    entidades.push(lineaDXF(posX - 12, posY - 57, posX - 12, posY - 59));
+    entidades.push(lineaDXF(posX - 12, posY - 59, posX - 13, posY - 59));
+    entidades.push(lineaDXF(posX - 12, posY - 58, posX -  1, posY - 58, -1, "DASHED", 0.1));
+    
+    // 2 contactos
+    entidades.push(lineaDXF(posX + 0, posY - 60, posX - 2, posY - 56));
+    entidades.push(lineaDXF(posX - 4, posY - 60, posX - 6, posY - 56));
 
-    // 0 - 1 - 2
-    entidades.push(textoDXF(posX - 11, posY - 57, "1", 1, "MC", 0));
-    entidades.push(textoDXF(posX - 9, posY - 57, "0", 1, "MC", 0));
-    entidades.push(textoDXF(posX - 7, posY - 57, "2", 1, "MC", 0));
+    //puente inferior selector
+    entidades.push(lineaDXF(posX - 4, posY - 66, posX + 0, posY - 66));
+    entidades.push(lineaDXF(posX - 4, posY - 66, posX - 4, posY - 60));
+    entidades.push(punto(posX + 0, posY - 66));
 
-    // lineas
+    // rectangulo rele/contactor
     entidades.push(lineaDXF(posX - 4, posY - 90, posX - 4, posY - 94));
     entidades.push(lineaDXF(posX - 4, posY - 94, posX + 4, posY - 94));
     entidades.push(lineaDXF(posX + 4, posY - 94, posX + 4, posY - 90));
     entidades.push(lineaDXF(posX + 4, posY - 90, posX - 4, posY - 90));
-    entidades.push(lineaDXF(posX + 0, posY - 62, posX - 2, posY - 58));
-    entidades.push(lineaDXF(posX - 12, posY - 59, posX - 12, posY - 61));
-    entidades.push(lineaDXF(posX - 11, posY - 58, posX - 9, posY - 62));
-    entidades.push(lineaDXF(posX - 12, posY - 59, posX - 11, posY - 59));
-    entidades.push(lineaDXF(posX - 13, posY - 61, posX - 12, posY - 61));
+    
+    // A2 de rele/contactor a neutro y punto de union
     entidades.push(lineaDXF(posX + 0, posY - 94, posX + 0, posY - 100));
-    entidades.push(lineaDXF(posX - 4, posY - 62, posX - 6, posY - 58));
-    entidades.push(lineaDXF(posX - 4, posY - 68, posX + 0, posY - 68));
-    entidades.push(lineaDXF(posX - 4, posY - 68, posX - 4, posY - 62));
-
-    //puntos
-    entidades.push(punto(posX + 0, posY - 68));
     entidades.push(punto(posX + 0, posY - 100));
 
     // Texto señal
@@ -503,29 +507,28 @@ function SD_1_Rele_Base(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 =
 
     return entidades;
 
-    entidades.push(textoDXF(posX - 1, posY - 88, "KM2", 2.5, "MR", 0));
-
 }
 
 function SD_1_Rele(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0) {
 
     const entidades = [];
 
+    // Maniobra normal 230V
+    entidades.push(lineaDXF(posX + 0, posY - 0, posX + 0, posY - 56));
+    entidades.push(lineaDXF(posX - 4, posY - 4, posX - 4, posY - 56));
+    entidades.push(lineaDXF(posX - 8, posY - 4, posX - 8, posY + 0));
+    entidades.push(punto(posX - 4, posY - 4));
+    entidades.push(punto(posX - 8, posY - 4));
+
     // rele base
     entidades.push(...SD_1_Rele_Base(posX, posY, Linea1, Linea2, tagNumber, desG, desG0));
 
     // sin magneto
-    entidades.push(lineaDXF(posX + 0, posY - 62, posX + 0, posY - 90));
+    entidades.push(lineaDXF(posX + 0, posY - 60, posX + 0, posY - 90));
 
     // Nombre relé
     entidades.push(textoDXF(posX - 1, posY - 88, `R${tagNumber}`, 2.5, "MR", 0));
 
-    // Maniobra normal 230V
-    entidades.push(lineaDXF(posX + 0, posY - 58, posX + 0, posY + 0));
-    entidades.push(lineaDXF(posX - 4, posY - 58, posX - 4, posY - 4));
-    entidades.push(punto(posX - 4, posY - 4));
-    entidades.push(punto(posX - 8, posY - 4));
-    entidades.push(lineaDXF(posX - 8, posY - 4, posX - 8, posY + 0));
 
     return entidades;
 
@@ -547,7 +550,7 @@ function SD_1_Magneto(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0
     entidades.push(lineaDXF(posX - 0.5, posY - 77.25, posX - 0.5, posY - 78));
     entidades.push(lineaDXF(posX - 0.5, posY - 78, posX - 1.25, posY - 78));
     entidades.push(lineaDXF(posX + 0, posY - 90, posX + 0, posY - 80));
-    entidades.push(lineaDXF(posX + 0, posY - 76, posX + 0, posY - 62));
+    entidades.push(lineaDXF(posX + 0, posY - 76, posX + 0, posY - 60));
 
     return entidades;
 
@@ -558,11 +561,11 @@ function SD_1_Contactor(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 =
     const entidades = [];
 
     // Maniobra normal 230V
-    entidades.push(lineaDXF(posX + 0, posY - 58, posX + 0, posY + 0));
-    entidades.push(lineaDXF(posX - 4, posY - 58, posX - 4, posY - 4));
+    entidades.push(lineaDXF(posX + 0, posY - 0, posX + 0, posY - 56));
+    entidades.push(lineaDXF(posX - 4, posY - 4, posX - 4, posY - 56));
+    entidades.push(lineaDXF(posX - 8, posY - 4, posX - 8, posY + 0));
     entidades.push(punto(posX - 4, posY - 4));
     entidades.push(punto(posX - 8, posY - 4));
-    entidades.push(lineaDXF(posX - 8, posY - 4, posX - 8, posY + 0));
 
     // rele base
     entidades.push(...SD_1_Rele_Base(posX, posY, Linea1, Linea2, tagNumber, desG, desG0));
@@ -581,14 +584,14 @@ function SD_3_Motor3V(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0
 
     const entidades = [];
 
-    entidades.push(punto(posX - 4, posY - 100));  // HATCH punto línea 764
-    entidades.push(punto(posX - 8, posY - 4));  // HATCH punto línea 124
+    entidades.push(punto(posX - 4, posY - 100));
+    entidades.push(punto(posX - 8, posY - 4));
 
-    entidades.push(lineaDXF(posX + 4, posY - 110, posX + 4, posY - 116));  // LINE en línea 0
-    entidades.push(lineaDXF(posX + 0, posY - 110, posX + 0, posY - 116));  // LINE en línea 24
-    entidades.push(lineaDXF(posX + 0, posY - 104, posX + 0, posY + 0));  // LINE en línea 48
-    entidades.push(lineaDXF(posX - 4, posY - 110, posX - 4, posY - 116));  // LINE en línea 74
-    entidades.push(lineaDXF(posX - 4, posY - 104, posX - 4, posY - 100));  // LINE en línea 98
+    entidades.push(lineaDXF(posX + 4, posY - 110, posX + 4, posY - 116));
+    entidades.push(lineaDXF(posX + 0, posY - 110, posX + 0, posY - 116));
+    entidades.push(lineaDXF(posX + 0, posY - 104, posX + 0, posY + 0));
+    entidades.push(lineaDXF(posX - 4, posY - 110, posX - 4, posY - 116));
+    entidades.push(lineaDXF(posX - 4, posY - 104, posX - 4, posY - 100));
 
     entidades.push(textoDXF(posX - 4, posY - 118, "N", 2.5, "MC", 0));  // TEXT en línea 290
     entidades.push(textoDXF(posX + 0, posY - 118, "1", 2.5, "MC", 0));  // TEXT en línea 324
@@ -599,40 +602,40 @@ function SD_3_Motor3V(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0
 
     entidades.push(circunferenciaDXF(posX + 2, posY - 126, 5, -1));  // CIRCLE en línea 518
 
-    entidades.push(lineaDXF(posX - 4, posY - 122, posX - 4, posY - 120));  // LINE en línea 494
-    entidades.push(lineaDXF(posX - 8, posY + 0, posX - 8, posY - 4));  // LINE en línea 538
-    entidades.push(lineaDXF(posX + 32, posY + 0, posX + 32, posY - 56));  // LINE en línea 562
-    entidades.push(lineaDXF(posX + 8, posY - 110, posX + 8, posY - 116));  // LINE en línea 586
+    entidades.push(lineaDXF(posX - 4, posY - 122, posX - 4, posY - 120));
+    entidades.push(lineaDXF(posX - 8, posY + 0, posX - 8, posY - 4));
+    entidades.push(lineaDXF(posX + 32, posY + 0, posX + 32, posY - 56));
+    entidades.push(lineaDXF(posX + 8, posY - 110, posX + 8, posY - 116));
     entidades.push(textoDXF(posX + 8, posY - 118, "3", 2.5, "MC", 0));  // TEXT en línea 610
-    entidades.push(lineaDXF(posX + 8, posY - 120, posX + 8, posY - 122));  // LINE en línea 644
-    entidades.push(lineaDXF(posX + 8, posY - 122, posX + 6.391, posY - 123.609));  // LINE en línea 668
-    entidades.push(lineaDXF(posX + 4, posY - 121.417, posX + 4, posY - 120));  // LINE en línea 692
-    entidades.push(lineaDXF(posX + 0, posY - 121.417, posX + 0, posY - 120));  // LINE en línea 716
-    entidades.push(lineaDXF(posX - 4, posY - 122, posX - 2.391, posY - 123.609));  // LINE en línea 740
-    entidades.push(lineaDXF(posX + 32, posY - 56, posX + 8, posY - 56));  // LINE en línea 826
-    entidades.push(lineaDXF(posX + 4, posY - 104, posX + 4, posY - 52));  // LINE en línea 850
-    entidades.push(lineaDXF(posX + 4, posY - 52, posX + 16, posY - 52));  // LINE en línea 876
-    entidades.push(lineaDXF(posX + 16, posY + 0, posX + 16, posY - 52));  // LINE en línea 900
-    entidades.push(lineaDXF(posX + 8, posY - 104, posX + 8, posY - 56));  // LINE en línea 924
+    entidades.push(lineaDXF(posX + 8, posY - 120, posX + 8, posY - 122));
+    entidades.push(lineaDXF(posX + 8, posY - 122, posX + 6.391, posY - 123.609));
+    entidades.push(lineaDXF(posX + 4, posY - 121.417, posX + 4, posY - 120));
+    entidades.push(lineaDXF(posX + 0, posY - 121.417, posX + 0, posY - 120));
+    entidades.push(lineaDXF(posX - 4, posY - 122, posX - 2.391, posY - 123.609));
+    entidades.push(lineaDXF(posX + 32, posY - 56, posX + 8, posY - 56));
+    entidades.push(lineaDXF(posX + 4, posY - 104, posX + 4, posY - 52));
+    entidades.push(lineaDXF(posX + 4, posY - 52, posX + 16, posY - 52));
+    entidades.push(lineaDXF(posX + 16, posY + 0, posX + 16, posY - 52));
+    entidades.push(lineaDXF(posX + 8, posY - 104, posX + 8, posY - 56));
 
     // bornas
-    entidades.push(lineaDXF(posX + 6, posY - 104, posX + 2, posY - 104, 40));  // LINE en línea 0
-    entidades.push(lineaDXF(posX + 6, posY - 110, posX + 2, posY - 110, 40));  // LINE en línea 26
-    entidades.push(lineaDXF(posX + 6, posY - 104, posX + 6, posY - 110, 40));  // LINE en línea 52
-    entidades.push(lineaDXF(posX + 2, posY - 104, posX - 2, posY - 104, 40));  // LINE en línea 78
-    entidades.push(lineaDXF(posX + 2, posY - 110, posX - 2, posY - 110, 40));  // LINE en línea 104
-    entidades.push(lineaDXF(posX + 2, posY - 104, posX + 2, posY - 110, 40));  // LINE en línea 130
-    entidades.push(lineaDXF(posX - 2, posY - 104, posX - 6, posY - 104, 40));  // LINE en línea 156
-    entidades.push(lineaDXF(posX - 2, posY - 110, posX - 6, posY - 110, 40));  // LINE en línea 182
-    entidades.push(lineaDXF(posX - 6, posY - 104, posX - 6, posY - 110, 40));  // LINE en línea 208
-    entidades.push(lineaDXF(posX - 2, posY - 104, posX - 2, posY - 110, 40));  // LINE en línea 234
-    entidades.push(lineaDXF(posX + 10, posY - 104, posX + 6, posY - 104, 40));  // LINE en línea 260
-    entidades.push(lineaDXF(posX + 10, posY - 110, posX + 6, posY - 110, 40));  // LINE en línea 286
-    entidades.push(lineaDXF(posX + 10, posY - 104, posX + 10, posY - 110, 40));  // LINE en línea 312
-    entidades.push(lineaDXF(posX + 10, posY - 116, posX - 6, posY - 116, 40));  // LINE en línea 338
-    entidades.push(lineaDXF(posX + 10, posY - 132, posX - 6, posY - 132, 40));  // LINE en línea 362
-    entidades.push(lineaDXF(posX - 6, posY - 116, posX - 6, posY - 132, 40));  // LINE en línea 386
-    entidades.push(lineaDXF(posX + 10, posY - 132, posX + 10, posY - 116, 40));  // LINE en línea 410
+    entidades.push(lineaDXF(posX + 6, posY - 104, posX + 2, posY - 104, 40));
+    entidades.push(lineaDXF(posX + 6, posY - 110, posX + 2, posY - 110, 40));
+    entidades.push(lineaDXF(posX + 6, posY - 104, posX + 6, posY - 110, 40));
+    entidades.push(lineaDXF(posX + 2, posY - 104, posX - 2, posY - 104, 40));
+    entidades.push(lineaDXF(posX + 2, posY - 110, posX - 2, posY - 110, 40));
+    entidades.push(lineaDXF(posX + 2, posY - 104, posX + 2, posY - 110, 40));
+    entidades.push(lineaDXF(posX - 2, posY - 104, posX - 6, posY - 104, 40));
+    entidades.push(lineaDXF(posX - 2, posY - 110, posX - 6, posY - 110, 40));
+    entidades.push(lineaDXF(posX - 6, posY - 104, posX - 6, posY - 110, 40));
+    entidades.push(lineaDXF(posX - 2, posY - 104, posX - 2, posY - 110, 40));
+    entidades.push(lineaDXF(posX + 10, posY - 104, posX + 6, posY - 104, 40));
+    entidades.push(lineaDXF(posX + 10, posY - 110, posX + 6, posY - 110, 40));
+    entidades.push(lineaDXF(posX + 10, posY - 104, posX + 10, posY - 110, 40));
+    entidades.push(lineaDXF(posX + 10, posY - 116, posX - 6, posY - 116, 40));
+    entidades.push(lineaDXF(posX + 10, posY - 132, posX - 6, posY - 132, 40));
+    entidades.push(lineaDXF(posX - 6, posY - 116, posX - 6, posY - 132, 40));
+    entidades.push(lineaDXF(posX + 10, posY - 132, posX + 10, posY - 116, 40));
 
     //texto señal
     entidades.push(textoMultiDXF(posX + 4, posY - 190, [Linea1, Linea2], 2.5, "ML", 90));
@@ -746,7 +749,7 @@ function SD_1_Rele8T_Base(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0
 
     const entidades = [];
 
-    entidades.push(textoDXF(posX - 1, posY - 58, `R${tagNumber}`, 2.5, "MR", 0, "Standard", 0.8));
+    entidades.push(textoDXF(posX - 1, posY - 22, `R${tagNumber}`, 2.5, "MR", 0, "Standard", 0.8));
 
     entidades.push(lineaDXF(posX - 4, posY - 24, posX - 4, posY - 28));
     entidades.push(lineaDXF(posX - 4, posY - 28, posX + 4, posY - 28));
@@ -761,25 +764,63 @@ function SD_1_Rele8T_Base(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0
 
 }
 
+function SD_1_Externa8T(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0) {
+
+    const entidades = [];
+
+    entidades.push(...SD_1_Rele8T_Base(posX, posY, Linea1, Linea2, tagNumber, desG, desG0));
+
+    entidades.push(lineaDXF( posX + 2, posY -  58, posX - 1, posY -  58,-1, "DASHED", 0.1));
+    entidades.push(lineaDXF( posX + 2, posY -  28, posX + 2, posY -  58,-1, "DASHED", 0.1));
+
+    // arco
+    entidades.push(lineaDXF( posX + 0, posY -  56, posX + 0, posY -  50));
+    entidades.push(lineaDXF( posX - 4, posY - 104, posX - 4, posY -  50));
+    entidades.push(lineaDXF( posX + 0, posY -  60, posX + 0, posY - 104));
+    entidades.push(lineaDXF( posX + 0, posY -  50, posX - 4, posY -  50));
+
+    // contacto
+    entidades.push(lineaDXF( posX + 0, posY -  60, posX - 2, posY -  56));
+    
+    // bornas
+    entidades.push(lineaDXF( posX - 2, posY - 104, posX - 6, posY - 104, 40));
+    entidades.push(lineaDXF( posX - 2, posY - 110, posX - 6, posY - 110, 40));
+    entidades.push(lineaDXF( posX - 6, posY - 104, posX - 6, posY - 110, 40));
+    entidades.push(lineaDXF( posX - 2, posY - 104, posX - 2, posY - 110, 40));
+    entidades.push(lineaDXF( posX + 2, posY - 104, posX - 2, posY - 104, 40));
+    entidades.push(lineaDXF( posX + 2, posY - 110, posX - 2, posY - 110, 40));
+    entidades.push(lineaDXF( posX - 2, posY - 104, posX - 2, posY - 110, 40));
+    entidades.push(lineaDXF( posX + 2, posY - 104, posX + 2, posY - 110, 40));
+
+    // salida de bornas
+    entidades.push(lineaDXF( posX + 0, posY - 110, posX + 0, posY - 116));
+    entidades.push(lineaDXF( posX - 4, posY - 110, posX - 4, posY - 116));
+
+    return entidades;
+
+}
+
 function SD_1_Rele8T(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0) {
 
     const entidades = [];
 
     // rele 8T base
-    entidades.push(...SD_1_Rele8T_Base(posX, posY, Linea1, Linea2, tagNumber + ".1", desG, desG0));
+    entidades.push(...SD_1_Rele8T_Base(posX, posY, Linea1, Linea2, tagNumber, desG, desG0));
 
     // conexion 230v para selector en 8T
-    entidades.push(lineaDXF(posX + 0, posY - 58, posX + 0, posY - 50));  // LINE en línea 0
-    entidades.push(lineaDXF(posX + 0, posY - 50, posX - 2, posY - 46));  // LINE en línea 24
-    entidades.push(lineaDXF(posX + 0, posY - 46, posX + 0, posY - 40));  // LINE en línea 48
-    entidades.push(lineaDXF(posX - 4, posY - 56, posX - 4, posY - 40));  // LINE en línea 72
-    entidades.push(punto(posX - 4, posY - 40));  // HATCH punto línea 96
-    entidades.push(punto(posX + 0, posY - 40));  // HATCH punto línea 158
-    entidades.push(lineaDXF(posX + 2, posY - 48, posX - 1, posY - 48));  // LINE en línea 220
-    entidades.push(lineaDXF(posX + 2, posY - 28, posX + 2, posY - 48));  // LINE en línea 248
+    entidades.push(lineaDXF(posX + 0, posY - 56, posX + 0, posY - 50));
+    entidades.push(lineaDXF(posX + 0, posY - 50, posX - 2, posY - 46));
+    entidades.push(lineaDXF(posX + 0, posY - 46, posX + 0, posY - 40));
+    entidades.push(lineaDXF(posX - 4, posY - 56, posX - 4, posY - 40));
+    entidades.push(punto(posX - 4, posY - 40));
+    entidades.push(punto(posX + 0, posY - 40));
+
+    // discontinuas de rele a contacto
+    entidades.push(lineaDXF(posX + 2, posY - 48, posX - 1, posY - 48, -1, "DASHED", 0.1));
+    entidades.push(lineaDXF(posX + 2, posY - 28, posX + 2, posY - 48, -1, "DASHED", 0.1));
 
     // sin magneto
-    entidades.push(lineaDXF(posX + 0, posY - 62, posX + 0, posY - 90));
+    entidades.push(lineaDXF(posX + 0, posY - 60, posX + 0, posY - 90));
 
     // rele base
     entidades.push(...SD_1_Rele_Base(posX, posY, Linea1, Linea2, tagNumber, desG, desG0));
@@ -796,17 +837,19 @@ function SD_1_Contactor8T(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0
     entidades.push(...SD_1_Rele8T_Base(posX, posY, Linea1, Linea2, tagNumber, desG, desG0));
 
     // conexion 230v para selector en 8T
-    entidades.push(lineaDXF(posX + 0, posY - 58, posX + 0, posY - 50));  // LINE en línea 0
-    entidades.push(lineaDXF(posX + 0, posY - 50, posX - 2, posY - 46));  // LINE en línea 24
-    entidades.push(lineaDXF(posX + 0, posY - 46, posX + 0, posY - 40));  // LINE en línea 48
-    entidades.push(lineaDXF(posX - 4, posY - 56, posX - 4, posY - 40));  // LINE en línea 72
-    entidades.push(punto(posX - 4, posY - 40));  // HATCH punto línea 96
-    entidades.push(punto(posX + 0, posY - 40));  // HATCH punto línea 158
-    entidades.push(lineaDXF(posX + 2, posY - 48, posX - 1, posY - 48));  // LINE en línea 220
-    entidades.push(lineaDXF(posX + 2, posY - 28, posX + 2, posY - 48));  // LINE en línea 248
+    entidades.push(lineaDXF(posX + 0, posY - 58, posX + 0, posY - 50));
+    entidades.push(lineaDXF(posX + 0, posY - 50, posX - 2, posY - 46));
+    entidades.push(lineaDXF(posX + 0, posY - 46, posX + 0, posY - 40));
+    entidades.push(lineaDXF(posX - 4, posY - 56, posX - 4, posY - 40));
+    entidades.push(punto(posX - 4, posY - 40));
+    entidades.push(punto(posX + 0, posY - 40));
+
+    // discontinuas de rele a contacto
+    entidades.push(lineaDXF(posX + 2, posY - 48, posX - 1, posY - 48, -1, "DASHED", 0.1));
+    entidades.push(lineaDXF(posX + 2, posY - 28, posX + 2, posY - 48, -1, "DASHED", 0.1));
 
     // proteccion magneto
-    entidades.push(...SD_1_Magneto(posX, posY, Linea1, Linea2, tagNumber, desG, desG0));
+    entidades.push(...SD_1_Magneto(posX, posY, Linea1, Linea2, tagNumber.slice(0, -2), desG, desG0));
 
     // rele base
     entidades.push(...SD_1_Rele_Base(posX, posY, Linea1, Linea2, tagNumber, desG, desG0));
@@ -819,44 +862,47 @@ function SD_2_Externa8T(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 =
 
     const entidades = [];
 
-    entidades.push(...SD_1_Rele8T_Base(posX, posY, Linea1, Linea2, tagNumber + ".1", desG, desG0));
-    entidades.push(...SD_1_Rele8T_Base(posX + 16, posY, Linea1, Linea2, tagNumber + ".2", desG, desG0));
+    const tagNumber2 = tagNumber.slice(0, -1) + (Number(tagNumber.slice(-1)) + 1);
 
+    // 2 reles 8T base
+    entidades.push(...SD_1_Rele8T_Base(posX, posY, Linea1, Linea2, tagNumber, desG, desG0));
+    entidades.push(...SD_1_Rele8T_Base(posX + 16, posY, Linea1, Linea2, tagNumber2, desG, desG0));
 
-    
-    
     // verticales bornas  
-    entidades.push(lineaDXF(posX + 9, posY - 104, posX + 9, posY - 110));
-    entidades.push(lineaDXF(posX + 5, posY - 104, posX + 5, posY - 110));
-    entidades.push(lineaDXF(posX + 13, posY - 104, posX + 13, posY - 110));
-    entidades.push(lineaDXF(posX + 17, posY - 104, posX + 17, posY - 110));
-    
+    entidades.push(lineaDXF(posX + 9, posY - 104, posX + 9, posY - 110, 40));
+    entidades.push(lineaDXF(posX + 5, posY - 104, posX + 5, posY - 110, 40));
+    entidades.push(lineaDXF(posX + 5, posY - 104, posX + 5, posY - 110, 40));
+    entidades.push(lineaDXF(posX + 13, posY - 104, posX + 13, posY - 110, 40));
+    entidades.push(lineaDXF(posX + 13, posY - 104, posX + 13, posY - 110, 40));
+    entidades.push(lineaDXF(posX + 17, posY - 104, posX + 17, posY - 110, 40));
+
     // horizontales bornas
-    entidades.push(lineaDXF(posX + 5, posY - 104, posX + 17, posY - 104));
-    entidades.push(lineaDXF(posX + 5, posY - 110, posX + 17, posY - 110));
+    entidades.push(lineaDXF(posX + 5, posY - 104, posX + 9, posY - 104, 40));
+    entidades.push(lineaDXF(posX + 9, posY - 104, posX + 13, posY - 104, 40));
+    entidades.push(lineaDXF(posX + 13, posY - 104, posX + 17, posY - 104, 40));
+    entidades.push(lineaDXF(posX + 5, posY - 110, posX + 9, posY - 110, 40));
+    entidades.push(lineaDXF(posX + 9, posY - 110, posX + 13, posY - 110, 40));
+    entidades.push(lineaDXF(posX + 13, posY - 110, posX + 17, posY - 110, 40));
 
-
-
-    entidades.push(lineaDXF(posX + 7, posY - 110, posX + 7, posY - 116));
-
-    entidades.push(lineaDXF(posX + 11, posY - 110, posX + 11, posY - 116));
-    entidades.push(lineaDXF(posX + 11, posY - 104, posX + 11, posY - 100));
-
-    entidades.push(lineaDXF(posX + 15, posY - 110, posX + 15, posY - 116));
+    // fase -> contacto -> bornas
+    entidades.push(lineaDXF(posX + 7, posY - 46, posX + 7, posY - 40));
     entidades.push(lineaDXF(posX + 7, posY - 50, posX + 5, posY - 46));
+    entidades.push(lineaDXF(posX + 7, posY - 104, posX + 7, posY - 50));
+    entidades.push(lineaDXF(posX + 7, posY - 110, posX + 7, posY - 116));
+    entidades.push(lineaDXF(posX + 11, posY - 104, posX + 11, posY - 100));
+    entidades.push(lineaDXF(posX + 11, posY - 110, posX + 11, posY - 116));
+    entidades.push(lineaDXF(posX + 15, posY - 46, posX + 15, posY - 40));
     entidades.push(lineaDXF(posX + 15, posY - 50, posX + 13, posY - 46));
     entidades.push(lineaDXF(posX + 15, posY - 104, posX + 15, posY - 50));
-    entidades.push(lineaDXF(posX + 15, posY - 48, posX + 15, posY - 40));
-    entidades.push(lineaDXF(posX + 7, posY - 104, posX + 7, posY - 50));
-    entidades.push(lineaDXF(posX + 7, posY - 48, posX + 7, posY - 40));
-    
-    
-    // discontinuas
+    entidades.push(lineaDXF(posX + 15, posY - 110, posX + 15, posY - 116));
+
+    // discontinuas de rele a contacto
     entidades.push(lineaDXF(posX + 2, posY - 28, posX + 2, posY - 48, -1, "DASHED", 0.1));
     entidades.push(lineaDXF(posX + 2, posY - 48, posX + 6, posY - 48, -1, "DASHED", 0.1));
     entidades.push(lineaDXF(posX + 18, posY - 48, posX + 14, posY - 48, -1, "DASHED", 0.1));
     entidades.push(lineaDXF(posX + 18, posY - 28, posX + 18, posY - 48, -1, "DASHED", 0.1));
 
+    // puntos
     entidades.push(punto(posX + 11, posY - 100));
     entidades.push(punto(posX + 7, posY - 40));
     entidades.push(punto(posX + 15, posY - 40));
@@ -872,13 +918,11 @@ function SD_2_Actuador8T(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 
 
     const entidades = [];
 
-
+    // maniobra
+    entidades.push(...SD_2_Externa8T(posX, posY, Linea1, Linea2, tagNumber, desG, desG0));
 
     // cuerpo elemento de campo
-    entidades.push(...valvula(posX + 8, posY, "Y1", "N", "Y2"));
-
-    // texto señal
-    entidades.push(textoMultiDXF(posX + 4, posY - 190, [Linea1, Linea2], 2.5, "ML", 90));
+    entidades.push(...valvula(posX + 15, posY, "Y1", "N", "Y2"));
 
     return entidades;
 
