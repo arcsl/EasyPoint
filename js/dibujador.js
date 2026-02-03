@@ -1126,7 +1126,9 @@ function dibujarPaginaDeDispositivo(hojaX, hojaY, dispositivo, pageIndex, startX
                         const opcionTexto = (sig.Opciones?.[sig.Opcion]) || "";
                         const funcionNombre = `${tipo}_${numero}_${opcionTexto}${tipoQ}`;
 
-                        if (tipoQ === "8T") sig.tagNumber = nModulo + "." + canalModulo;
+                        sig.tagNumber8T = tipoQ === "8T" 
+                            ? nModulo + "." + canalModulo
+                            : "";
                         
                         // Construcción del nombre de función JS
                         const fn = window[funcionNombre];
@@ -1136,7 +1138,7 @@ function dibujarPaginaDeDispositivo(hojaX, hojaY, dispositivo, pageIndex, startX
                             const L2Mayus = sig.Linea2.toUpperCase();
 
                             entidades.push(
-                                ...fn(inX, inY, L1Mayus, L2Mayus, sig.tagNumber, desG, desG0, digLogo24)
+                                ...fn(inX, inY, L1Mayus, L2Mayus, sig.tagNumber, desG, desG0, digLogo24, sig.tagNumber8T)
                             );
                         } else {
                             console.warn(`⚠️ Falta función símbolo DXF: ${funcionNombre}(x,y,Linea1,Linea2,tag)`);
