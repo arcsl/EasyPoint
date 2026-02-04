@@ -1079,18 +1079,20 @@ function dibujarPaginaDeDispositivo(hojaX, hojaY, dispositivo, pageIndex, startX
 
     // Marca de módulo PX (si aplica)
     const { Familia, Tipo, Alto } = dispositivo.Disposicion || {};
-    if (Familia === "PX" && Tipo === "modulo") {
+    if ((Familia === "PX" && Tipo === "modulo") || (Familia === "Modbus" && Tipo === "controlador")) {
         nModulo++;
         entidades.push(
             textoDXF(inX + larguraNoEnv - 5, inY + 21, `${nModulo}`, 3, 'MC', 0, "Negrita"),
             lineaDXF(inX + larguraNoEnv - 10, inY + 18, inX + larguraNoEnv - 10, inY + 24),
         );
     }
-    
-    let canalModulo = 0; // numero de cala del modulo (solo se usa para salidas triac a rele TXM1.8T p ej)
+
+    let canalModulo = 0; // numero de canal del modulo (solo se usa para salidas a reles de 24V, p. ej. TXM1.8T o EM1.8R)
 
     // Relleno por conectores
     pagina.forEach((conector, idxCon) => {
+
+        // canalModulo++;
 
         // Strings centradas en su bloque
         franjas.forEach(franja => {
@@ -1100,14 +1102,20 @@ function dibujarPaginaDeDispositivo(hojaX, hojaY, dispositivo, pageIndex, startX
                 entidades.push(...hasheador(posXCent, inY, conector[franja], franja));
             }
         });
-        canalModulo++;
+
         // Columnas del conector
         const nCols = conector.Numeracion?.length || 0;
         for (let i = 0; i < nCols; i++) {
             inX += paso;
+
             // 1) Si el borne tiene SEÑAL asignada en EL ESTADO → dibujar símbolo correspondiente
             const borneObj = conector.Numeracion[i];
-            const { num, seniales, nombre, desG, desG0, digLogo24, multSeñales, tipoQ } = normalizarBorne(borneObj);          
+
+            if (borneObj && (typeof (borneObj) === "object") && (!Array.isArray(borneObj)) && (borneObj.nombre)) canalModulo++;
+
+            const { num, seniales, nombre, desG, desG0, digLogo24, multSeñales, tipoQ } = normalizarBorne(borneObj);
+
+            const tipoFN = (tipoQ === "8T" || tipoQ === "8R") ? "R24V" : "";
 
             // nombre del borne (para mapear en estado)
             const nombreBorne = nombre || num || null;
@@ -1124,12 +1132,29 @@ function dibujarPaginaDeDispositivo(hojaX, hojaY, dispositivo, pageIndex, startX
                         const { tipo, sig } = info; // tipo = EA | ED | SA | SD
                         const numero = sig.Numero;
                         const opcionTexto = (sig.Opciones?.[sig.Opcion]) || "";
-                        const funcionNombre = `${tipo}_${numero}_${opcionTexto}${tipoQ}`;
+                        const funcionNombre = `${tipo}_${numero}_${opcionTexto}${tipoFN}`;
 
-                        sig.tagNumber8T = tipoQ === "8T" 
-                            ? nModulo + "." + canalModulo
-                            : "";
-                        
+                        // añadimos el rele base en caso de salidas a 24V
+                        if (tipoQ === "8T" || tipoQ === "8R") {
+
+                            // un rele por cada señal indicada en el numero:
+                            //  ->  1 rele normalmente
+                            //  ->  2 reles para elemento a 3 puntos 
+                            //  ->  3 reles para ventiladores 3 velocidades
+                            for (let reles = 0; reles < numero; reles++) {
+
+                                // numeracion del rele 24v
+                                const tagnumberR24V = nModulo + "." + (canalModulo + reles);
+
+                                // nombre de la funcion a llamar
+                                const fnReleBase24V = window[`SD_1_Rele${tipoQ}_Base`];
+
+                                // insercion del rele (espaciados 16mm)
+                                entidades.push(...fnReleBase24V(inX + reles * 16, inY, "", "", tagnumberR24V));
+
+                            }
+                        }
+
                         // Construcción del nombre de función JS
                         const fn = window[funcionNombre];
 
@@ -1138,7 +1163,7 @@ function dibujarPaginaDeDispositivo(hojaX, hojaY, dispositivo, pageIndex, startX
                             const L2Mayus = sig.Linea2.toUpperCase();
 
                             entidades.push(
-                                ...fn(inX, inY, L1Mayus, L2Mayus, sig.tagNumber, desG, desG0, digLogo24, sig.tagNumber8T)
+                                ...fn(inX, inY, L1Mayus, L2Mayus, sig.tagNumber, desG, desG0)
                             );
                         } else {
                             console.warn(`⚠️ Falta función símbolo DXF: ${funcionNombre}(x,y,Linea1,Linea2,tag)`);
@@ -1234,7 +1259,7 @@ function dibujarBarrasComunes(CajetinX, CajetinY, hojaItems) {
 
     const entidades = [];
     const paso = 4;
-    const despY = { "S0": paso * 1, "G": paso * 3, "G0": paso * 4, "CE+": paso * 6, "CE-": paso * 7, "N0": paso * 25 };
+    const despY = { "S0": paso * 1, "S0sec": paso * 10, "G": paso * 3, "G0": paso * 4, "CE+": paso * 6, "CE-": paso * 7, "N0": paso * 25 };
 
     if (!hojaItems.length) return entidades;
 
@@ -1252,7 +1277,7 @@ function dibujarBarrasComunes(CajetinX, CajetinY, hojaItems) {
             Logo = true;
         }
         if (item.tension230) dostreinta = true;
-        if (item.tension230sec) dostreinta = true;
+        if (item.tension230sec) dostreintasec = true;
         if (item.tension24) veinticuatro = true;
     });
 
@@ -1272,13 +1297,33 @@ function dibujarBarrasComunes(CajetinX, CajetinY, hojaItems) {
             );
         }
 
-        if (dostreinta && (key === "S0" || key === "N0")) {
+        // linea fase 230V
+        if (dostreinta && key === "S0") {
             entidades.push(
                 textoDXF(xInicio - 2, y, key, 2.5, 'MR'),
                 lineaDXF(xInicio, y, xFin, y),
                 textoDXF(xFin + 2, y, key, 2.5, 'ML'),
             );
         }
+
+        // linea fase 230V secundaria para las maniobras de las salidas de reles a 24V
+        if (dostreintasec && key === "S0sec") {
+            entidades.push(
+                textoDXF(xInicio - 2, y, "S0", 2.5, 'MR'),
+                lineaDXF(xInicio, y, xFin, y),
+                textoDXF(xFin + 2, y, "S0", 2.5, 'ML'),
+            );
+        }
+
+        // Linea neutro 230V
+        if ((dostreinta || dostreintasec) && key === "N0") {
+            entidades.push(
+                textoDXF(xInicio - 2, y, key, 2.5, 'MR'),
+                lineaDXF(xInicio, y, xFin, y),
+                textoDXF(xFin + 2, y, key, 2.5, 'ML'),
+            );
+        }
+
 
         if (veinticuatro && (key === "G" || key === "G0")) {
 

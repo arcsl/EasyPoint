@@ -744,31 +744,61 @@ function SD_1_Bus_LTE(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0
     return Bus_LTE(posX, posY, Linea1, Linea2);
 }
 
-// === SD 8T ===
-function SD_1_Rele8T_Base(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0, digLogo24 = false, tagNumber8T = "") {
-
+// === SD a rele 24V (TXM1.8T y EM1.8R) ===
+function SD_1_Rele24V_Base(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0) {
     const entidades = [];
 
-    entidades.push(textoDXF(posX - 1, posY - 22, `R${tagNumber8T}`, 2.5, "MR", 0, "Standard", 0.8));
+    entidades.push(textoDXF(posX - 1, posY - 22, `R${tagNumber}`, 2.5, "MR", 0, "Standard", 0.8));
 
+    // linea que baja de la salida hasta el rele
+    entidades.push(lineaDXF(posX + 0, posY + 0, posX + 0, posY - 24,));
+
+    // rectangulo rele
     entidades.push(lineaDXF(posX - 4, posY - 24, posX - 4, posY - 28));
     entidades.push(lineaDXF(posX - 4, posY - 28, posX + 4, posY - 28));
     entidades.push(lineaDXF(posX + 4, posY - 28, posX + 4, posY - 24));
     entidades.push(lineaDXF(posX + 4, posY - 24, posX - 4, posY - 24));
+
+    // linea que baja del rectangulo 
+    entidades.push(lineaDXF(posX + 0, posY - 28, posX + 0, posY - 32));
+
+    //linea hacia la izquierda
     entidades.push(lineaDXF(posX + 0, posY - 32, posX - 8, posY - 32));
-    entidades.push(lineaDXF(posX + 0, posY - 24, posX + 0, posY + 0));
-    entidades.push(lineaDXF(posX + 0, posY - 32, posX + 0, posY - 28));
+
+    return entidades;
+
+}
+
+function SD_1_Rele8T_Base(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0) {
+
+    const entidades = [];
+     
+    entidades.push(...SD_1_Rele24V_Base(posX, posY, Linea1, Linea2, tagNumber));
+
+    // linea hacia arriba 
     entidades.push(lineaDXF(posX - 8, posY + 0, posX - 8, posY - 32));
 
     return entidades;
 
 }
 
-function SD_1_Externa8T(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0, digLogo24 = false, tagNumber8T = "") {
+function SD_1_Rele8R_Base(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0) {
 
     const entidades = [];
 
-    entidades.push(...SD_1_Rele8T_Base(posX, posY, Linea1, Linea2, tagNumber, desG, desG0, digLogo24, tagNumber8T));
+    entidades.push(...SD_1_Rele24V_Base(posX, posY, Linea1, Linea2, tagNumber));
+
+    // linea hacia arriba y punto para conectar en G0
+    entidades.push(lineaDXF(posX - 8, posY - 32, posX - 8, posY - 16));
+    entidades.push(punto(posX - 8, posY - 16));
+
+    return entidades;
+
+}
+
+function SD_1_ExternaR24V(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0) {
+
+    const entidades = [];
 
     // discontinua de rele a contacto
     entidades.push(lineaDXF(posX + 2, posY - 48, posX - 1, posY - 48, -1, "DASHED", 0.1));
@@ -803,12 +833,9 @@ function SD_1_Externa8T(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 =
 
 }
 
-function SD_1_Rele8T(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0, digLogo24 = false, tagNumber8T = "") {
+function SD_1_ReleR24V(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0) {
 
     const entidades = [];
-
-    // rele 8T base
-    entidades.push(...SD_1_Rele8T_Base(posX, posY, Linea1, Linea2, tagNumber, desG, desG0, digLogo24, tagNumber8T));
 
     // conexion 230v para selector en 8T
     entidades.push(lineaDXF(posX + 0, posY - 56, posX + 0, posY - 50));
@@ -837,12 +864,9 @@ function SD_1_Rele8T(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0,
 
 }
 
-function SD_1_Simple8T(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0, digLogo24 = false, tagNumber8T = "") {
+function SD_1_SimpleR24V(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0) {
 
     const entidades = [];
-
-    // rele 8T base
-    entidades.push(...SD_1_Rele8T_Base(posX, posY, Linea1, Linea2, tagNumber, desG, desG0, digLogo24, tagNumber8T));
 
     // discontinua de rele a contacto
     entidades.push(lineaDXF(posX + 2, posY - 48, posX - 1, posY - 48, -1, "DASHED", 0.1));
@@ -897,12 +921,9 @@ function SD_1_Simple8T(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 
 
 }
 
-function SD_1_Conmutada8T(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0, digLogo24 = false, tagNumber8T = "") {
+function SD_1_ConmutadaR24V(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0) {
 
     const entidades = [];
-
-    // rele 8T base
-    entidades.push(...SD_1_Rele8T_Base(posX, posY, Linea1, Linea2, tagNumber, desG, desG0, digLogo24, tagNumber8T));
 
     // discontinua de rele a contacto
     entidades.push(lineaDXF(posX + 2, posY - 48, posX - 4.55, posY - 48, -1, "DASHED", 0.1));
@@ -962,12 +983,9 @@ function SD_1_Conmutada8T(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0
 
 }
 
-function SD_1_Contactor8T(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0, digLogo24 = false, tagNumber8T = "") {
+function SD_1_ContactorR24V(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0) {
 
     const entidades = [];
-
-    // rele 8T base
-    entidades.push(...SD_1_Rele8T_Base(posX, posY, Linea1, Linea2, tagNumber8T, desG, desG0, digLogo24, tagNumber8T));
 
     // discontinuas de rele a contacto
     entidades.push(lineaDXF(posX + 2, posY - 48, posX - 1, posY - 48, -1, "DASHED", 0.1));
@@ -998,15 +1016,9 @@ function SD_1_Contactor8T(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0
 
 }
 
-function SD_2_Externa8T(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0, digLogo24 = false, tagNumber8T = "") {
+function SD_2_ExternaR24V(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0) {
 
     const entidades = [];
-
-    const tagNumber8T2 = tagNumber8T.slice(0, -1) + (Number(tagNumber8T.slice(-1)) + 1);
-
-    // 2 reles 8T base
-    entidades.push(...SD_1_Rele8T_Base(posX, posY, Linea1, Linea2, tagNumber, desG, desG0, digLogo24, tagNumber8T));
-    entidades.push(...SD_1_Rele8T_Base(posX + 16, posY, Linea1, Linea2, tagNumber, desG, desG0, digLogo24, tagNumber8T2));
 
     // verticales bornas  
     entidades.push(lineaDXF(posX + 9, posY - 104, posX + 9, posY - 110, 40));
@@ -1030,13 +1042,13 @@ function SD_2_Externa8T(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 =
     entidades.push(textoDXF(posX + 6, posY - 45, "13", 1, "MC", 0));
     entidades.push(lineaDXF(posX + 7, posY - 50, posX + 5, posY - 46));
     entidades.push(textoDXF(posX + 6, posY - 51, "14", 1, "MC", 0));
-    
+
     entidades.push(lineaDXF(posX + 7, posY - 104, posX + 7, posY - 50));
     entidades.push(lineaDXF(posX + 7, posY - 110, posX + 7, posY - 116));
     entidades.push(lineaDXF(posX + 11, posY - 104, posX + 11, posY - 100));
     entidades.push(lineaDXF(posX + 11, posY - 110, posX + 11, posY - 116));
     entidades.push(lineaDXF(posX + 15, posY - 46, posX + 15, posY - 40));
-    
+
     entidades.push(textoDXF(posX + 14, posY - 45, "13", 1, "MC", 0));
     entidades.push(lineaDXF(posX + 15, posY - 50, posX + 13, posY - 46));
     entidades.push(textoDXF(posX + 14, posY - 51, "14", 1, "MC", 0));
@@ -1062,12 +1074,12 @@ function SD_2_Externa8T(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 =
 
 }
 
-function SD_2_Actuador8T(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0, digLogo24 = false, tagNumber8T = "") {
+function SD_2_ActuadorR24V(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0) {
 
     const entidades = [];
 
     // maniobra
-    entidades.push(...SD_2_Externa8T(posX, posY, Linea1, Linea2, tagNumber, desG, desG0, digLogo24, tagNumber8T));
+    entidades.push(...SD_2_ExternaR24V(posX, posY, Linea1, Linea2, tagNumber, desG, desG0));
 
     // cuerpo elemento de campo
     entidades.push(...valvula(posX + 15, posY, "Y1", "N", "Y2"));

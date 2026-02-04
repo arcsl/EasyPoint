@@ -3109,6 +3109,7 @@ const dispositivos = {
             "Alto": 104,
             "Familia": "Modbus",
             "Tipo": "controlador",
+            "Tension230": false,          
         },
     },
     "EM1.8D": {
@@ -3170,6 +3171,7 @@ const dispositivos = {
             "Alto": 104,
             "Familia": "Modbus",
             "Tipo": "controlador",
+            "Tension230": false,
         },
     },
     "EM1.8R": {
@@ -3184,10 +3186,10 @@ const dispositivos = {
                         null, null, "#Q8R",
                     ],
                     "Numeracion": [
-                        "C1-2", null, { num: "DO1", señales: ["SD"], nombre: "DO1" }, null,
-                        null, null, { num: "DO2", señales: ["SD"], nombre: "DO2" }, null,
-                        "C3-4", null, { num: "DO3", señales: ["SD"], nombre: "DO3" }, null,
-                        null, null, { num: "DO4", señales: ["SD"], nombre: "DO4" },
+                        "C1-2", null, { num: "DO1", señales: ["SD"], nombre: "DO1", tipoQ: "8R" }, null,
+                        null, null, { num: "DO2", señales: ["SD"], nombre: "DO2", tipoQ: "8R" }, null,
+                        "C3-4", null, { num: "DO3", señales: ["SD"], nombre: "DO3", tipoQ: "8R" }, null,
+                        null, null, { num: "DO4", señales: ["SD"], nombre: "DO4", tipoQ: "8R" },
                     ],
                     "Fijo": [
                         "#G", null, null, null,
@@ -3196,7 +3198,7 @@ const dispositivos = {
                         null, null, null,
                     ],
                 },
-                {   // salidas DO1 a DO4
+                {   // salidas DO5 a DO8
                     "Simbolos": [
                         null, null, null, null,
                         null, null, "#Q8R", "#/",
@@ -3204,10 +3206,10 @@ const dispositivos = {
                         null, null, "#Q8R",
                     ],
                     "Numeracion": [
-                        "C5-6", null, { num: "DO5", señales: ["SD"], nombre: "DO5" }, null,
-                        null, null, { num: "DO6", señales: ["SD"], nombre: "DO6" }, null,
-                        "C7-8", null, { num: "DO7", señales: ["SD"], nombre: "DO7" }, null,
-                        null, null, { num: "DO8", señales: ["SD"], nombre: "DO8" },
+                        "C5-6", null, { num: "DO5", señales: ["SD"], nombre: "DO5", tipoQ: "8R" }, null,
+                        null, null, { num: "DO6", señales: ["SD"], nombre: "DO6", tipoQ: "8R" }, null,
+                        "C7-8", null, { num: "DO7", señales: ["SD"], nombre: "DO7", tipoQ: "8R" }, null,
+                        null, null, { num: "DO8", señales: ["SD"], nombre: "DO8", tipoQ: "8R" },
                     ],
                     "Fijo": [
                         "#G", null, null, null,
@@ -3243,6 +3245,8 @@ const dispositivos = {
             "Alto": 104,
             "Familia": "Modbus",
             "Tipo": "controlador",
+            "Tension230": false,
+            "Tension230sec": true,         
         },
     },
     "WTV776": {
