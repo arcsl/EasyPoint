@@ -75,6 +75,7 @@ function hasheador(posX, posY, hash, franja, extraEstrecho = false) {
             case "#ext2": return hashExterna2(posX, desY);
             case "#ext3": return hashExterna3(posX, desY);
             case "#int": return hashInterna(posX, desY);
+            case "#utp": return hashUTP(posX, desY);
             case "#L": return hashAlimL(posX, desY);
             case "#N": return hashAlimN(posX, desY);
             case "#G": return hashAlimG(posX, desY);
@@ -472,6 +473,16 @@ function hashInterna(posX, posY) {
 
 }
 
+function hashUTP(posX, posY) {
+
+    const entidades = [];
+
+    entidades.push(lineaDXF(posX + 0, posY + 0, posX + 0, posY - 104, 40, "", 1, 6));
+
+    return entidades;
+
+}
+
 function hashAlimL(posX, posY) {
 
     const entidades = [];
@@ -541,13 +552,13 @@ function hashKNX(posX, posY) {
 
     const entidades = [];
 
-    // rojo
-    entidades.push(lineaDXF(posX + 2, posY + 0, posX + 2, posY - 28, -1, "Continuous", 1, 1));
-    entidades.push(punto(posX + 2, posY - 28));
-
     // verde
-    entidades.push(lineaDXF(posX - 2, posY + 0, posX - 2, posY - 24, -1, "Continuous", 1, 96));
-    entidades.push(punto(posX - 2, posY - 24));
+    entidades.push(lineaDXF(posX + 2, posY + 0, posX + 2, posY - 28, -1, "", 1, 96));
+    entidades.push(punto(posX + 2, posY - 28, 96));
+    
+    // rojo
+    entidades.push(lineaDXF(posX - 2, posY + 0, posX - 2, posY - 24, -1, "", 1, 1));
+    entidades.push(punto(posX - 2, posY - 24, 1));
 
     // tipo cable
     entidades.push(textoDXF(posX + 6, posY - 32, "2x0.8 Trenzado", 2.5, 'MC'));
@@ -738,13 +749,13 @@ function hashKNXsinlogo(posX, posY) {
 
     const entidades = [];
 
-    // rojo
-    entidades.push(lineaDXF(posX, posY, posX, posY - 28, -1, "Continuous", 1, 1));
-    entidades.push(punto(posX, posY - 28));
-
     // verde
-    entidades.push(lineaDXF(posX - 4, posY, posX - 4, posY - 24, -1, "Continuous", 1, 96));
-    entidades.push(punto(posX - 4, posY - 24));
+    entidades.push(lineaDXF(posX, posY, posX, posY - 28, -1, "", 1, 96));
+    entidades.push(punto(posX, posY - 28, 96));
+    
+    // rojo
+    entidades.push(lineaDXF(posX - 4, posY, posX - 4, posY - 24, -1, "", 1, 1));
+    entidades.push(punto(posX - 4, posY - 24, 1));
 
     return entidades;
 }
@@ -1163,23 +1174,23 @@ function hashModbusIN(posX, posY) {
     const entidades = [];
 
     // A
-    entidades.push(lineaDXF(posX - 0, posY + 0, posX - 1, posY - 1, -1, "Continuous", 1, 1));  // LINE en línea 0
-    entidades.push(lineaDXF(posX - 1, posY - 1, posX - 1, posY - 24, -1, "Continuous", 1, 1));  // LINE en línea 26
-    entidades.push(lineaDXF(posX - 1, posY - 24, posX - 8, posY - 24, -1, "Continuous", 1, 1));  // LINE en línea 302
+    entidades.push(lineaDXF(posX - 0, posY + 0, posX - 1, posY - 1, -1, "", 1, 1));  // LINE en línea 0
+    entidades.push(lineaDXF(posX - 1, posY - 1, posX - 1, posY - 24, -1, "", 1, 1));  // LINE en línea 26
+    entidades.push(lineaDXF(posX - 1, posY - 24, posX - 8, posY - 24, -1, "", 1, 1));  // LINE en línea 302
 
     // GND
-    entidades.push(lineaDXF(posX + 4, posY + 0, posX + 3, posY - 1, -1, "Continuous", 1, 4));  // LINE en línea 52
-    entidades.push(lineaDXF(posX + 3, posY - 1, posX + 3, posY - 28, -1, "Continuous", 1, 4));  // LINE en línea 130
-    entidades.push(lineaDXF(posX + 3, posY - 28, posX - 8, posY - 28, -1, "Continuous", 1, 4));  // LINE en línea 328
+    entidades.push(lineaDXF(posX + 4, posY + 0, posX + 3, posY - 1, -1, "", 1, 4));  // LINE en línea 52
+    entidades.push(lineaDXF(posX + 3, posY - 1, posX + 3, posY - 28, -1, "", 1, 4));  // LINE en línea 130
+    entidades.push(lineaDXF(posX + 3, posY - 28, posX - 8, posY - 28, -1, "", 1, 4));  // LINE en línea 328
 
     // B
-    entidades.push(lineaDXF(posX + 8, posY + 0, posX + 7, posY - 1, -1, "Continuous", 1, 3));  // LINE en línea 78
-    entidades.push(lineaDXF(posX + 7, posY - 1, posX + 7, posY - 32, -1, "Continuous", 1, 3));  // LINE en línea 104
-    entidades.push(lineaDXF(posX + 7, posY - 32, posX - 8, posY - 32, -1, "Continuous", 1, 3));  // LINE en línea 378  
+    entidades.push(lineaDXF(posX + 8, posY + 0, posX + 7, posY - 1, -1, "", 1, 3));  // LINE en línea 78
+    entidades.push(lineaDXF(posX + 7, posY - 1, posX + 7, posY - 32, -1, "", 1, 3));  // LINE en línea 104
+    entidades.push(lineaDXF(posX + 7, posY - 32, posX - 8, posY - 32, -1, "", 1, 3));  // LINE en línea 378  
 
     // pantalla
     entidades.push(lineaDXF(posX - 4, posY - 36, posX - 8, posY - 36));  // LINE en línea 354
-    entidades.push(elipseDXF(posX - 4, posY - 29, 2, 7, -1, "Continuous", 1, 0));  // ELLIPSE en línea 266
+    entidades.push(elipseDXF(posX - 4, posY - 29, 2, 7, -1, "", 1, 0));  // ELLIPSE en línea 266
 
     entidades.push(textoDXF(posX - 10, posY - 24, "+", 2.5, "MC", 0));  // TEXT en línea 156
     entidades.push(textoDXF(posX - 10, posY - 28, "T", 2.5, "MC", 180));  // TEXT en línea 228
@@ -1194,22 +1205,22 @@ function hashModbusOUT(posX, posY) {
     const entidades = [];
 
     // A
-    entidades.push(lineaDXF(posX - 8, posY + 0, posX - 7, posY - 1, -1, "Continuous", 1, 1,));
-    entidades.push(lineaDXF(posX - 7, posY - 1, posX - 7, posY - 24, -1, "Continuous", 1, 1,));
-    entidades.push(lineaDXF(posX - 7, posY - 24, posX + 8, posY - 24, -1, "Continuous", 1, 1,));
+    entidades.push(lineaDXF(posX - 8, posY + 0, posX - 7, posY - 1, -1, "", 1, 1,));
+    entidades.push(lineaDXF(posX - 7, posY - 1, posX - 7, posY - 24, -1, "", 1, 1,));
+    entidades.push(lineaDXF(posX - 7, posY - 24, posX + 8, posY - 24, -1, "", 1, 1,));
 
     // GND
-    entidades.push(lineaDXF(posX - 4, posY + 0, posX - 3, posY - 1, -1, "Continuous", 1, 4,));
-    entidades.push(lineaDXF(posX - 3, posY - 1, posX - 3, posY - 28, -1, "Continuous", 1, 4,));
-    entidades.push(lineaDXF(posX - 3, posY - 28, posX + 8, posY - 28, -1, "Continuous", 1, 4,));
+    entidades.push(lineaDXF(posX - 4, posY + 0, posX - 3, posY - 1, -1, "", 1, 4,));
+    entidades.push(lineaDXF(posX - 3, posY - 1, posX - 3, posY - 28, -1, "", 1, 4,));
+    entidades.push(lineaDXF(posX - 3, posY - 28, posX + 8, posY - 28, -1, "", 1, 4,));
 
     // B
-    entidades.push(lineaDXF(posX + 0, posY + 0, posX + 1, posY - 1, -1, "Continuous", 1, 3,));
-    entidades.push(lineaDXF(posX + 1, posY - 1, posX + 1, posY - 32, -1, "Continuous", 1, 3,));
-    entidades.push(lineaDXF(posX + 1, posY - 32, posX + 8, posY - 32, -1, "Continuous", 1, 3,));
+    entidades.push(lineaDXF(posX + 0, posY + 0, posX + 1, posY - 1, -1, "", 1, 3,));
+    entidades.push(lineaDXF(posX + 1, posY - 1, posX + 1, posY - 32, -1, "", 1, 3,));
+    entidades.push(lineaDXF(posX + 1, posY - 32, posX + 8, posY - 32, -1, "", 1, 3,));
 
     // pantalla
-    entidades.push(elipseDXF(posX + 4, posY - 29, 2, 7, -1, "Continuous", 1, 0,));
+    entidades.push(elipseDXF(posX + 4, posY - 29, 2, 7, -1, "", 1, 0,));
     entidades.push(lineaDXF(posX + 4, posY - 36, posX + 8, posY - 36,));
 
     entidades.push(textoDXF(posX + 10, posY - 24, "+", 2.5, "MC", 0,));
@@ -1225,17 +1236,17 @@ function hashABC(posX, posY) {
 
     const entidades = [];
 
-    entidades.push(lineaDXF(posX - 132, posY + 0, posX - 132, posY - 24, -1, "Continuous", 1, 1,));  // LINE en línea 0
-    entidades.push(lineaDXF(posX - 4, posY - 24, posX - 132, posY - 24, -1, "Continuous", 1, 1,));  // LINE en línea 26
-    entidades.push(lineaDXF(posX - 4, posY + 0, posX - 4, posY - 24, -1, "Continuous", 1, 1,));  // LINE en línea 52
+    entidades.push(lineaDXF(posX - 132, posY + 0, posX - 132, posY - 24, -1, "", 1, 1,));  // LINE en línea 0
+    entidades.push(lineaDXF(posX - 4, posY - 24, posX - 132, posY - 24, -1, "", 1, 1,));  // LINE en línea 26
+    entidades.push(lineaDXF(posX - 4, posY + 0, posX - 4, posY - 24, -1, "", 1, 1,));  // LINE en línea 52
 
-    entidades.push(lineaDXF(posX - 128, posY + 0, posX - 128, posY - 28, -1, "Continuous", 1, 4,));  // LINE en línea 78
-    entidades.push(lineaDXF(posX + 0, posY - 28, posX - 128, posY - 28, -1, "Continuous", 1, 4,));  // LINE en línea 104
-    entidades.push(lineaDXF(posX + 0, posY + 0, posX + 0, posY - 28, -1, "Continuous", 1, 4,));  // LINE en línea 130
+    entidades.push(lineaDXF(posX - 128, posY + 0, posX - 128, posY - 28, -1, "", 1, 4,));  // LINE en línea 78
+    entidades.push(lineaDXF(posX + 0, posY - 28, posX - 128, posY - 28, -1, "", 1, 4,));  // LINE en línea 104
+    entidades.push(lineaDXF(posX + 0, posY + 0, posX + 0, posY - 28, -1, "", 1, 4,));  // LINE en línea 130
 
-    entidades.push(lineaDXF(posX - 124, posY + 0, posX - 124, posY - 32, -1, "Continuous", 1, 3,));  // LINE en línea 156
-    entidades.push(lineaDXF(posX + 4, posY - 32, posX - 124, posY - 32, -1, "Continuous", 1, 3,));  // LINE en línea 182
-    entidades.push(lineaDXF(posX + 4, posY + 0, posX + 4, posY - 32, -1, "Continuous", 1, 3,));  // LINE en línea 208
+    entidades.push(lineaDXF(posX - 124, posY + 0, posX - 124, posY - 32, -1, "", 1, 3,));  // LINE en línea 156
+    entidades.push(lineaDXF(posX + 4, posY - 32, posX - 124, posY - 32, -1, "", 1, 3,));  // LINE en línea 182
+    entidades.push(lineaDXF(posX + 4, posY + 0, posX + 4, posY - 32, -1, "", 1, 3,));  // LINE en línea 208
 
     return entidades;
 
@@ -1245,13 +1256,13 @@ function hashVLC(posX, posY) {
 
     const entidades = [];
 
-    entidades.push(lineaDXF(posX - 2, posY + 0, posX - 2, posY - 24, -1, "Continuous", 1, 3,));  // LINE en línea 0
-    entidades.push(lineaDXF(posX - 38, posY + 0, posX - 38, posY - 24, -1, "Continuous", 1, 3,));  // LINE en línea 26
-    entidades.push(lineaDXF(posX - 2, posY - 24, posX - 38, posY - 24, -1, "Continuous", 1, 3,));  // LINE en línea 50
+    entidades.push(lineaDXF(posX - 2, posY + 0, posX - 2, posY - 24, -1, "", 1, 3,));  // LINE en línea 0
+    entidades.push(lineaDXF(posX - 38, posY + 0, posX - 38, posY - 24, -1, "", 1, 3,));  // LINE en línea 26
+    entidades.push(lineaDXF(posX - 2, posY - 24, posX - 38, posY - 24, -1, "", 1, 3,));  // LINE en línea 50
 
-    entidades.push(lineaDXF(posX + 2, posY + 0, posX + 2, posY - 28, -1, "Continuous", 1, 1,));  // LINE en línea 76
-    entidades.push(lineaDXF(posX - 34, posY + 0, posX - 34, posY - 28, -1, "Continuous", 1, 1,));  // LINE en línea 102
-    entidades.push(lineaDXF(posX + 2, posY - 28, posX - 34, posY - 28, -1, "Continuous", 1, 1,));  // LINE en línea 126
+    entidades.push(lineaDXF(posX + 2, posY + 0, posX + 2, posY - 28, -1, "", 1, 1,));  // LINE en línea 76
+    entidades.push(lineaDXF(posX - 34, posY + 0, posX - 34, posY - 28, -1, "", 1, 1,));  // LINE en línea 102
+    entidades.push(lineaDXF(posX + 2, posY - 28, posX - 34, posY - 28, -1, "", 1, 1,));  // LINE en línea 126
 
     return entidades;
 

@@ -58,8 +58,8 @@ const dispositivos = {
                     "Simbolos": [null, "#RED", null, null, null, "#RED", null,],
                     "Numeracion": [null, "#25", null, "LAN", null, "#52", null,],
                     "Opcional": [
-                        null, { nombre: "LAN 1A", dibujo: "#int", Linea1: "A controlador anterior en pag # - #", Linea2: "Ethernet UTP CAT-6", desX: 12, }, null, null,
-                        null, { nombre: "LAN 1B", dibujo: "#int", Linea1: "A router o rack de comunicaciones", Linea2: "Ethernet UTP CAT-6", desX: 12, }, null,
+                        null, { nombre: "LAN 1A", dibujo: "#utp", Linea1: "A controlador anterior en pag # - #", Linea2: "Ethernet UTP CAT-6", desX: 12, }, null, null,
+                        null, { nombre: "LAN 1B", dibujo: "#utp", Linea1: "A router o rack de comunicaciones", Linea2: "Ethernet UTP CAT-6", desX: 12, }, null,
                     ],
                 },
                 {   // KNX
@@ -146,8 +146,8 @@ const dispositivos = {
                     "Simbolos": [null, "#RED", null, null, null, "#RED", null,],
                     "Numeracion": [null, "#25", null, "LAN", null, "#52", null,],
                     "Opcional": [
-                        null, { nombre: "LAN 1A", dibujo: "#int", Linea1: "A controlador anterior en pag # - #", Linea2: "Ethernet UTP CAT-6", desX: 12 }, null, null,
-                        null, { nombre: "LAN 1B", dibujo: "#int", Linea1: "A router o rack de comunicaciones", Linea2: "Ethernet UTP CAT-6", desX: 12 }, null,
+                        null, { nombre: "LAN 1A", dibujo: "#utp", Linea1: "A controlador anterior en pag # - #", Linea2: "Ethernet UTP CAT-6", desX: 12 }, null, null,
+                        null, { nombre: "LAN 1B", dibujo: "#utp", Linea1: "A router o rack de comunicaciones", Linea2: "Ethernet UTP CAT-6", desX: 12 }, null,
                     ],
                 },
                 {   // WAN
@@ -295,8 +295,8 @@ const dispositivos = {
                     "Simbolos": [null, "#RED", null, null, null, "#RED", null,],
                     "Numeracion": [null, "#25", null, "LAN", null, "#52", null,],
                     "Opcional": [
-                        null, { nombre: "LAN 1A", dibujo: "#int", Linea1: "A controlador anterior en pag # - #", Linea2: "Ethernet UTP CAT-6", desX: 12, }, null, null,
-                        null, { nombre: "LAN 1B", dibujo: "#int", Linea1: "A router o rack de comunicaciones", Linea2: "Ethernet UTP CAT-6", desX: 12, }, null,
+                        null, { nombre: "LAN 1A", dibujo: "#utp", Linea1: "A controlador anterior en pag # - #", Linea2: "Ethernet UTP CAT-6", desX: 12, }, null, null,
+                        null, { nombre: "LAN 1B", dibujo: "#utp", Linea1: "A router o rack de comunicaciones", Linea2: "Ethernet UTP CAT-6", desX: 12, }, null,
                     ],
                 },
                 {   // WAN
@@ -789,8 +789,8 @@ const dispositivos = {
                     "Simbolos": [null, "#RED", null, null, null, "#RED", null,],
                     "Numeracion": [null, "#25", null, "LAN", null, "#52", null,],
                     "Opcional": [
-                        null, { nombre: "LAN 1A", dibujo: "#int", Linea1: "A controlador anterior en pag # - #", Linea2: "Ethernet UTP CAT-6", desX: 12, }, null, null,
-                        null, { nombre: "LAN 1B", dibujo: "#int", Linea1: "A router o rack de comunicaciones", Linea2: "Ethernet UTP CAT-6", desX: 12, }, null,
+                        null, { nombre: "LAN 1A", dibujo: "#utp", Linea1: "A controlador anterior en pag # - #", Linea2: "Ethernet UTP CAT-6", desX: 12, }, null, null,
+                        null, { nombre: "LAN 1B", dibujo: "#utp", Linea1: "A router o rack de comunicaciones", Linea2: "Ethernet UTP CAT-6", desX: 12, }, null,
                     ],
                 },
                 {   // alimentacion 24V
@@ -842,7 +842,7 @@ const dispositivos = {
                     "Simbolos": [null, "#RED", null,],
                     "Numeracion": [null, "LAN", null,],
                     "Opcional": [
-                        null, { nombre: "LAN", dibujo: "#int", Linea1: "A router o rack de comunicaciones", Linea2: "Ethernet UTP CAT-6", }, null,
+                        null, { nombre: "LAN", dibujo: "#utp", Linea1: "A router o rack de comunicaciones", Linea2: "Ethernet UTP CAT-6", }, null,
                     ],
                 },
             ],
@@ -871,8 +871,8 @@ const dispositivos = {
                     "Simbolos": [null, "#RED", null, null, null, "#RED", null,],
                     "Numeracion": [null, "#25", null, "LAN", null, "#52", null,],
                     "Opcional": [
-                        null, { nombre: "LAN 1", dibujo: "#int", Linea1: "A DXR2 anterior", Linea2: "Ethernet UTP CAT-6", }, null,
-                        null, { nombre: "LAN 2", dibujo: "#int", Linea1: "A DXR2 siguiente", Linea2: "Ethernet UTP CAT-6", }, null,
+                        null, { nombre: "LAN 1", dibujo: "#utp", Linea1: "A DXR2 anterior", Linea2: "Ethernet UTP CAT-6", }, null,
+                        null, { nombre: "LAN 2", dibujo: "#utp", Linea1: "A DXR2 siguiente", Linea2: "Ethernet UTP CAT-6", }, null,
                     ],
                 },
                 {   // entradas Digitales
@@ -934,11 +934,11 @@ const dispositivos = {
                     "Simbolos": [null, "#RED", null, null, null, "#RED", null, null, null, "#RED", null, null, null, "#RED", null, null, null, "#RED", null,],
                     "Numeracion": [null, "#216", null, null, null, "#213", null, null, null, "LAN", null, null, null, "#132", null, null, null, "#162", null,],
                     "Opcional": [
-                        null, { nombre: "LAN P1", dibujo: "#int", Linea1: "A controlador anterior en pag # - #", Linea2: "Ethernet UTP CAT-6", }, null,
-                        null, { nombre: "LAN P2", dibujo: "#int", Linea1: "A controlador anterior en pag # - #", Linea2: "Ethernet UTP CAT-6", }, null,
-                        null, { nombre: "LAN P3", dibujo: "#int", Linea1: "A router o rack de comunicaciones", Linea2: "Ethernet UTP CAT-6", }, null,
-                        null, { nombre: "LAN P4", dibujo: "#int", Linea1: "A controlador siguiente en pag # - #", Linea2: "Ethernet UTP CAT-6", }, null,
-                        null, { nombre: "LAN P5", dibujo: "#int", Linea1: "A controlador siguiente en pag # - #", Linea2: "Ethernet UTP CAT-6", }, null,
+                        null, { nombre: "LAN P1", dibujo: "#utp", Linea1: "A controlador anterior en pag # - # ", Linea2: "Ethernet UTP CAT-6", desX: 36, }, null, null,
+                        null, { nombre: "LAN P2", dibujo: "#utp", Linea1: "A controlador anterior en pag # - # ", Linea2: "Ethernet UTP CAT-6", desX: 36, }, null, null,
+                        null, { nombre: "LAN P3", dibujo: "#utp", Linea1: "A router o rack de comunicaciones   ", Linea2: "Ethernet UTP CAT-6", desX: 36, }, null, null,
+                        null, { nombre: "LAN P4", dibujo: "#utp", Linea1: "A controlador siguiente en pag # - #", Linea2: "Ethernet UTP CAT-6", desX: 36, }, null, null,
+                        null, { nombre: "LAN P5", dibujo: "#utp", Linea1: "A controlador siguiente en pag # - #", Linea2: "Ethernet UTP CAT-6", desX: 36, }, null,
                     ],
                 },
 
@@ -968,14 +968,14 @@ const dispositivos = {
                     "Simbolos": [null, "#RED", null, null, null, "#RED", null, null, null, "#RED", null, null, null, "#RED", null, null, null, "#RED", null, null, null, "#RED", null, null, null, "#RED", null, null, null, "#RED", null,],
                     "Numeracion": [null, "#216", null, null, null, "#216", null, null, null, "#216", null, null, null, "#25", null, "LAN", null, "#52", null, null, null, "#162", null, null, null, "#162", null, null, null, "#162", null,],
                     "Opcional": [
-                        null, { nombre: "LAN P1", dibujo: "#int", Linea1: "A controlador anterior en pag # - #", Linea2: "Ethernet UTP CAT-6", }, null,
-                        null, { nombre: "LAN P2", dibujo: "#int", Linea1: "A controlador anterior en pag # - #", Linea2: "Ethernet UTP CAT-6", }, null,
-                        null, { nombre: "LAN P3", dibujo: "#int", Linea1: "A controlador anterior en pag # - #", Linea2: "Ethernet UTP CAT-6", }, null,
-                        null, { nombre: "LAN P4", dibujo: "#int", Linea1: "A router o rack de comunicaciones", Linea2: "Ethernet UTP CAT-6", }, null,
-                        null, { nombre: "LAN P5", dibujo: "#int", Linea1: "A controlador siguiente en pag # - #", Linea2: "Ethernet UTP CAT-6", }, null,
-                        null, { nombre: "LAN P6", dibujo: "#int", Linea1: "A controlador siguiente en pag # - #", Linea2: "Ethernet UTP CAT-6", }, null,
-                        null, { nombre: "LAN P7", dibujo: "#int", Linea1: "A controlador siguiente en pag # - #", Linea2: "Ethernet UTP CAT-6", }, null,
-                        null, { nombre: "LAN P8", dibujo: "#int", Linea1: "A controlador siguiente en pag # - #", Linea2: "Ethernet UTP CAT-6", }, null,
+                        null, { nombre: "LAN P1", dibujo: "#utp", Linea1: "A controlador anterior en pag # - # ", Linea2: "Ethernet UTP CAT-6", desX: 60, }, null, null,
+                        null, { nombre: "LAN P2", dibujo: "#utp", Linea1: "A controlador anterior en pag # - # ", Linea2: "Ethernet UTP CAT-6", desX: 60, }, null, null,
+                        null, { nombre: "LAN P3", dibujo: "#utp", Linea1: "A controlador anterior en pag # - # ", Linea2: "Ethernet UTP CAT-6", desX: 60, }, null, null,
+                        null, { nombre: "LAN P4", dibujo: "#utp", Linea1: "A router o rack de comunicaciones   ", Linea2: "Ethernet UTP CAT-6", desX: 60, }, null, null,
+                        null, { nombre: "LAN P5", dibujo: "#utp", Linea1: "A controlador siguiente en pag # - #", Linea2: "Ethernet UTP CAT-6", desX: 60, }, null, null,
+                        null, { nombre: "LAN P6", dibujo: "#utp", Linea1: "A controlador siguiente en pag # - #", Linea2: "Ethernet UTP CAT-6", desX: 60, }, null, null,
+                        null, { nombre: "LAN P7", dibujo: "#utp", Linea1: "A controlador siguiente en pag # - #", Linea2: "Ethernet UTP CAT-6", desX: 60, }, null, null,
+                        null, { nombre: "LAN P8", dibujo: "#utp", Linea1: "A controlador siguiente en pag # - #", Linea2: "Ethernet UTP CAT-6", desX: 60, }, null,
                     ],
                 },
 
@@ -1818,8 +1818,8 @@ const dispositivos = {
                 {   // LAN
                     "Simbolos": [null, "#RED", null,],
                     "Numeracion": [null, "LAN", null,],
-                    "Fijo": "#int",
-                    "Etiqueta": "A ROUTER O RACK DE COMUNICACIONES%ETHERNET CAT-6",
+                    "Fijo": "#utp",
+                    "Etiqueta": "A ROUTER O RACK DE COMUNICACIONES%ETHERNET UTP CAT-6",
                 },
                 {   // Bus KNX
                     "Simbolos": [null, "#|", "#|", null,],
@@ -1925,8 +1925,8 @@ const dispositivos = {
                     "Cinta": "Ethernet",
                     "Simbolos": "#RED",
                     "Numeracion": [null, "LAN", null,],
-                    "Fijo": "#int",
-                    "Etiqueta": "A ROUTER O RACK DE COMUNICACIONES%ETHERNET CAT-6",
+                    "Fijo": "#utp",
+                    "Etiqueta": "A ROUTER O RACK DE COMUNICACIONES%ETHERNET UTP CAT-6",
                 },
                 {   // PORT B
                     "Cinta": "PORT B",
@@ -2519,7 +2519,7 @@ const dispositivos = {
                     "Cinta": "X1 P1",
                     "Simbolos": "#RED",
                     "Numeracion": [null, "IE(LAN)", null],
-                    "Opcional": [null, { nombre: "LAN", dibujo: "#int", Linea1: "A switch de comunicaciones en pag # - #", Linea2: "Ethernet UTP CAT-6", desX: 4, }, null],
+                    "Opcional": [null, { nombre: "LAN", dibujo: "#utp", Linea1: "A router o rack de comunicaciones", Linea2: "Ethernet UTP CAT-6", desX: 4, }, null],
                 },
                 {   // Salidas Q1 a Q4
                     "Cinta": "X11",
@@ -2585,7 +2585,7 @@ const dispositivos = {
                     "Cinta": "X1 P1",
                     "Simbolos": "#RED",
                     "Numeracion": [null, "IE(LAN)", null],
-                    "Opcional": [null, { nombre: "LAN", dibujo: "#int", Linea1: "A switch de comunicaciones en pag # - #", Linea2: "Ethernet UTP CAT-6", desX: 4, }, null],
+                    "Opcional": [null, { nombre: "LAN", dibujo: "#utp", Linea1: "A router o rack de comunicaciones", Linea2: "Ethernet UTP CAT-6", desX: 4, }, null],
                 },
                 {   // Salidas Q1 a Q4
                     "Cinta": "X11",
@@ -3014,7 +3014,7 @@ const dispositivos = {
                     "Cinta": "RJ45",
                     "Simbolos": "#RED",
                     "Numeracion": [null, "ETH", null],
-                    "Opcional": [null, { nombre: "LAN", dibujo: "#int", Linea1: "A switch de comunicaciones en pag # - #", Linea2: "Ethernet UTP CAT-6", desX: 4, }, null],
+                    "Opcional": [null, { nombre: "LAN", dibujo: "#utp", Linea1: "A router o rack de comunicaciones", Linea2: "Ethernet UTP CAT-6", desX: 4, }, null],
                 },
                 {   // Salidas Q1 a Q4
                     "Cinta": "OUTPUTS",
@@ -3109,7 +3109,7 @@ const dispositivos = {
             "Alto": 104,
             "Familia": "Modbus",
             "Tipo": "controlador",
-            "Tension230": false,          
+            "Tension230": false,
         },
     },
     "EM1.8D": {
@@ -3246,7 +3246,7 @@ const dispositivos = {
             "Familia": "Modbus",
             "Tipo": "controlador",
             "Tension230": false,
-            "Tension230sec": true,         
+            "Tension230sec": true,
         },
     },
     "WTV776": {
@@ -3256,7 +3256,7 @@ const dispositivos = {
                 {   // LAN
                     "Simbolos": "#RED",
                     "Numeracion": [null, "ETH", null,],
-                    "Opcional": [null, { nombre: "LAN", dibujo: "#int", Linea1: "A switch de comunicaciones en pag # - #", Linea2: "Ethernet UTP CAT-6", desX: 4, }, null],
+                    "Opcional": [null, { nombre: "LAN", dibujo: "#utp", Linea1: "A router o rack de comunicaciones", Linea2: "Ethernet UTP CAT-6", desX: 4, }, null],
                 },
                 {   // ABC
                     "Cinta": "RS-232",

@@ -1289,7 +1289,7 @@ function dibujarBarrasComunes(CajetinX, CajetinY, hojaItems) {
         const y = CajetinY + 236 - value;
 
         if (KNX && (key === "CE+" || key === "CE-")) {
-            const colorLinea = key === "CE+" ? 96 : 1;
+            const colorLinea = key === "CE+" ? 1 : 96;
             entidades.push(
                 textoDXF(xInicio - 2, y, key, 2.5, 'MR'),
                 lineaDXF(xInicio, y, xFin, y, -1, "Continuous", 1, colorLinea),
@@ -1323,7 +1323,6 @@ function dibujarBarrasComunes(CajetinX, CajetinY, hojaItems) {
                 textoDXF(xFin + 2, y, key, 2.5, 'ML'),
             );
         }
-
 
         if (veinticuatro && (key === "G" || key === "G0")) {
 
