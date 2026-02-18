@@ -1271,7 +1271,7 @@ function dibujarBarrasComunes(CajetinX, CajetinY, hojaItems) {
 
     // determinar que lineas hay que dibujar
     hojaItems.forEach(item => {
-        if (item.familia.toUpperCase() === "SYNCO") {
+        if (item.familia.toUpperCase() === "SYNCO" || item.familia.toUpperCase() === "KNX") {
             KNX = true;
         } else if (item.familia.toUpperCase() === "LOGO") {
             Logo = true;

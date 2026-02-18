@@ -1997,7 +1997,7 @@ const dispositivos = {
                     ],
                 },
                 {   // salidas analógicas
-                    "Simbolos": [null, null, "#D", null, "#|", "#-", "#D", null, null, "#-", "#D",],
+                    "Simbolos": [null, null, "#D", ],
                     "Numeracion": [
                         null, null, { num: "Y50", señales: ["SA"], nombre: "Y50", desG: 12, desGO: 16, },
                     ],
@@ -2008,6 +2008,65 @@ const dispositivos = {
             "Ancho": 92,
             "Alto": 134,
             "Tension24": false,
+            "Familia": "KNX",
+            "Tipo": "controlador",
+        },
+    },
+    "RDG260KN": {
+        "Nombre": "RDG260KN",
+        "Paginas": [
+            [
+                {   // alimentacion 230V
+                    "Cinta": "24V~",
+                    "Simbolos": ["#U", "#U",],
+                    "Numeracion": ["G", "G0",],
+                    "Fijo": ["#G", "#G0",],
+                },
+                {   // entradas 
+                    "Simbolos": [
+                        null, "#U", "#/",
+                        "#-", "#U", "#/",
+                        null, "#UD",],
+                    "Numeracion": [
+                        null, { num: "X1", señales: ["ED"], nombre: "X1", desG0: 16, }, null,
+                        "M", { num: "X2", señales: ["EA", "ED"], nombre: "X2", }, null,
+                        null, { num: "U1", señales: ["EA", "ED", "SA"], nombre: "U1", desGO: 16, },
+                    ],
+                },
+                {   // Bus KNX
+                    "Simbolos": ["#UD", "#UD",],
+                    "Numeracion": [
+                        { num: "CE+", extraEstrecho: true, desX: -1 },
+                        { num: "CE-", extraEstrecho: true, desX: 1 },
+                    ],
+                    "Opcional": "#KNX",
+                },
+                {   // 3 velocidades
+                    "Simbolos": "#3V",
+                    "Numeracion": [
+                        "L1", null, { num: "Q1", señales: ["SD"], nombre: "Q1" }, null,
+                        null, null, { num: "Q2", señales: ["SD"], nombre: "Q2" }, null,
+                        null, null, { num: "Q3", señales: ["SD"], nombre: "Q3" },
+                    ],
+                },
+                {   // salidas analógicas
+                    "Simbolos": [
+                        null, null, "#D", "#/",
+                        null, null, "#D", "#/",
+                        null, null, "#D", "#/",
+                        null, null, "#D"],
+                    "Numeracion": [
+                        null, null, { num: "Y10", señales: ["SA"], nombre: "Y10", desG: 12, desG0: 16, }, null,
+                        null, null, { num: "Y20", señales: ["SA"], nombre: "Y20", desG: 12, desG0: 16, }, null,
+                        null, null, { num: "Y30", señales: ["SA"], nombre: "Y30", desG: 12, desG0: 16, }, null,
+                        null, null, { num: "Y50", señales: ["SA"], nombre: "Y50", desG: 12, desG0: 16, },
+                    ],
+                },
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": 92,
+            "Alto": 134,
             "Familia": "KNX",
             "Tipo": "controlador",
         },

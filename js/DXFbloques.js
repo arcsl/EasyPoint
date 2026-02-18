@@ -169,9 +169,9 @@ function paloDesplazable(posX, posY, desX = 0, desY = 0) {
         entidades.push(lineaDXF(posX + 0, posY - 104, posX + 0, posY - desY));
         if (desY !== 0) entidades.push(punto(posX, posY - desY));
     } else {
-        entidades.push(lineaDXF(posX + 0, posY - 104, posX + 0, posY - 54));
-        entidades.push(lineaDXF(posX + 0, posY - 54, posX + desX, posY - 54));
-        entidades.push(lineaDXF(posX + desX, posY - 54, posX + desX, posY + 0));
+        entidades.push(lineaDXF(posX + 0, posY - 104, posX + 0, posY - 66));
+        entidades.push(lineaDXF(posX + 0, posY - 66, posX + desX, posY - 66));
+        entidades.push(lineaDXF(posX + desX, posY - 66, posX + desX, posY + 0));
     }
 
     return entidades;
@@ -459,38 +459,49 @@ function SA_1_Bus_LTE(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0
 // === SD ===
 function SD_1_Externa(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0) {
     const entidades = [];
-    entidades.push(...paloDesplazable(posX - 6, posY, -2, 0));
-    entidades.push(...paloDesplazable(posX - 2, posY, 2, 0));
-    entidades.push(textoMultiDXF(posX - 4, posY - 190, [Linea1, Linea2], 2.5, "ML", 90));
+    entidades.push(...paloDesplazable(posX - 4, posY, -4, 4));
+    entidades.push(...paloDesplazable(posX, posY, 0, 0));
+    entidades.push(textoMultiDXF(posX - 2, posY - 190, [Linea1, Linea2], 2.5, "ML", 90));
     return entidades;
+}
+
+function SD_1_Selector_Base(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0) {
+
+    const entidades = [];
+
+    // 3 posiciones
+    entidades.push(textoDXF(posX - 9.5, posY - 55, "1", 1, "MC", 0));
+    entidades.push(textoDXF(posX - 8, posY - 55, "0", 1, "MC", 0));
+    entidades.push(textoDXF(posX - 6.5, posY - 55, "2", 1, "MC", 0));
+    entidades.push(lineaDXF(posX - 8, posY - 60, posX - 9.5, posY - 56));
+    entidades.push(lineaDXF(posX - 8, posY - 60, posX - 8, posY - 56, -1, "DASHED", 0.1));
+    entidades.push(lineaDXF(posX - 8, posY - 60, posX - 6.5, posY - 56, -1, "DASHED", 0.1));
+
+    // palomilla selector
+    entidades.push(lineaDXF(posX - 9.5, posY - 57, posX - 10, posY - 57));
+    entidades.push(lineaDXF(posX - 10, posY - 57, posX - 10, posY - 59));
+    entidades.push(lineaDXF(posX - 10, posY - 59, posX - 10.5, posY - 59));
+    entidades.push(lineaDXF(posX - 10, posY - 58, posX - 0.75, posY - 58, -1, "DASHED", 0.1));
+
+    // 2 contactos
+    entidades.push(lineaDXF(posX - 0, posY - 60, posX - 1.5, posY - 56));
+    entidades.push(lineaDXF(posX - 4, posY - 60, posX - 5.5, posY - 56));
+
+    //L inferior selector
+    entidades.push(lineaDXF(posX - 4, posY - 66, posX + 0, posY - 66));
+    entidades.push(lineaDXF(posX - 4, posY - 66, posX - 4, posY - 60));
+    entidades.push(punto(posX + 0, posY - 66));
+
+    return entidades;
+
 }
 
 function SD_1_Rele_Base(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0) {
 
     const entidades = [];
 
-    // 3 posiciones
-    entidades.push(lineaDXF(posX - 9, posY - 60, posX - 11, posY - 56));
-    entidades.push(lineaDXF(posX - 9, posY - 60, posX - 9, posY - 56, -1, "DASHED", 0.1));
-    entidades.push(lineaDXF(posX - 9, posY - 60, posX - 7, posY - 56, -1, "DASHED", 0.1));
-    entidades.push(textoDXF(posX - 11, posY - 55, "1", 1, "MC", 0));
-    entidades.push(textoDXF(posX - 9, posY - 55, "0", 1, "MC", 0));
-    entidades.push(textoDXF(posX - 7, posY - 55, "2", 1, "MC", 0));
-
-    // palomilla selector
-    entidades.push(lineaDXF(posX - 11, posY - 57, posX - 12, posY - 57));
-    entidades.push(lineaDXF(posX - 12, posY - 57, posX - 12, posY - 59));
-    entidades.push(lineaDXF(posX - 12, posY - 59, posX - 13, posY - 59));
-    entidades.push(lineaDXF(posX - 12, posY - 58, posX - 1, posY - 58, -1, "DASHED", 0.1));
-
-    // 2 contactos
-    entidades.push(lineaDXF(posX + 0, posY - 60, posX - 2, posY - 56));
-    entidades.push(lineaDXF(posX - 4, posY - 60, posX - 6, posY - 56));
-
-    //puente inferior selector
-    entidades.push(lineaDXF(posX - 4, posY - 66, posX + 0, posY - 66));
-    entidades.push(lineaDXF(posX - 4, posY - 66, posX - 4, posY - 60));
-    entidades.push(punto(posX + 0, posY - 66));
+    // Selector
+    entidades.push(...SD_1_Selector_Base(posX, posY, Linea1, Linea2, tagNumber, desG, desG0));
 
     // rectangulo rele/contactor
     entidades.push(lineaDXF(posX - 4, posY - 90, posX - 4, posY - 94));
@@ -772,7 +783,7 @@ function SD_1_Rele24V_Base(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG
 function SD_1_Rele8T_Base(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 0) {
 
     const entidades = [];
-     
+
     entidades.push(...SD_1_Rele24V_Base(posX, posY, Linea1, Linea2, tagNumber));
 
     // linea hacia arriba 
@@ -829,6 +840,9 @@ function SD_1_ExternaR24V(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0
     entidades.push(lineaDXF(posX + 0, posY - 110, posX + 0, posY - 116));
     entidades.push(lineaDXF(posX - 4, posY - 110, posX - 4, posY - 116));
 
+    // Texto señal
+    entidades.push(textoMultiDXF(posX - 2, posY - 190, [Linea1, Linea2], 2.5, "ML", 90));
+
     return entidades;
 
 }
@@ -837,28 +851,44 @@ function SD_1_ReleR24V(posX, posY, Linea1, Linea2, tagNumber, desG = 0, desG0 = 
 
     const entidades = [];
 
-    // conexion 230v para selector en 8T
-    entidades.push(lineaDXF(posX + 0, posY - 56, posX + 0, posY - 50));
-    entidades.push(textoDXF(posX - 1, posY - 45, "13", 1, "MC", 0));
-    entidades.push(lineaDXF(posX + 0, posY - 50, posX - 2, posY - 46));
-    entidades.push(textoDXF(posX - 1, posY - 51, "14", 1, "MC", 0));
-    entidades.push(lineaDXF(posX + 0, posY - 46, posX + 0, posY - 40));
-    entidades.push(lineaDXF(posX - 4, posY - 56, posX - 4, posY - 40));
-    entidades.push(punto(posX - 4, posY - 40));
-    entidades.push(punto(posX + 0, posY - 40));
+    // Selector
+    entidades.push(...SD_1_Selector_Base(posX, posY, Linea1, Linea2, tagNumber, desG, desG0));
 
-    // discontinuas de rele a contacto
+    // discontinua de rele a contacto
     entidades.push(lineaDXF(posX + 2, posY - 48, posX - 1, posY - 48, -1, "DASHED", 0.1));
     entidades.push(lineaDXF(posX + 2, posY - 28, posX + 2, posY - 48, -1, "DASHED", 0.1));
 
-    // rele base
-    entidades.push(...SD_1_Rele_Base(posX, posY, Linea1, Linea2, tagNumber, desG, desG0));
+    // arco
+    entidades.push(lineaDXF(posX + 4, posY - 42, posX + 4, posY - 104));
+    entidades.push(lineaDXF(posX + 0, posY - 60, posX + 0, posY - 104));
+    entidades.push(lineaDXF(posX + 0, posY - 56, posX + 0, posY - 50));
 
-    // sin magneto
-    entidades.push(lineaDXF(posX + 0, posY - 60, posX + 0, posY - 90));
+    entidades.push(lineaDXF(posX - 4, posY - 56, posX - 4, posY - 42));
+    entidades.push(lineaDXF(posX + 0, posY - 46, posX + 0, posY - 42));
+    entidades.push(lineaDXF(posX + 4, posY - 42, posX - 4, posY - 42));
+    entidades.push(punto(posX, posY - 42));
 
-    // Nombre relé
-    entidades.push(textoDXF(posX - 1, posY - 88, `R${tagNumber}`, 2.5, "MR", 0));
+    // contacto
+    entidades.push(textoDXF(posX - 1, posY - 45, "13", 1, "MC", 0));
+    entidades.push(lineaDXF(posX + 0, posY - 50, posX - 2, posY - 46));
+    entidades.push(textoDXF(posX - 1, posY - 51, "14", 1, "MC", 0));
+
+    // bornas
+    entidades.push(lineaDXF(posX + 2, posY - 104, posX - 2, posY - 104, 40));
+    entidades.push(lineaDXF(posX + 2, posY - 110, posX - 2, posY - 110, 40));
+    entidades.push(lineaDXF(posX - 2, posY - 104, posX - 2, posY - 110, 40));
+    entidades.push(lineaDXF(posX + 2, posY - 104, posX + 2, posY - 110, 40));
+    entidades.push(lineaDXF(posX + 6, posY - 104, posX + 2, posY - 104, 40));
+    entidades.push(lineaDXF(posX + 6, posY - 110, posX + 2, posY - 110, 40));
+    entidades.push(lineaDXF(posX + 2, posY - 104, posX + 2, posY - 110, 40));
+    entidades.push(lineaDXF(posX + 6, posY - 104, posX + 6, posY - 110, 40));
+
+    // salida de bornas
+    entidades.push(lineaDXF(posX + 0, posY - 110, posX + 0, posY - 116));
+    entidades.push(lineaDXF(posX + 4, posY - 110, posX + 4, posY - 116));
+
+    // Texto señal
+    entidades.push(textoMultiDXF(posX + 2, posY - 190, [Linea1, Linea2], 2.5, "ML", 90));
 
     return entidades;
 

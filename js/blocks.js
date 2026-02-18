@@ -298,7 +298,7 @@ const Narrativa = {
 			"{{La medicion de condiciones exteriores permite compensar la respuesta térmica de la instalación, mejorando el confort y la eficiencia energética.}}{CondExte}"
 		],
 		"Elementos": [
-			"{{Sensor de [{Opcion}]{CondExte} exterior.}}{CondExte}"
+			"{{Sensor de [{Opcion}]{CondExte} [{NombreUsuario}]{MainBloc}.}}{CondExte}"
 		],
 		"Funcionamiento": [
 			"{{La señal proporcionada por el sensor se utilizará para: <+Ajustar la consigna de impulsión de los circuitos de distribucion.|Cambiar el regimen de trabajo entre invierno y verano.|Optimizar estrategias de ventilación para enfriamiento y calentamiento gratuitos.|Optimizar estrategias de ventilación por calidad de aire exterior.>}}{CondExte}"
@@ -338,16 +338,17 @@ const Narrativa = {
 			"Su funcionamiento se integra dentro de la estrategia general de generación, adaptándose a las condiciones de carga y a las consignas establecidas por el sistema de control."
 		],
 		"Elementos": [
-			"{{Temperatura[/s]{CaldTemp} de [impulsión/impulsión y retorno]{CaldTemp} general[/es]{CaldTemp}.}}{CaldTemp}",
-			"{{[{Opcion}]{CaldHumo} para la temperatura de humos.}}{CaldHumo}",
+			"{{Temperatura[/s]{CaldTemp} de [impulsión/impulsión y retorno]{CaldTemp}.}}{CaldTemp}",
+			"{{[{Opcion}]{CaldHumo} de temperatura de humos.}}{CaldHumo}",
+			"{{Sonda de temperatura de humos.}}{CaldHumo.is(\"Sonda\")}",
+			"{{Pirostato de limitacion máxima de temperatura de humos.}}{CaldHumo.is(\"Termostato\")}",			
 			"{{Sonda de presión estática del circuito hidráulico.}}{CaldPres.is(\"Sonda\")}",
 			"{{Presostato de seguridad por [mínima/máxima] en el circuito hidráulico.}}{CaldPres.is(\"Presostato\")}",
-			"{{Bomba[/s]{CaldBomb} asociada[/s]{CaldBomb} a la caldera.}}{CaldBomb}",
-			"{{Válvula motorizada [{Opcion}]{CaldValv} en retorno.}}{CaldValv}",
+			"{{Bomba[/s]{CaldBomb} de recirculacion en caldera.}}{CaldBomb}",
+			"{{Válvula de aislamiento.}}{CaldValv.is(\"Todo/Nada\")}",
+			"{{Válvula modulante [{Opcion}]{CaldValv} en retorno.}}{!CaldValv.is(\"Todo/Nada\")}",
 		],
 		"Funcionamiento": [
-			"La caldera entra en funcionamiento cuando recibe la orden de habilitación correspondiente, de acuerdo con la estrategia definida para la producción térmica del sistema.",
-
 			"El arranque de la caldera se produce [por demanda de la instalación|por horario|por control externo].",
 			"{{Antes del arranque de la caldera se verifica el correcto funcionamiento de la[/s]{CaldBomb} bomba[/s]{CaldBomb} asociada[/s]{CaldBomb}, para garantizar que existe circulación de fluido.}}{CaldBomb}",
 			"{{El sistema gestiona el funcionamiento de las bombas asociadas de forma alternada, realizando la rotación de la bomba en funcionamiento en función de las horas de servicio o en caso de fallo de la otra bomba, de modo que se mantenga la disponibilidad de la caldera.}}{CaldBomb.qty(\">1\")}",
@@ -367,10 +368,10 @@ const Narrativa = {
 	},
 	"Aerotermia": {
 		"Descripción": [
-			"La unidad de aerotermia es un elemento principal de producción térmica del sistema, intercambiando energía térmica con el aire exterior para aportar calor o frío a los distintos consumidores.",
+			"La[/s]{MainBloc} unidad[/es]{MainBloc} de aerotermia [es/son]{MainBloc} el elemento principal de producción térmica del sistema, intercambiando energía térmica con el aire exterior para aportar calor o frío a los distintos consumidores.",
 		],
 		"Elementos": [
-			"{{Temperatura[/s]{AeroTemp} de impulsión[/ y retorno]{AeroTemp} general[/es]{AeroTemp}.}}{AeroTemp}",
+			"{{Temperatura[/s]{AeroTemp} de impulsión[/ y retorno]{AeroTemp}[/de cada aerotermia]{MainBloc}.}}{AeroTemp}",
 			"{{Sonda de presión estática del circuito hidráulico.}}{AeroPres.is(\"Sonda\")}",
 			"{{Presostato de seguridad por [mínima/máxima] en el circuito hidráulico.}}{AeroPres.is(\"Presostato\")}",
 			"{{Bomba[/s]{AeroBomb} de circulación.}}{AeroBomb}",
@@ -405,17 +406,18 @@ const Narrativa = {
 			"La instalación se compone de un circuito primario de captación y, opcionalmente, de circuitos secundarios de acumulación o transferencia, integrados con el resto de sistemas térmicos."
 		],
 		"Elementos": [
-			"{{Sonda de radiación solar para detección de condiciones favorables de captación.}}{SolRad}",
+			"{{Sonda de radiación solar.}}{SolRad}",
 			"{{Sonda de temperatura en los paneles solares.}}{SolTePa}",
 			"{{Sonda de temperatura en el circuito secundario.}}{SolTeSe}",
 			"{{Sonda de temperatura en el depósito solar.}}{SolTeDe}",
 			"{{Bomba de circulación del circuito primario solar.}}{SolBoPr}",
 			"{{Bomba de circulación del circuito secundario solar.}}{SolBoSe}",
-			"{{Bomba de transvase entre circuitos.}}{SolBoTr}",
-			"{{Aerotermo para disipación de excedentes térmicos.}}{SolAero}",
+			"{{Bomba de transvase entre depositos.}}{SolBoTr}",
+			"{{Aerotermo de disipación de excedentes térmicos.}}{SolAero}",
 			"{{Válvula de control del circuito primario.}}{SolVaPr}",
 			"{{Válvula de control del circuito secundario.}}{SolVaSe}",
-			"{{Sistema de control de presión del circuito solar.}}{SolPres}"
+			"{{Sonda de presión estática del circuito hidráulico.}}{SolPres.is(\"Sonda\")}",
+			"{{Presostato de seguridad por [mínima/máxima] en el circuito hidráulico.}}{SolPres.is(\"Presostato\")}",
 		],
 		"Funcionamiento": [
 			"{{}}{SolRad}",

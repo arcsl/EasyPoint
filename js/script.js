@@ -724,7 +724,6 @@ function procesaNombres(bName, bCant, eName, eCant) {
     return resultado;
 }
 
-
 function writeSignals() {
 
     UI.listadoCont.innerHTML = "";
@@ -816,6 +815,7 @@ function writeSignals() {
                 row.remove();
                 renumerarFilas();
                 actualizaSumatorio();
+                updateSelectsSeniales();
             });
 
             const labelNumSenial = document.createElement('label');
@@ -991,11 +991,11 @@ function crearMemoria() {
                 const textoPuntoListado = interpretarNarrativa(texto, bloque).trim();
                 if (textoPuntoListado !== "") {
                     let puntoListado;
-                    if(textoPuntoListado.startsWith("--")) {
+                    if (textoPuntoListado.startsWith("--")) {
                         listado.appendChild(document.createElement("br"));    // 1 linea de separacion
-                        puntoListado =  document.createElement("p");
+                        puntoListado = document.createElement("p");
                     } else {
-                        puntoListado =  document.createElement("li");
+                        puntoListado = document.createElement("li");
                     }
                     puntoListado.innerHTML = textoPuntoListado;
                     listado.appendChild(puntoListado);
@@ -1070,8 +1070,7 @@ function interpretarNarrativa(texto, bloque) {
 
         return texto.replace(/\[\{(.*?)\}\]\{(.*?)\}/g, (match, prop, ref) => {
 
-            const elem = bloque.Elementos.find(e => e.Ref === ref)
-                || (ref === "MainBloc" ? bloque : null);
+            const elem = bloque.Elementos.find(e => e.Ref === ref) || (ref === "MainBloc" ? bloque : null);
 
             if (!elem) return "";
 
@@ -1086,17 +1085,16 @@ function interpretarNarrativa(texto, bloque) {
 
     function resolverCantidad(texto, bloque) {
 
-        return texto.replace(/\[(?=[^[\]]*\/)(.*?)\/(.*?)\]\{(.*?)\}/g,
-            (match, singular, plural, ref) => {
+        return texto.replace(/\[(?=[^[\]]*\/)(.*?)\/(.*?)\]\{(.*?)\}/g, (match, singular, plural, ref) => {
 
-                const elem = bloque.Elementos.find(e => e.Ref === ref);
-                if (!elem || !elem.Checked) return singular;
-                const cantidad = elem.Cantidad || 0;
+            const elem = bloque.Elementos.find(e => e.Ref === ref) || (ref === "MainBloc" ? bloque : null);
 
-                return cantidad > 1 ? plural : singular;
+            if ((!elem || !elem.Checked) && ref !== "MainBloc") return singular;
+            const cantidad = elem.Cantidad || 0;
 
-            }
-        );
+            return cantidad > 1 ? plural : singular;
+
+        });
     }
 
     function resolverSelectores(texto) {
@@ -1175,12 +1173,12 @@ function evaluarCondicion(refExpr, bloque) {
         const cantidad = elem.Cantidad || 0;
 
         switch (operador) {
-            case ">":  return cantidad > valor;
+            case ">": return cantidad > valor;
             case ">=": return cantidad >= valor;
-            case "<":  return cantidad < valor;
+            case "<": return cantidad < valor;
             case "<=": return cantidad <= valor;
             case "==": return cantidad === valor;
-            default:   return false;
+            default: return false;
         }
     }
 
