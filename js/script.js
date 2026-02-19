@@ -113,17 +113,23 @@ function populateCustomPop() {
 
 function populateSumatorio() {
 
+    const subCabeceraSenialesHead = UI.proyectoSubCabecera.querySelector("table thead tr");
     const sumarioSenialesHead = UI.proyectoPie.querySelector("table thead tr");
     const sumarioSenialesBody = UI.proyectoPie.querySelector("table tbody tr");
 
     signalTypes.forEach(sig => {
 
-        // celdas cabecera
+        // celdas cabecera  titulo señales
         const headTitle = document.createElement("th");
-        sumarioSenialesHead.appendChild(headTitle);
+        subCabeceraSenialesHead.appendChild(headTitle);
         headTitle.innerText = sig;
 
-        // celdas con suma total
+        // celdas pie titulo señales
+        const pieTitle = document.createElement("th");
+        sumarioSenialesHead.appendChild(pieTitle);
+        pieTitle.innerText = sig;
+
+        // celdas pie suma señales
         const sumCell = document.createElement("td");
         sumarioSenialesBody.appendChild(sumCell);
         sumCell.classList.add(sig);
@@ -203,6 +209,17 @@ function addBlock(bloque) {
     addBlockHeader(bloque, table);
     addBlockBody(bloque, table);
 
+    if (bloque.hasOwnProperty("_visible")) {
+        if (bloque._visible === false) {
+            table.querySelector("tbody").classList.add("w3-hide");
+        } else {
+            table.querySelector("thead").querySelectorAll("td").forEach(celda => celda.classList.add("w3-invisible"));
+        }
+    } else {
+        bloque._visible = true;
+        table.querySelector("thead").querySelectorAll("td").forEach(celda => celda.classList.add("w3-invisible"));
+    }
+
     UI.sectionToolsSelect.focus();
 
 }
@@ -224,19 +241,45 @@ function addBlockHeader(bloque, table) {
     headerRow.appendChild(headerCell);
 
     const deleteBtn = document.createElement("button");
-    headerCell.appendChild(deleteBtn);
+    // headerCell.appendChild(deleteBtn);
 
     const nameInput = inputNombre(bloque.NombreUsuario);
-    headerCell.appendChild(nameInput);
+    // headerCell.appendChild(nameInput);
 
     const numberInput = inputNumero(bloque.Cantidad);
-    headerCell.appendChild(numberInput);
+    // headerCell.appendChild(numberInput);
 
     const subirBtn = document.createElement('button');
-    headerCell.appendChild(subirBtn);
+    // headerCell.appendChild(subirBtn);
 
     const bajarBtn = document.createElement('button');
-    headerCell.appendChild(bajarBtn);
+    // headerCell.appendChild(bajarBtn);
+
+    // === Botón mostrar/ocultar canales ===
+    const icono = bloque._visible ? "eye-slash" : "eye";
+    const btnToggle = createBoton(null, icono, "Mostrar/Ocultar elementos", () => {
+
+        // ocultar elementos y mostrar resumen de señales del bloque
+        const oculto = table.querySelector("tbody").classList.toggle("w3-hide");
+        headerRow.querySelectorAll("td").forEach(celda => celda.classList.toggle("w3-invisible"));
+
+        //guardar estado actual de visibilidad
+        bloque._visible = !oculto;
+        proyectoNoGuardado();
+
+        //modificar el icono
+        if (oculto) {
+            btnToggle.innerHTML = '<img src="./images/eye.svg" alt="ver">';
+            btnToggle.title = "Mostrar elementos.";
+        } else {
+            btnToggle.innerHTML = '<img src="./images/eye-slash.svg" alt="ocultar">';
+            btnToggle.title = "Ocultar elementos.";
+        }
+
+    });
+    btnToggle.classList.add("botonCuadrado", "ojoElemBtn");
+
+    headerCell.append(deleteBtn, nameInput, numberInput, subirBtn, bajarBtn, btnToggle);
 
     // asignar valores y dinamicas a los elementos del DOM
     nameInput.classList.add("nombreBloque");
@@ -291,7 +334,7 @@ function addBlockHeader(bloque, table) {
 
     // añadir una columna por cada tiopo de señal para mantener la alineacion de toda la tabla
     signalTypes.forEach(() => {
-        const th = document.createElement("th");
+        const th = document.createElement("td");
         headerRow.appendChild(th);
     });
 
@@ -304,7 +347,7 @@ function addBlockBody(bloque, table) {
 
     //añadimos una fila por cada elemento del bloque
     bloque.Elementos.forEach(elemento => {
-        addFilaBody(elemento, tBody, bloque);
+        addFilaBody(elemento, tBody, bloque, table);
     });
 
     //añadimos una fila para insertar el boton para añadir lineas custom
@@ -350,9 +393,11 @@ function addBlockBody(bloque, table) {
 
     });
 
+    actualizaSumatorioBloque(table);
+
 }
 
-function addFilaBody(elemento, tBody, bloque) {
+function addFilaBody(elemento, tBody, bloque, table) {
 
     // iniciar valores que fuede que no existan si es un bloque nuevo
     if (!elemento.hasOwnProperty("NombreUsuario")) elemento.NombreUsuario = elemento.Nombre;
@@ -395,6 +440,9 @@ function addFilaBody(elemento, tBody, bloque) {
         // eliminar la fila
         row.remove();
 
+        // actualizar sumatorio del bloque
+        actualizaSumatorioBloque(table);
+
         // actualizar sumatorio
         actualizaSumatorio();
     });
@@ -409,6 +457,7 @@ function addFilaBody(elemento, tBody, bloque) {
         }
         mostrarOcultarInputsYSelects(row, checkbox.checked);
         calculaSeniales(row, elemento, bloque, checkbox.checked);
+        actualizaSumatorioBloque(table);
         actualizaSumatorio();
         proyectoNoGuardado();
     });
@@ -506,6 +555,39 @@ function addFilaBody(elemento, tBody, bloque) {
         });
 
     }
+
+}
+
+function actualizaSumatorioBloque(table) {
+
+    const totalesSeniales = {};
+    signalTypes.forEach(sig => totalesSeniales[sig] = 0);
+
+
+    const rows = table.querySelectorAll("tbody tr");
+    rows.forEach(row => {
+
+        const checkbox = row.querySelector("input[type=checkbox]");
+        if (!checkbox || !checkbox.checked) return;
+
+        signalTypes.forEach(sig => {
+            const cellText = row.querySelector(`td.${sig}`)?.textContent;
+            const val = parseInt(cellText) || 0;
+            totalesSeniales[sig] += val;
+        });
+
+    });
+
+    signalTypes.forEach((sig, i) => {
+        const celda = table
+            .querySelector("thead")
+            .querySelector(`td:nth-child(${i + 2})`);
+
+        if (celda) {
+            celda.textContent = totalesSeniales[sig];
+        }
+    });
+
 
 }
 
@@ -914,6 +996,7 @@ function limpiarAsignacion() {
     });
 }
 
+
 /* ------------------------- MEMORIA ------------------------- */
 
 function writeMemo() {
@@ -1208,7 +1291,9 @@ function guardaCambiosMemoria() {
 
 }
 
+
 /* ------------------------- AUXILIARES ------------------------- */
+
 function inputNombre(texto) {
     const nameInput = document.createElement("input");
     nameInput.classList.add("w3-input", "w3-margin-right", "nobackground");
@@ -1283,5 +1368,3 @@ function moverElemento(array, fromIndex, toIndex) {
     const [item] = array.splice(fromIndex, 1);
     array.splice(toIndex, 0, item);
 }
-
-

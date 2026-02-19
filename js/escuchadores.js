@@ -598,6 +598,9 @@ UI.popCustomAceptarBtn.addEventListener("click", () => {
     ultima.querySelector('input[name="nombreSenial"]').value = "";
     ultima.querySelector('input[name="nombreSenial"]').focus();
 
+    // recalcular total de señales del bloque
+     actualizaSumatorioBloque(table);
+
     // quitamos el overlay
     UI.popCustomCancelBtn.dispatchEvent(new Event('click', { bubbles: true }));
 
@@ -647,8 +650,13 @@ UI.estudioMostrarBtn.addEventListener("click", () => {
     // cambiar icono en la barra de botones
     UI.proyectoSeccionBtn.querySelector("img").src = "./images/estudio.svg";
 
-    // cambiar contenido del label informativo de seccion
-    UI.proyectoLabelSeccion.innerText = "ESTUDIO DE PUNTOS DE CONTROL DEL PROYECTO";
+    // cambiar contenido de la celda informativa de la seccion actual
+    UI.proyectoNombreSeccion.innerText = "ESTUDIO DE PUNTOS DE CONTROL DEL PROYECTO";
+
+    // cambiar contenido de las celdas cabecera del tipo de señal (EA, ED,...)
+    signalTypes.forEach((sig,i) => {
+        UI.proyectoSubCabecera.querySelectorAll("table thead tr th")[i].innerText = sig;
+    });
 
     // cambiar botones mostrados en el popup para no mostrar el boton de la seccion en la que ya estamos
     UI.estudioMostrarBtn.classList.add("w3-hide");
@@ -684,7 +692,12 @@ UI.listadoMostrarBtn.addEventListener("click", () => {
     UI.proyectoSeccionBtn.querySelector("img").src = "./images/listado.svg";
 
     // cambiar contenido del label informativo de seccion
-    UI.proyectoLabelSeccion.innerText = "LISTADO DE PUNTOS Y ESTADO DE ASIGNACIÓN";
+    UI.proyectoNombreSeccion.innerText = "LISTADO DE PUNTOS Y ESTADO DE ASIGNACIÓN";
+
+    // eliminar contenido de las celdas cabecera del tipo de señal (EA, ED,...)
+    UI.proyectoSubCabecera.querySelectorAll("table thead tr th").forEach(celda => {
+        celda.innerText = "";
+    });    
 
     // cambiar botones mostrados en el popup para no mostrar el boton de la seccion en la que ya estamos
     UI.estudioMostrarBtn.classList.remove("w3-hide");
@@ -720,7 +733,12 @@ UI.dibujarMostrarBtn.addEventListener("click", () => {
     UI.proyectoSeccionBtn.querySelector("img").src = "./images/techDraw.svg";
 
     // cambiar contenido del label informativo de seccion
-    UI.proyectoLabelSeccion.innerText = "ASIGNACIÓN DE SEÑALES Y CREACIÓN DE PLANOS";
+    UI.proyectoNombreSeccion.innerText = "ASIGNACIÓN DE SEÑALES Y CREACIÓN DE PLANOS";
+
+    // eliminar contenido de las celdas cabecera del tipo de señal (EA, ED,...)
+    UI.proyectoSubCabecera.querySelectorAll("table thead tr th").forEach(celda => {
+        celda.innerText = "";
+    });
 
     // cambiar botones mostrados en el popup para no mostrar el boton de la seccion en la que ya estamos
     UI.estudioMostrarBtn.classList.remove("w3-hide");
@@ -752,7 +770,12 @@ UI.memoriaMostrarBtn.addEventListener("click", () => {
     UI.proyectoSeccionBtn.querySelector("img").src = "./images/book.svg";
 
     // cambiar contenido del label informativo de seccion
-    UI.proyectoLabelSeccion.innerText = "MEMORIA DE CONTROL";
+    UI.proyectoNombreSeccion.innerText = "MEMORIA DE CONTROL";
+
+    // eliminar el contenido de las celdas cabecera del tipo de señal (EA, ED,...)
+    signalTypes.forEach((sig,i) => {
+        UI.proyectoSubCabecera.querySelectorAll("table thead tr th")[i].innerText = "";
+    })
 
     // cambiar botones mostrados en el popup para no mostrar el boton de la seccion en la que ya estamos
     UI.estudioMostrarBtn.classList.remove("w3-hide");

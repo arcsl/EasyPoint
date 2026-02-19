@@ -130,15 +130,12 @@ table tbody tr:last-child {
     width: 736px;
 }
 
-#proyectoLabelSeccion {
-    height: 40px;
-}
-
 #sectionToolsSelect {
     width: 415px;
 }
 
-/* columnas señales en el pie */
+/* columnas señales en cabecera y  pie */
+#proyectoSubCabecera table tr :not(:first-child),
 #proyectoPie table tr :not(:first-child) {
     width: 50px;
     text-align: center;

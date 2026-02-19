@@ -34,6 +34,16 @@
     vertical-align: top;
 }
 
+
+#estudioCont > table > thead > tr > td {
+    vertical-align: middle;
+}
+
+/* boton ojo mostrar ocultar elementos */
+.ojoElemBtn {
+    margin-left: 120px;
+}
+
 /* elementos de las filas del cuerpo */
 #estudioCont tbody tr * {
     height: 25px;
