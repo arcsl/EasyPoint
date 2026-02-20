@@ -1657,16 +1657,13 @@ const dispositivos = {
                 },
                 {   // Salidas digitales
                     "Simbolos": [
-                        null, "#Qc", null, "#/",
+                        null, "#Qs", null, "#/",
                         null, "#Qs", null, "#/",
                         null, "#Qs", null, "#/",
                         null, "#Qc", null,
                     ],
                     "Numeracion": [
-                        { num: "Q11", extraEstrecho: true, desX: -1 },
-                        { num: "Q12", extraEstrecho: true, desX: 0 },
-                        { num: "Q14", extraEstrecho: true, desX: 1, señales: ["SD"], nombre: "Q1" }, null,
-
+                        "Q13", null, { num: "Q14", señales: ["SD"], nombre: "Q1" }, null,
                         "Q23", null, { num: "Q24", señales: ["SD"], nombre: "Q2" }, null,
                         "Q33", null, { num: "Q34", señales: ["SD"], nombre: "Q3" }, null,
 

@@ -579,7 +579,7 @@ UI.popCustomAceptarBtn.addEventListener("click", () => {
 
     // insertamos la fila correspondiente el elemento en la tabla
     const ultimoElemento = bloque.Elementos[bloque.Elementos.length - 1];
-    addFilaBody(ultimoElemento, tBody, bloque);
+    addFilaBody(ultimoElemento, tBody, bloque, table);
 
     const filas = tBody.querySelectorAll("tr");
     const ultima = filas[filas.length - 1];

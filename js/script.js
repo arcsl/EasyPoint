@@ -381,9 +381,6 @@ function addBlockBody(bloque, table) {
         // Obtener tamaño y posición del contenedor
         const contRect = UI.estudioCont.getBoundingClientRect();
 
-        // Calcular posición centrada dentro del contenedor
-        const left = contRect.left + (contRect.width - UI.overlayPopCustom.offsetWidth) / 2;
-
         // Posicionar el poup
         UI.overlayPopCustom.style.top = (window.innerHeight - UI.overlayPopCustom.offsetHeight) / 2 + "px";
         UI.overlayPopCustom.style.left = contRect.left + (contRect.width - UI.overlayPopCustom.offsetWidth) / 2 + "px";
@@ -412,19 +409,11 @@ function addFilaBody(elemento, tBody, bloque, table) {
     row.appendChild(nameCell);
 
     const elimcustom = document.createElement("button");
-    nameCell.appendChild(elimcustom);
-
     const checkbox = document.createElement("input");
-    nameCell.appendChild(checkbox);
-
     const nameInput = inputNombre(elemento.NombreUsuario);
-    nameCell.appendChild(nameInput);
-
     const numberInput = inputNumero(elemento.Cantidad);
-    nameCell.appendChild(numberInput);
-
     const select = document.createElement("select");
-    nameCell.appendChild(select);
+    nameCell.append(elimcustom, checkbox, nameInput, numberInput, select);
 
     // asignar valores y dinamicas a los elementos del DOM
     row.name = elemento.Nombre;
@@ -445,6 +434,7 @@ function addFilaBody(elemento, tBody, bloque, table) {
 
         // actualizar sumatorio
         actualizaSumatorio();
+
     });
 
     checkbox.type = "checkbox";
@@ -504,6 +494,7 @@ function addFilaBody(elemento, tBody, bloque, table) {
             elemento.Opcion = select.selectedIndex;
             calculaSeniales(row, elemento, bloque, checkbox.checked);
             proyectoNoGuardado();
+            actualizaSumatorioBloque(table);
             actualizaSumatorio();
         });
 
