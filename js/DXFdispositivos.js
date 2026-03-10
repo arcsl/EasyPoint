@@ -976,6 +976,33 @@ const dispositivos = {
             "Tipo": "controlador",
         },
     },
+    "PANEL PC": {
+        "Nombre": "PANEL PC",
+        "Paginas": [
+            [
+                {   // alimentacion
+                    "Simbolos": [null, "#|", null,],
+                    "Numeracion": [null, "TRAF", null,],
+                    "Fijo": "#Sch",
+                },
+                {   // LAN
+                    "Simbolos": [null, "#RED", null,],
+                    "Numeracion": [null, "LAN", null,],
+                    "Opcional": [
+                        null, { nombre: "LAN", dibujo: "#utp", Linea1: "A router o rack de comunicaciones", Linea2: "Ethernet UTP CAT-6", }, null,
+                    ],
+                },
+            ],
+        ],
+        "Disposicion": {
+            "Mensaje": "Recorte en puerta de cuadro.",
+            "Ancho": 0,
+            "Alto": 0,
+            "Familia": "Otros",
+            "Tension230": false,
+            "Tipo": "controlador",
+        },
+    },
     "ROUTER 4G": {
         "Nombre": "ROUTER 4G",
         "Paginas": [
