@@ -1059,11 +1059,11 @@ function dibujarPaginaDeDispositivo(hojaX, hojaY, dispositivo, pageIndex, startX
 
     const pagina = dispositivo.Paginas[pageIndex];
 
-    // largura en vase a la longitud de "numeracion" de todos los conectores
-    const largura = dispositivo?.Disposicion?.AnchoEnHoja?.[pageIndex] ??
-        (pagina.map(c => ((c.Numeracion?.length || 0) + 1)).reduce((a, b) => a + b, 0) * paso);
+    // largura en base a la longitud de "numeracion" de todos los conectores
+    // const largura = dispositivo?.Disposicion?.AnchoEnHoja?.[pageIndex] ??
+    //     (pagina.map(c => ((c.Numeracion?.length || 0) + 1)).reduce((a, b) => a + b, 0) * paso);
 
-    // idem excluyendo a los conectores marcados con noEnv
+    // idem excluyendo a los conectores marcados con noEnv ( no envolvente)
     const larguraNoEnv = pagina
         .map(c => c.noEnv ? 0 : ((c.Numeracion?.length || 0) + 1))
         .reduce((a, b) => a + b, 0) * paso;
@@ -1071,14 +1071,14 @@ function dibujarPaginaDeDispositivo(hojaX, hojaY, dispositivo, pageIndex, startX
     let inX = hojaX + startX;
     let inY = hojaY + 236;
 
-    // Envolvente + título (solo si existe la propiedad alto y ancho o y son mayores que 0)
-    if (dispositivo.Disposicion.Alto && dispositivo.Disposicion.Ancho) {
+    // Envolvente + título (solo si existe la propiedad alto y ancho o y son mayores que 0) ¿porque si el alto y ancho son dimensiones fisicas, no de conectores?
+    // if (dispositivo.Disposicion.Alto && dispositivo.Disposicion.Ancho) {
         entidades.push(...hashEnv(inX, inY, larguraNoEnv));
         entidades.push(textoDXF(inX + 2, inY + 21, dispositivo.Nombre, 3, 'ML', 0, "Negrita"));
-    }
+    // }
 
     // Marca de módulo PX (si aplica)
-    const { Familia, Tipo, Alto } = dispositivo.Disposicion || {};
+    const { Familia, Tipo } = dispositivo.Disposicion || {};
     if ((Familia === "PX" && Tipo === "modulo") || (Familia === "Modbus" && Tipo === "controlador")) {
         nModulo++;
         entidades.push(
@@ -1221,7 +1221,8 @@ function dibujarPaginaDeDispositivo(hojaX, hojaY, dispositivo, pageIndex, startX
         }
 
         inX += paso;
-        if (Alto && idxCon + 1 < (pagina.length || 0)) {
+        // if (Alto && idxCon + 1 < (pagina.length || 0)) {
+        if (idxCon + 1 < (pagina.length || 0)) {
             if (!conector.noEnv) entidades.push(...hasheador(inX, inY, "#Sep"));
         }
     });

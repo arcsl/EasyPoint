@@ -988,7 +988,7 @@ const dispositivos = {
                 {   // LAN
                     "Cinta": [null, "P1", null, null, null, "P2", null, null, null, "P3", null, null, null, "P4", null,],
                     "Simbolos": [null, "#RED", null, null, null, "#RED", null, null, null, "#RED", null, null, null, "#RED", null,],
-                    "Numeracion": [null, "#216", null, null, null, "#213", null, "LAN", null, "#132", null, null, null, "#162", null,],
+                    "Numeracion": [null, "#216", null, null, null, "#25", null, "LAN", null, "#52", null, null, null, "#162", null,],
                     "Opcional": [
                         null, { nombre: "LAN P1", dibujo: "#utp", Linea1: "A controlador anterior en pag # - # ", Linea2: "Ethernet UTP CAT-6", desX: 36, }, null, null,
                         null, { nombre: "LAN P3", dibujo: "#utp", Linea1: "A router o rack de comunicaciones   ", Linea2: "Ethernet UTP CAT-6", desX: 36, }, null, null,
@@ -1000,8 +1000,8 @@ const dispositivos = {
             ],
         ],
         "Disposicion": {
-            "Ancho": null,
-            "Alto": null,
+            "Ancho": 0,
+            "Alto": 0,
             "Familia": "Otros",
             "Tension230": false,
             "Tipo": "controlador",
