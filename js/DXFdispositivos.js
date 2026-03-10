@@ -827,6 +827,35 @@ const dispositivos = {
             "Tipo": "controlador",
         },
     },
+    "PXM30": {
+        "Nombre": "PXM30",
+        "Paginas": [
+            [
+                {   // alimentacion 24V
+                    "Cinta": "AC 24V",
+                    "Subcinta": ["~", "#T", "#uTierra",],
+                    "Simbolos": ["#|", "#|", "#|",],
+                    "Numeracion": ["1", "2", "3",],
+                    "Fijo": ["#G", "#G0", null,],
+                },
+                {   // LAN
+                    "Simbolos": [null, "#RED", null,],
+                    "Numeracion": [null, "LAN", null,],
+                    "Opcional": [
+                        null, { nombre: "LAN", dibujo: "#utp", Linea1: "A router o rack de comunicaciones", Linea2: "Ethernet UTP CAT-6", }, null,
+                    ],
+                },
+            ],
+        ],
+        "Disposicion": {
+            "Mensaje": "Recorte en puerta de cuadro.",
+            "Ancho": 181,
+            "Alto": 116,
+            "Familia": "PX",
+            "Tension230": false,
+            "Tipo": "controlador",
+        },
+    },
     "PXM40": {
         "Nombre": "PXM40",
         "Paginas": [
@@ -849,8 +878,37 @@ const dispositivos = {
         ],
         "Disposicion": {
             "Mensaje": "Recorte en puerta de cuadro.",
-            "Ancho": 258,
-            "Alto": 168,
+            "Ancho": 266,
+            "Alto": 172,
+            "Familia": "PX",
+            "Tension230": false,
+            "Tipo": "controlador",
+        },
+    },
+    "PXM50": {
+        "Nombre": "PXM50",
+        "Paginas": [
+            [
+                {   // alimentacion 24V
+                    "Cinta": "AC 24V",
+                    "Subcinta": ["~", "#T", "#uTierra",],
+                    "Simbolos": ["#|", "#|", "#|",],
+                    "Numeracion": ["1", "2", "3",],
+                    "Fijo": ["#G", "#G0", null,],
+                },
+                {   // LAN
+                    "Simbolos": [null, "#RED", null,],
+                    "Numeracion": [null, "LAN", null,],
+                    "Opcional": [
+                        null, { nombre: "LAN", dibujo: "#utp", Linea1: "A router o rack de comunicaciones", Linea2: "Ethernet UTP CAT-6", }, null,
+                    ],
+                },
+            ],
+        ],
+        "Disposicion": {
+            "Mensaje": "Recorte en puerta de cuadro.",
+            "Ancho": 395,
+            "Alto": 240,
             "Familia": "PX",
             "Tension230": false,
             "Tipo": "controlador",
@@ -915,6 +973,37 @@ const dispositivos = {
             "Ancho": 112,
             "Alto": 165,
             "Familia": "PX",
+            "Tipo": "controlador",
+        },
+    },
+    "ROUTER 4G": {
+        "Nombre": "ROUTER 4G",
+        "Paginas": [
+            [
+                {   // alimentacion
+                    "Simbolos": [null, "#|", null,],
+                    "Numeracion": [null, "TRAF", null,],
+                    "Fijo": "#Sch",
+                },
+                {   // LAN
+                    "Cinta": [null, "P1", null, null, null, "P2", null, null, null, "P3", null, null, null, "P4", null,],
+                    "Simbolos": [null, "#RED", null, null, null, "#RED", null, null, null, "#RED", null, null, null, "#RED", null,],
+                    "Numeracion": [null, "#216", null, null, null, "#213", null, "LAN", null, "#132", null, null, null, "#162", null,],
+                    "Opcional": [
+                        null, { nombre: "LAN P1", dibujo: "#utp", Linea1: "A controlador anterior en pag # - # ", Linea2: "Ethernet UTP CAT-6", desX: 36, }, null, null,
+                        null, { nombre: "LAN P3", dibujo: "#utp", Linea1: "A router o rack de comunicaciones   ", Linea2: "Ethernet UTP CAT-6", desX: 36, }, null, null,
+                        null, { nombre: "LAN P4", dibujo: "#utp", Linea1: "A controlador siguiente en pag # - #", Linea2: "Ethernet UTP CAT-6", desX: 36, }, null, null,
+                        null, { nombre: "LAN P5", dibujo: "#utp", Linea1: "A controlador siguiente en pag # - #", Linea2: "Ethernet UTP CAT-6", desX: 36, }, null,
+                    ],
+                },
+
+            ],
+        ],
+        "Disposicion": {
+            "Ancho": null,
+            "Alto": null,
+            "Familia": "Otros",
+            "Tension230": false,
             "Tipo": "controlador",
         },
     },
