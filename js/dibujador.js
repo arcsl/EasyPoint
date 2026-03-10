@@ -1071,11 +1071,14 @@ function dibujarPaginaDeDispositivo(hojaX, hojaY, dispositivo, pageIndex, startX
     let inX = hojaX + startX;
     let inY = hojaY + 236;
 
-    // Envolvente + título (solo si existe la propiedad alto y ancho o y son mayores que 0) ¿porque si el alto y ancho son dimensiones fisicas, no de conectores?
-    // if (dispositivo.Disposicion.Alto && dispositivo.Disposicion.Ancho) {
+    // Envolvente + título (solo si existe la propiedad alto y ancho o y son mayores que 0) 
+    // ¿porque si el alto y ancho son dimensiones fisicas, no de conectores?
+    // pues para ni dibujar esas lineas en "ACOMETIDA
+    // Lo cambiamos por verificar si la propiedad exciste aunque sea 0 -> que en ese caso hay que dibujar la envolvente de conectores, pero no el dispositivo en la hoja de medidas"
+    if (("Alto" in dispositivo.Disposicion) && ("Ancho" in dispositivo.Disposicion)) {
         entidades.push(...hashEnv(inX, inY, larguraNoEnv));
         entidades.push(textoDXF(inX + 2, inY + 21, dispositivo.Nombre, 3, 'ML', 0, "Negrita"));
-    // }
+    }
 
     // Marca de módulo PX (si aplica)
     const { Familia, Tipo } = dispositivo.Disposicion || {};
@@ -1221,8 +1224,7 @@ function dibujarPaginaDeDispositivo(hojaX, hojaY, dispositivo, pageIndex, startX
         }
 
         inX += paso;
-        // if (Alto && idxCon + 1 < (pagina.length || 0)) {
-        if (idxCon + 1 < (pagina.length || 0)) {
+        if ( ("Alto" in dispositivo.Disposicion) && idxCon + 1 < (pagina.length || 0)) {    // verificamos existencia de "Alto" para no dibujar palitroques en "ACOOMETIDA"
             if (!conector.noEnv) entidades.push(...hasheador(inX, inY, "#Sep"));
         }
     });
