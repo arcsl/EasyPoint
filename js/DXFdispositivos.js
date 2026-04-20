@@ -738,17 +738,17 @@ const dispositivos = {
                 {   // Canal 1
                     "Cinta": "(1)",
                     "Simbolos": "#Qc",
-                    "Numeracion": ["3", "4", { num: "2", señales: ["ED"], nombre: "DO1" },],
+                    "Numeracion": ["3", "4", { num: "2", señales: ["SD"], nombre: "DO1" },],
                 },
                 {   // Canal 2
                     "Cinta": "(2)",
                     "Simbolos": "#Qc",
-                    "Numeracion": ["9", "10", { num: "8", señales: ["ED"], nombre: "DO2" },],
+                    "Numeracion": ["9", "10", { num: "8", señales: ["SD"], nombre: "DO2" },],
                 },
                 {   // Canal 3
                     "Cinta": "(3)",
                     "Simbolos": "#Qc",
-                    "Numeracion": ["15", "16", { num: "14", señales: ["ED"], nombre: "DO3" },],
+                    "Numeracion": ["15", "16", { num: "14", señales: ["SD"], nombre: "DO3" },],
                 },
                 {   // Canal 5
                     "Cinta": [null, "#T", "(5)",],
@@ -758,17 +758,17 @@ const dispositivos = {
                 {   // Canal 6
                     "Cinta": [null, "#T", "(6)",],
                     "Simbolos": [null, "#-", "#U",],
-                    "Numeracion": [null, "28", { num: "29", señales: ["SD"], nombre: "DI6" },],
+                    "Numeracion": [null, "28", { num: "29", señales: ["ED"], nombre: "DI6" },],
                 },
                 {   // Canal 7
                     "Cinta": [null, "#T", "(7)",],
                     "Simbolos": [null, "#-", "#U",],
-                    "Numeracion": [null, "30", { num: "31", señales: ["SD"], nombre: "DI7" },],
+                    "Numeracion": [null, "30", { num: "31", señales: ["ED"], nombre: "DI7" },],
                 },
                 {   // Canal 8
                     "Cinta": [null, "#T", "(8)",],
                     "Simbolos": [null, "#-", "#U",],
-                    "Numeracion": [null, "32", { num: "33", señales: ["SD"], nombre: "DI8" },],
+                    "Numeracion": [null, "32", { num: "33", señales: ["ED"], nombre: "DI8" },],
                 },
             ],
         ],
